@@ -63,7 +63,6 @@ ActiveRecord::Schema.define(version: 20171208035527) do
   create_table "reviews", force: :cascade do |t|
     t.integer "score", default: 0, null: false
     t.text "content", default: "", null: false
-    t.bigint "user_id"
     t.bigint "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -72,7 +71,6 @@ ActiveRecord::Schema.define(version: 20171208035527) do
     t.index ["agency_id"], name: "index_reviews_on_agency_id"
     t.index ["product_id"], name: "index_reviews_on_product_id"
     t.index ["service_id"], name: "index_reviews_on_service_id"
-    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "services", force: :cascade do |t|
@@ -84,12 +82,6 @@ ActiveRecord::Schema.define(version: 20171208035527) do
     t.index ["company_id"], name: "index_services_on_company_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.text "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   add_foreign_key "comments", "agencies"
   add_foreign_key "comments", "reviews"
   add_foreign_key "likes", "agencies"
@@ -98,6 +90,5 @@ ActiveRecord::Schema.define(version: 20171208035527) do
   add_foreign_key "reviews", "agencies"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "services"
-  add_foreign_key "reviews", "users"
   add_foreign_key "services", "companies"
 end
