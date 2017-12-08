@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171208035525) do
+ActiveRecord::Schema.define(version: 20171208035527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 20171208035525) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "agency_id"
+    t.bigint "review_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agency_id"], name: "index_comments_on_agency_id"
+    t.index ["review_id"], name: "index_comments_on_review_id"
+  end
+
   create_table "companies", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "UEN", default: "", null: false
@@ -30,6 +40,15 @@ ActiveRecord::Schema.define(version: 20171208035525) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["UEN"], name: "index_companies_on_UEN", unique: true
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "review_id"
+    t.bigint "agency_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agency_id"], name: "index_likes_on_agency_id"
+    t.index ["review_id"], name: "index_likes_on_review_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -71,6 +90,10 @@ ActiveRecord::Schema.define(version: 20171208035525) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "comments", "agencies"
+  add_foreign_key "comments", "reviews"
+  add_foreign_key "likes", "agencies"
+  add_foreign_key "likes", "reviews"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "agencies"
   add_foreign_key "reviews", "products"
