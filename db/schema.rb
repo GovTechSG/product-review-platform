@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20171208035527) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.text "content"
+    t.text "content", default: "", null: false
     t.bigint "agency_id"
     t.bigint "review_id"
     t.datetime "created_at", null: false
@@ -53,10 +53,10 @@ ActiveRecord::Schema.define(version: 20171208035527) do
 
   create_table "products", force: :cascade do |t|
     t.string "name", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
     t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_products_on_company_id"
   end
 
@@ -64,10 +64,10 @@ ActiveRecord::Schema.define(version: 20171208035527) do
     t.integer "score", default: 0, null: false
     t.text "content", default: "", null: false
     t.bigint "product_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.bigint "service_id"
     t.bigint "agency_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["agency_id"], name: "index_reviews_on_agency_id"
     t.index ["product_id"], name: "index_reviews_on_product_id"
     t.index ["service_id"], name: "index_reviews_on_service_id"
@@ -76,9 +76,9 @@ ActiveRecord::Schema.define(version: 20171208035527) do
   create_table "services", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
+    t.bigint "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "company_id"
     t.index ["company_id"], name: "index_services_on_company_id"
   end
 
