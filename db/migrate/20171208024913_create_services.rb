@@ -1,6 +1,6 @@
-class CreateProducts < ActiveRecord::Migration[5.1]
+class CreateServices < ActiveRecord::Migration[5.1]
   def change
-    create_table :products do |t|
+    create_table :services do |t|
       t.string :name, :null => false, :default => ""
       t.string :description, :null => false, :default => ""
       t.references :company, foreign_key: true

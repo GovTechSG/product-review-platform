@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :users
+  resources :companies do
+    resources :products do
+      resources :reviews do
+        resources :comments
+      end
+    end
 
-  resources :products
-
-  resources :reviews
+    resources :services do
+      resources :reviews do
+        resources :comments
+      end
+    end
+  end
+  resources :agencies
 end
