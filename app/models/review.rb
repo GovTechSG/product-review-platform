@@ -1,7 +1,6 @@
 class Review < ApplicationRecord
   belongs_to :agency
-  belongs_to :product
-  belongs_to :service
+  belongs_to :reviewable, polymorphic: true
 
   has_many :likes
   has_many :comments
