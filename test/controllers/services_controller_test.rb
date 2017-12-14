@@ -2,17 +2,25 @@ require 'test_helper'
 
 class ServicesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @service = services(:one)
+    @service = services(:service_foo)
+    @company = @service.company
   end
 
   test "should get index" do
-    get services_url, as: :json
+    get company_services_url(@company.id), as: :json
+
     assert_response :success
+    assert_equal @company.services.to_json, response.body
   end
 
   test "should create service" do
+    service = {
+      name: "New Service",
+      description: "New description",
+      company_id: @company.id
+    }
     assert_difference('Service.count') do
-      post services_url, params: { service: { description: @service.description, name: @service.name } }, as: :json
+      post company_services_url(@company.id), params: { service: service }, as: :json
     end
 
     assert_response 201
@@ -20,11 +28,18 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
 
   test "should show service" do
     get service_url(@service), as: :json
+
     assert_response :success
+    assert_equal @service.to_json, response.body
   end
 
   test "should update service" do
-    patch service_url(@service), params: { service: { description: @service.description, name: @service.name } }, as: :json
+    updated = {
+      name: "New Service",
+      description: "New description",
+      company_id: @company.id
+    }
+    patch service_url(@service), params: { service: updated }, as: :json
     assert_response 200
   end
 

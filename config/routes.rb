@@ -7,9 +7,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :services, only: [:index] do
-        resources :reviews, only: [:index] do
-          resources :comments, only: [:index]
+      resources :services do
+        resources :reviews do
+          resources :comments
         end
       end
     end
