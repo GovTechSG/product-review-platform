@@ -1,9 +1,17 @@
 class ReviewsController < ApplicationController
   before_action :set_review, only: [:show, :update, :destroy]
 
-  # GET /reviews
+  # GET /companies/:company_id/reviewable/:reviewable_id/reviews
   def index
-    @reviews = Review.all
+    @reviews = []
+    if params[:product_id].present?
+      @reviews = Product.find(params[:product_id]).reviews
+    elsif params[:service_id].present?
+      @reviews = Service.find(params[:service_id]).reviews
+    else
+      render_bad_request("No product_id or service_id specified")
+      return
+    end
 
     render json: @reviews
   end
@@ -15,7 +23,25 @@ class ReviewsController < ApplicationController
 
   # POST /reviews
   def create
-    @review = Review.new(review_params)
+    # Store review_params in a temp variable to avoid
+    # repeatedly calling the method
+    whitelisted = review_params
+    params = {
+      score: whitelisted[:score],
+      content: whitelisted[:content],
+      agency_id: whitelisted[:agency_id]
+    }
+    if whitelisted[:product_id].present?
+      params[:reviewable_id] = whitelisted[:product_id]
+      params[:reviewable_type] = "Product"
+    elsif whitelisted[:service_id].present?
+      params[:reviewable_id] = whitelisted[:service_id]
+      params[:reviewable_type] = "Service"
+    else
+      render_bad_request("No product_id or service_id specified")
+      return
+    end
+    @review = Review.new(params)
 
     if @review.save
       render json: @review, status: :created, location: @review

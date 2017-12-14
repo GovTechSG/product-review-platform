@@ -1,9 +1,9 @@
 class ServicesController < ApplicationController
   before_action :set_service, only: [:show, :update, :destroy]
 
-  # GET /services
+  # GET /companies/:company_id/services
   def index
-    @services = Service.all
+    @services = Service.where(company_id: params[:company_id])
 
     render json: @services
   end

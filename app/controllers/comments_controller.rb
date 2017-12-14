@@ -1,9 +1,9 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :update, :destroy]
 
-  # GET /comments
+  # GET /companies/:company_id/reviewable/:reviewable_id/reviews/:review_id/comments
   def index
-    @comments = Comment.all
+    @comments = Comment.where(review_id: params[:review_id])
 
     render json: @comments
   end
