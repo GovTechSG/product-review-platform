@@ -1,7 +1,8 @@
 class ReviewsController < ApplicationController
   before_action :set_review, only: [:show, :update, :destroy]
 
-  # GET /companies/:company_id/reviewable/:reviewable_id/reviews
+  # GET /products/:product_id/reviews
+  # GET /services/:service_id/reviews
   def index
     @reviews = []
     if params[:product_id].present?
@@ -21,7 +22,8 @@ class ReviewsController < ApplicationController
     render json: @review
   end
 
-  # POST /reviews
+  # POST /products/:product_id/reviews
+  # POST /services/:service_id/reviews
   def create
     # Store review_params in a temp variable to avoid
     # repeatedly calling the method

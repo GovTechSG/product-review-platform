@@ -13,7 +13,7 @@ class ServicesController < ApplicationController
     render json: @service
   end
 
-  # POST /services
+  # POST /companies/:company_id/services
   def create
     @service = Service.new(service_params)
 

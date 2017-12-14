@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
     render json: @product
   end
 
-  # POST /products
+  # POST /companies/:company_id/products
   def create
     @product = Product.new(product_params)
 
