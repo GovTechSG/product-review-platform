@@ -3,9 +3,9 @@
 pivotal_tracker:
   name: "Pivotal Tracker"
   description: "Agile Project Management Tool"
-  company: company_foo
+  company: foo
 
 greenplum_database:
   name: "Greenplum Database"
   description: "Advanced, fully featured, open source data platform"
-  company: company_foo
+  company: foo
