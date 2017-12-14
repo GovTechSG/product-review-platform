@@ -1,11 +1,21 @@
 # # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 #
 one:
-  content: "Great review of Pivotal Tracker!"
+  content: "Great review of Service Foo!"
   agency: one
   review: service_foo_review_one
 
 two:
-  content: "Okay review of Pivotal Tracker"
+  content: "Okay review of Service Foo"
   agency: one
   review: service_foo_review_two
+
+three:
+  content: "Great review of Pivotal Tracker!"
+  agency: two
+  review: pivotal_tracker_review_one
+
+four:
+  content: "Okay review of Pivotal Tracker"
+  agency: three
+  review: pivotal_tracker_review_one

@@ -20,4 +20,12 @@ class ReviewTest < ActiveSupport::TestCase
     refute @review.valid? 'saved review without content'
     assert_not_nil @review.errors[:content]
   end
+
+  test 'has many likes' do
+    assert_equal 2, @review.likes.size
+  end
+
+  test 'has many comments' do
+    assert_equal 2, @review.comments.size
+  end
 end
