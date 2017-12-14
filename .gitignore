@@ -3,3 +3,6 @@ tmp/
 
 # Ignore application configuration
 /config/application.yml
+
+# For Mac users
+.DS_Store
