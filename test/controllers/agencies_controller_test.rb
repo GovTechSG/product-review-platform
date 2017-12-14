@@ -7,12 +7,19 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     get agencies_url, as: :json
+
     assert_response :success
+    assert_equal Agency.all.to_json, response.body
   end
 
   test "should create agency" do
+    agency = {
+      email: "agency_four@foo.com",
+      name: "Agency Four",
+      number: "11113333"
+    }
     assert_difference('Agency.count') do
-      post agencies_url, params: { agency: { email: @agency.email, name: @agency.name, number: @agency.number } }, as: :json
+      post agencies_url, params: { agency: agency }, as: :json
     end
 
     assert_response 201
@@ -20,7 +27,9 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should show agency" do
     get agency_url(@agency), as: :json
+
     assert_response :success
+    assert_equal @agency.to_json, response.body
   end
 
   test "should update agency" do

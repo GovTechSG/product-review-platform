@@ -1,9 +1,9 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :update, :destroy]
 
-  # GET /products
+  # GET /companies/:company_id/products
   def index
-    @products = Product.all
+    @products = Product.where(company_id: params[:company_id])
 
     render json: @products
   end
@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
     render json: @product
   end
 
-  # POST /products
+  # POST /companies/:company_id/products
   def create
     @product = Product.new(product_params)
 

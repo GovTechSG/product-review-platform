@@ -1,9 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  review: one
+  review: pivotal_tracker_review_one
   agency: one
 
 two:
-  review: two
-  agency: two
+  review: pivotal_tracker_review_two
+  agency: one
+
+three:
+  review: pivotal_tracker_review_one
+  agency: three

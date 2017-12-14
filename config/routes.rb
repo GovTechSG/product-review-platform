@@ -1,16 +1,19 @@
 Rails.application.routes.draw do
-  resources :companies do
-    resources :products do
-      resources :reviews do
-        resources :comments
+  shallow do
+    resources :companies do
+      resources :products do
+        resources :reviews do
+          resources :comments
+        end
       end
-    end
 
-    resources :services do
-      resources :reviews do
-        resources :comments
+      resources :services do
+        resources :reviews do
+          resources :comments
+        end
       end
     end
   end
+
   resources :agencies
 end
