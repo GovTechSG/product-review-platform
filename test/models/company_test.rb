@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CompanyTest < ActiveSupport::TestCase
   def setup
-    @company = companies(:one)
+    @company = companies(:company_foo)
   end
 
   test 'valid company' do

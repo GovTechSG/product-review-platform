@@ -3,9 +3,9 @@
 one:
   name: "Service Foo"
   description: "Good service"
-  company: one
+  company: company_foo
 
 two:
   name: "Service Baz"
   description: "Better service"
-  company: one
+  company: company_foo
