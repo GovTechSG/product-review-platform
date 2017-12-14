@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ServiceReviewsControllerTest < ActionDispatch::IntegrationTest
+class ServiceReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:service_foo_review_one)
     @service = Service.find(@review.reviewable_id)

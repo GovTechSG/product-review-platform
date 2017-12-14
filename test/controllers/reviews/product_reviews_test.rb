@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProductReviewsControllerTest < ActionDispatch::IntegrationTest
+class ProductReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:pivotal_tracker_review_one)
     @product = Product.find(@review.reviewable_id)
