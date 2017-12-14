@@ -4,4 +4,6 @@ class Review < ApplicationRecord
 
   has_many :likes
   has_many :comments
+
+  validates_presence_of :score, :content, :agency, :reviewable
 end
