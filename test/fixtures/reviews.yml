@@ -9,3 +9,13 @@ pivotal_tracker_review_two:
   score: 3
   content: "Okay-ish tracker"
   reviewable: pivotal_tracker (Product)
+
+service_foo_review_one:
+  score: 4
+  content: "Really good service!"
+  reviewable: service_foo (Service)
+
+service_foo_review_two:
+  score: 3
+  content: "Okay-ish service"
+  reviewable: service_foo (Service)
