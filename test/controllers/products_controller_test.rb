@@ -35,8 +35,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should update product" do
     updated = {
       name: "New Product",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     patch product_url(@product), params: { product: updated }, as: :json
     assert_response 200

@@ -36,8 +36,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "should update service" do
     updated = {
       name: "New Service",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     patch service_url(@service), params: { service: updated }, as: :json
     assert_response 200
