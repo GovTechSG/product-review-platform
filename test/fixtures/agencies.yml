@@ -4,3 +4,8 @@ one:
   name: "Agency One"
   email: "agency_one@foo.com"
   number: "51512234"
+
+two:
+  name: "Agency two"
+  email: "agency_two@foo.com"
+  number: "31512234"
