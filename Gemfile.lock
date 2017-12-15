@@ -112,6 +112,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    swagger-blocks (2.0.2)
     thor (0.20.0)
     thread_safe (0.3.6)
     tzinfo (1.2.4)
@@ -132,6 +133,7 @@ DEPENDENCIES
   rails (~> 5.1.4)
   spring
   spring-watcher-listen (~> 2.0.0)
+  swagger-blocks
   tzinfo-data
 
 BUNDLED WITH
