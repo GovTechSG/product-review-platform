@@ -1,7 +1,7 @@
-class SwaggerErrorModel
+class SwaggerError
   include Swagger::Blocks
 
-  swagger_schema :SwaggerErrorModel do
+  swagger_schema :SwaggerError do
     key :required, [:code, :message]
     property :code do
       key :type, :integer
