@@ -34,7 +34,17 @@ class Agency < ApplicationRecord
       schema do
         property :agency do
           key :type, :object
-          key :'$ref', :Agency
+          property :name do
+            key :type, :string
+          end
+
+          property :email do
+            key :type, :string
+          end
+
+          property :number do
+            key :type, :string
+          end
         end
       end
     end

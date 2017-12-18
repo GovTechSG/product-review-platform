@@ -33,7 +33,17 @@ class Company < ApplicationRecord
       schema do
         property :company do
           key :type, :object
-          key :'$ref', :Company
+          property :name do
+            key :type, :string
+          end
+
+          property :UEN do
+            key :type, :string
+          end
+
+          property :aggregate_score do
+            key :type, :number
+          end
         end
       end
     end
