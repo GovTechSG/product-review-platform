@@ -5,6 +5,7 @@ class AgenciesController < ApplicationController
 
   swagger_path '/agencies' do
     operation :get do
+      key :tags, ['agency']
       key :description, 'Returns list of all agencies'
       key :operationId, 'findAgencies'
       key :produces, [
@@ -19,6 +20,7 @@ class AgenciesController < ApplicationController
       end
     end
     operation :post do
+      key :tags, ['agency']
       key :description, 'Creates a new agency'
       key :operationId, 'addAgency'
       key :produces, [
@@ -57,6 +59,7 @@ class AgenciesController < ApplicationController
       key :format, :int64
     end
     operation :put do
+      key :tags, ['agency']
       key :description, 'Update an agency'
       key :operationId, 'updateAgency'
       key :produces, [
@@ -84,6 +87,7 @@ class AgenciesController < ApplicationController
       end
     end
     operation :get do
+      key :tags, ['agency']
       key :description, 'Returns an agency'
       key :operationId, 'findAgencyById'
       key :produces, [
@@ -96,6 +100,7 @@ class AgenciesController < ApplicationController
       end
     end
     operation :delete do
+      key :tags, ['agency']
       key :description, 'Deletes a single agency'
       key :operationId, 'deleteAgency'
       response 204

@@ -5,6 +5,7 @@ class CompaniesController < ApplicationController
 
   swagger_path '/companies' do
     operation :get do
+      key :tags, ['company']
       key :description, 'Returns list of all companies'
       key :operationId, 'findCompanies'
       key :produces, [
@@ -19,6 +20,7 @@ class CompaniesController < ApplicationController
       end
     end
     operation :post do
+      key :tags, ['company']
       key :description, 'Creates a new company'
       key :operationId, 'addCompany'
       key :produces, [
@@ -57,6 +59,7 @@ class CompaniesController < ApplicationController
       key :format, :int64
     end
     operation :put do
+      key :tags, ['company']
       key :description, 'Update a company'
       key :operationId, 'updateCompany'
       key :produces, [
@@ -84,6 +87,7 @@ class CompaniesController < ApplicationController
       end
     end
     operation :get do
+      key :tags, ['company']
       key :description, 'Returns a company'
       key :operationId, 'findCompanyById'
       key :produces, [
@@ -96,6 +100,7 @@ class CompaniesController < ApplicationController
       end
     end
     operation :delete do
+      key :tags, ['company']
       key :description, 'Deletes a single company'
       key :operationId, 'deleteCompany'
       response 204
