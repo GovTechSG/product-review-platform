@@ -15,7 +15,6 @@ module SwaggerDocs::Comment
 
       property :content do
         key :type, :string
-        key :format, :text
       end
 
       property :agency_id do
@@ -36,7 +35,6 @@ module SwaggerDocs::Comment
             key :type, :object
             property :content do
               key :type, :string
-              key :format, :text
             end
 
             property :agency_id do
