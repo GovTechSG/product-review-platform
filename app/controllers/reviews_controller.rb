@@ -19,7 +19,7 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/1
   def show
-    render json: @review
+    render json: @review, methods: [:agency, :likes_count, :comments_count]
   end
 
   # POST /products/:product_id/reviews
