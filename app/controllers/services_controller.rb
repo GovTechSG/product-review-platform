@@ -10,7 +10,7 @@ class ServicesController < ApplicationController
 
   # GET /services/1
   def show
-    render json: @service
+    render json: @service, methods: [:reviews_count, :aggregate_score, :company_name]
   end
 
   # POST /companies/:company_id/services

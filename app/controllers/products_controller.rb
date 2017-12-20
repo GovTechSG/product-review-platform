@@ -10,7 +10,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1
   def show
-    render json: @product
+    render json: @product, methods: [:reviews_count, :aggregate_score, :company_name]
   end
 
   # POST /companies/:company_id/products
