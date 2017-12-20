@@ -14,7 +14,7 @@ class ReviewsController < ApplicationController
       return
     end
 
-    render json: @reviews
+    render json: @reviews, methods: [:agency]
   end
 
   # GET /reviews/1
