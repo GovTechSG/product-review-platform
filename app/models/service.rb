@@ -1,4 +1,6 @@
 class Service < ApplicationRecord
+  include Statistics::ProductsAndServices
+
   belongs_to :company
   has_many :reviews, as: :reviewable, dependent: :destroy
 

@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
   def index
     @companies = Company.all
 
-    render json: @companies
+    render json: @companies, methods: [:reviews_count]
   end
 
   # GET /companies/1
