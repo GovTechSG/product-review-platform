@@ -1,5 +1,5 @@
 class Company < ApplicationRecord
-  include Statistics::Company
+  include Statistics::Companies
 
   has_many :products, dependent: :destroy
   has_many :services, dependent: :destroy

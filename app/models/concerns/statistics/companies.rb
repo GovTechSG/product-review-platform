@@ -1,4 +1,4 @@
-module Statistics::Company
+module Statistics::Companies
   extend ActiveSupport::Concern
 
   included do
