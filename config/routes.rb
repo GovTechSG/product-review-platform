@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/statistics', to: 'statistics#index'
   shallow do
     resources :companies do
       resources :products do
