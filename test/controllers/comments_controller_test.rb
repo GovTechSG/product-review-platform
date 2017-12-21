@@ -10,7 +10,10 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     get review_comments_url(@review.id), as: :json
 
     assert_response :success
-    assert_equal @review.comments.to_json, response.body
+    # Call :agency method for each comment
+    expected = @review.comments.as_json
+    expected.each { |comment| comment["agency"] = @comment.agency }
+    assert_equal expected.to_json, response.body
   end
 
   test "should create comment" do
