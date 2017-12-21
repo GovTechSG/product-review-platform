@@ -9,7 +9,14 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     get companies_url, as: :json
 
     assert_response :success
-    assert_equal Company.all.to_json, response.body
+
+    companies = Company.all
+    expected = companies.as_json
+    # Call associated methods for each company
+    expected.each_with_index do |company, idx|
+      company["reviews_count"] = companies[idx].reviews_count
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should create company" do
