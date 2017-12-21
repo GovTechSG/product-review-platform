@@ -11,7 +11,16 @@ class ProductReviewsTest < ActionDispatch::IntegrationTest
     get product_reviews_url(@product.id), as: :json
 
     assert_response :success
-    assert_equal @product.reviews.to_json, response.body
+
+    reviews = @product.reviews
+    expected = reviews.as_json
+    # Call associated methods for each product
+    expected.each_with_index do |review, idx|
+      review["agency"] = reviews[idx].agency
+      review["likes_count"] = reviews[idx].likes_count
+      review["comments_count"] = reviews[idx].comments_count
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should create review" do
@@ -32,7 +41,14 @@ class ProductReviewsTest < ActionDispatch::IntegrationTest
     get review_url(@review), as: :json
 
     assert_response :success
-    assert_equal @review.to_json, response.body
+
+    expected = @review.as_json
+    # Call associated methods on review
+    expected["agency"] = @review.agency
+    expected["likes_count"] = @review.likes_count
+    expected["comments_count"] = @review.comments_count
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should update review" do
