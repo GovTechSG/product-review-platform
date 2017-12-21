@@ -10,7 +10,15 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get company_services_url(@company.id), as: :json
 
     assert_response :success
-    assert_equal @company.services.to_json, response.body
+
+    services = @company.services
+    expected = services.as_json
+    # Call associated methods for each service
+    expected.each_with_index do |service, idx|
+      service["reviews_count"] = services[idx].reviews_count
+      service["aggregate_score"] = services[idx].aggregate_score
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should create service" do
@@ -30,7 +38,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get service_url(@service), as: :json
 
     assert_response :success
-    assert_equal @service.to_json, response.body
+
+    # Call associated methods on service
+    expected = @service.as_json
+    expected["reviews_count"] = @service.reviews_count
+    expected["aggregate_score"] = @service.aggregate_score
+    expected["company_name"] = @service.company_name
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should update service" do
