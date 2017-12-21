@@ -10,7 +10,15 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     get company_products_url(@company.id), as: :json
 
     assert_response :success
-    assert_equal @company.products.to_json, response.body
+
+    products = @company.products
+    expected = products.as_json
+    # Call associated methods for each product
+    expected.each_with_index do |product, idx|
+      product["reviews_count"] = products[idx].reviews_count
+      product["aggregate_score"] = products[idx].aggregate_score
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should create product" do
@@ -28,8 +36,16 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show product" do
     get product_url(@product), as: :json
+
     assert_response :success
-    assert_equal @product.to_json, response.body
+
+    # Call associated methods on product
+    expected = @product.as_json
+    expected["reviews_count"] = @product.reviews_count
+    expected["aggregate_score"] = @product.aggregate_score
+    expected["company_name"] = @product.company_name
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should update product" do
