@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  description: MyString
+service_foo:
+  name: "Service Foo"
+  description: "Good service"
+  company: foo
 
-two:
-  name: MyString
-  description: MyString
+service_baz:
+  name: "Service Baz"
+  description: "Better service"
+  company: foo

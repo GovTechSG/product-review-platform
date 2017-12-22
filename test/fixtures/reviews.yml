@@ -1,11 +1,25 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  stars: 1
-  comment: MyText
-  product: one
+pivotal_tracker_review_one:
+  score: 4
+  content: "Really good tracker!"
+  reviewable: pivotal_tracker (Product)
+  agency: one
 
-two:
-  stars: 1
-  comment: MyText
-  product: two
+pivotal_tracker_review_two:
+  score: 3
+  content: "Okay-ish tracker"
+  reviewable: pivotal_tracker (Product)
+  agency: one
+
+service_foo_review_one:
+  score: 4
+  content: "Really good service!"
+  reviewable: service_foo (Service)
+  agency: two
+
+service_foo_review_two:
+  score: 3
+  content: "Okay-ish service"
+  reviewable: service_foo (Service)
+  agency: two

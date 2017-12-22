@@ -1,7 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyText
+pivotal_tracker:
+  name: "Pivotal Tracker"
+  description: "Agile Project Management Tool"
+  company: foo
 
-two:
-  name: MyText
+greenplum_database:
+  name: "Greenplum Database"
+  description: "Advanced, fully featured, open source data platform"
+  company: foo

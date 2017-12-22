@@ -1,5 +1,7 @@
 class Agency < ApplicationRecord
-  has_many :reviews
-  has_many :likes
-  has_many :comments
+  has_many :reviews, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :comments, dependent: :destroy
+
+  validates_presence_of :name, :email, :number
 end
