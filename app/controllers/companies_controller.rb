@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/1
   def show
-    render json: @company
+    render json: @company, methods: [:reviews_count]
   end
 
   # POST /companies

@@ -36,7 +36,12 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     get company_url(@company), as: :json
 
     assert_response :success
-    assert_equal @company.to_json, response.body
+
+    expected = @company.as_json
+    # Call associated methods on company
+    expected["reviews_count"] = @company.reviews_count
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should update company" do
