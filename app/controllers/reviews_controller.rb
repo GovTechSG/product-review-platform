@@ -15,12 +15,12 @@ class ReviewsController < ApplicationController
       return
     end
 
-    render json: @reviews
+    render json: @reviews, methods: [:agency, :likes_count, :comments_count]
   end
 
   # GET /reviews/1
   def show
-    render json: @review
+    render json: @review, methods: [:agency, :likes_count, :comments_count]
   end
 
   # POST /products/:product_id/reviews

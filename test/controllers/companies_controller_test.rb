@@ -17,7 +17,14 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     get companies_url, headers: @auth_headers, as: :json
 
     assert_response :success
-    assert_equal Company.all.to_json, response.body
+
+    companies = Company.all
+    expected = companies.as_json
+    # Call associated methods for each company
+    expected.each_with_index do |company, idx|
+      company["reviews_count"] = companies[idx].reviews_count
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should not create company if not signed in" do
@@ -58,7 +65,12 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     get company_url(@company), headers: @auth_headers, as: :json
 
     assert_response :success
-    assert_equal @company.to_json, response.body
+
+    expected = @company.as_json
+    # Call associated methods on company
+    expected["reviews_count"] = @company.reviews_count
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should not update company if not signed in" do

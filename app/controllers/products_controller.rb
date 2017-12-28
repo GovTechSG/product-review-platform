@@ -6,12 +6,12 @@ class ProductsController < ApplicationController
   def index
     @products = Product.where(company_id: params[:company_id])
 
-    render json: @products
+    render json: @products, methods: [:reviews_count, :aggregate_score]
   end
 
   # GET /products/1
   def show
-    render json: @product
+    render json: @product, methods: [:reviews_count, :aggregate_score, :company_name]
   end
 
   # POST /companies/:company_id/products

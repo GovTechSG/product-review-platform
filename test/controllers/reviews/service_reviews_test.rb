@@ -19,7 +19,16 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     get service_reviews_url(@service.id), headers: @auth_headers, as: :json
 
     assert_response :success
-    assert_equal @service.reviews.to_json, response.body
+
+    reviews = @service.reviews
+    expected = reviews.as_json
+    # Call associated methods for each review
+    expected.each_with_index do |review, idx|
+      review["agency"] = reviews[idx].agency
+      review["likes_count"] = reviews[idx].likes_count
+      review["comments_count"] = reviews[idx].comments_count
+    end
+    assert_equal expected.to_json, response.body
   end
 
   test "should not create service review if not signed in" do
@@ -62,7 +71,14 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     get review_url(@review), headers: @auth_headers, as: :json
 
     assert_response :success
-    assert_equal @review.to_json, response.body
+
+    expected = @review.as_json
+    # Call associated methods on review
+    expected["agency"] = @review.agency
+    expected["likes_count"] = @review.likes_count
+    expected["comments_count"] = @review.comments_count
+
+    assert_equal expected.to_json, response.body
   end
 
   test "should not update service review if not signed in" do

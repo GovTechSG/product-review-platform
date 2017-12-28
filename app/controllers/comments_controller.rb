@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   def index
     @comments = Comment.where(review_id: params[:review_id])
 
-    render json: @comments
+    render json: @comments, methods: [:agency]
   end
 
   # GET /comments/1

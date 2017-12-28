@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/statistics', to: 'statistics#index'
   mount_devise_token_auth_for 'User', at: 'auth', skip: [:sessions, :passwords, :registrations, :confirmations]
   # Mount custom routes, removing view-only routes e.g. /new, /cancel
   devise_scope :user do
