@@ -1,4 +1,5 @@
 class StatisticsController < ApplicationController
+  before_action :authenticate_user!
   def index
     render :json => {
       reviews: Review.count,
