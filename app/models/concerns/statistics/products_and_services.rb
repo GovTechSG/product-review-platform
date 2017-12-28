@@ -9,11 +9,10 @@ module Statistics::ProductsAndServices
     def aggregate_score
       score = 0
       if self.reviews.count > 0
-        self.reviews.each { |r| score += r.score }
+        score = self.reviews.sum(:score)
         return score.to_f/self.reviews.count
-      else
-        return score
       end
+      score
     end
 
     def company_name
