@@ -1,4 +1,6 @@
 class Review < ApplicationRecord
+  include Statistics::Reviews
+
   belongs_to :agency
   belongs_to :reviewable, polymorphic: true
 

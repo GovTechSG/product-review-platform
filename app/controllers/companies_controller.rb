@@ -1,16 +1,17 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /companies
   def index
     @companies = Company.all
 
-    render json: @companies
+    render json: @companies, methods: [:reviews_count]
   end
 
   # GET /companies/1
   def show
-    render json: @company
+    render json: @company, methods: [:reviews_count]
   end
 
   # POST /companies
