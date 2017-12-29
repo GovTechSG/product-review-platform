@@ -1,6 +1,6 @@
 FROM ruby:2.3.5
 
-MAINTAINER Shaun Thium <shaun.thium@gmail.com>
+LABEL maintainer="shaun.thium@gmail.com"
 
 # Instructions below modified from https://semaphoreci.com/community/tutorials/dockerizing-a-ruby-on-rails-application
 
