@@ -1,5 +1,8 @@
+# Unnecessary misc files/folders
 log/
 tmp/
+# For Mac users
+.DS_Store
 
 # Ignore application configuration
 /config/application.yml
