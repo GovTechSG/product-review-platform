@@ -27,6 +27,10 @@ class CompanyTest < ActiveSupport::TestCase
     assert_not_nil @company.errors[:aggregate_score]
   end
 
+  test 'has many reviews' do
+    assert_equal 2, @company.reviews.size
+  end
+
   test 'has many products' do
     assert_equal 2, @company.products.size
   end
