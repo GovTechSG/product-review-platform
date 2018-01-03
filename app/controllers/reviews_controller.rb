@@ -50,8 +50,7 @@ class ReviewsController < ApplicationController
     end
     @review = Review.new(params)
     # Update aggregate score of associated vendor company
-    company = reviewable.company
-    company.aggregate_score = company.update_score(whitelisted[:score])
+    company = add_company_score(reviewable.company, whitelisted[:score])
 
     if @review.save && company.save
       render json: @review, status: :created, location: @review
@@ -62,7 +61,12 @@ class ReviewsController < ApplicationController
 
   # PATCH/PUT /reviews/1
   def update
-    if @review.update(review_params)
+    company = nil
+    if review_params[:score]
+      # Update aggregate score of associated vendor company
+      company = update_company_score(@review.reviewable.company, @review.score, review_params[:score])
+    end
+    if @review.update(review_params) && company && company.save
       render json: @review
     else
       render json: @review.errors, status: :unprocessable_entity
@@ -71,10 +75,27 @@ class ReviewsController < ApplicationController
 
   # DELETE /reviews/1
   def destroy
+    # Update aggregate score of associated vendor company
+    company = subtract_company_score(@review.reviewable.company, @review.score)
     @review.destroy
   end
 
   private
+    def add_company_score(company, score)
+      company.aggregate_score = company.add_score(score)
+      company
+    end
+
+    def update_company_score(company, old_score, updated_score)
+      company.aggregate_score = company.update_score(old_score, updated_score)
+      company
+    end
+
+    def subtract_company_score(company, score)
+      company.aggregate_score = company.subtract_score(score)
+      company
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_review
       @review = Review.find(params[:id])
