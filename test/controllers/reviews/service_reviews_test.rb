@@ -4,7 +4,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:service_foo_review_one)
     @service = Service.find(@review.reviewable_id)
-    @agency = agencies(:one)
+    @company = companies(:foo)
     @auth_headers = users(:one).create_new_auth_token
   end
 
@@ -24,7 +24,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     expected = reviews.as_json
     # Call associated methods for each review
     expected.each_with_index do |review, idx|
-      review["agency"] = reviews[idx].agency
+      review["company"] = reviews[idx].company
       review["likes_count"] = reviews[idx].likes_count
       review["comments_count"] = reviews[idx].comments_count
     end
@@ -36,7 +36,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       score: 5,
       content: "Amazing service!",
       service_id: @service.id,
-      agency_id: @agency.id,
+      company_id: @company.id,
     }
     assert_no_difference('Review.count') do
       post service_reviews_url(@service.id), params: { review: review }, as: :json
@@ -51,7 +51,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       score: 5,
       content: "Amazing service!",
       service_id: @service.id,
-      agency_id: @agency.id,
+      company_id: @company.id,
     }
     assert_difference('Review.count') do
       post service_reviews_url(@service.id), params: { review: review }, headers: @auth_headers, as: :json
@@ -74,7 +74,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
 
     expected = @review.as_json
     # Call associated methods on review
-    expected["agency"] = @review.agency
+    expected["company"] = @review.company
     expected["likes_count"] = @review.likes_count
     expected["comments_count"] = @review.comments_count
 

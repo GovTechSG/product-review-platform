@@ -15,12 +15,12 @@ class ReviewsController < ApplicationController
       return
     end
 
-    render json: @reviews, methods: [:agency, :likes_count, :comments_count]
+    render json: @reviews, methods: [:company, :likes_count, :comments_count]
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:agency, :likes_count, :comments_count]
+    render json: @review, methods: [:company, :likes_count, :comments_count]
   end
 
   # POST /products/:product_id/reviews
@@ -32,7 +32,7 @@ class ReviewsController < ApplicationController
     params = {
       score: whitelisted[:score],
       content: whitelisted[:content],
-      agency_id: whitelisted[:agency_id]
+      company_id: whitelisted[:company_id]
     }
     if whitelisted[:product_id].present?
       params[:reviewable_id] = whitelisted[:product_id]
@@ -75,6 +75,6 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def review_params
-      params.require(:review).permit(:score, :content, :product_id, :service_id, :agency_id)
+      params.require(:review).permit(:score, :content, :product_id, :service_id, :company_id)
     end
 end
