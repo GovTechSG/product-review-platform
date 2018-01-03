@@ -23,6 +23,7 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     # Call associated methods for each company
     expected.each_with_index do |company, idx|
       company["reviews_count"] = companies[idx].reviews_count
+      company["strengths"] = companies[idx].strengths
     end
     assert_equal expected.to_json, response.body
   end
@@ -69,6 +70,7 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
     expected = @company.as_json
     # Call associated methods on company
     expected["reviews_count"] = @company.reviews_count
+    expected["strengths"] = @company.strengths
 
     assert_equal expected.to_json, response.body
   end
