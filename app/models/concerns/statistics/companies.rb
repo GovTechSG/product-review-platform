@@ -20,5 +20,12 @@ module Statistics::Companies
       end
       strengths.to_a
     end
+
+    def update_score(latest_score)
+      # Get current total score and add latest score to it
+      # Then divide by total number of reviews + 1 (+1 because latest review not yet
+      # saved to database)
+      ((reviews_count * aggregate_score) + latest_score)/(reviews_count+1)
+    end
   end
 end

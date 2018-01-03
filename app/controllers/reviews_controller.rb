@@ -15,12 +15,12 @@ class ReviewsController < ApplicationController
       return
     end
 
-    render json: @reviews, methods: [:company, :likes_count, :comments_count]
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count]
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths]
   end
 
   # POST /products/:product_id/reviews
@@ -32,21 +32,28 @@ class ReviewsController < ApplicationController
     params = {
       score: whitelisted[:score],
       content: whitelisted[:content],
-      company_id: whitelisted[:company_id]
+      company_id: whitelisted[:company_id],
+      strengths: whitelisted[:strengths] || []
     }
+    reviewable = nil
     if whitelisted[:product_id].present?
       params[:reviewable_id] = whitelisted[:product_id]
       params[:reviewable_type] = "Product"
+      reviewable = Product.find(whitelisted[:product_id])
     elsif whitelisted[:service_id].present?
       params[:reviewable_id] = whitelisted[:service_id]
       params[:reviewable_type] = "Service"
+      reviewable = Service.find(whitelisted[:service_id])
     else
       render_bad_request("No product_id or service_id specified")
       return
     end
     @review = Review.new(params)
+    # Update aggregate score of associated vendor company
+    company = reviewable.company
+    company.aggregate_score = company.update_score(whitelisted[:score])
 
-    if @review.save
+    if @review.save && company.save
       render json: @review, status: :created, location: @review
     else
       render json: @review.errors, status: :unprocessable_entity
@@ -75,6 +82,6 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def review_params
-      params.require(:review).permit(:score, :content, :product_id, :service_id, :company_id)
+      params.permit(:score, :content, :product_id, :service_id, :company_id, :strengths)
     end
 end
