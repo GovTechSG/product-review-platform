@@ -29,26 +29,26 @@ class ReviewsController < ApplicationController
     # Store review_params in a temp variable to avoid
     # repeatedly calling the method
     whitelisted = review_params
-    params = {
+    create_params = {
       score: whitelisted[:score],
       content: whitelisted[:content],
       company_id: whitelisted[:company_id],
       strengths: whitelisted[:strengths] || []
     }
     reviewable = nil
-    if whitelisted[:product_id].present?
-      params[:reviewable_id] = whitelisted[:product_id]
-      params[:reviewable_type] = "Product"
-      reviewable = Product.find(whitelisted[:product_id])
-    elsif whitelisted[:service_id].present?
-      params[:reviewable_id] = whitelisted[:service_id]
-      params[:reviewable_type] = "Service"
-      reviewable = Service.find(whitelisted[:service_id])
+    if params[:product_id].present?
+      create_params[:reviewable_id] = params[:product_id]
+      create_params[:reviewable_type] = "Product"
+      reviewable = Product.find(params[:product_id])
+    elsif params[:service_id].present?
+      create_params[:reviewable_id] = params[:service_id]
+      create_params[:reviewable_type] = "Service"
+      reviewable = Service.find(params[:service_id])
     else
       render_bad_request("No product_id or service_id specified")
       return
     end
-    @review = Review.new(params)
+    @review = Review.new(create_params)
     # Update aggregate score of associated vendor company
     company = add_company_score(reviewable.company, whitelisted[:score])
 
@@ -103,6 +103,6 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def review_params
-      params.require(:review).permit(:score, :content, :product_id, :service_id, :company_id, :strengths)
+      params.require(:review).permit(:score, :content, :company_id, :strengths)
     end
 end
