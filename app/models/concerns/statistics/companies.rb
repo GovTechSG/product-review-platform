@@ -13,10 +13,20 @@ module Statistics::Companies
     def strengths
       strengths = Set.new()
       products.first(3).each do |p|
-        p.reviews.first(3).each { |r| strengths.merge(r.strengths) }
+        p.reviews.first(3).each do |r|
+          strengths.merge(r.strengths)
+          if strengths.length >= 5
+            return strengths.to_a[0, 5]
+          end
+        end
       end
       services.first(3).each do |s|
-        s.reviews.first(3).each { |r| strengths.merge(r.strengths) }
+        s.reviews.first(3).each do |r|
+          strengths.merge(r.strengths)
+          if strengths.length >= 5
+            return strengths.to_a[0, 5]
+          end
+        end
       end
       strengths.to_a
     end
