@@ -66,7 +66,7 @@ class ReviewsController < ApplicationController
       # Update aggregate score of associated vendor company
       company = update_company_score(@review.reviewable.company, @review.score, review_params[:score])
     end
-    if @review.update(review_params) && company && company.save
+    if @review.update(review_params) && (company.nil? || company.save)
       render json: @review
     else
       render json: @review.errors, status: :unprocessable_entity
@@ -77,7 +77,7 @@ class ReviewsController < ApplicationController
   def destroy
     # Update aggregate score of associated vendor company
     company = subtract_company_score(@review.reviewable.company, @review.score)
-    @review.destroy
+    @review.destroy && company.save
   end
 
   private

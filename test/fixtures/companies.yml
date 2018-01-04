@@ -1,11 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# Aggregate score of foo is manually hardcoded here,
+# based on it having 2 products and 2 services with
+# a total score of 12.0. Updating any of those numbers
+# requires an update to foo's aggregate_score below,
+# else tests will break
 foo:
   name: "Company Foo"
   UEN: "12345678"
-  aggregate_score: 4.3
+  aggregate_score: 3.0
 
 bar:
   name: "Company Bar"
   UEN: "87554421"
-  aggregate_score: 4.2
+  aggregate_score: 0.0
