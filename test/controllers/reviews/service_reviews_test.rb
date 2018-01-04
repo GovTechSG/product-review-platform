@@ -39,7 +39,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       company_id: @company.id,
     }
     assert_no_difference('Review.count') do
-      post service_reviews_url(@service.id), params: review, as: :json
+      post service_reviews_url(@service.id), params: { review: review }, as: :json
     end
 
     assert_response 401
@@ -58,7 +58,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     old_total_score = @company.aggregate_score * @company.reviews_count
 
     assert_difference('Review.count') do
-      post service_reviews_url(@service.id), params: review, headers: @auth_headers, as: :json
+      post service_reviews_url(@service.id), params: { review: review }, headers: @auth_headers, as: :json
     end
 
     # Reload company from database
@@ -95,7 +95,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       score: 3,
       content: "Okay service"
     }
-    patch review_url(@review), params: updated, as: :json
+    patch review_url(@review), params: { review: updated }, as: :json
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -110,7 +110,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       score: 3,
       content: "Okay service"
     }
-    patch review_url(@review), params: updated, headers: @auth_headers, as: :json
+    patch review_url(@review), params: { review: updated }, headers: @auth_headers, as: :json
 
     # Reload company from database
     @company.reload
