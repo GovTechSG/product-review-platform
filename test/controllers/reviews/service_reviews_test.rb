@@ -4,7 +4,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:service_foo_review_one)
     @service = Service.find(@review.reviewable_id)
-    @company = companies(:foo)
+    @company = @service.company
     @auth_headers = users(:one).create_new_auth_token
   end
 
@@ -39,7 +39,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       company_id: @company.id,
     }
     assert_no_difference('Review.count') do
-      post service_reviews_url(@service.id), params: { review: review }, as: :json
+      post service_reviews_url(@service.id), params: review, as: :json
     end
 
     assert_response 401
@@ -53,9 +53,18 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       service_id: @service.id,
       company_id: @company.id,
     }
+
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     assert_difference('Review.count') do
-      post service_reviews_url(@service.id), params: { review: review }, headers: @auth_headers, as: :json
+      post service_reviews_url(@service.id), params: review, headers: @auth_headers, as: :json
     end
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score + review[:score])/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
 
     assert_response 201
   end
@@ -86,18 +95,28 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
       score: 3,
       content: "Okay service"
     }
-    patch review_url(@review), params: { review: updated }, as: :json
+    patch review_url(@review), params: updated, as: :json
 
     assert_response 401
     assert_not_signed_in_error response.body
   end
 
   test "should update service review" do
+    old_review_score = @review[:score]
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     updated = {
       score: 3,
       content: "Okay service"
     }
-    patch review_url(@review), params: { review: updated }, headers: @auth_headers, as: :json
+    patch review_url(@review), params: updated, headers: @auth_headers, as: :json
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score - old_review_score + updated[:score])/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
+
     assert_response 200
   end
 
@@ -111,9 +130,18 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy service review" do
+    old_review_score = @review[:score]
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     assert_difference('Review.count', -1) do
       delete review_url(@review), headers: @auth_headers, as: :json
     end
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score - old_review_score)/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
 
     assert_response 204
   end
