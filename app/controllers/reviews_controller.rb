@@ -103,6 +103,6 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def review_params
-      params.permit(:score, :content, :product_id, :service_id, :company_id, :strengths)
+      params.require(:review).permit(:score, :content, :product_id, :service_id, :company_id, :strengths)
     end
 end
