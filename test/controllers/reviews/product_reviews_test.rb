@@ -91,11 +91,20 @@ class ProductReviewsTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update product review if not signed in" do
+    current = {
+      score: @review.score,
+      content: @review.content
+    }
     updated = {
       score: 3,
       content: "Okay tracker"
     }
     patch review_url(@review), params: { review: updated }, as: :json
+
+    # Assert unchanged
+    @review.reload
+    assert_equal current[:score], @review.score
+    assert_equal current[:content], @review.content
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -116,6 +125,11 @@ class ProductReviewsTest < ActionDispatch::IntegrationTest
     @company.reload
     expected_aggregate_score = (old_total_score - old_review_score + updated[:score])/@company.reviews_count
     assert_equal_float expected_aggregate_score, @company.aggregate_score
+
+    # Check that review was updated
+    @review.reload
+    assert_equal updated[:score], @review.score
+    assert_equal updated[:content], @review.content
 
     assert_response 200
   end
