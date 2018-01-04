@@ -76,12 +76,23 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update company if not signed in" do
+    current = {
+      name: @company.name,
+      UEN: @company.UEN,
+      description: @company.description
+    }
     updated = {
       name: "New Company",
       UEN: "23456789",
       description: "Dolor sit amet"
     }
     patch company_url(@company), params: { company: updated }, as: :json
+
+    # Assert unchanged
+    @company.reload
+    assert_equal current[:name], @company[:name]
+    assert_equal current[:UEN], @company[:UEN]
+    assert_equal current[:description], @company[:description]
 
     assert_response 401
     assert_not_signed_in_error response.body
