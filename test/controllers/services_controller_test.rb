@@ -78,11 +78,20 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update service if not signed in" do
+    current = {
+      name: @service.name,
+      description: @service.description
+    }
     updated = {
       name: "New Service",
       description: "New description"
     }
     patch service_url(@service), params: { service: updated }, as: :json
+
+    # Assert unchanged
+    @service.reload
+    assert_equal current[:name], @service.name
+    assert_equal current[:description], @service.description
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -94,6 +103,11 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
       description: "New description"
     }
     patch service_url(@service), params: { service: updated }, headers: @auth_headers, as: :json
+
+    @service.reload
+    assert_equal updated[:name], @service.name
+    assert_equal updated[:description], @service.description
+
     assert_response 200
   end
 

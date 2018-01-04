@@ -78,11 +78,20 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update product if not signed in" do
+    current = {
+      name: @product.name,
+      description: @product.description
+    }
     updated = {
       name: "New Product",
       description: "New description"
     }
     patch product_url(@product), params: { product: updated }, as: :json
+
+    # Assert unchanged
+    @product.reload
+    assert_equal current[:name], @product.name
+    assert_equal current[:description], @product.description
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -94,6 +103,10 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
       description: "New description"
     }
     patch product_url(@product), params: { product: updated }, headers: @auth_headers, as: :json
+
+    @product.reload
+    assert_equal updated[:name], @product.name
+    assert_equal updated[:description], @product.description
 
     assert_response 200
   end
