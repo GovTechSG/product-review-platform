@@ -66,8 +66,13 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update comment if not signed in" do
+    current = { content: @comment.content }
     updated = { content: "New content" }
     patch comment_url(@comment), params: { comment: updated }, as: :json
+
+    # Assert unchanged
+    @comment.reload
+    assert_equal current[:content], @comment.content
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -76,6 +81,9 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "should update comment" do
     updated = { content: "New content" }
     patch comment_url(@comment), params: { comment: updated }, headers: @auth_headers, as: :json
+
+    @comment.reload
+    assert_equal updated[:content], @comment.content
 
     assert_response 200
   end
