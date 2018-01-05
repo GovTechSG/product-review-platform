@@ -16,7 +16,7 @@ class ServicesController < ApplicationController
 
   # POST /companies/:company_id/services
   def create
-    @service = Service.new(service_params)
+    @service = Service.new(service_params.merge(company_id: params[:company_id]))
 
     if @service.save
       render json: @service, status: :created, location: @service
@@ -47,6 +47,6 @@ class ServicesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def service_params
-      params.require(:service).permit(:name, :description, :company_id)
+      params.require(:service).permit(:name, :description)
     end
 end

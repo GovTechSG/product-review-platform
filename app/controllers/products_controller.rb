@@ -16,7 +16,7 @@ class ProductsController < ApplicationController
 
   # POST /companies/:company_id/products
   def create
-    @product = Product.new(product_params)
+    @product = Product.new(product_params.merge(company_id: params[:company_id]))
 
     if @product.save
       render json: @product, status: :created, location: @product
@@ -47,6 +47,6 @@ class ProductsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def product_params
-      params.require(:product).permit(:name, :description, :company_id)
+      params.require(:product).permit(:name, :description)
     end
 end
