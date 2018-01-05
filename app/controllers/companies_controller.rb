@@ -2,17 +2,18 @@ class CompaniesController < ApplicationController
   include SwaggerDocs::Companies
 
   before_action :set_company, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /companies
   def index
     @companies = Company.all
 
-    render json: @companies
+    render json: @companies, methods: [:reviews_count, :strengths]
   end
 
   # GET /companies/1
   def show
-    render json: @company
+    render json: @company, methods: [:reviews_count, :strengths]
   end
 
   # POST /companies
@@ -48,6 +49,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :aggregate_score)
+      params.require(:company).permit(:name, :UEN, :description)
     end
 end

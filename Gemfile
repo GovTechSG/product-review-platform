@@ -16,6 +16,8 @@ gem 'puma', '~> 3.7'
 gem 'figaro'
 # Generate swagger documentation
 gem 'swagger-blocks'
+# Use Devise token auth
+gem 'devise_token_auth'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -27,11 +29,14 @@ gem 'swagger-blocks'
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Gems for ruby debugging
+  gem 'ruby-debug-ide', '0.6.0'
+  gem 'debase', '0.2.2.beta10'
 end
 
 group :development do

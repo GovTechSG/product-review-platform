@@ -3,6 +3,7 @@ require 'test_helper'
 class CompanyTest < ActiveSupport::TestCase
   def setup
     @company = companies(:foo)
+    @claimant_company = companies(:bar)
   end
 
   test 'valid company' do
@@ -25,6 +26,16 @@ class CompanyTest < ActiveSupport::TestCase
     @company.aggregate_score = nil
     refute @company.valid? 'saved company without an aggregate_score'
     assert_not_nil @company.errors[:aggregate_score]
+  end
+
+  test 'invalid without description' do
+    @company.description = nil
+    refute @company.valid? 'saved company without a description'
+    assert_not_nil @company.errors[:description]
+  end
+
+  test 'has many reviews' do
+    assert_equal 4, @claimant_company.reviews.size
   end
 
   test 'has many products' do

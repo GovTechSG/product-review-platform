@@ -1,0 +1,12 @@
+# Unnecessary misc files/folders
+log/
+tmp/
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Unneeded Docker-related items
+Dockerfile
+.dockerignore

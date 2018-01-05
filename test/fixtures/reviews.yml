@@ -4,22 +4,22 @@ pivotal_tracker_review_one:
   score: 4
   content: "Really good tracker!"
   reviewable: pivotal_tracker (Product)
-  agency: one
+  company: bar
 
 pivotal_tracker_review_two:
   score: 3
   content: "Okay-ish tracker"
   reviewable: pivotal_tracker (Product)
-  agency: one
+  company: bar
 
 service_foo_review_one:
   score: 4
   content: "Really good service!"
   reviewable: service_foo (Service)
-  agency: two
+  company: bar
 
 service_foo_review_two:
-  score: 3
-  content: "Okay-ish service"
+  score: 1
+  content: "Bad service"
   reviewable: service_foo (Service)
-  agency: two
+  company: bar

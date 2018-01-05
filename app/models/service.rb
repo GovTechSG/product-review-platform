@@ -1,5 +1,6 @@
 class Service < ApplicationRecord
   include SwaggerDocs::Service
+  include Statistics::ProductsAndServices
 
   belongs_to :company
   has_many :reviews, as: :reviewable, dependent: :destroy

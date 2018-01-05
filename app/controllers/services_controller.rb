@@ -2,22 +2,23 @@ class ServicesController < ApplicationController
   include SwaggerDocs::Services
 
   before_action :set_service, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /companies/:company_id/services
   def index
     @services = Service.where(company_id: params[:company_id])
 
-    render json: @services
+    render json: @services, methods: [:reviews_count, :aggregate_score]
   end
 
   # GET /services/1
   def show
-    render json: @service
+    render json: @service, methods: [:reviews_count, :aggregate_score, :company_name]
   end
 
   # POST /companies/:company_id/services
   def create
-    @service = Service.new(service_params)
+    @service = Service.new(service_params.merge(company_id: params[:company_id]))
 
     if @service.save
       render json: @service, status: :created, location: @service
@@ -48,6 +49,6 @@ class ServicesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def service_params
-      params.require(:service).permit(:name, :description, :company_id)
+      params.require(:service).permit(:name, :description)
     end
 end

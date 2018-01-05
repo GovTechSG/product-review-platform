@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
   include SwaggerDocs::Product
+  include Statistics::ProductsAndServices
 
   belongs_to :company
   has_many :reviews, as: :reviewable, dependent: :destroy

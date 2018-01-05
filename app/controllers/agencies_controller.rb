@@ -2,6 +2,7 @@ class AgenciesController < ApplicationController
   include SwaggerDocs::Agencies
 
   before_action :set_agency, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /agencies
   def index
