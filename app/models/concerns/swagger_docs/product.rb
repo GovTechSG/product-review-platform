@@ -39,11 +39,6 @@ module SwaggerDocs::Product
             property :description do
               key :type, :string
             end
-
-            property :company_id do
-              key :type, :integer
-              key :format, :int64
-            end
           end
         end
       end
