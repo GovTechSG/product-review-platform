@@ -41,8 +41,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "should create comment" do
     comment = {
       content: "Some comment here",
-      agency_id: agencies(:three).id,
-      review_id: reviews(:pivotal_tracker_review_one).id
+      agency_id: agencies(:three).id
     }
     assert_difference('Comment.count') do
       post review_comments_url(@review.id), params: { comment: comment }, headers: @auth_headers, as: :json

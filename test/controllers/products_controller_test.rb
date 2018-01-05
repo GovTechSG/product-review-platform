@@ -32,8 +32,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should not create product if not signed in" do
     product = {
       name: "Product Foo",
-      description: "Lorem ipsum",
-      company_id: @company.id
+      description: "Lorem ipsum"
     }
     assert_no_difference('Product.count') do
       post company_products_url(@company.id), params: { product: product }, as: :json
@@ -46,8 +45,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should create product" do
     product = {
       name: "Product Foo",
-      description: "Lorem ipsum",
-      company_id: @company.id
+      description: "Lorem ipsum"
     }
     assert_difference('Product.count') do
       post company_products_url(@company.id), params: { product: product }, headers: @auth_headers, as: :json

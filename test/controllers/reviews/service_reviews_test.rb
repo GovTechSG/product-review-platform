@@ -35,8 +35,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     review = {
       score: 5,
       content: "Amazing service!",
-      service_id: @service.id,
-      company_id: @company.id,
+      company_id: @company.id
     }
     assert_no_difference('Review.count') do
       post service_reviews_url(@service.id), params: { review: review }, as: :json
@@ -50,8 +49,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     review = {
       score: 5,
       content: "Amazing service!",
-      service_id: @service.id,
-      company_id: @company.id,
+      company_id: @company.id
     }
 
     # Test updating of associated company scores

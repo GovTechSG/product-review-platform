@@ -32,8 +32,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "should not create service if not signed in" do
     service = {
       name: "New Service",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     assert_no_difference('Service.count') do
       post company_services_url(@company.id), params: { service: service }, as: :json
@@ -46,8 +45,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "should create service" do
     service = {
       name: "New Service",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     assert_difference('Service.count') do
       post company_services_url(@company.id), params: { service: service }, headers: @auth_headers, as: :json
