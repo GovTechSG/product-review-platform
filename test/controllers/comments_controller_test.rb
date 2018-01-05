@@ -18,9 +18,13 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     get review_comments_url(@review.id), headers: @auth_headers, as: :json
 
     assert_response :success
+
+    comments = @review.comments
+    expected = comments.as_json
     # Call :agency method for each comment
-    expected = @review.comments.as_json
-    expected.each { |comment| comment["agency"] = @comment.agency }
+    expected.each_with_index do |comment, idx|
+      comment["agency"] = comments[idx].agency
+    end
     assert_equal expected.to_json, response.body
   end
 
