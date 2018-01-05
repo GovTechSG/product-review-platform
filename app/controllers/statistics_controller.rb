@@ -1,4 +1,6 @@
 class StatisticsController < ApplicationController
+  include SwaggerDocs::Statistics
+
   before_action :authenticate_user!
   def index
     render :json => {
