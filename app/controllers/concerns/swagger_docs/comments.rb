@@ -33,7 +33,7 @@ module SwaggerDocs::Comments
           key :description, 'Comment to create'
           key :required, true
           schema do
-            key :'$ref', :CommentInput
+            key :'$ref', :CommentCreateInput
           end
         end
         response 200 do
@@ -72,7 +72,7 @@ module SwaggerDocs::Comments
           key :description, 'Comment to update'
           key :required, true
           schema do
-            key :'$ref', :CommentInput
+            key :'$ref', :CommentUpdateInput
           end
         end
         response 200 do

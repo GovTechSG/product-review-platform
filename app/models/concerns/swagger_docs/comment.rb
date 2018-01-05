@@ -28,7 +28,7 @@ module SwaggerDocs::Comment
       end
     end
 
-    swagger_schema :CommentInput do
+    swagger_schema :CommentCreateInput do
       allOf do
         schema do
           property :comment do
@@ -41,10 +41,18 @@ module SwaggerDocs::Comment
               key :type, :integer
               key :format, :int64
             end
+          end
+        end
+      end
+    end
 
-            property :review_id do
-              key :type, :integer
-              key :format, :int64
+    swagger_schema :CommentUpdateInput do
+      allOf do
+        schema do
+          property :comment do
+            key :type, :object
+            property :content do
+              key :type, :string
             end
           end
         end
