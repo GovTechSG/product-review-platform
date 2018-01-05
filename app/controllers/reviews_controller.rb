@@ -26,29 +26,15 @@ class ReviewsController < ApplicationController
   # POST /products/:product_id/reviews
   # POST /services/:service_id/reviews
   def create
-    # Store review_params in a temp variable to avoid
+    # Store create_params in a temp variable to avoid
     # repeatedly calling the method
-    whitelisted = review_params
-    create_params = {
-      score: whitelisted[:score],
-      content: whitelisted[:content],
-      company_id: whitelisted[:company_id],
-      strengths: whitelisted[:strengths] || []
-    }
-    reviewable = nil
-    if params[:product_id].present?
-      create_params[:reviewable_id] = params[:product_id]
-      create_params[:reviewable_type] = "Product"
-      reviewable = Product.find(params[:product_id])
-    elsif params[:service_id].present?
-      create_params[:reviewable_id] = params[:service_id]
-      create_params[:reviewable_type] = "Service"
-      reviewable = Service.find(params[:service_id])
-    else
+    whitelisted = create_params
+    if whitelisted.nil?
       render_bad_request("No product_id or service_id specified")
       return
     end
-    @review = Review.new(create_params)
+    reviewable = params[:product_id].present? ? Product.find(params[:product_id]) : Service.find(params[:service_id])
+    @review = Review.new(whitelisted)
     # Update aggregate score of associated vendor company
     company = add_company_score(reviewable.company, whitelisted[:score])
 
@@ -62,11 +48,14 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   def update
     company = nil
-    if review_params[:score]
+    # Store update_params in a temp variable to avoid
+    # repeatedly calling the method
+    whitelisted = update_params
+    if whitelisted[:score]
       # Update aggregate score of associated vendor company
-      company = update_company_score(@review.reviewable.company, @review.score, review_params[:score])
+      company = update_company_score(@review.reviewable.company, @review.score, whitelisted[:score])
     end
-    if @review.update(review_params) && (company.nil? || company.save)
+    if @review.update(whitelisted) && (company.nil? || company.save)
       render json: @review
     else
       render json: @review.errors, status: :unprocessable_entity
@@ -102,7 +91,18 @@ class ReviewsController < ApplicationController
     end
 
     # Only allow a trusted parameter "white list" through.
-    def review_params
-      params.require(:review).permit(:score, :content, :company_id, :strengths)
+    def create_params
+      whitelisted = params.require(:review).permit(:score, :content, :company_id, :strengths => [])
+      if params[:product_id].present?
+        whitelisted = whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
+      elsif params[:service_id].present?
+        whitelisted = whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
+      else return nil
+      end
+      whitelisted
+    end
+
+    def update_params
+      params.require(:review).permit(:score, :content, :strengths => [])
     end
 end
