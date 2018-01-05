@@ -6,7 +6,7 @@ module SwaggerDocs::Review
 
     swagger_schema :Review do
       key :type, :object
-      key :required, [:id, :score, :content, :agency_id, :reviewable_id]
+      key :required, [:id, :score, :content, :company_id, :reviewable_id]
 
       property :id do
         key :type, :integer
@@ -21,7 +21,7 @@ module SwaggerDocs::Review
         key :type, :string
       end
 
-      property :agency_id do
+      property :company_id do
         key :type, :integer
         key :format, :int64
       end
@@ -33,6 +33,13 @@ module SwaggerDocs::Review
       property :reviewable_id do
         key :type, :integer
         key :format, :int64
+      end
+
+      property :strengths do
+        key :type, :array
+        items do
+          key :type, :string
+        end
       end
     end
 
@@ -49,18 +56,11 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :agency_id do
-              key :type, :integer
-              key :format, :int64
-            end
-
-            property :reviewable_type do
-              key :type, :string
-            end
-
-            property :reviewable_id do
-              key :type, :integer
-              key :format, :int64
+            property :strengths do
+              key :type, :array
+              items do
+                key :type, :string
+              end
             end
           end
         end
@@ -80,14 +80,16 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :agency_id do
+            property :company_id do
               key :type, :integer
               key :format, :int64
             end
 
-            property :product_id do
-              key :type, :integer
-              key :format, :int64
+            property :strengths do
+              key :type, :array
+              items do
+                key :type, :string
+              end
             end
           end
         end
@@ -107,14 +109,16 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :agency_id do
+            property :company_id do
               key :type, :integer
               key :format, :int64
             end
 
-            property :service_id do
-              key :type, :integer
-              key :format, :int64
+            property :strengths do
+              key :type, :array
+              items do
+                key :type, :string
+              end
             end
           end
         end

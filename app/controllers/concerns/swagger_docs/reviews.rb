@@ -5,6 +5,14 @@ module SwaggerDocs::Reviews
     include Swagger::Blocks
 
     swagger_path '/products/{product_id}/reviews' do
+      parameter do
+        key :name, :product_id
+        key :in, :path
+        key :description, 'ID of product'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       operation :get do
         key :tags, ['review']
         key :description, 'Returns list of all reviews from specified product'
@@ -51,6 +59,14 @@ module SwaggerDocs::Reviews
     end
 
     swagger_path '/services/{services_id}/reviews' do
+      parameter do
+        key :name, :service_id
+        key :in, :path
+        key :description, 'ID of service'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       operation :get do
         key :tags, ['review']
         key :description, 'Returns list of all reviews from specified service'
