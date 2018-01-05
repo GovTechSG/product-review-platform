@@ -3,7 +3,7 @@ require 'test_helper'
 class ProductReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:pivotal_tracker_review_one)
-    @product = Product.find(@review.reviewable_id)
+    @product = @review.reviewable
     @company = @product.company
     @auth_headers = users(:one).create_new_auth_token
   end

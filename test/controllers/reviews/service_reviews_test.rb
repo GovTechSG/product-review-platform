@@ -3,7 +3,7 @@ require 'test_helper'
 class ServiceReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:service_foo_review_one)
-    @service = Service.find(@review.reviewable_id)
+    @service = @review.reviewable
     @company = @service.company
     @auth_headers = users(:one).create_new_auth_token
   end
