@@ -5,6 +5,14 @@ module SwaggerDocs::Products
     include Swagger::Blocks
 
     swagger_path '/companies/{company_id}/products' do
+      parameter do
+        key :name, :company_id
+        key :in, :path
+        key :description, 'ID of company'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       operation :get do
         key :tags, ['product']
         key :description, 'Returns list of all products from specified company'

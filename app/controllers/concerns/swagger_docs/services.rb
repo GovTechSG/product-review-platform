@@ -5,6 +5,14 @@ module SwaggerDocs::Services
     include Swagger::Blocks
 
     swagger_path '/companies/{company_id}/services' do
+      parameter do
+        key :name, :company_id
+        key :in, :path
+        key :description, 'ID of company'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       operation :get do
         key :tags, ['service']
         key :description, 'Returns list of all services from specified company'

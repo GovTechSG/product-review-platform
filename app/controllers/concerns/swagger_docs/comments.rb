@@ -5,6 +5,14 @@ module SwaggerDocs::Comments
     include Swagger::Blocks
 
     swagger_path '/reviews/{review_id}/comments' do
+      parameter do
+        key :name, :review_id
+        key :in, :path
+        key :description, 'ID of review'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       operation :get do
         key :tags, ['comment']
         key :description, 'Returns list of all comments from specified review'
