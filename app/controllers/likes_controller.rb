@@ -1,4 +1,6 @@
 class LikesController < ApplicationController
+  include SwaggerDocs::Likes
+
   before_action :set_like, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 

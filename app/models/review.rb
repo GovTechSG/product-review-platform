@@ -1,4 +1,5 @@
 class Review < ApplicationRecord
+  include SwaggerDocs::Review
   include Statistics::Reviews
 
   belongs_to :company

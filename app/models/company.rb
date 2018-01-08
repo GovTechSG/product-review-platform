@@ -1,4 +1,5 @@
 class Company < ApplicationRecord
+  include SwaggerDocs::Company
   include Statistics::Companies
 
   # These refer to the reviews written by a claimant company

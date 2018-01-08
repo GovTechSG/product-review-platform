@@ -1,4 +1,6 @@
 class Like < ApplicationRecord
+  include SwaggerDocs::Like
+
   belongs_to :agency
   belongs_to :review
 

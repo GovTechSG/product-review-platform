@@ -1,4 +1,6 @@
 class ReviewsController < ApplicationController
+  include SwaggerDocs::Reviews
+
   before_action :set_review, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 

@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  include SwaggerDocs::Comments
+
   before_action :set_comment, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 

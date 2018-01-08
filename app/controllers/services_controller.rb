@@ -1,4 +1,6 @@
 class ServicesController < ApplicationController
+  include SwaggerDocs::Services
+
   before_action :set_service, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 

@@ -1,4 +1,6 @@
 class ProductsController < ApplicationController
+  include SwaggerDocs::Products
+
   before_action :set_product, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 

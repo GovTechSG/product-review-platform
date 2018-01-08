@@ -1,4 +1,5 @@
 class Service < ApplicationRecord
+  include SwaggerDocs::Service
   include Statistics::ProductsAndServices
 
   belongs_to :company
