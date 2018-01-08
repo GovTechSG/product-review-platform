@@ -32,8 +32,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "should not create service if not signed in" do
     service = {
       name: "New Service",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     assert_no_difference('Service.count') do
       post company_services_url(@company.id), params: { service: service }, as: :json
@@ -46,8 +45,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "should create service" do
     service = {
       name: "New Service",
-      description: "New description",
-      company_id: @company.id
+      description: "New description"
     }
     assert_difference('Service.count') do
       post company_services_url(@company.id), params: { service: service }, headers: @auth_headers, as: :json
@@ -78,11 +76,20 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update service if not signed in" do
+    current = {
+      name: @service.name,
+      description: @service.description
+    }
     updated = {
       name: "New Service",
       description: "New description"
     }
     patch service_url(@service), params: { service: updated }, as: :json
+
+    # Assert unchanged
+    @service.reload
+    assert_equal current[:name], @service.name
+    assert_equal current[:description], @service.description
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -94,6 +101,11 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
       description: "New description"
     }
     patch service_url(@service), params: { service: updated }, headers: @auth_headers, as: :json
+
+    @service.reload
+    assert_equal updated[:name], @service.name
+    assert_equal updated[:description], @service.description
+
     assert_response 200
   end
 

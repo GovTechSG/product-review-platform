@@ -22,8 +22,8 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create agency if not signed in" do
     agency = {
-      email: "agency_four@foo.com",
       name: "Agency Four",
+      email: "agency_four@foo.com",
       number: "11113333"
     }
     assert_no_difference('Agency.count') do
@@ -36,8 +36,8 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create agency" do
     agency = {
-      email: "agency_four@foo.com",
       name: "Agency Four",
+      email: "agency_four@foo.com",
       number: "11113333"
     }
     assert_difference('Agency.count') do
@@ -62,12 +62,23 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update agency if not signed in" do
-    updated = {
-      email: @agency.email,
+    current = {
       name: @agency.name,
+      email: @agency.email,
       number: @agency.number
     }
+    updated = {
+      name: "Agency One New",
+      email: "agency_one_new@foo.com",
+      number: "113344564"
+    }
     patch agency_url(@agency), params: { agency: updated }, as: :json
+
+    # Assert unchanged
+    @agency.reload
+    assert_equal current[:name], @agency[:name]
+    assert_equal current[:email], @agency[:email]
+    assert_equal current[:number], @agency[:number]
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -75,11 +86,17 @@ class AgenciesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update agency" do
     updated = {
-      email: @agency.email,
-      name: @agency.name,
-      number: @agency.number
+      name: "Agency One New",
+      email: "agency_one_new@foo.com",
+      number: "113344564"
     }
     patch agency_url(@agency), params: { agency: updated }, headers: @auth_headers, as: :json
+
+    @agency.reload
+    assert_equal updated[:name], @agency.name
+    assert_equal updated[:email], @agency.email
+    assert_equal updated[:number], @agency.number
+
     assert_response 200
   end
 

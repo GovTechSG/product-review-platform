@@ -6,12 +6,12 @@ class CompaniesController < ApplicationController
   def index
     @companies = Company.all
 
-    render json: @companies, methods: [:reviews_count]
+    render json: @companies, methods: [:reviews_count, :strengths]
   end
 
   # GET /companies/1
   def show
-    render json: @company, methods: [:reviews_count]
+    render json: @company, methods: [:reviews_count, :strengths]
   end
 
   # POST /companies
@@ -47,6 +47,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :aggregate_score)
+      params.require(:company).permit(:name, :UEN, :description)
     end
 end

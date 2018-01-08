@@ -3,8 +3,8 @@ require 'test_helper'
 class ServiceReviewsTest < ActionDispatch::IntegrationTest
   setup do
     @review = reviews(:service_foo_review_one)
-    @service = Service.find(@review.reviewable_id)
-    @agency = agencies(:one)
+    @service = @review.reviewable
+    @company = @service.company
     @auth_headers = users(:one).create_new_auth_token
   end
 
@@ -24,7 +24,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     expected = reviews.as_json
     # Call associated methods for each review
     expected.each_with_index do |review, idx|
-      review["agency"] = reviews[idx].agency
+      review["company"] = reviews[idx].company
       review["likes_count"] = reviews[idx].likes_count
       review["comments_count"] = reviews[idx].comments_count
     end
@@ -35,8 +35,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     review = {
       score: 5,
       content: "Amazing service!",
-      service_id: @service.id,
-      agency_id: @agency.id,
+      company_id: @company.id
     }
     assert_no_difference('Review.count') do
       post service_reviews_url(@service.id), params: { review: review }, as: :json
@@ -50,12 +49,20 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
     review = {
       score: 5,
       content: "Amazing service!",
-      service_id: @service.id,
-      agency_id: @agency.id,
+      company_id: @company.id
     }
+
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     assert_difference('Review.count') do
       post service_reviews_url(@service.id), params: { review: review }, headers: @auth_headers, as: :json
     end
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score + review[:score])/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
 
     assert_response 201
   end
@@ -74,7 +81,7 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
 
     expected = @review.as_json
     # Call associated methods on review
-    expected["agency"] = @review.agency
+    expected["company"] = @review.company
     expected["likes_count"] = @review.likes_count
     expected["comments_count"] = @review.comments_count
 
@@ -82,22 +89,46 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update service review if not signed in" do
+    current = {
+      score: @review.score,
+      content: @review.content
+    }
     updated = {
       score: 3,
       content: "Okay service"
     }
     patch review_url(@review), params: { review: updated }, as: :json
 
+    # Assert unchanged
+    @review.reload
+    assert_equal current[:score], @review.score
+    assert_equal current[:content], @review.content
+
     assert_response 401
     assert_not_signed_in_error response.body
   end
 
   test "should update service review" do
+    old_review_score = @review[:score]
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     updated = {
       score: 3,
       content: "Okay service"
     }
     patch review_url(@review), params: { review: updated }, headers: @auth_headers, as: :json
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score - old_review_score + updated[:score])/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
+
+    # Check that review was updated
+    @review.reload
+    assert_equal updated[:score], @review.score
+    assert_equal updated[:content], @review.content
+
     assert_response 200
   end
 
@@ -111,9 +142,18 @@ class ServiceReviewsTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy service review" do
+    old_review_score = @review[:score]
+    # Test updating of associated company scores
+    old_total_score = @company.aggregate_score * @company.reviews_count
+
     assert_difference('Review.count', -1) do
       delete review_url(@review), headers: @auth_headers, as: :json
     end
+
+    # Reload company from database
+    @company.reload
+    expected_aggregate_score = (old_total_score - old_review_score)/@company.reviews_count
+    assert_equal_float expected_aggregate_score, @company.aggregate_score
 
     assert_response 204
   end

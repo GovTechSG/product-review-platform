@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171219074845) do
+ActiveRecord::Schema.define(version: 20180103082733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20171219074845) do
     t.decimal "aggregate_score", default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description", default: "", null: false
     t.index ["UEN"], name: "index_companies_on_UEN", unique: true
   end
 
@@ -66,11 +67,13 @@ ActiveRecord::Schema.define(version: 20171219074845) do
     t.text "content", default: "", null: false
     t.string "reviewable_type"
     t.bigint "reviewable_id"
-    t.bigint "agency_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agency_id"], name: "index_reviews_on_agency_id"
+    t.string "strengths", default: [], array: true
+    t.bigint "company_id"
+    t.index ["company_id"], name: "index_reviews_on_company_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
+    t.index ["strengths"], name: "index_reviews_on_strengths", using: :gin
   end
 
   create_table "services", force: :cascade do |t|
@@ -115,6 +118,6 @@ ActiveRecord::Schema.define(version: 20171219074845) do
   add_foreign_key "likes", "agencies"
   add_foreign_key "likes", "reviews"
   add_foreign_key "products", "companies"
-  add_foreign_key "reviews", "agencies"
+  add_foreign_key "reviews", "companies"
   add_foreign_key "services", "companies"
 end

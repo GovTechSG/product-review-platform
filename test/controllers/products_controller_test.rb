@@ -32,8 +32,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should not create product if not signed in" do
     product = {
       name: "Product Foo",
-      description: "Lorem ipsum",
-      company_id: @company.id
+      description: "Lorem ipsum"
     }
     assert_no_difference('Product.count') do
       post company_products_url(@company.id), params: { product: product }, as: :json
@@ -46,8 +45,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should create product" do
     product = {
       name: "Product Foo",
-      description: "Lorem ipsum",
-      company_id: @company.id
+      description: "Lorem ipsum"
     }
     assert_difference('Product.count') do
       post company_products_url(@company.id), params: { product: product }, headers: @auth_headers, as: :json
@@ -78,11 +76,20 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update product if not signed in" do
+    current = {
+      name: @product.name,
+      description: @product.description
+    }
     updated = {
       name: "New Product",
       description: "New description"
     }
     patch product_url(@product), params: { product: updated }, as: :json
+
+    # Assert unchanged
+    @product.reload
+    assert_equal current[:name], @product.name
+    assert_equal current[:description], @product.description
 
     assert_response 401
     assert_not_signed_in_error response.body
@@ -94,6 +101,10 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
       description: "New description"
     }
     patch product_url(@product), params: { product: updated }, headers: @auth_headers, as: :json
+
+    @product.reload
+    assert_equal updated[:name], @product.name
+    assert_equal updated[:description], @product.description
 
     assert_response 200
   end

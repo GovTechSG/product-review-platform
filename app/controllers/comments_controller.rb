@@ -16,7 +16,7 @@ class CommentsController < ApplicationController
 
   # POST /reviews/:review_id/comments
   def create
-    @comment = Comment.new(comment_params)
+    @comment = Comment.new(create_params.merge(review_id: params[:review_id]))
 
     if @comment.save
       render json: @comment, status: :created, location: @comment
@@ -27,7 +27,7 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /comments/1
   def update
-    if @comment.update(comment_params)
+    if @comment.update(update_params)
       render json: @comment
     else
       render json: @comment.errors, status: :unprocessable_entity
@@ -46,7 +46,11 @@ class CommentsController < ApplicationController
     end
 
     # Only allow a trusted parameter "white list" through.
-    def comment_params
-      params.require(:comment).permit(:content, :agency_id, :review_id)
+    def create_params
+      params.require(:comment).permit(:content, :agency_id)
+    end
+
+    def update_params
+      params.require(:comment).permit(:content)
     end
 end

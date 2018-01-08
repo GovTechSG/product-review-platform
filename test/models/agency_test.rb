@@ -27,10 +27,6 @@ class AgencyTest < ActiveSupport::TestCase
     assert_not_nil @agency.errors[:number]
   end
 
-  test 'has many reviews' do
-    assert_equal 2, @agency.reviews.size
-  end
-
   test 'has many likes' do
     assert_equal 2, @agency.likes.size
   end
