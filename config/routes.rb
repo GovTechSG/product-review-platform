@@ -35,4 +35,6 @@ Rails.application.routes.draw do
   end
 
   resources :agencies
+
+  resources :apidocs, only: [:index]
 end
