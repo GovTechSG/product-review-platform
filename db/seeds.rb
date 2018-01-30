@@ -1,6 +1,19 @@
 # For demo purposes
-User.create!(email: "user1@foo.com", password: "password1", password_confirmation: "password1", confirm_success_url: "localhost:3000")
-User.first.confirm
+user = User.new(
+    email: 'user1@foo.com',
+    uid:   'user1@foo.com',
+    name: 'John Smith',
+    password: 'password1',
+    password_confirmation: 'password1'
+)
+client_id = 'vv7Y_8YRcYaX_VeMXTKezw'
+token     = 'IR2mODqTN5hjsbF0DM-J8w'
+user.tokens[client_id] = {
+    token: BCrypt::Password.create(token),
+    expiry: (Time.now + DeviseTokenAuth.token_lifespan).to_i
+}
+user.confirmed_at = Time.now
+user.save
 company_names = [
   "Pivotal Software",
   "Microsoft",
