@@ -3,6 +3,7 @@ log/
 tmp/
 # For Mac users
 .DS_Store
+.idea/
 
 # Ignore application configuration
 /config/application.yml
