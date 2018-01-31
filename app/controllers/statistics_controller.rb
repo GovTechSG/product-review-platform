@@ -1,4 +1,4 @@
-class StatisticsController < ApplicationController
+class StatisticsController < ApiController
   include SwaggerDocs::Statistics
 
   before_action :authenticate_user!

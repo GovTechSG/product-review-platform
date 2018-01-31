@@ -1,4 +1,4 @@
-class CompaniesController < ApplicationController
+class CompaniesController < ApiController
   include SwaggerDocs::Companies
 
   before_action :set_company, only: [:show, :update, :destroy]

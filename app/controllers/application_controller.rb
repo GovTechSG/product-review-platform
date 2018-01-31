@@ -1,9 +1,9 @@
-# API routes go here
-class ApplicationController < ActionController::API
-  include DeviseTokenAuth::Concerns::SetUserByToken
-  include RenderErrors
+# Front-end routes go here
+class ApplicationController < ApiController::Base
 end
 
-# Front-end routes go here
-class BaseController < ActionController::Base
+# API routes go here
+class ApiController < ActionController::Base
+  include DeviseTokenAuth::Concerns::SetUserByToken
+  include RenderErrors
 end
