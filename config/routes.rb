@@ -13,7 +13,6 @@ Rails.application.routes.draw do
     patch "/auth", to: "devise_token_auth/registrations#update"
     delete "/auth", to: "devise_token_auth/registrations#destroy"
 
-    post "/auth/confirmation", to: "devise_token_auth/confirmations#create"
   end
 
   shallow do
