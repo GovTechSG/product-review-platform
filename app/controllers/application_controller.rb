@@ -6,4 +6,5 @@ end
 
 # Front-end routes go here
 class BaseController < ActionController::Base
+  
 end
