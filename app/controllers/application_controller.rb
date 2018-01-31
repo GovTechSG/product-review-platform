@@ -1,3 +1,3 @@
 # Front facing routes inherit this
-class ApplicationController < ApiController::Base
+class ApplicationController < ActionController::Base
 end
