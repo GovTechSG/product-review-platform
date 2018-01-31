@@ -1,4 +1,4 @@
-class CommentsController < ApplicationController
+class CommentsController < ApiController
   include SwaggerDocs::Comments
 
   before_action :set_comment, only: [:show, :update, :destroy]

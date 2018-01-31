@@ -1,4 +1,4 @@
-class ReviewsController < ApplicationController
+class ReviewsController < ApiController
   include SwaggerDocs::Reviews
 
   before_action :set_review, only: [:show, :update, :destroy]

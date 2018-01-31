@@ -1,4 +1,4 @@
-class ServicesController < ApplicationController
+class ServicesController < ApiController
   include SwaggerDocs::Services
 
   before_action :set_service, only: [:show, :update, :destroy]
