@@ -37,6 +37,7 @@ group :development, :test do
   # Gems for ruby debugging
   gem 'ruby-debug-ide', '0.6.0'
   gem 'debase', '0.2.2.beta10'
+  gem 'rspec-rails'
 end
 
 group :development do
