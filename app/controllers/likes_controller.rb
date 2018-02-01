@@ -1,8 +1,7 @@
-class LikesController < ApplicationController
+class LikesController < ApiController
   include SwaggerDocs::Likes
 
   before_action :set_like, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /reviews/:review_id/likes
   def index

@@ -1,8 +1,7 @@
-class ReviewsController < ApplicationController
+class ReviewsController < ApiController
   include SwaggerDocs::Reviews
 
   before_action :set_review, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews

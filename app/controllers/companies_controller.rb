@@ -1,8 +1,7 @@
-class CompaniesController < ApplicationController
+class CompaniesController < ApiController
   include SwaggerDocs::Companies
 
   before_action :set_company, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /companies
   def index

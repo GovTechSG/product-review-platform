@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
+gem 'activeadmin'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
 # Use postgresql as the database for Active Record
@@ -37,6 +37,7 @@ group :development, :test do
   # Gems for ruby debugging
   gem 'ruby-debug-ide', '0.6.0'
   gem 'debase', '0.2.2.beta10'
+  gem 'rspec-rails'
 end
 
 group :development do

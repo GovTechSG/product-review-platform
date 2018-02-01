@@ -1,8 +1,7 @@
-class ServicesController < ApplicationController
+class ServicesController < ApiController
   include SwaggerDocs::Services
 
   before_action :set_service, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /companies/:company_id/services
   def index
