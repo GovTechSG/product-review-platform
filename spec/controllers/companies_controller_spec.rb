@@ -2,7 +2,7 @@
 # More specific tests will be added in later user stories
 require 'rails_helper'
 
-RSpec.describe AgenciesController, type: :controller do
+RSpec.describe CompaniesController, type: :controller do
   let(:valid_user){
     User.first
   }
@@ -10,7 +10,7 @@ RSpec.describe AgenciesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      get :index, params: {}
+      get :index
       expect(response).to be_success
     end
   end
