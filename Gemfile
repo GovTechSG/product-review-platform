@@ -7,6 +7,9 @@ end
 
 gem 'activeadmin'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'doorkeeper'
+gem 'doorkeeper-jwt'
+gem 'devise'
 gem 'rails', '~> 5.1.4'
 gem 'rubocop'
 # Use postgresql as the database for Active Record

@@ -14,3 +14,8 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+
+# Reference: http://107.170.16.7/activesupport-inflector-and-you/
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'OAuth'
+end
