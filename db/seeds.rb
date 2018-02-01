@@ -1,13 +1,4 @@
 # For demo purposes
-user = User.new(
-    email: 'user1@foo.com',
-    uid:   'user1@foo.com',
-    name: 'John Smith',
-    password: 'password1',
-    password_confirmation: 'password1'
-)
-user.confirmed_at = Time.now
-user.save
 company_names = [
   "Pivotal Software",
   "Microsoft",

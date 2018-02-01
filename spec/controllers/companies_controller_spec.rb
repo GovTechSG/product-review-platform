@@ -3,11 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe CompaniesController, type: :controller do
-  let(:valid_user){
-    User.first
-  }
-  before { subject.stub(current_user: valid_user, authenticate_user!: true) }
-
   describe "GET #index" do
     it "returns a success response" do
       get :index
