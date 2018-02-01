@@ -2,8 +2,6 @@ class CommentsController < ApiController
   include SwaggerDocs::Comments
 
   before_action :set_comment, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
-
   # GET /reviews/:review_id/comments
   def index
     @comments = Comment.where(review_id: params[:review_id])
