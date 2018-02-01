@@ -14,9 +14,24 @@ class ApidocsController < ApplicationController
         key :name, 'MIT'
       end
     end
+
     key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
     key :consumes, ['application/json']
     key :produces, ['application/json']
+
+    parameter :test do
+      key :name, 'test'
+      key :in, :header
+      key :description, 'playground'
+      key :required, false
+      key :type, :string
+    end
+
+    security_definition :location do
+      key :type, :apiKey
+      key :name, "location"
+      key :in, :header
+    end
 
     security_definition :access_token do
       key :type, :apiKey
@@ -40,7 +55,9 @@ class ApidocsController < ApplicationController
       key :access_token, []
       key :uid, []
       key :client, []
+      key :location, []
     end
+
   end
 
   # A list of all classes that have swagger_* declarations.
