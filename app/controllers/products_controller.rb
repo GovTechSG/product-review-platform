@@ -1,6 +1,6 @@
 class ProductsController < ApiController
   include SwaggerDocs::Products
-
+  before_action :doorkeeper_authorize!
   before_action :set_product, only: [:show, :update, :destroy]
 
   # GET /companies/:company_id/products

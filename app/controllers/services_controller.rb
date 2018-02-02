@@ -1,6 +1,6 @@
 class ServicesController < ApiController
   include SwaggerDocs::Services
-
+  before_action :doorkeeper_authorize!
   before_action :set_service, only: [:show, :update, :destroy]
 
   # GET /companies/:company_id/services
