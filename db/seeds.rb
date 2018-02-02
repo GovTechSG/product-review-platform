@@ -1,4 +1,5 @@
 # For demo purposes
+App.create!(name: "BGP", password: "test12", password_confirmation: "test12")
 company_names = [
   "Pivotal Software",
   "Microsoft",

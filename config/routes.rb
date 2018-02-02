@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   devise_for :apps
-  use_doorkeeper
+  use_doorkeeper do
+    skip_controllers :authorizations, :applications,
+                     :authorized_applications
+  end
   get '/statistics', to: 'statistics#index'
   # Mount custom routes, removing view-only routes e.g. /new, /cancel
 

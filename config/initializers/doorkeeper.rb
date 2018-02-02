@@ -3,14 +3,10 @@ Doorkeeper.configure do
   orm :active_record
 
   # set authentication control
-  resource_owner_authenticator do |routes|
-    if current_app
-      current_app
-    else
-      session[:user_return_to] = request.fullpath
-      redirect_to(new_user_session_url)
-    end
+  resource_owner_from_credentials do |_routes|
+    App.authenticate(params[:name], params[:password])
   end
+ 
 
   # set token expiry
   access_token_expires_in nil
@@ -18,30 +14,6 @@ Doorkeeper.configure do
   access_token_generator '::Doorkeeper::JWT'
 
   reuse_access_token
-
-  Doorkeeper::JWT.configure do
-    token_payload do |opts|
-      user = User.find(opts[:resource_owner_id])
-      {
-        iss: Rails.application.class.parent.to_s.underscore,
-        iat: Time.now.utc.to_i,
-        jti: SecureRandom.uuid,
-        user: {
-          id: user.id,
-          email: user.email
-        }
-      }
-    end
-  
-    use_application_secret true
-
-    # Specify encryption type. Supports any algorithim in
-    # https://github.com/progrium/ruby-jwt
-    # defaults to nil
-    encryption_method :hs256
-  end
-
-
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   # admin_authenticator do
   #   # Put your admin authentication logic here.
@@ -130,15 +102,35 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w(authorization_code client_credentials)
+  grant_flows %w(password)
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
-  # skip_authorization do |resource_owner, client|
-  #   client.superapp? or resource_owner.admin?
-  # end
-
+  skip_authorization do |resource_owner, client|
+    true
+  end
   # WWW-Authenticate Realm (default "Doorkeeper").
   # realm "Doorkeeper"
+end
+Doorkeeper::JWT.configure do
+  token_payload do |opts|
+    app = App.find(opts[:resource_owner_id])
+    {
+      iss: Rails.application.class.parent.to_s.underscore,
+      iat: Time.now.utc.to_i,
+      jti: SecureRandom.uuid,
+      app: {
+        id: app.id,
+        name: app.name
+      }
+    }
+  end
+  
+  secret_key ENV["SECRET_KEY_BASE"]
+
+  # Specify encryption type. Supports any algorithim in
+  # https://github.com/progrium/ruby-jwt
+  # defaults to nil
+  encryption_method :hs256
 end

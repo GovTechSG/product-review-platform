@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201094129) do
+ActiveRecord::Schema.define(version: 20180202013654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,20 @@ ActiveRecord::Schema.define(version: 20180201094129) do
     t.index ["review_id"], name: "index_likes_on_review_id"
   end
 
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer "resource_owner_id"
+    t.integer "application_id"
+    t.string "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.string "scopes"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
@@ -137,6 +151,7 @@ ActiveRecord::Schema.define(version: 20180201094129) do
   add_foreign_key "comments", "reviews"
   add_foreign_key "likes", "agencies"
   add_foreign_key "likes", "reviews"
+  add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "companies"
   add_foreign_key "services", "companies"
