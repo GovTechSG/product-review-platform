@@ -1,4 +1,5 @@
 # Product Review Platform
+[ ![Codeship Status for GovTechSG/product-review-platform](https://app.codeship.com/projects/44920520-e9ee-0135-9c63-46e97464ee28/status?branch=master)](https://app.codeship.com/projects/270015)
 Review service for bgp
 
 # Setup
