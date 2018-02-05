@@ -1,6 +1,7 @@
 # Front facing routes inherit this
 class ApplicationController < ActionController::Base
   before_action :check_host
+
   include DeviseTokenAuth::Concerns::SetUserByToken
   include RenderErrors
 
