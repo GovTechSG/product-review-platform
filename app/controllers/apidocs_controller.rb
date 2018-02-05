@@ -19,14 +19,6 @@ class ApidocsController < ApplicationController
     key :consumes, ['application/json']
     key :produces, ['application/json']
 
-    parameter :test do
-      key :name, 'test'
-      key :in, :header
-      key :description, 'playground'
-      key :required, false
-      key :type, :string
-    end
-
     security_definition :location do
       key :type, :apiKey
       key :name, "location"
