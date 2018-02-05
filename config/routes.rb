@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     skip_controllers :authorizations, :applications,
                      :authorized_applications
     as :tokens => 'sign_in'
+    controllers :tokens => 'tokens'
   end
   get '/statistics', to: 'statistics#index'
   # Mount custom routes, removing view-only routes e.g. /new, /cancel
