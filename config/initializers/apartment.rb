@@ -25,7 +25,10 @@ Apartment.configure do |config|
   # - a hash which keys are tenant names, and values custom db config (must contain all key/values required in database.yml)
   #
   # config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
-  # config.tenant_names = ['tenant1', 'tenant2']
+  # Apartment::Tenant.create('playground')
+  config.tenant_names = ['playground']
+  # config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
+
   # config.tenant_names = {
   #   'tenant1' => {
   #     adapter: 'postgresql',
@@ -48,11 +51,6 @@ Apartment.configure do |config|
   #   end
   # end
   #
-  config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
-
-  # Use a static list of tenant names for migrate
-  config.tenant_names = ['www', 'playground', 'public']
-
   # PostgreSQL:
   #   Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   #
@@ -97,7 +95,7 @@ end
 # }
 
 # Rails.application.config.middleware.use Apartment::Elevators::Domain
-Rails.application.config.middleware.use Apartment::Elevators::Subdomain
+#Rails.application.config.middleware.use Apartment::Elevators::Subdomain
 #Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
 # Rails.application.config.middleware.use Apartment::Elevators::FirstSubdomain
 # Rails.application.config.middleware.use Apartment::Elevators::Host
