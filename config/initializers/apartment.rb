@@ -50,6 +50,9 @@ Apartment.configure do |config|
   #
   config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
 
+  # Use a static list of tenant names for migrate
+  config.tenant_names = ['www', 'playground', 'public']
+
   # PostgreSQL:
   #   Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   #
