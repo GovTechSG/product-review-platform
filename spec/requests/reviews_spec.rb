@@ -1,4 +1,4 @@
-# TODO: Currently the tests are written to test if ApiController works. 
+# TODO: Currently the tests are written to test if ApiController works.
 # More specific tests will be added in later user stories
 require 'rails_helper'
 
