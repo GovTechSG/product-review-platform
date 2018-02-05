@@ -1,6 +1,11 @@
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+#Apartment::Tenant.drop( "www" ) rescue nil
+#Apartment::Tenant.create( "www" ) rescue nil
+#Apartment::Tenant.switch!( "www" )
+#Apartment::Tenant.seed
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all

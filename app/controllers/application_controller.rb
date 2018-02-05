@@ -15,5 +15,6 @@ class ApplicationController < ActionController::API
       puts Apartment::Tenant.current
     end
   end
+
 end
 
