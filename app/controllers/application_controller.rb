@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   PLAY_ENV = '"playground"'
 
   def check_host
-
     if request.headers['location'].eql? PLAY_ENV
       Apartment::Tenant.switch!("playground")
       puts Apartment::Tenant.current
