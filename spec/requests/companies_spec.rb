@@ -8,7 +8,7 @@ RSpec.describe "Companies", type: :request do
       grant_type: "password",
       password: "test12",
       name: "BGP"
-    }.to_json, headers: {"Content-Type" => "application/json"}, as: JSON
+    }.to_json, headers: { "Content-Type" => "application/json" }, as: JSON
     env ||= {}
     env['Authorization'] = "Bearer " + JSON.parse(response.body)["access_token"]
     return env

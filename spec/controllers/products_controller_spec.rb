@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe ProductsController, type: :controller do
-  let(:token) { double :acceptable? => true }
+  let(:token) { double acceptable?: true }
   before do
     allow(controller).to receive(:doorkeeper_token) {token}
   end
