@@ -2,7 +2,6 @@ class ProductsController < ApiController
   include SwaggerDocs::Products
 
   before_action :set_product, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /companies/:company_id/products
   def index
