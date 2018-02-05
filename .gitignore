@@ -4,6 +4,7 @@ tmp/
 # For Mac users
 .DS_Store
 .idea/
+.byebug_history
 
 # Ignore application configuration
 /config/application.yml
