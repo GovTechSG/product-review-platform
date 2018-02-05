@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   before_action :check_host
+
   include DeviseTokenAuth::Concerns::SetUserByToken
   include RenderErrors
 
