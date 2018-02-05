@@ -6,7 +6,6 @@ Doorkeeper.configure do
   resource_owner_from_credentials do |_routes|
     App.authenticate(params[:name], params[:password])
   end
- 
 
   # set token expiry
   access_token_expires_in nil
@@ -102,7 +101,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  grant_flows %w[password]
+  grant_flows %w(password)
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
@@ -126,7 +125,7 @@ Doorkeeper::JWT.configure do
       }
     }
   end
-  
+
   secret_key ENV["SECRET_KEY_BASE"]
 
   # Specify encryption type. Supports any algorithim in

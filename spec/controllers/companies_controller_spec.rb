@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe CompaniesController, type: :controller do
   let(:token) { double acceptable?: true }
   before do
-    allow(controller).to receive(:doorkeeper_token) {token}
+    allow(controller).to receive(:doorkeeper_token) { token }
   end
   describe "GET #index" do
     it "returns a success response" do

@@ -11,7 +11,7 @@ RSpec.describe "Companies", type: :request do
     }.to_json, headers: { "Content-Type" => "application/json" }, as: JSON
     env ||= {}
     env['Authorization'] = "Bearer " + JSON.parse(response.body)["access_token"]
-    return env
+    env
   end
 
   describe "GET /companies" do
