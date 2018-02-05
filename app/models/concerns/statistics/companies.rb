@@ -7,27 +7,14 @@ module Statistics::Companies
     # These refer to the aggregate number of reviews of a vendor company's products and services
     # (different from #reviews method on company, see models/company.rb)
     def reviews_count
-      self.products.reduce(0) { |accum, p| accum + p.reviews.count } + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
+      self.products.reduce(0) { |accum, p| accum + p.reviews.count }
+      + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
     end
 
     def strengths
       strengths = Set.new()
-      products.first(3).each do |p|
-        p.reviews.first(3).each do |r|
-          strengths.merge(r.strengths)
-          if strengths.length >= 5
-            return strengths.to_a[0, 5]
-          end
-        end
-      end
-      services.first(3).each do |s|
-        s.reviews.first(3).each do |r|
-          strengths.merge(r.strengths)
-          if strengths.length >= 5
-            return strengths.to_a[0, 5]
-          end
-        end
-      end
+      strengths = get_product_reviews(strengths)
+      strengths = get_service_reviews(strengths)
       strengths.to_a
     end
 
@@ -47,6 +34,30 @@ module Statistics::Companies
     def subtract_score(score)
       count = reviews_count
       ((count * aggregate_score) - score)/(count - 1)
+    end
+
+    private
+
+    def get_product_reviews(set)
+      products.first(3).each do |p|
+        p.reviews.first(3).each do |r|
+          if set.length >= 5
+            return set.to_a[0, 5]
+          end
+          set.merge(r.strengths)
+        end
+      end
+    end
+
+    def get_service_reviews(set)
+      services.first(3).each do |s|
+        s.reviews.first(3).each do |r|
+          if set.length >= 5
+            return set.to_a[0, 5]
+          end
+          set.merge(r.strengths)
+        end
+      end
     end
   end
 end
