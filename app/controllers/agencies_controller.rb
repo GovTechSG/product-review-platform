@@ -1,4 +1,4 @@
-class AgenciesController < ApplicationController
+class AgenciesController < ApiController
   include SwaggerDocs::Agencies
 
   before_action :set_agency, only: [:show, :update, :destroy]

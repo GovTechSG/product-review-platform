@@ -1,4 +1,3 @@
-class ApplicationController < ActionController::API
-  include DeviseTokenAuth::Concerns::SetUserByToken
-  include RenderErrors
+# Front facing routes inherit this
+class ApplicationController < ActionController::Base
 end

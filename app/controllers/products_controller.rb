@@ -1,4 +1,4 @@
-class ProductsController < ApplicationController
+class ProductsController < ApiController
   include SwaggerDocs::Products
 
   before_action :set_product, only: [:show, :update, :destroy]
