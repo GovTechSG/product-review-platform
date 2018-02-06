@@ -1,6 +1,7 @@
 # Product Review Platform
-[ ![Codeship Status for GovTechSG/product-review-platform](https://app.codeship.com/projects/44920520-e9ee-0135-9c63-46e97464ee28/status?branch=development)](https://app.codeship.com/projects/270015)
-Review service for bgp 
+[![Codeship Status for GovTechSG/product-review-platform](https://app.codeship.com/projects/44920520-e9ee-0135-9c63-46e97464ee28/status?branch=development)](https://app.codeship.com/projects/270015)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
 # Setup
 Create config/application.yml and add:
