@@ -3,7 +3,7 @@
 # ApplicationController. Other tests will be added with later user stories
 FactoryBot.define do
   factory :user do
-    username 'Joe'
+    name 'Joe'
     email 'joe@gmail.com'
     password 'blah'
   end

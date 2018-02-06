@@ -25,6 +25,23 @@ RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
+  # configuration to test Apartment multi-tenant
+  config.before(:suite) do
+    # Clean all tables to start
+    DatabaseCleaner.clean_with :truncation
+    # Use transactions for tests
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each) do
+    # Start transaction for this test
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    # Rollback transaction
+    DatabaseCleaner.clean
+  end
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
     # and `failure_message` of custom matchers include text for helper methods
