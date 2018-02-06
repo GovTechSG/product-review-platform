@@ -13,6 +13,14 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
+def body_as_json
+  json_str_to_hash(response.body)
+end
+
+def json_str_to_hash(str)
+  JSON.parse(str).with_indifferent_access
+end
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
