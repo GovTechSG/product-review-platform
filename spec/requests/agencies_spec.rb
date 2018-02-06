@@ -7,7 +7,7 @@ RSpec.describe "Agencies", type: :request do
   describe "GET /agencies" do
     it "should route to agencies#index" do
       header = login
-      get agencies_path, params: {}, headers: header
+      get agencies_url, params: {}, headers: header
       expect(response).to have_http_status(200)
     end
   end
@@ -15,7 +15,7 @@ RSpec.describe "Agencies", type: :request do
   describe "GET /agencies" do
     it "should return unauthorized response" do
       @expected = unauthorized_response
-      get agencies_path, params: {}, headers: nil
+      get agencies_url, params: {}, headers: nil
 
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json

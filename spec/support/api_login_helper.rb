@@ -1,9 +1,10 @@
 def login
-  post oauth_sign_in_path, params: {
-    grant_type: "password",
-    password: "test12",
-    name: "BGP"
-  }.to_json, headers: { "Content-Type" => "application/json" }, as: JSON
+  authorized_app = create(:app)
+  @app_params = {
+    "password": authorized_app.password,
+    "name": authorized_app.name
+  }.as_json
+  post oauth_sign_in_path, params: @app_params
   env ||= {}
   env['Authorization'] = "Bearer " + JSON.parse(response.body)["access_token"]
   env

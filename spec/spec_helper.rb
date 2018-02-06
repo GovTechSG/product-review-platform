@@ -13,7 +13,9 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
 Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
+
 def body_as_json
   json_str_to_hash(response.body)
 end

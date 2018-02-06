@@ -11,7 +11,9 @@ RSpec.describe CommentsController, type: :controller do
 
   describe "GET #show", authorized: true do
     it "returns a success response" do
-      get :show, params: { id: 1 }
+      comment = create(:product_review_comment)
+      get :show, params: { id: comment.id }
+
       expect(response).to be_success
     end
   end
@@ -19,8 +21,9 @@ RSpec.describe CommentsController, type: :controller do
   describe "GET #show", authorized: false do
     it "returns an unauthorized response" do
       @expected = unauthorized_response
+      comment = create(:product_review_comment)
+      get :show, params: { id: comment.id }
 
-      get :show, params: { id: 1 }
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
       expect(body_as_json).to match(@expected)

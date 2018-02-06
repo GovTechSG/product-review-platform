@@ -4,18 +4,21 @@ require 'rails_helper'
 require 'support/api_login_helper'
 
 RSpec.describe "Services", type: :request do
-  describe "GET /services/1" do
+  describe "GET /services/:id" do
     it "should route to services#show" do
       header = login
-      get service_path('1'), params: {}, headers: header
+      
+      service = create(:service)
+      get service_path(service.id), params: {}, headers: header
       expect(response).to have_http_status(200)
     end
   end
 
-  describe "GET /services/1" do
+  describe "GET /services/:id" do
     it "should return unauthorized response" do
       @expected = unauthorized_response
-      get service_path('1'), params: {}, headers: nil
+      service = create(:service)
+      get service_path(service.id), params: {}, headers: nil
 
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json
