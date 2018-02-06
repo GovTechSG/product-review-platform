@@ -49,7 +49,6 @@ class ApidocsController < ApplicationController
       key :client, []
       key :location, []
     end
-
   end
 
   # A list of all classes that have swagger_* declarations.

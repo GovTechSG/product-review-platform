@@ -12,7 +12,6 @@ require 'apartment/elevators/subdomain'
 # Apartment Configuration
 #
 Apartment.configure do |config|
-
   # Add any models that you do not want to be multi-tenanted, but remain in the global (public) namespace.
   # A typical example would be a Customer or Tenant model that stores each Tenant's information.
   #
@@ -22,7 +21,8 @@ Apartment.configure do |config|
   # You can make this dynamic by providing a Proc object to be called on migrations.
   # This object should yield either:
   # - an array of strings representing each Tenant name.
-  # - a hash which keys are tenant names, and values custom db config (must contain all key/values required in database.yml)
+  # - a hash which keys are tenant names, and values custom db config
+  # (must contain all key/values required in database.yml)
   #
   # config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
   # Apartment::Tenant.create('playground')
@@ -95,7 +95,7 @@ end
 # }
 
 # Rails.application.config.middleware.use Apartment::Elevators::Domain
-#Rails.application.config.middleware.use Apartment::Elevators::Subdomain
-#Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
+# Rails.application.config.middleware.use Apartment::Elevators::Subdomain
+# Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
 # Rails.application.config.middleware.use Apartment::Elevators::FirstSubdomain
 # Rails.application.config.middleware.use Apartment::Elevators::Host

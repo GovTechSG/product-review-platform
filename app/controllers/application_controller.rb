@@ -2,17 +2,14 @@
 class ApplicationController < ActionController::Base
   before_action :check_host
 
-  PLAY_ENV = '"playground"'
+  PLAY_ENV = '"playground"'.freeze
 
   def check_host
     if request.headers['location'].eql? PLAY_ENV
       Apartment::Tenant.switch!("playground")
-      puts Apartment::Tenant.current
     else
       Apartment::Tenant.switch!
-      puts Apartment::Tenant.current
     end
   end
-
 end
 
