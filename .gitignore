@@ -4,6 +4,7 @@ tmp/
 # For Mac users
 .DS_Store
 .idea/
+db/schema.rb
 .byebug_history
 
 # Ignore application configuration
