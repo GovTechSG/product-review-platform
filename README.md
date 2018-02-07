@@ -5,9 +5,20 @@ Status of the last build: <img src="http://teamcity:8111/app/rest/builds/buildTy
 [![Build status](https://teamcity.jetbrains.com/guestAuth/app/rest/builds/buildType:(project:(id:ProductReviewPlatform)))/statusIcon.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_TeamcityGoogleTagManagerPlugin_Build)
 
 # Setup
-Create config/application.yml and add:
-```yml
-SECRET_KEY_BASE: 
+For docker using docker-compose
+  To spin the container up
+    docker-compose up --build -d
+
+  To start the services
+    docker-compose run -d --publish 3000:3000  backend bundle exec rails s
+    docker-compose run backend rake db:create
+    docker-compose run backend rake db:schema:load
+
+  To run rspec or rails console
+    docker-compose run backend rspec
+    docker-compose run backend rails c
+
+
 ```
 
 Install gems, db & start.
