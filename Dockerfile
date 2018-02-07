@@ -4,8 +4,8 @@ LABEL maintainer="shaun.thium@gmail.com"
 
 # Instructions below modified from https://semaphoreci.com/community/tutorials/dockerizing-a-ruby-on-rails-application
 
-# Set rails environment to production
-ENV RAILS_ENV production
+# Set rails environment to test
+ENV RAILS_ENV test
 
 # Install some required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -30,4 +30,4 @@ RUN bundle install
 COPY . .
 
 # Run rails server on default port 3000
-CMD rails s
+#CMD rails s
