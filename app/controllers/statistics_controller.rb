@@ -1,6 +1,6 @@
 class StatisticsController < ApiController
   include SwaggerDocs::Statistics
-
+  before_action :doorkeeper_authorize!
   def index
     render :json => {
       reviews: Review.count,

@@ -35,6 +35,7 @@ AllCops:
     - 'provisioning/Vagrantfile'
     - 'scripts/**/*'
     - 'lib/generators/grant/templates/**/*'
+    - 'app/controllers/tokens_controller.rb' # library controller
     - 'brakemanJson2Junit.rb' # TODO
 
   # Default formatter will be used if no -f/--format option is given.
@@ -965,6 +966,7 @@ Metrics/LineLength:
   IgnoreCopDirectives: true
   Exclude:
     - spec/**/*.rb
+    - config/initializers/*
   URISchemes:
     - http
     - https

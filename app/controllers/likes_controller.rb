@@ -1,6 +1,6 @@
 class LikesController < ApiController
   include SwaggerDocs::Likes
-
+  before_action :doorkeeper_authorize!
   before_action :set_like, only: [:show, :update, :destroy]
 
   # GET /reviews/:review_id/likes

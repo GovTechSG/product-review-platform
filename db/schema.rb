@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131085626) do
+ActiveRecord::Schema.define(version: 20180202030134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,24 @@ ActiveRecord::Schema.define(version: 20180131085626) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "apps", force: :cascade do |t|
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.text "description"
+    t.index ["name"], name: "index_apps_on_name", unique: true
+    t.index ["reset_password_token"], name: "index_apps_on_reset_password_token", unique: true
+  end
+
   create_table "comments", force: :cascade do |t|
     t.text "content", default: "", null: false
     t.bigint "agency_id"
@@ -82,6 +100,20 @@ ActiveRecord::Schema.define(version: 20180131085626) do
     t.index ["agency_id", "review_id"], name: "index_likes_on_agency_id_and_review_id", unique: true
     t.index ["agency_id"], name: "index_likes_on_agency_id"
     t.index ["review_id"], name: "index_likes_on_review_id"
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer "resource_owner_id"
+    t.integer "application_id"
+    t.string "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.string "scopes"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
   create_table "products", force: :cascade do |t|
@@ -116,38 +148,11 @@ ActiveRecord::Schema.define(version: 20180131085626) do
     t.index ["company_id"], name: "index_services_on_company_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "provider", default: "email", null: false
-    t.string "uid", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
-    t.string "name"
-    t.string "nickname"
-    t.string "image"
-    t.string "email"
-    t.json "tokens"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
-  end
-
   add_foreign_key "comments", "agencies"
   add_foreign_key "comments", "reviews"
   add_foreign_key "likes", "agencies"
   add_foreign_key "likes", "reviews"
+  add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "companies"
   add_foreign_key "services", "companies"

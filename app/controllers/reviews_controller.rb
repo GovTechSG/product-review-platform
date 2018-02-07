@@ -1,6 +1,6 @@
 class ReviewsController < ApiController
   include SwaggerDocs::Reviews
-
+  before_action :doorkeeper_authorize!
   before_action :set_review, only: [:show, :update, :destroy]
 
   # GET /products/:product_id/reviews

@@ -1,6 +1,6 @@
 class CommentsController < ApiController
   include SwaggerDocs::Comments
-
+  before_action :doorkeeper_authorize!
   before_action :set_comment, only: [:show, :update, :destroy]
   # GET /reviews/:review_id/comments
   def index
