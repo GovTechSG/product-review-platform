@@ -5,27 +5,27 @@ Status of the last build: <img src="http://teamcity:8111/app/rest/builds/buildTy
 [![Build status](https://teamcity.jetbrains.com/guestAuth/app/rest/builds/buildType:(project:(id:ProductReviewPlatform)))/statusIcon.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_TeamcityGoogleTagManagerPlugin_Build)
 
 # Setup
+
 For docker using docker-compose
-  To spin the container up
-    docker-compose up --build -d
 
-  To start the services
-    docker-compose run -d --publish 3000:3000  backend bundle exec rails s
-    docker-compose run backend rake db:create
-    docker-compose run backend rake db:schema:load
+Make sure you have `docker` and `docker-compose` installed.
 
-  To run rspec or rails console
-    docker-compose run backend rspec
-    docker-compose run backend rails c
-
-
+To spin the container up
+```
+docker-compose up --build -d
 ```
 
-Install gems, db & start.
-```sh
-bundle
-bin/rails db:migrate RAILS_ENV=development
-rails s
+To start the services
+```
+docker-compose run -d --publish 3000:3000  backend bundle exec rails s
+docker-compose run backend rake db:create
+docker-compose run backend rake db:schema:load
+```
+
+To run rspec or rails console
+```
+docker-compose run backend rspec
+docker-compose run backend rails c
 ```
 
 # Stack
