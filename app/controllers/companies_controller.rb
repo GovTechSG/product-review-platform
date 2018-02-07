@@ -1,4 +1,4 @@
-class CompaniesController < ApiController
+class CompaniesController < ApplicationController
   include SwaggerDocs::Companies
   before_action :doorkeeper_authorize!
   before_action :set_company, only: [:show, :update, :destroy]
