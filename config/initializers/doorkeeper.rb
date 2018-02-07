@@ -127,7 +127,8 @@ Doorkeeper::JWT.configure do
     }
   end
 
-  secret_key ENV["SECRET_KEY_BASE"]
+  # secret_key ENV["SECRET_KEY_BASE"]
+  secret_key Rails.application.secrets.secret_key_base
 
   # Specify encryption type. Supports any algorithim in
   # https://github.com/progrium/ruby-jwt
