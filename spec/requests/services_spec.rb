@@ -7,7 +7,7 @@ RSpec.describe "Services", type: :request do
   describe "GET /services/:id" do
     it "should route to services#show" do
       header = login
-      
+
       service = create(:service)
       get service_path(service.id), params: {}, headers: header
       expect(response).to have_http_status(200)

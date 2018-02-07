@@ -1,4 +1,4 @@
-RSpec::Matchers.define :look_like_json do |expected|
+RSpec::Matchers.define :look_like_json do |_expected|
   match do |actual|
     begin
       JSON.parse(actual)

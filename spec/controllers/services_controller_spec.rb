@@ -24,7 +24,7 @@ RSpec.describe ServicesController, type: :controller do
 
       service = create(:service)
       get :show, params: { id: service.id }
-      
+
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
       expect(body_as_json).to match(@expected)

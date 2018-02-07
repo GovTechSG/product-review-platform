@@ -17,7 +17,7 @@ RSpec.describe "Reviews", type: :request do
   describe "GET /reviews/1" do
     it "should return unauthorized response" do
       @expected = unauthorized_response
-      
+
       review = create(:product_review)
       get review_path(review.id), params: {}, headers: nil
 

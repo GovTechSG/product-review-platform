@@ -13,7 +13,7 @@ RSpec.describe ProductsController, type: :controller do
     it "returns a success response" do
       product = create(:product)
       get :show, params: { id: product.id }
-      
+
       expect(response).to be_success
     end
   end
@@ -23,7 +23,7 @@ RSpec.describe ProductsController, type: :controller do
       @expected = unauthorized_response
       product = create(:product)
       get :show, params: { id: product.id }
-      
+
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
       expect(body_as_json).to match(@expected)

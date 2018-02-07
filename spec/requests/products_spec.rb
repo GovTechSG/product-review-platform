@@ -16,7 +16,7 @@ RSpec.describe "Products", type: :request do
   describe "GET /products/1" do
     it "should return unauthorized response" do
       @expected = unauthorized_response
-      
+
       product = create(:product)
       get product_path(product.id), params: {}, headers: nil
 
