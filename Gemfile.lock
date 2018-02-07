@@ -50,6 +50,11 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    apartment (2.1.0)
+      activerecord (>= 3.1.2, < 6.0)
+      parallel (>= 0.7.1)
+      public_suffix (>= 2)
+      rack (>= 1.3.6)
     arbre (1.1.1)
       activesupport (>= 3.0.0)
     arel (8.0.0)
@@ -148,6 +153,7 @@ GEM
     polyamorous (1.3.3)
       activerecord (>= 3.0)
     powerpack (0.1.1)
+    public_suffix (3.0.1)
     puma (3.11.0)
     rack (2.0.3)
     rack-cors (1.0.2)
@@ -252,6 +258,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin
+  apartment
   byebug
   database_cleaner
   debase (= 0.2.2.beta10)
