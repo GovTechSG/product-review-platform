@@ -1,4 +1,4 @@
-class StatisticsController < ApiController
+class StatisticsController < ApplicationController
   include SwaggerDocs::Statistics
   before_action :doorkeeper_authorize!
   def index

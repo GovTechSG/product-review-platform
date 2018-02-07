@@ -1,7 +1,10 @@
 # Creating test data
-# Current implementation only test that ApiController works with
+# Current implementation only test that ApplicationController works with
 # ApplicationController. Other tests will be added with later user stories
 FactoryBot.define do
+  factory :admin_user do
+    
+  end
   factory :agency do
     name { FFaker::Name.name }
     email { FFaker::Internet.email }

@@ -1,4 +1,4 @@
-class ProductsController < ApiController
+class ProductsController < ApplicationController
   include SwaggerDocs::Products
   before_action :doorkeeper_authorize!
   before_action :set_product, only: [:show, :update, :destroy]
