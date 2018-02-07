@@ -1,0 +1,24 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+  backend:
+    build: .
+    depends_on:
+      - postgres
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    ports:
+      - "3000:3000"
+    volumes:
+      - log:/app/src/log
+    environment:
+      DATABASE_TIMEOUT: 120
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: product-review-platform_test
+      DATABASE_SERVICE_NAME: postgres
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: 
+
+volumes:
+  log: {}

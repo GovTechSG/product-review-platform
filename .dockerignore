@@ -1,6 +1,6 @@
 # Unnecessary misc files/folders
-log/
-tmp/
+log/*
+tmp/*
 .DS_Store
 
 # Git
