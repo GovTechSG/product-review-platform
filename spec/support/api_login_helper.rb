@@ -13,6 +13,13 @@ end
 def unauthorized_response
   {
     error: "Invalid or missing access token. Please sign in/sign up first.",
-    "status_code": "401 Unauthorized"
+    "status_code": "401"
+  }
+end
+
+def wrong_credentials_response
+  {
+    error: "Missing or invalid credentials.",
+    "status_code": "401"
   }
 end

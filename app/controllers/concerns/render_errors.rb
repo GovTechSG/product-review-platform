@@ -11,7 +11,7 @@ module RenderErrors
     {
       json: {
         error: "Invalid or missing access token. Please sign in/sign up first.",
-        "status_code": "401 Unauthorized"
+        "status_code": "401"
       }
     }
   end

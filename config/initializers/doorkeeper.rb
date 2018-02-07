@@ -112,6 +112,7 @@ Doorkeeper.configure do
   # WWW-Authenticate Realm (default "Doorkeeper").
   # realm "Doorkeeper"
 end
+Doorkeeper::OAuth::ErrorResponse.send :prepend, CustomTokenErrorResponse
 Doorkeeper::JWT.configure do
   token_payload do |opts|
     app = App.find(opts[:resource_owner_id])
