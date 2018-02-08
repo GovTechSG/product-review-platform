@@ -63,4 +63,51 @@ RSpec.describe TokensController, type: :controller do
       expect(body_as_json).to match(@expected)
     end
   end
+
+  describe "POST #refresh" do
+    it "returns a success response" do
+      authorized_app = create(:app)
+      @app_params = {
+        "password": authorized_app.password,
+        "name": authorized_app.name
+      }
+      post :create, params: @app_params
+      @request.headers['Authorization'] = "Bearer " + body_as_json['access_token']
+      post :refresh, params: @app_params
+      expect(response).to be_success
+      expect(response.body).to look_like_json
+      expect(body_as_json.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+    end
+  end
+
+  describe "POST #token refresh wrong parameter" do
+    it "returns a unauthorized response" do
+      authorized_app = create(:app)
+      @app_params = {
+        "password": authorized_app.password,
+        "name": authorized_app.name
+      }
+      post :create, params: @app_params
+      @request.headers['Authorization'] = "Bearer " + body_as_json['access_token']
+      post :refresh, params: {}
+      expect(response).to be_unauthorized
+      expect(response.body).to look_like_json
+      expect(body_as_json).to match(refresh_wrong_parameter_response)
+    end
+  end
+
+  describe "POST #token refresh no header" do
+    it "returns a unauthorized response" do
+      authorized_app = create(:app)
+      @app_params = {
+        "password": authorized_app.password,
+        "name": authorized_app.name
+      }
+      post :create, params: @app_params
+      post :refresh, params: @app_params
+      expect(response).to be_unauthorized
+      expect(response.body).to look_like_json
+      expect(body_as_json).to match(refresh_no_header_response)
+    end
+  end
 end
