@@ -41,7 +41,7 @@ RSpec.describe TokensController, type: :controller do
     end
   end
 
-  describe "POST #token incorrect" do
+  describe "POST #revoke incorrect" do
     it "returns a not found response" do
       @expected = incorrect_token_response
       token = { token: "" }
