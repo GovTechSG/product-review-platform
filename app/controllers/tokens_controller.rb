@@ -30,6 +30,8 @@ class TokensController < Doorkeeper::TokensController
     end
   end
 
+  private
+
   def revoke_token
     if token.accessible?
       token.revoke
