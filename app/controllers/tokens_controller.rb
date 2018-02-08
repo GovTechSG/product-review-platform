@@ -30,6 +30,19 @@ class TokensController < Doorkeeper::TokensController
     end
   end
 
+  def refresh
+    request.POST['token'] = request.headers["Authorization"].split(' ')[1]
+    if token.present? && token.accessible?
+      token.revoke
+      create
+    else
+      render json: {
+        error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body",
+        "status_code": "401"
+      }, status: 401
+    end
+  end
+
   private
 
   def revoke_token
