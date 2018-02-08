@@ -6,7 +6,7 @@ require 'support/api_login_helper'
 RSpec.describe "Reviews", type: :request do
   describe "GET /reviews/1" do
     it "reviews#show" do
-      header = login
+      header = request_login
 
       review = create(:product_review)
       get review_path(review.id), params: {}, headers: header

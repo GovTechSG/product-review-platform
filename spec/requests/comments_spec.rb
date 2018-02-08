@@ -6,7 +6,7 @@ require 'support/api_login_helper'
 RSpec.describe "Comments", type: :request do
   describe "GET /comments/:id" do
     it "should route to comments#show" do
-      header = login
+      header = request_login
       comment = create(:product_review_comment)
       get comment_path(comment.id), params: {}, headers: header
       expect(response).to have_http_status(200)
