@@ -24,7 +24,7 @@ class TokensController < Doorkeeper::TokensController
       revoke_token
     else
       render json: {
-        error: "Invalid token",
+        error: "Invalid token.",
         "status_code": "404"
       }, status: 404
     end
@@ -36,7 +36,7 @@ class TokensController < Doorkeeper::TokensController
       render json: {}, status: 200
     else
       render json: {
-        error: "Inaccessible token. May have already been revoked",
+        error: "Inaccessible token. May have already been revoked.",
         "status_code": "404"
       }, status: 404
     end

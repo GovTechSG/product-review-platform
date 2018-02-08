@@ -6,7 +6,7 @@ require 'support/api_login_helper'
 RSpec.describe "Companies", type: :request do
   describe "GET /companies" do
     it "should route to companies#index" do
-      header = login
+      header = request_login
       get companies_path, params: {}, headers: header
       expect(response).to have_http_status(200)
     end
