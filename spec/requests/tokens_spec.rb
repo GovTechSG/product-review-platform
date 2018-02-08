@@ -16,7 +16,7 @@ RSpec.describe "Tokens", type: :request do
     end
   end
 
-  describe "GET /oauth/token" do
+  describe "GET /oauth/token unauthorised" do
     it "should return unauthorized response" do
       @expected = wrong_credentials_response
       authorized_app = build(:app)
@@ -27,6 +27,28 @@ RSpec.describe "Tokens", type: :request do
       post oauth_sign_in_path, params: @app_params
 
       expect(response).to have_http_status(401)
+      expect(response.body).to look_like_json
+      expect(body_as_json).to match(@expected)
+    end
+  end
+
+  describe "GET /oauth/revoke" do
+    it "should return access token" do
+      headers = request_login
+      post oauth_revoke_path, params: { token: headers['Authorization'].split(' ')[1] }
+      expect(response).to have_http_status(200)
+      expect(response.body).to look_like_json
+      expect(body_as_json).to match({})
+    end
+  end
+
+  describe "GET /oauth/revoke not found" do
+    it "should return not found response" do
+      @expected = incorrect_token_response
+      request_login
+      post oauth_revoke_path, params: {}
+
+      expect(response).to have_http_status(404)
       expect(response.body).to look_like_json
       expect(body_as_json).to match(@expected)
     end
