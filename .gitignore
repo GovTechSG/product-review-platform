@@ -5,6 +5,7 @@ tmp/
 .DS_Store
 .idea/
 .byebug_history
+coverage
 
 # Ignore application configuration
 /config/application.yml
