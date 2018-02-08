@@ -6,7 +6,7 @@ require 'support/api_login_helper'
 RSpec.describe "Statistics", type: :request do
   describe "GET /statistics" do
     it "should route to statistic#show" do
-      header = login
+      header = request_login
       get statistics_path, params: {}, headers: header
       expect(response).to have_http_status(200)
     end

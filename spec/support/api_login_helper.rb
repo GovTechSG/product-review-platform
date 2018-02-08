@@ -1,4 +1,4 @@
-def login
+def request_login
   authorized_app = create(:app)
   @app_params = {
     "password": authorized_app.password,
@@ -8,6 +8,16 @@ def login
   env ||= {}
   env['Authorization'] = "Bearer " + JSON.parse(response.body)["access_token"]
   env
+end
+
+def controller_login
+  authorized_app = create(:app)
+  @app_params = {
+    "password": authorized_app.password,
+    "name": authorized_app.name
+  }
+  post :create, params: @app_params
+  JSON.parse(response.body)["access_token"]
 end
 
 def unauthorized_response
@@ -21,5 +31,19 @@ def wrong_credentials_response
   {
     error: "Missing or invalid credentials.",
     "status_code": "401"
+  }
+end
+
+def incorrect_token_response
+  {
+    error: "Invalid token.",
+    "status_code": "404"
+  }
+end
+
+def revoked_token_response
+  {
+    error: "Inaccessible token. May have already been revoked.",
+    "status_code": "404"
   }
 end

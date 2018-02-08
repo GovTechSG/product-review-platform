@@ -6,7 +6,7 @@ require 'support/api_login_helper'
 RSpec.describe "Products", type: :request do
   describe "GET /products/:id" do
     it "should route to products#show" do
-      header = login
+      header = request_login
       product = create(:product)
       get product_path(product.id), params: {}, headers: header
       expect(response).to have_http_status(200)
