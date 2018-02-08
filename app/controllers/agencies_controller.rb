@@ -1,4 +1,4 @@
-class AgenciesController < ApiController
+class AgenciesController < ApplicationController
   include SwaggerDocs::Agencies
   before_action :doorkeeper_authorize!
   before_action :set_agency, only: [:show, :update, :destroy]

@@ -1,4 +1,4 @@
-class CommentsController < ApiController
+class CommentsController < ApplicationController
   include SwaggerDocs::Comments
   before_action :doorkeeper_authorize!
   before_action :set_comment, only: [:show, :update, :destroy]

@@ -1,5 +1,5 @@
 # Creating test data
-# Current implementation only test that ApiController works with
+# Current implementation only test that ApplicationController works with
 # ApplicationController. Other tests will be added with later user stories
 FactoryBot.define do
   factory :agency do
