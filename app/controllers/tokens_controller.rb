@@ -12,4 +12,35 @@ class TokensController < Doorkeeper::TokensController
   rescue Errors::DoorkeeperError => e
     handle_token_exception e
   end
+
+  def revoke
+    # The authorization server, if applicable, first authenticates the client
+    # and checks its ownership of the provided token.
+    #
+    # Doorkeeper does not use the token_type_hint logic described in the
+    # RFC 7009 due to the refresh token implementation that is a field in
+    # the access token model.
+    if authorized?
+      revoke_token
+    else
+      render json: {
+        error: "Invalid token.",
+        "status_code": "404"
+      }, status: 404
+    end
+  end
+
+  private
+
+  def revoke_token
+    if token.accessible?
+      token.revoke
+      render json: {}, status: 200
+    else
+      render json: {
+        error: "Inaccessible token. May have already been revoked.",
+        "status_code": "404"
+      }, status: 404
+    end
+  end
 end
