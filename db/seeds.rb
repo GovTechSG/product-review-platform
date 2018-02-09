@@ -104,4 +104,4 @@ Review.all.each_with_index do |r, i|
   r.likes.create!(agency_id: 4)
   r.likes.create!(agency_id: 5)
 end
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)
