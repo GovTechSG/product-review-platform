@@ -47,3 +47,17 @@ def revoked_token_response
     "status_code": "404"
   }
 end
+
+def refresh_wrong_parameter_response
+  {
+    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body",
+    "status_code": "401"
+  }
+end
+
+def refresh_no_header_response
+  {
+    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body",
+    "status_code": "401"
+  }
+end
