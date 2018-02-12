@@ -16,7 +16,7 @@ class ApidocsController < ApplicationController
     end
     # Need to enter the host path of the playground, for now its on localhost:3001
     key :host, "localhost:3001"
-    #key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
+    # key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
     key :consumes, ['application/json']
     key :produces, ['application/json']
 

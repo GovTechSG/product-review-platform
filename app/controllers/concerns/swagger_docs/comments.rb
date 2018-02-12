@@ -18,7 +18,7 @@ module SwaggerDocs::Comments
         key :description, 'Returns list of all comments from specified review'
         key :operationId, 'findCommentsByReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -33,7 +33,7 @@ module SwaggerDocs::Comments
         key :description, 'Creates a new comment belonging to specified review'
         key :operationId, 'addCommentByReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :comment
@@ -72,7 +72,7 @@ module SwaggerDocs::Comments
         key :description, 'Update a comment'
         key :operationId, 'updateComment'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :comment
@@ -100,7 +100,7 @@ module SwaggerDocs::Comments
         key :description, 'Returns a comment'
         key :operationId, 'findCommentById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

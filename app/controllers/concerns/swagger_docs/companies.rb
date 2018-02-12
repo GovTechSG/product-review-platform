@@ -10,7 +10,7 @@ module SwaggerDocs::Companies
         key :description, 'Returns list of all companies'
         key :operationId, 'findCompanies'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -25,7 +25,7 @@ module SwaggerDocs::Companies
         key :description, 'Creates a new company'
         key :operationId, 'addCompany'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :company
@@ -64,7 +64,7 @@ module SwaggerDocs::Companies
         key :description, 'Update a company'
         key :operationId, 'updateCompany'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :company
@@ -92,7 +92,7 @@ module SwaggerDocs::Companies
         key :description, 'Returns a company'
         key :operationId, 'findCompanyById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do
