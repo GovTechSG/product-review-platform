@@ -11,7 +11,7 @@ module SwaggerDocs::Agencies
         key :description, 'Returns list of all agencies'
         key :operationId, 'findAgencies'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -26,7 +26,7 @@ module SwaggerDocs::Agencies
         key :description, 'Creates a new agency'
         key :operationId, 'addAgency'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :agency
@@ -65,7 +65,7 @@ module SwaggerDocs::Agencies
         key :description, 'Update an agency'
         key :operationId, 'updateAgency'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :agency
@@ -93,7 +93,7 @@ module SwaggerDocs::Agencies
         key :description, 'Returns an agency'
         key :operationId, 'findAgencyById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

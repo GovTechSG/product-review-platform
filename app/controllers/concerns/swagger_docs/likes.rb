@@ -18,7 +18,7 @@ module SwaggerDocs::Likes
         key :description, 'Returns list of all likes from specified review'
         key :operationId, 'findLikesByReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -33,7 +33,7 @@ module SwaggerDocs::Likes
         key :description, 'Creates a new like belonging to specified review'
         key :operationId, 'addLikeByReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :like
@@ -72,7 +72,7 @@ module SwaggerDocs::Likes
         key :description, 'Returns a like'
         key :operationId, 'findLikeById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

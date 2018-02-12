@@ -18,7 +18,7 @@ module SwaggerDocs::Products
         key :description, 'Returns list of all products from specified company'
         key :operationId, 'findProductsByCompany'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -33,7 +33,7 @@ module SwaggerDocs::Products
         key :description, 'Creates a new product belonging to specified company'
         key :operationId, 'addProductByCompany'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :product
@@ -72,7 +72,7 @@ module SwaggerDocs::Products
         key :description, 'Update a product'
         key :operationId, 'updateProduct'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :product
@@ -100,7 +100,7 @@ module SwaggerDocs::Products
         key :description, 'Returns a product'
         key :operationId, 'findProductById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

@@ -18,7 +18,7 @@ module SwaggerDocs::Reviews
         key :description, 'Returns list of all reviews from specified product'
         key :operationId, 'findProductsByReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -33,7 +33,7 @@ module SwaggerDocs::Reviews
         key :description, 'Creates a new review belonging to specified product'
         key :operationId, 'addReviewByProduct'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :review
@@ -72,7 +72,7 @@ module SwaggerDocs::Reviews
         key :description, 'Returns list of all reviews from specified service'
         key :operationId, 'findReviewsByService'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -87,7 +87,7 @@ module SwaggerDocs::Reviews
         key :description, 'Creates a new review belonging to specified service'
         key :operationId, 'addReviewByService'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :review
@@ -126,7 +126,7 @@ module SwaggerDocs::Reviews
         key :description, 'Update a review'
         key :operationId, 'updateReview'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :review
@@ -154,7 +154,7 @@ module SwaggerDocs::Reviews
         key :description, 'Returns a review'
         key :operationId, 'findReviewById'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

@@ -10,7 +10,7 @@ module SwaggerDocs::Statistics
         key :description, 'Returns some general statistics about the app'
         key :operationId, 'findStatistics'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         response 200 do
           schema do

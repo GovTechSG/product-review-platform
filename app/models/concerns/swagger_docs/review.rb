@@ -62,7 +62,7 @@ module SwaggerDocs::Review
               key :type, :array
               items do
                 key :type, :string
-                key :example, "[Enter the review strengths here], [Enter the review strengths here] Example: 'Reliable','Good Performance' "
+                key :example, "[Enter the review strengths here] Example: 'Reliable','Good Performance' "
               end
             end
           end
@@ -95,7 +95,7 @@ module SwaggerDocs::Review
               key :type, :array
               items do
                 key :type, :string
-                key :example, "[Enter the review strengths here], [Enter the review strengths here] Example: 'Reliable','Good Performance' "
+                key :example, "[Enter the review strengths here] Example: 'Reliable','Good Performance' "
               end
             end
           end
@@ -128,7 +128,7 @@ module SwaggerDocs::Review
               key :type, :array
               items do
                 key :type, :string
-                key :example, "[Enter the review strengths here], [Enter the review strengths here] Example: 'Reliable','Good Performance' "
+                key :example, "[Enter the review strengths here] Example: 'Reliable','Good Performance' "
               end
             end
           end
