@@ -7,6 +7,14 @@ module RenderErrors
     render json: payload, status: :bad_request
   end
 
+  def render_id_not_found
+    payload = {
+      status: 404,
+      error: 'No resource with given ID found.'
+    }
+    render json: payload, status: 404
+  end
+
   def doorkeeper_unauthorized_render_options(*)
     {
       json: {
