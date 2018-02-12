@@ -15,19 +15,20 @@ class ApidocsController < ApplicationController
       end
     end
     # Need to enter the host path of the playground, for now its on localhost:3001
-    key :host, "localhost:3001"
+    key :host, "localhost:3000"
     # key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
     key :consumes, ['application/json']
     key :produces, ['application/json']
 
-    security_definition :access_token do
+    security_definition :Authorization do
       key :type, :apiKey
-      key :name, "access-token"
+      key :name, "Authorization"
       key :in, :header
+      key :description, 'Enter "Bearer " before ur access key'
     end
 
     security do
-      key :access_token, []
+      key :Authorization, []
     end
   end
 
