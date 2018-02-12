@@ -32,6 +32,27 @@ def body_as_json
   json_str_to_hash(response.body)
 end
 
+def parsed_response
+  JSON.parse(response.body)
+end
+
+def expect_not_found
+  expect(parsed_response['error']).to eq("No resource with given ID found.")
+  expect(parsed_response['status']).to eq(404)
+  expect(response).to be_not_found
+end
+
+def expect_show_response
+  expect(response.body).to look_like_json
+  expect(parsed_response).to_not be_nil
+end
+
+def expect_unauthorized
+  expect(response.body).to look_like_json
+  expect(response).to be_unauthorized
+  expect(body_as_json).to match(unauthorized_response)
+end
+
 def json_str_to_hash(str)
   JSON.parse(str).with_indifferent_access
 end

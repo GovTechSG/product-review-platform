@@ -3,12 +3,7 @@ require 'rails_helper'
 RSpec.describe CompanySerializer, type: :serializer do
   context 'Individual Resource Representation' do
     before(:all) do
-      #Timecop.freeze
       @company = create(:company)
-    end
-
-    after(:all) do
-      #Timecop.return
     end
 
     subject { CompanySerializer.new(@company, root: false).as_json["object"] }
