@@ -103,4 +103,30 @@ RSpec.describe CompaniesController, type: :controller do
       expect_unauthorized
     end
   end
+
+  describe "POST #create", authorized: true do
+    let(:company) { build(:company) }
+    it "returns a success response" do
+      post :create, params: { company: company.as_json }
+      expect(response.status).to eq(201)
+    end
+
+    it "returns data of the single created company" do
+      post :create, params: { company: company.as_json }
+      expect_show_response
+    end
+
+    it "returns Unprocessable Entity if company is not valid" do
+      company.name = ""
+      post :create, params: { company: company.as_json }
+      expect(response.status).to eq(422)
+    end
+  end
+
+  describe "POST #create", authorized: false do
+    it "returns an unauthorized response" do
+      get :create, params: { company: {} }
+      expect_unauthorized
+    end
+  end
 end
