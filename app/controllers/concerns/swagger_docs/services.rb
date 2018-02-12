@@ -18,7 +18,7 @@ module SwaggerDocs::Services
         key :description, 'Returns list of all services from specified company'
         key :operationId, 'findServicesByCompany'
         key :produces, [
-          'application/json'
+            'application/json'
         ]
         response 200 do
           schema type: :array do
@@ -33,7 +33,7 @@ module SwaggerDocs::Services
         key :description, 'Creates a new service belonging to specified company'
         key :operationId, 'addServiceByCompany'
         key :produces, [
-          'application/json'
+            'application/json'
         ]
         parameter do
           key :name, :service
@@ -52,7 +52,7 @@ module SwaggerDocs::Services
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end
@@ -72,7 +72,7 @@ module SwaggerDocs::Services
         key :description, 'Update a service'
         key :operationId, 'updateService'
         key :produces, [
-          'application/json'
+            'application/json'
         ]
         parameter do
           key :name, :service
@@ -91,7 +91,7 @@ module SwaggerDocs::Services
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end
@@ -100,7 +100,7 @@ module SwaggerDocs::Services
         key :description, 'Returns a service'
         key :operationId, 'findServiceById'
         key :produces, [
-          'application/json'
+            'application/json'
         ]
         response 200 do
           schema do

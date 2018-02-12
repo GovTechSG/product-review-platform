@@ -33,14 +33,17 @@ module SwaggerDocs::Agency
             key :type, :object
             property :name do
               key :type, :string
+              key :example, "[Enter the Agency name here. Example: SPRING Singapore]"
             end
 
             property :email do
               key :type, :string
+              key :example, "[Enter the Agency email here. Example: agency_3@foo.com]"
             end
 
             property :number do
               key :type, :string
+              key :example, "[Enter the Agency number here. Example: 71512234]"
             end
           end
         end
