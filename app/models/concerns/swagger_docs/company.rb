@@ -24,6 +24,10 @@ module SwaggerDocs::Company
       property :aggregate_score do
         key :type, :number
       end
+
+      property :description do
+        key :type, :string
+      end
     end
 
     swagger_schema :CompanyInput do
@@ -33,17 +37,35 @@ module SwaggerDocs::Company
             key :type, :object
             property :name do
               key :type, :string
+              key :example, "[Enter the company name here. Example: GovTech]"
             end
 
             property :UEN do
               key :type, :string
+              key :example, "[Enter the UEN of the company here. Example: 987654321]"
             end
 
             property :aggregate_score do
               key :type, :number
+              key :example, "[Enter the aggregate score of the company here. Example: 3]"
+            end
+
+            property :description do
+              key :type, :string
+              key :example, "[Enter the description of the company here]"
             end
           end
         end
+      end
+    end
+    swagger_schema :SwaggerError do
+      key :required, [:code, :message]
+      property :code do
+        key :type, :integer
+        key :format, :int32
+      end
+      property :message do
+        key :type, :string
       end
     end
   end
