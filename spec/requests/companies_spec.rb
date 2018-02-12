@@ -32,12 +32,12 @@ RSpec.describe "Companies", type: :request do
       expect(response).to be_success
     end
 
-    it "returns data of an single student" do
+    it "returns data of a single company" do
       get company_path(company.id), params: {}, headers: header
       expect_show_response
     end
 
-    it "returns not found if the student does not exist" do
+    it "returns not found if the company does not exist" do
       get company_path(0), params: {}, headers: header
       expect_not_found
     end
