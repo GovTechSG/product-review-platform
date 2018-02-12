@@ -73,7 +73,7 @@ RSpec.describe CompaniesController, type: :controller do
 
   describe "POST #create", authorized: false do
     it "returns an unauthorized response" do
-      get :create, params: { company: {} }
+      post :create, params: { company: {} }
       expect_unauthorized
     end
   end
