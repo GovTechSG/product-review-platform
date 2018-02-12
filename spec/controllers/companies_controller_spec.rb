@@ -34,12 +34,12 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response).to be_success
     end
 
-    it "returns data of an single student" do
+    it "returns data of an single company" do
       get :show, params: { id: company.id }, format: :json
       expect_show_response
     end
 
-    it "returns not found if the student does not exist" do
+    it "returns not found if the company does not exist" do
       get :show, params: { id: 0 }, format: :json
       expect_not_found
     end
