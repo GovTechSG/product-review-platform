@@ -3,29 +3,50 @@ require 'support/api_login_helper'
 
 RSpec.describe "Companies", type: :request do
   describe "GET /companies" do
+    let(:header) { request_login }
     it "should respond with success" do
-      header = request_login
       get companies_path, params: {}, headers: header
       expect(response).to have_http_status(200)
     end
 
     it "should return all companies" do
       create_list(:company, 5)
-      header = request_login
       get companies_path, params: {}, headers: header
-      parsed_response = JSON.parse(response.body)
       expect(parsed_response.length).to eq(5)
     end
   end
 
-  describe "GET /companies" do
+  describe "GET /companies unauthorized" do
     it "should return unauthorized response" do
-      @expected = unauthorized_response
       get companies_path, params: {}, headers: nil
 
-      expect(response).to have_http_status(401)
-      expect(response.body).to look_like_json
-      expect(body_as_json).to match(@expected)
+      expect_unauthorized
+    end
+  end
+
+  describe "GET /companies/:id" do
+    let(:company) { create(:company) }
+    let(:header) { request_login }
+    it "returns a success response" do
+      get company_path(company.id), params: {}, headers: header
+      expect(response).to be_success
+    end
+
+    it "returns data of an single student" do
+      get company_path(company.id), params: {}, headers: header
+      expect_show_response
+    end
+
+    it "returns not found if the student does not exist" do
+      get company_path(0), params: {}, headers: header
+      expect_not_found
+    end
+  end
+
+  describe "GET /companies/:id unauthorized" do
+    it "returns unauthorized response" do
+      get company_path(0), params: {}, headers: nil
+      expect_unauthorized
     end
   end
 end
