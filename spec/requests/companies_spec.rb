@@ -108,4 +108,31 @@ RSpec.describe "Companies", type: :request do
       expect_unauthorized
     end
   end
+
+  describe "POST /companies" do
+    let(:company) { build(:company) }
+    let(:header) { request_login }
+    it "returns a success response" do
+      post companies_path, params: { company: company.as_json }, headers: header
+      expect(response.status).to eq(201)
+    end
+
+    it "returns data of the single created company" do
+      post companies_path, params: { company: company.as_json }, headers: header
+      expect_show_response
+    end
+
+    it "returns Unprocessable Entity if company is not valid" do
+      company.name = ""
+      post companies_path, params: { company: company.as_json }, headers: header
+      expect(response.status).to eq(422)
+    end
+  end
+
+  describe "POST /companies unauthorized" do
+    it "returns an unauthorized response" do
+      post companies_path, params: { company: {} }, headers: nil
+      expect_unauthorized
+    end
+  end
 end
