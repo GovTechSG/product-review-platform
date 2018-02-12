@@ -12,6 +12,13 @@ RSpec.describe CompaniesController, type: :controller do
       get :index
       expect(response).to be_success
     end
+
+    it "returns all company" do
+      create_list(:company, 5)
+      get :index
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response.length).to eq(5)
+    end
   end
 
   describe "GET #index", authorized: false do

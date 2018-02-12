@@ -3,10 +3,18 @@ require 'support/api_login_helper'
 
 RSpec.describe "Companies", type: :request do
   describe "GET /companies" do
-    it "should route to companies#index" do
+    it "should respond with success" do
       header = request_login
       get companies_path, params: {}, headers: header
       expect(response).to have_http_status(200)
+    end
+
+    it "should return all companies" do
+      create_list(:company, 5)
+      header = request_login
+      get companies_path, params: {}, headers: header
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response.length).to eq(5)
     end
   end
 
