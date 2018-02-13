@@ -1,9 +1,5 @@
 # Product Review Platform
 
-Status of the last build: <img src="http://teamcity.gahmen.tech:8111/app/rest/builds/buildType:(project:(id:ProductReviewPlatform)))/statusIcon.svg"/>
-
-[![Build status](https://teamcity.jetbrains.com/guestAuth/app/rest/builds/buildType:(project:(id:ProductReviewPlatform)))/statusIcon.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_TeamcityGoogleTagManagerPlugin_Buil
-
 <a href="https://teamcity.gahmen.tech/viewType.html?buildTypeId=ProductReviewPlatform_UnitTest&guest=1"> 
 <img src="https://teamcity.gahmen.tech/app/rest/builds/buildType(id:ProductReviewPlatform_UnitTest)/statusIcon"/>
 </a>
