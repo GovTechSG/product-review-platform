@@ -186,4 +186,24 @@ RSpec.describe CompaniesController, type: :controller do
       expect_unauthorized
     end
   end
+
+  describe "DELETE #destroy", authorized: true do
+    it "returns a success response" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      expect(response.status).to eq(200)
+    end
+
+    it "returns a not found response if company is not found" do
+      delete :destroy, params: { id: 0 }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "DELETE #destroy", authorized: false do
+    it "returns an unauthorized response" do
+      delete :destroy, params: { id: 0 }, format: :json
+      expect_unauthorized
+    end
+  end
 end

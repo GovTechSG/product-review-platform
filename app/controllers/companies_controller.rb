@@ -38,6 +38,7 @@ class CompaniesController < ApplicationController
   # DELETE /companies/1
   def destroy
     @company.destroy
+    render json: nil, status: :ok
   end
 
   private
