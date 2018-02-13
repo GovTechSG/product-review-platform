@@ -253,7 +253,7 @@ RSpec.describe CompaniesController, type: :controller do
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
-      expect(body_as_json.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
     end
   end
 
