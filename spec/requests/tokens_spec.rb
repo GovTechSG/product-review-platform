@@ -12,7 +12,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_sign_in_path, params: @app_params
       expect(response).to have_http_status(200)
       expect(response.body).to look_like_json
-      expect(body_as_json.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
     end
   end
 
@@ -28,7 +28,7 @@ RSpec.describe "Tokens", type: :request do
 
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_revoke_path, params: { token: headers['Authorization'].split(' ')[1] }
       expect(response).to have_http_status(200)
       expect(response.body).to look_like_json
-      expect(body_as_json).to match({})
+      expect(parsed_response).to match({})
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Tokens", type: :request do
 
       expect(response).to have_http_status(404)
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 
@@ -67,7 +67,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_refresh_path, params: @app_params, headers: env
       expect(response).to have_http_status(200)
       expect(response.body).to look_like_json
-      expect(body_as_json.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_refresh_path, params: @app_params
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(refresh_wrong_parameter_response)
+      expect(parsed_response).to match(refresh_wrong_parameter_response)
     end
   end
 end

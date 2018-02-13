@@ -20,7 +20,7 @@ RSpec.describe "Services", type: :request do
 
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 end
