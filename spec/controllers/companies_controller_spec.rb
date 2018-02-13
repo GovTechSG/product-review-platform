@@ -116,6 +116,13 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response.status).to eq(200)
     end
 
+    it "sets company's discarded_at column" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      company.reload
+      expect(company.discarded?).to be true
+    end
+
     it "returns a not found response if company is not found" do
       delete :destroy, params: { id: 0 }
       expect(response.status).to eq(404)

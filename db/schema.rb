@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207053033) do
+ActiveRecord::Schema.define(version: 20180213084802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,7 +89,9 @@ ActiveRecord::Schema.define(version: 20180207053033) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
+    t.datetime "discarded_at"
     t.index ["UEN"], name: "index_companies_on_UEN", unique: true
+    t.index ["discarded_at"], name: "index_companies_on_discarded_at"
   end
 
   create_table "likes", force: :cascade do |t|
