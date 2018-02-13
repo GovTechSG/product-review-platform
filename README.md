@@ -23,6 +23,11 @@ docker-compose run backend rake db:create
 docker-compose run backend rake db:schema:load
 ```
 
+To seed data from seed.rb 
+```
+docker-compose run backend rake db:seed
+```
+
 To run rspec or rails console
 ```
 docker-compose run backend rspec
