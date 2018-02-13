@@ -4,6 +4,10 @@ module SwaggerDocs::Company
   included do
     include Swagger::Blocks
 
+    # example :Company do
+    #   key :strength, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
+    # end
+
     swagger_schema :Company do
       key :type, :object
       key :required, [:id, :name, :UEN, :aggregate_score]
@@ -15,10 +19,12 @@ module SwaggerDocs::Company
 
       property :name do
         key :type, :string
+        key :example, 'Pivotal Software'
       end
 
       property :UEN do
         key :type, :string
+        key :example, '984208875'
       end
 
       property :aggregate_score do
@@ -27,6 +33,16 @@ module SwaggerDocs::Company
 
       property :description do
         key :type, :string
+        key :example, 'Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis.'
+      end
+
+      property :review_count do
+        key :type, :number
+      end
+
+      property :strength do
+        key :type, :array
+        key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
       end
     end
 

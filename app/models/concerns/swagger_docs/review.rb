@@ -19,6 +19,7 @@ module SwaggerDocs::Review
 
       property :content do
         key :type, :string
+        key :example, "Spring frameworks was not developed in spring"
       end
 
       property :company_id do
@@ -28,6 +29,7 @@ module SwaggerDocs::Review
 
       property :reviewable_type do
         key :type, :string
+        key :example, "Product"
       end
 
       property :reviewable_id do
@@ -39,6 +41,10 @@ module SwaggerDocs::Review
         key :type, :array
         items do
           key :type, :string
+          key :example, [
+              "Reliable",
+              "Explanation of Resources"
+          ]
         end
       end
     end
