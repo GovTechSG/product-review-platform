@@ -29,7 +29,7 @@ end
 Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
 def parsed_response
   parsed_data = JSON.parse(response.body)
-  parsed_data.is_a?(Array) ? parsed_data.map(&:to_s) : parsed_data.with_indifferent_access
+  parsed_data.is_a?(Array) ? parsed_data : parsed_data.with_indifferent_access
 end
 
 def expect_not_found
