@@ -76,4 +76,36 @@ RSpec.describe "Companies", type: :request do
       expect_unauthorized
     end
   end
+
+  describe "PATCH /company/:id" do
+    let(:company) { create(:company) }
+    let(:header) { request_login }
+    it "returns a success response" do
+      patch company_path(company.id), params: { company: company.as_json }, headers: header
+      expect(response.status).to eq(200)
+    end
+
+    it "returns data of the single updated company" do
+      updated_company = build(:company)
+      patch company_path(company.id), params: { company: updated_company.as_json }, headers: header
+      company.reload
+      expect(company.attributes.except('id', 'created_at', 'updated_at')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at'))
+    end
+
+    it "returns Unprocessable Entity if company is not valid" do
+      original_company = company
+      patch company_path(company.id), params: { company: Company.new(aggregate_score: 6).as_json, id: company.id }, headers: header
+      company.reload
+      expect(company).to match(original_company)
+      expect(response.status).to eq(422)
+      expect(body_as_json.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+    end
+  end
+
+  describe "PATCH #update", authorized: false do
+    it "returns an unauthorized response" do
+      patch company_path(0), params: { company: {}, id: 0 }
+      expect_unauthorized
+    end
+  end
 end

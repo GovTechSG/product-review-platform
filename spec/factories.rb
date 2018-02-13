@@ -29,7 +29,7 @@ FactoryBot.define do
   factory :company do
     name { FFaker::Name.name }
     UEN { FFaker::Guid.guid }
-    aggregate_score { FFaker.numerify("#.#") }
+    aggregate_score { rand * 5 }
     description { FFaker::Lorem.sentences }
   end
 
