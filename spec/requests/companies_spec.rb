@@ -108,4 +108,25 @@ RSpec.describe "Companies", type: :request do
       expect_unauthorized
     end
   end
+
+  describe "DELETE #destroy", authorized: true do
+    let(:company) { create(:company) }
+    let(:header) { request_login }
+    it "returns a success response" do
+      delete company_path(company.id), params: {}, headers: header
+      expect(response.status).to eq(200)
+    end
+
+    it "returns a not found response if company is not found" do
+      delete company_path(0), params: {}, headers: header
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "DELETE #destroy", authorized: false do
+    it "returns an unauthorized response" do
+      delete company_path(0), params: {}, headers: nil
+      expect_unauthorized
+    end
+  end
 end
