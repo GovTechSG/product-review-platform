@@ -27,13 +27,9 @@ end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
-
-def body_as_json
-  json_str_to_hash(response.body)
-end
-
 def parsed_response
-  JSON.parse(response.body)
+  parsed_data = JSON.parse(response.body)
+  parsed_data.is_a?(Array) ? parsed_data.map(&:to_s) : parsed_data.with_indifferent_access
 end
 
 def expect_not_found
@@ -50,12 +46,9 @@ end
 def expect_unauthorized
   expect(response.body).to look_like_json
   expect(response).to be_unauthorized
-  expect(body_as_json).to match(unauthorized_response)
+  expect(parsed_response).to match(unauthorized_response)
 end
 
-def json_str_to_hash(str)
-  JSON.parse(str).with_indifferent_access
-end
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

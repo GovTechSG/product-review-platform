@@ -24,7 +24,7 @@ RSpec.describe LikesController, type: :controller do
 
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 end

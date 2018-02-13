@@ -12,7 +12,7 @@ RSpec.describe TokensController, type: :controller do
       post :create, params: @app_params
       expect(response).to be_success
       expect(response.body).to look_like_json
-      expect(body_as_json.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe TokensController, type: :controller do
       post :create, params: @app_params
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 
@@ -37,7 +37,7 @@ RSpec.describe TokensController, type: :controller do
       post :revoke, params: { token: token }
       expect(response).to be_success
       expect(response.body).to look_like_json
-      expect(body_as_json).to match({})
+      expect(parsed_response).to match({})
     end
   end
 
@@ -48,7 +48,7 @@ RSpec.describe TokensController, type: :controller do
       post :revoke, params: token
       expect(response.body).to look_like_json
       expect(response.status).to eq(404)
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 
@@ -60,7 +60,7 @@ RSpec.describe TokensController, type: :controller do
       post :revoke, params: { token: token }
       expect(response.body).to look_like_json
       expect(response.status).to eq(404)
-      expect(body_as_json).to match(@expected)
+      expect(parsed_response).to match(@expected)
     end
   end
 
@@ -72,11 +72,11 @@ RSpec.describe TokensController, type: :controller do
         "name": authorized_app.name
       }
       post :create, params: @app_params
-      @request.headers['Authorization'] = "Bearer " + body_as_json['access_token']
+      @request.headers['Authorization'] = "Bearer " + parsed_response['access_token']
       post :refresh, params: @app_params
       expect(response).to be_success
       expect(response.body).to look_like_json
-      expect(body_as_json.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
     end
   end
 
@@ -88,11 +88,11 @@ RSpec.describe TokensController, type: :controller do
         "name": authorized_app.name
       }
       post :create, params: @app_params
-      @request.headers['Authorization'] = "Bearer " + body_as_json['access_token']
+      @request.headers['Authorization'] = "Bearer " + parsed_response['access_token']
       post :refresh, params: {}
       expect(response).to be_unauthorized
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(refresh_wrong_parameter_response)
+      expect(parsed_response).to match(refresh_wrong_parameter_response)
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe TokensController, type: :controller do
       post :refresh, params: @app_params
       expect(response).to be_unauthorized
       expect(response.body).to look_like_json
-      expect(body_as_json).to match(refresh_no_header_response)
+      expect(parsed_response).to match(refresh_no_header_response)
     end
   end
 end
