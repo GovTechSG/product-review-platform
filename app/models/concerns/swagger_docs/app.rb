@@ -34,5 +34,16 @@ module SwaggerDocs::App
         end
       end
     end
+
+    swagger_schema :TokenSignoutInput do
+      allOf do
+        schema do
+          property :token do
+            key :type, :string
+            key :example, "[Enter your access token here]"
+          end
+        end
+      end
+    end
   end
 end

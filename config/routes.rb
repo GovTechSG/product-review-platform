@@ -34,5 +34,5 @@ Rails.application.routes.draw do
 
   resources :apidocs, only: [:index]
 
-  get '/sandbox', :to => redirect('index.html')
+  get '/sandbox', to: redirect('index.html')
 end
