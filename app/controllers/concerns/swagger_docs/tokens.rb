@@ -28,6 +28,5 @@ module SwaggerDocs::Tokens
         end
       end
     end
-
   end
 end

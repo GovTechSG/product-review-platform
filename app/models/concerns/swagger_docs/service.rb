@@ -15,10 +15,12 @@ module SwaggerDocs::Service
 
       property :name do
         key :type, :string
+        key :example, "Spring Frameworks"
       end
 
       property :description do
         key :type, :string
+        key :example, "Spring frameworks was not developed in spring"
       end
 
       property :company_id do

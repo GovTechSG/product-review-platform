@@ -10,10 +10,12 @@ module SwaggerDocs::App
 
       property :name do
         key :type, :string
+        key :example, "validAccount"
       end
 
       property :password do
         key :type, :string
+        key :example, "validPassword"
       end
     end
 

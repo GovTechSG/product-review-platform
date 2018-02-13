@@ -15,6 +15,7 @@ module SwaggerDocs::Comment
 
       property :content do
         key :type, :string
+        key :example, "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis."
       end
 
       property :agency_id do

@@ -15,14 +15,17 @@ module SwaggerDocs::Agency
 
       property :name do
         key :type, :string
+        key :example, "MTI"
       end
 
       property :email do
         key :type, :string
+        key :example, "agency_1@foo.com"
       end
 
       property :number do
         key :type, :string
+        key :example, "51512234"
       end
     end
 
