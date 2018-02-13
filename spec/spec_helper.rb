@@ -47,16 +47,6 @@ def expect_unauthorized
   expect(response.body).to look_like_json
   expect(response).to be_unauthorized
   expect(parsed_response).to match(unauthorized_response)
-
-def expect_not_found
-  expect(parsed_response['error']).to eq("No resource with given ID found.")
-  expect(parsed_response['status']).to eq(404)
-  expect(response).to be_not_found
-end
-
-def expect_show_response
-  expect(response.body).to look_like_json
-  expect(parsed_response).to_not be_nil
 end
 
 RSpec.configure do |config|
