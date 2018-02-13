@@ -42,8 +42,8 @@ module SwaggerDocs::Review
         items do
           key :type, :string
           key :example, [
-              "Reliable",
-              "Explanation of Resources"
+            "Reliable",
+            "Explanation of Resources"
           ]
         end
       end
