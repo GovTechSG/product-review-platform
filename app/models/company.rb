@@ -10,4 +10,5 @@ class Company < ApplicationRecord
   has_many :services, dependent: :destroy
 
   validates_presence_of :name, :UEN, :aggregate_score, :description
+  validates :aggregate_score, inclusion: { in: 0..5 }
 end
