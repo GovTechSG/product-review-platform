@@ -1,6 +1,6 @@
 class Comment < ApplicationRecord
   include SwaggerDocs::Comment
-
+  include Discard::Model
   belongs_to :agency
   belongs_to :review
 

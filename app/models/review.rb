@@ -1,7 +1,7 @@
 class Review < ApplicationRecord
   include SwaggerDocs::Review
   include Statistics::Reviews
-
+  include Discard::Model
   belongs_to :company
   belongs_to :reviewable, polymorphic: true
 

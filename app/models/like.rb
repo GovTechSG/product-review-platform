@@ -1,6 +1,6 @@
 class Like < ApplicationRecord
   include SwaggerDocs::Like
-
+  include Discard::Model
   belongs_to :agency
   belongs_to :review
 

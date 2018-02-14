@@ -1,6 +1,6 @@
 class Agency < ApplicationRecord
   include SwaggerDocs::Agency
-
+  include Discard::Model
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
 
