@@ -47,13 +47,13 @@ FactoryBot.define do
 
   factory :product do
     name { FFaker::Name.name }
-    description { FFaker::Lorem.sentences }
+    description { FFaker::Lorem.sentence }
     company
   end
 
   factory :service do
     name { FFaker::Name.name }
-    description { FFaker::Lorem.sentences }
+    description { FFaker::Lorem.sentence }
     company
   end
 
