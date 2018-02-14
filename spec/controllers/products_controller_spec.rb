@@ -34,6 +34,11 @@ RSpec.describe ProductsController, type: :controller do
         get :show, params: { id: product.to_param }
         expect(response).to be_success
       end
+
+      it "returns not found when product not found", authorized: true do
+        get :show, params: { id: 0 }
+        expect(response).to be_not_found
+      end
     end
 
     describe "POST #create" do
@@ -103,11 +108,31 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe "DELETE #destroy" do
-      it "destroys the requested product", authorized: true do
+      it "soft deletes", authorized: true do
         product = Product.create! valid_attributes
         expect do
           delete :destroy, params: { id: product.to_param }, session: valid_session
-        end.to change(Product, :count).by(-1)
+        end.to change(Product, :count).by(0)
+      end
+
+      it "sets discarded_at datetime", authorized: true do
+        product = Product.create! valid_attributes
+        delete :destroy, params: { id: product.to_param }
+        product.reload
+        expect(product.discarded?).to be true
+      end
+
+      it "renders a JSON response with the product", authorized: true do
+        product = Product.create! valid_attributes
+
+        put :update, params: { id: product.to_param, product: valid_attributes }
+        expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq('application/json')
+      end
+
+      it "returns a not found response when product not found", authorized: true do
+        delete :destroy, params: { id: 0 }
+        expect(response).to be_not_found
       end
     end
   end
@@ -172,11 +197,18 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe "DELETE #destroy" do
-      it "destroys the requested product", authorized: false do
+      it "does not destroy the requested product", authorized: false do
         product = Product.create! valid_attributes
         expect do
           delete :destroy, params: { id: product.to_param }, session: valid_session
         end.to change(Product, :count).by(0)
+      end
+
+      it "does not set discarded_at datetime", authorized: false do
+        product = Product.create! valid_attributes
+        delete :destroy, params: { id: product.to_param }
+        product.reload
+        expect(product.discarded?).to be false
       end
 
       it "returns an unauthorized response", authorized: false do
