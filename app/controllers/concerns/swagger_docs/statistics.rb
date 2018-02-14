@@ -4,7 +4,7 @@ module SwaggerDocs::Statistics
   included do
     include Swagger::Blocks
 
-    swagger_path '/statistics' do
+    swagger_path '/api/v1/statistics' do
       operation :get do
         key :tags, ['statistics']
         key :description, 'Returns some general statistics about the app'

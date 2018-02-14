@@ -5,7 +5,7 @@ module SwaggerDocs::Agencies
 
     include Swagger::Blocks
 
-    swagger_path '/agencies' do
+    swagger_path '/api/v1/agencies' do
       operation :get do
         key :tags, ['agency']
         key :description, 'Returns list of all agencies'
@@ -51,7 +51,7 @@ module SwaggerDocs::Agencies
       end
     end
 
-    swagger_path '/agencies/{id}' do
+    swagger_path '/api/v1/agencies/{id}' do
       parameter do
         key :name, :id
         key :in, :path

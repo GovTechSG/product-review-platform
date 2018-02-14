@@ -4,7 +4,7 @@ module SwaggerDocs::Services
   included do
     include Swagger::Blocks
 
-    swagger_path '/companies/{company_id}/services' do
+    swagger_path '/api/v1/companies/{company_id}/services' do
       parameter do
         key :name, :company_id
         key :in, :path
@@ -58,7 +58,7 @@ module SwaggerDocs::Services
       end
     end
 
-    swagger_path '/services/{id}' do
+    swagger_path '/api/v1/services/{id}' do
       parameter do
         key :name, :id
         key :in, :path

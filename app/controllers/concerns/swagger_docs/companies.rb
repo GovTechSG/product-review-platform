@@ -4,7 +4,7 @@ module SwaggerDocs::Companies
   included do
     include Swagger::Blocks
 
-    swagger_path '/companies' do
+    swagger_path '/api/v1/companies' do
       operation :get do
         key :tags, ['company']
         key :description, 'Returns list of all companies'
@@ -50,7 +50,7 @@ module SwaggerDocs::Companies
       end
     end
 
-    swagger_path '/companies/{id}' do
+    swagger_path '/api/v1/companies/{id}' do
       parameter do
         key :name, :id
         key :in, :path

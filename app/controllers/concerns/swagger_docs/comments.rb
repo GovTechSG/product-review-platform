@@ -4,7 +4,7 @@ module SwaggerDocs::Comments
   included do
     include Swagger::Blocks
 
-    swagger_path '/reviews/{review_id}/comments' do
+    swagger_path '/api/v1/reviews/{review_id}/comments' do
       parameter do
         key :name, :review_id
         key :in, :path
@@ -58,7 +58,7 @@ module SwaggerDocs::Comments
       end
     end
 
-    swagger_path '/comments/{id}' do
+    swagger_path '/api/v1/comments/{id}' do
       parameter do
         key :name, :id
         key :in, :path

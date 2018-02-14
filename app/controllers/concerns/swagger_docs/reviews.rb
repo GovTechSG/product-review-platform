@@ -4,7 +4,7 @@ module SwaggerDocs::Reviews
   included do
     include Swagger::Blocks
 
-    swagger_path '/products/{product_id}/reviews' do
+    swagger_path '/api/v1/products/{product_id}/reviews' do
       parameter do
         key :name, :product_id
         key :in, :path
@@ -58,7 +58,7 @@ module SwaggerDocs::Reviews
       end
     end
 
-    swagger_path '/services/{service_id}/reviews' do
+    swagger_path '/api/v1/services/{service_id}/reviews' do
       parameter do
         key :name, :service_id
         key :in, :path
@@ -112,7 +112,7 @@ module SwaggerDocs::Reviews
       end
     end
 
-    swagger_path '/reviews/{id}' do
+    swagger_path '/api/v1/reviews/{id}' do
       parameter do
         key :name, :id
         key :in, :path
