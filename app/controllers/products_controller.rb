@@ -37,13 +37,15 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1
   def destroy
-    @product.destroy
+    @product.discard
+    render json: nil, status: :ok
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-      @product = Product.find(params[:id])
+      @product = Product.find_by(id: params[:id])
+      render_id_not_found if @product.nil?
     end
 
     # Only allow a trusted parameter "white list" through.
