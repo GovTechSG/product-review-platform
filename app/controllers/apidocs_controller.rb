@@ -14,37 +14,28 @@ class ApidocsController < ApplicationController
         key :name, 'MIT'
       end
     end
+    # Need to enter the host path of the playground, for now its on localhost:3001
+    # key :host, "localhost:3000"
     key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
     key :consumes, ['application/json']
     key :produces, ['application/json']
 
-    security_definition :access_token do
+    security_definition :Authorization do
       key :type, :apiKey
-      key :name, "access-token"
+      key :name, "Authorization"
       key :in, :header
-    end
-
-    security_definition :uid do
-      key :type, :apiKey
-      key :name, :uid
-      key :in, :header
-    end
-
-    security_definition :client do
-      key :type, :apiKey
-      key :name, :client
-      key :in, :header
+      key :description, 'Enter "Bearer " before ur access key'
     end
 
     security do
-      key :access_token, []
-      key :uid, []
-      key :client, []
+      key :Authorization, []
     end
   end
 
   # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [
+    App,
+    TokensController,
     CompaniesController,
     Company,
     AgenciesController,

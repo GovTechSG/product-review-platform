@@ -83,7 +83,7 @@ module SwaggerDocs::Companies
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end

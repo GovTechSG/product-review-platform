@@ -52,13 +52,13 @@ module SwaggerDocs::Reviews
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end
     end
 
-    swagger_path '/services/{services_id}/reviews' do
+    swagger_path '/services/{service_id}/reviews' do
       parameter do
         key :name, :service_id
         key :in, :path
@@ -106,7 +106,7 @@ module SwaggerDocs::Reviews
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end
@@ -145,7 +145,7 @@ module SwaggerDocs::Reviews
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end

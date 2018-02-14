@@ -1,4 +1,5 @@
 class TokensController < Doorkeeper::TokensController
+  include SwaggerDocs::Tokens
   def url_options
     {}
   end

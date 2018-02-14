@@ -15,10 +15,12 @@ module SwaggerDocs::Product
 
       property :name do
         key :type, :string
+        key :example, "Postman Product"
       end
 
       property :description do
         key :type, :string
+        key :example, "A postman API"
       end
 
       property :company_id do
@@ -34,10 +36,12 @@ module SwaggerDocs::Product
             key :type, :object
             property :name do
               key :type, :string
+              key :example, "[Enter the product name here. Example: Postman Product]"
             end
 
             property :description do
               key :type, :string
+              key :example, "[Enter the product description here. Example: A postman API]"
             end
           end
         end

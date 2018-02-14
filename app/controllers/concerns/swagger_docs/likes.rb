@@ -41,7 +41,7 @@ module SwaggerDocs::Likes
           key :description, 'Like to create'
           key :required, true
           schema do
-            key :'$ref', :LikeCreateInput
+            key :'$ref', :LikeInput
           end
         end
         response 200 do
@@ -52,7 +52,7 @@ module SwaggerDocs::Likes
         response 422 do
           key :description, 'Unprocessable Entity'
           schema do
-            key :'$ref', :SwaggerErrorModel
+            key :'$ref', :SwaggerError
           end
         end
       end
