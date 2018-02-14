@@ -37,7 +37,8 @@ class CompaniesController < ApplicationController
 
   # DELETE /companies/1
   def destroy
-    @company.destroy
+    @company.discard
+    render json: nil, status: :ok
   end
 
   private
@@ -53,6 +54,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :description)
+      params.require(:company).permit(:name, :UEN, :description, :aggregate_score)
     end
 end

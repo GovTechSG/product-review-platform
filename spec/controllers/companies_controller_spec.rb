@@ -77,4 +77,62 @@ RSpec.describe CompaniesController, type: :controller do
       expect_unauthorized
     end
   end
+
+  describe "PATCH #update", authorized: true do
+    let(:company) { create(:company) }
+    it "returns a success response" do
+      patch :update, params: { company: company.as_json, id: company.id }
+      expect(response.status).to eq(200)
+    end
+
+    it "returns data of the single updated company" do
+      updated_company = build(:company)
+      patch :update, params: { company: updated_company.as_json, id: company.id }
+      company.reload
+      expect(company.attributes.except('id', 'created_at', 'updated_at')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at'))
+    end
+
+    it "returns Unprocessable Entity if company is not valid" do
+      original_company = company
+      patch :update, params: { company: Company.new(aggregate_score: 6).as_json, id: company.id }
+      company.reload
+      expect(company).to match(original_company)
+      expect(response.status).to eq(422)
+      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+    end
+  end
+
+  describe "PATCH #update", authorized: false do
+    it "returns an unauthorized response" do
+      patch :update, params: { company: {}, id: 0 }
+      expect_unauthorized
+    end
+  end
+
+  describe "DELETE #destroy", authorized: true do
+    it "returns a success response" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      expect(response.status).to eq(200)
+    end
+
+    it "sets company's discarded_at column" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      company.reload
+      expect(company.discarded?).to be true
+    end
+
+    it "returns a not found response if company is not found" do
+      delete :destroy, params: { id: 0 }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "DELETE #destroy", authorized: false do
+    it "returns an unauthorized response" do
+      delete :destroy, params: { id: 0 }, format: :json
+      expect_unauthorized
+    end
+  end
 end
