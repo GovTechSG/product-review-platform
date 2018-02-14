@@ -30,7 +30,7 @@ FactoryBot.define do
     name { FFaker::Name.name }
     UEN { FFaker::Guid.guid }
     aggregate_score { rand * 5 }
-    description { FFaker::Lorem.sentences }
+    description { FFaker::Lorem.sentence }
   end
 
   factory :like do
@@ -47,13 +47,13 @@ FactoryBot.define do
 
   factory :product do
     name { FFaker::Name.name }
-    description { FFaker::Lorem.sentences }
+    description { FFaker::Lorem.sentence }
     company
   end
 
   factory :service do
     name { FFaker::Name.name }
-    description { FFaker::Lorem.sentences }
+    description { FFaker::Lorem.sentence }
     company
   end
 
