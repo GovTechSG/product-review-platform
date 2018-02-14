@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180214032651) do
+ActiveRecord::Schema.define(version: 20180214053122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_admin_users_on_discarded_at"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
@@ -52,6 +54,8 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.string "number", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_agencies_on_discarded_at"
   end
 
   create_table "apps", force: :cascade do |t|
@@ -68,6 +72,8 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.text "description"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_apps_on_discarded_at"
     t.index ["name"], name: "index_apps_on_name", unique: true
     t.index ["reset_password_token"], name: "index_apps_on_reset_password_token", unique: true
   end
@@ -78,7 +84,9 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.bigint "review_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
     t.index ["agency_id"], name: "index_comments_on_agency_id"
+    t.index ["discarded_at"], name: "index_comments_on_discarded_at"
     t.index ["review_id"], name: "index_comments_on_review_id"
   end
 
@@ -99,8 +107,10 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.bigint "agency_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
     t.index ["agency_id", "review_id"], name: "index_likes_on_agency_id_and_review_id", unique: true
     t.index ["agency_id"], name: "index_likes_on_agency_id"
+    t.index ["discarded_at"], name: "index_likes_on_discarded_at"
     t.index ["review_id"], name: "index_likes_on_review_id"
   end
 
@@ -138,7 +148,9 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.datetime "updated_at", null: false
     t.string "strengths", default: [], array: true
     t.bigint "company_id"
+    t.datetime "discarded_at"
     t.index ["company_id"], name: "index_reviews_on_company_id"
+    t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["strengths"], name: "index_reviews_on_strengths", using: :gin
   end
@@ -149,7 +161,9 @@ ActiveRecord::Schema.define(version: 20180214032651) do
     t.bigint "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
     t.index ["company_id"], name: "index_services_on_company_id"
+    t.index ["discarded_at"], name: "index_services_on_discarded_at"
   end
 
   add_foreign_key "comments", "agencies"
