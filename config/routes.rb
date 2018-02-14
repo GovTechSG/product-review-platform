@@ -37,6 +37,4 @@ Rails.application.routes.draw do
   end
 
   resources :apidocs, only: [:index]
-  root to: 'apidocs#swagger_ui'
-  get 'api/doc', to: 'apidocs#swagger_ui'
 end
