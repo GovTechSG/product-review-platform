@@ -4,7 +4,7 @@ module SwaggerDocs::Tokens
   included do
     include Swagger::Blocks
 
-    swagger_path '/oauth/token' do
+    swagger_path '/api/v1/oauth/token' do
       operation :post do
         key :tags, ['Authorisation']
         key :description, 'Sign in, to access the API'
@@ -29,7 +29,7 @@ module SwaggerDocs::Tokens
       end
     end
 
-    swagger_path '/oauth/refresh' do
+    swagger_path '/api/v1/oauth/refresh' do
       operation :post do
         key :tags, ['Authorisation']
         key :description, 'Refresh, to get another access code'
@@ -54,7 +54,7 @@ module SwaggerDocs::Tokens
       end
     end
 
-    swagger_path '/oauth/revoke' do
+    swagger_path '/api/v1/oauth/revoke' do
       operation :post do
         key :tags, ['Authorisation']
         key :description, 'Revoke, to sign out the user access'

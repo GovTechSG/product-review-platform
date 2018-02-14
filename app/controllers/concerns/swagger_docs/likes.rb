@@ -4,7 +4,7 @@ module SwaggerDocs::Likes
   included do
     include Swagger::Blocks
 
-    swagger_path '/reviews/{review_id}/likes' do
+    swagger_path '/api/v1/reviews/{review_id}/likes' do
       parameter do
         key :name, :review_id
         key :in, :path
@@ -58,7 +58,7 @@ module SwaggerDocs::Likes
       end
     end
 
-    swagger_path '/likes/{id}' do
+    swagger_path '/api/v1/likes/{id}' do
       parameter do
         key :name, :id
         key :in, :path
