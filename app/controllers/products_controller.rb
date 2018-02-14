@@ -52,6 +52,10 @@ class ProductsController < ApplicationController
       render_id_not_found if @product.nil?
     end
 
+    def validate_product_pressence
+      render_id_not_found if @product.nil?
+    end
+
     # Only allow a trusted parameter "white list" through.
     def product_params
       params.require(:product).permit(:name, :description)
