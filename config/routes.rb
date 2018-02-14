@@ -37,6 +37,6 @@ Rails.application.routes.draw do
   end
 
   resources :apidocs, only: [:index]
-
-  get '/sandbox', to: redirect('index.html')
+  root to: 'apidocs#swaggerUI'
+  get 'api/doc', to: 'apidocs#swaggerUI'
 end
