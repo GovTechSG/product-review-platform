@@ -78,32 +78,6 @@ RSpec.describe CompaniesController, type: :controller do
     end
   end
 
-  describe "POST #create", authorized: true do
-    let(:company) { build(:company) }
-    it "returns a success response" do
-      post :create, params: { company: company.as_json }
-      expect(response.status).to eq(201)
-    end
-
-    it "returns data of the single created company" do
-      post :create, params: { company: company.as_json }
-      expect_show_response
-    end
-
-    it "returns Unprocessable Entity if company is not valid" do
-      company.name = ""
-      post :create, params: { company: company.as_json }
-      expect(response.status).to eq(422)
-    end
-  end
-
-  describe "POST #create", authorized: false do
-    it "returns an unauthorized response" do
-      post :create, params: { company: {} }
-      expect_unauthorized
-    end
-  end
-
   describe "PATCH #update", authorized: true do
     let(:company) { create(:company) }
     it "returns a success response" do
@@ -131,6 +105,33 @@ RSpec.describe CompaniesController, type: :controller do
   describe "PATCH #update", authorized: false do
     it "returns an unauthorized response" do
       patch :update, params: { company: {}, id: 0 }
+      expect_unauthorized
+    end
+  end
+
+  describe "DELETE #destroy", authorized: true do
+    it "returns a success response" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      expect(response.status).to eq(200)
+    end
+
+    it "sets company's discarded_at column" do
+      company = create(:company)
+      delete :destroy, params: { id: company.id }
+      company.reload
+      expect(company.discarded?).to be true
+    end
+
+    it "returns a not found response if company is not found" do
+      delete :destroy, params: { id: 0 }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "DELETE #destroy", authorized: false do
+    it "returns an unauthorized response" do
+      delete :destroy, params: { id: 0 }, format: :json
       expect_unauthorized
     end
   end
