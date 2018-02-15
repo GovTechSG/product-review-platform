@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_login_helper'
 
-RSpec.describe AgenciesController, type: :controller do
+RSpec.describe UsersController, type: :controller do
   let(:token) { double acceptable?: true }
   before(:each, authorized: true) do
     allow(controller).to receive(:doorkeeper_token) { token }

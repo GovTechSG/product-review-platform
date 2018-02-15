@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_login_helper'
 
-RSpec.describe "Agencies", type: :request do
+RSpec.describe "Users", type: :request do
   describe "GET /agencies" do
     it "should route to agencies#index" do
       header = request_login

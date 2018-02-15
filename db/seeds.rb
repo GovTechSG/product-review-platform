@@ -36,11 +36,11 @@ end
 # c_1.services.create!(name: "Greenplum Hand Washers", description: "Cleanest hands")
 # c_1.services.create!(name: "Carpenters R'Us", description: "Got a fixer-upper? Look no further!")
 
-Agency.create!(name: "MTI", email: "agency_1@foo.com", number: "51512234")
-Agency.create!(name: "IES", email: "agency_2@foo.com", number: "51512236")
-Agency.create!(name: "SPRING Singapore", email: "agency_3@foo.com", number: "71512234")
-Agency.create!(name: "EDB", email: "agency_4@foo.com", number: "51512235")
-Agency.create!(name: "IMDA", email: "agency_5@foo.com", number: "51512237")
+User.create!(name: "MTI", email: "agency_1@foo.com", number: "51512234")
+User.create!(name: "IES", email: "agency_2@foo.com", number: "51512236")
+User.create!(name: "SPRING Singapore", email: "agency_3@foo.com", number: "71512234")
+User.create!(name: "EDB", email: "agency_4@foo.com", number: "51512235")
+User.create!(name: "IMDA", email: "agency_5@foo.com", number: "51512237")
 
 (1..10).each do |i|
   c = Company.find(i)
