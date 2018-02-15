@@ -79,9 +79,15 @@
 <script>
 window.onload = function() {
   var path = '<%= "#{ENV['SWAGGER_API_BASE_PATH']}" %>';
+  var head;
+  <% if request.ssl? %>
+    head = "https://"
+  <% else %>
+    head = "http://"
+  <% end %>
   // Build a system
   const ui = SwaggerUIBundle({
-    url: path + "/apidocs",
+    url: head + path + "/apidocs",
     enableCORS: false,
     dom_id: '#swagger-ui',
     deepLinking: true,
