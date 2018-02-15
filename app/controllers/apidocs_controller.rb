@@ -58,6 +58,5 @@ class ApidocsController < ApplicationController
     render json: Swagger::Blocks.build_root_json(SWAGGERED_CLASSES)
   end
 
-  def swaggerUI
-  end
+  def swagger_ui; end
 end
