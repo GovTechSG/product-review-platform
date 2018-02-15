@@ -28,13 +28,15 @@ class LikesController < ApplicationController
 
   # DELETE /likes/1
   def destroy
-    @like.destroy
+    @like.discard
+    render json: nil, status: :ok
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_like
-      @like = Like.find(params[:id])
+      @like = Like.find_by(id: params[:id])
+      render_id_not_found if @like.nil?
     end
 
     # Only allow a trusted parameter "white list" through.
