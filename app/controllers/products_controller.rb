@@ -2,6 +2,7 @@ class ProductsController < ApplicationController
   include SwaggerDocs::Products
   before_action :doorkeeper_authorize!
   before_action :set_product, only: [:show, :update, :destroy]
+  before_action :validate_product_pressence, only: [:show, :update, :destroy]
 
   # GET /companies/:company_id/products
   def index
@@ -45,6 +46,9 @@ class ProductsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.find_by(id: params[:id])
+    end
+
+    def validate_product_pressence
       render_id_not_found if @product.nil?
     end
 
