@@ -125,7 +125,7 @@ RSpec.describe ProductsController, type: :controller do
       it "renders a JSON response with the product", authorized: true do
         product = Product.create! valid_attributes
 
-        put :update, params: { id: product.to_param, product: valid_attributes }
+        delete :destroy, params: { id: product.to_param }
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
       end
