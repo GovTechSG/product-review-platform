@@ -37,7 +37,6 @@
 </head>
 
 <body>
-
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0">
   <defs>
     <symbol viewBox="0 0 20 20" id="unlocked">
@@ -79,10 +78,10 @@
 
 <script>
 window.onload = function() {
-  
+  var path = '<%= "#{ENV['SWAGGER_API_BASE_PATH']}" %>';
   // Build a system
   const ui = SwaggerUIBundle({
-    url: "http://0.0.0.0:3000/apidocs",
+    url: path + "/apidocs",
     enableCORS: false,
     dom_id: '#swagger-ui',
     deepLinking: true,
