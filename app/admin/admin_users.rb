@@ -27,13 +27,13 @@ ActiveAdmin.register AdminUser do
 
   controller do
     def update
-      if params[:app][:password].blank?
-        params[:app].delete("password")
-        params[:app].delete("password_confirmation")
+      if params[:admin_user][:password].blank?
+        params[:admin_user].delete("password")
+        params[:admin_user].delete("password_confirmation")
       end
-      if params[:app][:email].blank?
-        params[:app].delete("email")
-        params[:app].delete("email_confirmation")
+      if params[:admin_user][:email].blank?
+        params[:admin_user].delete("email")
+        params[:admin_user].delete("email_confirmation")
       end
       super
     end

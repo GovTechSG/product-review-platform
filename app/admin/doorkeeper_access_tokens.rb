@@ -16,12 +16,5 @@ ActiveAdmin.register Doorkeeper::AccessToken do
   controller do
     resources_configuration[:self][:instance_name] = 'AccessToken'
     actions :all, except: [:edit, :create]
-    def destroy(options = {}, &block)
-      object = resource
-      options[:location] ||= smart_collection_url
-
-      object.discard
-      respond_with_dual_blocks(object, options, &block)
-    end
   end
 end
