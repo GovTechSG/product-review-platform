@@ -33,6 +33,8 @@ class CompaniesController < ApplicationController
     else
       render json: @company.errors, status: :unprocessable_entity
     end
+  rescue ActionController::ParameterMissing => e
+    render json: e.message, status: :unprocessable_entity
   end
 
   # DELETE /companies/1
