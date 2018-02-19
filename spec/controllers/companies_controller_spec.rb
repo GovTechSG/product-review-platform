@@ -94,7 +94,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
-      patch :update, params: { company: Company.new(aggregate_score: 6).as_json, id: company.id }
+      patch :update, params: { company: Company.new(aggregate_score: '').as_json, id: company.id }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)

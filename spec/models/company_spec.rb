@@ -24,14 +24,4 @@ RSpec.describe Company, type: :model do
     company.aggregate_score = ''
     expect(company).to_not be_valid
   end
-  it "is not valid with an aggregate_score below 0" do
-    company = build(:company)
-    company.aggregate_score = -1
-    expect(company).to_not be_valid
-  end
-  it "is not valid with an aggregate_score above 5" do
-    company = build(:company)
-    company.aggregate_score = 5.1
-    expect(company).to_not be_valid
-  end
 end
