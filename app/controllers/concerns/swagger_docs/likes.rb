@@ -14,6 +14,9 @@ module SwaggerDocs::Likes
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Returns list of all likes from specified review'
         key :operationId, 'findLikesByReview'
@@ -29,6 +32,9 @@ module SwaggerDocs::Likes
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Creates a new like belonging to specified review'
         key :operationId, 'addLikeByReview'
@@ -68,6 +74,9 @@ module SwaggerDocs::Likes
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Returns a like'
         key :operationId, 'findLikeById'
@@ -81,6 +90,9 @@ module SwaggerDocs::Likes
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Deletes a single like'
         key :operationId, 'deleteLike'

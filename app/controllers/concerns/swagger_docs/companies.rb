@@ -6,6 +6,9 @@ module SwaggerDocs::Companies
 
     swagger_path '/api/v1/companies' do
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['company']
         key :description, 'Returns list of all companies'
         key :operationId, 'findCompanies'
@@ -13,14 +16,21 @@ module SwaggerDocs::Companies
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, list of companies fetched'
           schema type: :array do
             items do
               key :'$ref', :Company
             end
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['company']
         key :description, 'Creates a new company'
         key :operationId, 'addCompany'
@@ -28,15 +38,16 @@ module SwaggerDocs::Companies
           'application/json'
         ]
         parameter do
-          key :name, :company
+          key :name, :body
           key :in, :body
-          key :description, 'Company to create'
+          key :description, 'Details of the company to be created'
           key :required, true
           schema do
             key :'$ref', :CompanyInput
           end
         end
         response 200 do
+          key :description, 'OK, company is successfully created'
           schema do
             key :'$ref', :Company
           end
@@ -46,6 +57,9 @@ module SwaggerDocs::Companies
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
@@ -60,6 +74,9 @@ module SwaggerDocs::Companies
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['company']
         key :description, 'Update a company'
         key :operationId, 'updateCompany'
@@ -67,15 +84,16 @@ module SwaggerDocs::Companies
           'application/json'
         ]
         parameter do
-          key :name, :company
+          key :name, :body
           key :in, :body
-          key :description, 'Company to update'
+          key :description, 'New details of the company to be updated'
           key :required, true
           schema do
             key :'$ref', :CompanyInput
           end
         end
         response 200 do
+          key :description, 'OK, company is successfully updated'
           schema do
             key :'$ref', :Company
           end
@@ -86,8 +104,17 @@ module SwaggerDocs::Companies
             key :'$ref', :SwaggerError
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['company']
         key :description, 'Returns a company'
         key :operationId, 'findCompanyById'
@@ -95,16 +122,34 @@ module SwaggerDocs::Companies
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, company of the given ID fetched'
           schema do
             key :'$ref', :Company
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['company']
         key :description, 'Deletes a single company'
         key :operationId, 'deleteCompany'
-        response 204
+        response 204 do
+          key :description, 'No content success. Company of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end

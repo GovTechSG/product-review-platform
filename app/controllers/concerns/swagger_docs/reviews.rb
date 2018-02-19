@@ -14,6 +14,9 @@ module SwaggerDocs::Reviews
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Returns list of all reviews from specified product'
         key :operationId, 'findProductsByReview'
@@ -29,6 +32,9 @@ module SwaggerDocs::Reviews
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Creates a new review belonging to specified product'
         key :operationId, 'addReviewByProduct'
@@ -68,6 +74,9 @@ module SwaggerDocs::Reviews
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Returns list of all reviews from specified service'
         key :operationId, 'findReviewsByService'
@@ -83,6 +92,9 @@ module SwaggerDocs::Reviews
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Creates a new review belonging to specified service'
         key :operationId, 'addReviewByService'
@@ -122,6 +134,9 @@ module SwaggerDocs::Reviews
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Update a review'
         key :operationId, 'updateReview'
@@ -150,6 +165,9 @@ module SwaggerDocs::Reviews
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Returns a review'
         key :operationId, 'findReviewById'
@@ -163,6 +181,9 @@ module SwaggerDocs::Reviews
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['review']
         key :description, 'Deletes a single review'
         key :operationId, 'deleteReview'

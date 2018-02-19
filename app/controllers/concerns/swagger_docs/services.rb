@@ -14,6 +14,9 @@ module SwaggerDocs::Services
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Returns list of all services from specified company'
         key :operationId, 'findServicesByCompany'
@@ -29,6 +32,9 @@ module SwaggerDocs::Services
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Creates a new service belonging to specified company'
         key :operationId, 'addServiceByCompany'
@@ -68,6 +74,9 @@ module SwaggerDocs::Services
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Update a service'
         key :operationId, 'updateService'
@@ -96,6 +105,9 @@ module SwaggerDocs::Services
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Returns a service'
         key :operationId, 'findServiceById'
@@ -109,6 +121,9 @@ module SwaggerDocs::Services
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Deletes a single service'
         key :operationId, 'deleteService'

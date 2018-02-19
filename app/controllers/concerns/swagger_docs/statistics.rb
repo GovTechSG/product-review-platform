@@ -6,6 +6,9 @@ module SwaggerDocs::Statistics
 
     swagger_path '/api/v1/statistics' do
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['statistics']
         key :description, 'Returns some general statistics about the app'
         key :operationId, 'findStatistics'

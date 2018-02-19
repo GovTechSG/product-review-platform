@@ -7,6 +7,9 @@ module SwaggerDocs::Agencies
 
     swagger_path '/api/v1/agencies' do
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['agency']
         key :description, 'Returns list of all agencies'
         key :operationId, 'findAgencies'
@@ -22,6 +25,9 @@ module SwaggerDocs::Agencies
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['agency']
         key :description, 'Creates a new agency'
         key :operationId, 'addAgency'
@@ -61,6 +67,9 @@ module SwaggerDocs::Agencies
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['agency']
         key :description, 'Update an agency'
         key :operationId, 'updateAgency'
@@ -89,6 +98,9 @@ module SwaggerDocs::Agencies
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['agency']
         key :description, 'Returns an agency'
         key :operationId, 'findAgencyById'
@@ -102,6 +114,9 @@ module SwaggerDocs::Agencies
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['agency']
         key :description, 'Deletes a single agency'
         key :operationId, 'deleteAgency'
