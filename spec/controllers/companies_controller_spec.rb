@@ -94,10 +94,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
-      patch :update, params: { id: company.id }
+      patch :update, params: { company: Company.new(aggregate_score: '').as_json, id: company.id }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
+      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
     end
 
     it "returns not found if company id is not valid" do
