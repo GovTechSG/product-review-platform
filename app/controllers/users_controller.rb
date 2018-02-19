@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   include SwaggerDocs::Users
   before_action :doorkeeper_authorize!
   before_action :set_user, only: [:show, :update, :destroy]
+  before_action :validate_user_pressence, only: [:show, :update, :destroy]
 
   # GET /users
   def index
@@ -37,17 +38,22 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-    @user.destroy
+    @user.discard
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:name, :email, :number)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find_by(id: params[:id])
+  end
+
+  def validate_user_pressence
+    render_id_not_found if @user.nil?
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.require(:user).permit(:name, :email, :number)
+  end
 end

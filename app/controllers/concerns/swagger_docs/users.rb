@@ -2,7 +2,6 @@ module SwaggerDocs::Users
   extend ActiveSupport::Concern
 
   included do
-
     include Swagger::Blocks
 
     swagger_path '/api/v1/users' do
