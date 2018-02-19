@@ -39,7 +39,6 @@ class ProductsController < ApplicationController
   # DELETE /products/1
   def destroy
     @product.discard
-    render json: nil, status: :ok
   end
 
   private

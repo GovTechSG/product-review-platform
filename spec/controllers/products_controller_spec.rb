@@ -126,8 +126,7 @@ RSpec.describe ProductsController, type: :controller do
         product = Product.create! valid_attributes
 
         delete :destroy, params: { id: product.to_param }
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
+        expect(response).to have_http_status(204)
       end
 
       it "returns a not found response when product not found", authorized: true do
