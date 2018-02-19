@@ -6,7 +6,7 @@ module SwaggerDocs::Comment
 
     swagger_schema :Comment do
       key :type, :object
-      key :required, [:id, :content, :agency_id, :review_id]
+      key :required, [:id, :content, :user_id, :review_id]
 
       property :id do
         key :type, :integer
@@ -18,7 +18,7 @@ module SwaggerDocs::Comment
         key :example, "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis."
       end
 
-      property :agency_id do
+      property :user_id do
         key :type, :integer
         key :format, :int64
       end
@@ -39,10 +39,10 @@ module SwaggerDocs::Comment
               key :example, "[Enter the content for the comment here. Example: The postman API is very good]"
             end
 
-            property :agency_id do
+            property :user_id do
               key :type, :integer
               key :format, :int64
-              key :example, "[Enter the Agency ID for the comment here. Example: 5]"
+              key :example, "[Enter the User ID for the comment here. Example: 5]"
             end
           end
         end

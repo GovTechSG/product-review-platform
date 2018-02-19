@@ -32,7 +32,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :agencies
+      resources :users
     end
   end
 

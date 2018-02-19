@@ -1,10 +1,10 @@
-module SwaggerDocs::Agency
+module SwaggerDocs::User
   extend ActiveSupport::Concern
 
   included do
     include Swagger::Blocks
 
-    swagger_schema :Agency do
+    swagger_schema :User do
       key :type, :object
       key :required, [:id, :name, :email, :number]
 
@@ -20,7 +20,7 @@ module SwaggerDocs::Agency
 
       property :email do
         key :type, :string
-        key :example, "agency_1@foo.com"
+        key :example, "user_1@foo.com"
       end
 
       property :number do
@@ -29,24 +29,24 @@ module SwaggerDocs::Agency
       end
     end
 
-    swagger_schema :AgencyInput do
+    swagger_schema :UserInput do
       allOf do
         schema do
-          property :agency do
+          property :user do
             key :type, :object
             property :name do
               key :type, :string
-              key :example, "[Enter the Agency name here. Example: SPRING Singapore]"
+              key :example, "[Enter the User name here. Example: SPRING Singapore]"
             end
 
             property :email do
               key :type, :string
-              key :example, "[Enter the Agency email here. Example: agency_3@foo.com]"
+              key :example, "[Enter the User email here. Example: user_3@foo.com]"
             end
 
             property :number do
               key :type, :string
-              key :example, "[Enter the Agency number here. Example: 71512234]"
+              key :example, "[Enter the User number here. Example: 71512234]"
             end
           end
         end
