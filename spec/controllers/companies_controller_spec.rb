@@ -113,7 +113,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns a success response" do
       company = create(:company)
       delete :destroy, params: { id: company.id }
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it "sets company's discarded_at column" do

@@ -114,7 +114,7 @@ RSpec.describe "Companies", type: :request do
     let(:header) { request_login }
     it "returns a success response" do
       delete company_path(company.id), params: {}, headers: header
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it "returns a not found response if company is not found" do
