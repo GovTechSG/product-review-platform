@@ -44,17 +44,13 @@ RSpec.describe UsersController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         it "creates a new User", authorized: true do
-          company = create(:company)
-
           expect do
-            post :create, params: { user: valid_attributes, company_id: company.id }
+            post :create, params: { user: valid_attributes }
           end.to change(User, :count).by(1)
         end
 
         it "renders a JSON response with the new user", authorized: true do
-          company = create(:company)
-
-          post :create, params: { user: valid_attributes, company_id: company.id }
+          post :create, params: { user: valid_attributes }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(user_url(User.last))
@@ -63,9 +59,7 @@ RSpec.describe UsersController, type: :controller do
 
       context "with invalid params", authorized: true do
         it "renders a JSON response with errors for the new user" do
-          company = create(:company)
-
-          post :create, params: { user: invalid_attributes, company_id: company.id }
+          post :create, params: { user: invalid_attributes }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -94,6 +88,13 @@ RSpec.describe UsersController, type: :controller do
           put :update, params: { id: user.to_param, user: valid_attributes }, session: valid_session
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with invalid id" do
+        it "renders a JSON response with errors for the user", authorized: true do
+          put :update, params: { id: 0, user: valid_attributes }, session: valid_session
+          expect(response).to be_not_found
         end
       end
 
@@ -158,17 +159,13 @@ RSpec.describe UsersController, type: :controller do
 
     describe "POST #create" do
       it "does not create a new User", authorized: false do
-        company = create(:company)
-
         expect do
-          post :create, params: { user: valid_attributes, company_id: company.id }
+          post :create, params: { user: valid_attributes }
         end.to change(User, :count).by(0)
       end
 
       it "returns an unauthorized response", authorized: false do
-        company = create(:company)
-
-        post :create, params: { user: valid_attributes, company_id: company.id }
+        post :create, params: { user: valid_attributes }
         expect_unauthorized
       end
     end
