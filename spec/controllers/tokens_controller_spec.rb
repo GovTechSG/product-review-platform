@@ -72,7 +72,7 @@ RSpec.describe TokensController, type: :controller do
         "name": authorized_app.name
       }
       post :create, params: @app_params
-      @request.headers['Authorization'] = "Bearer " + parsed_response['access_token']
+      @app_params[:token] = parsed_response['access_token']
       post :refresh, params: @app_params
       expect(response).to be_success
       expect(response.body).to look_like_json
