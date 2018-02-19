@@ -6,6 +6,9 @@ module SwaggerDocs::Users
 
     swagger_path '/api/v1/users' do
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['user']
         key :description, 'Returns list of all users'
         key :operationId, 'findUsers'
@@ -21,6 +24,9 @@ module SwaggerDocs::Users
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['user']
         key :description, 'Creates a new user'
         key :operationId, 'addUser'
@@ -60,6 +66,9 @@ module SwaggerDocs::Users
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['user']
         key :description, 'Update an user'
         key :operationId, 'updateUser'
@@ -88,6 +97,9 @@ module SwaggerDocs::Users
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['user']
         key :description, 'Returns an user'
         key :operationId, 'findUserById'
@@ -101,6 +113,9 @@ module SwaggerDocs::Users
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['user']
         key :description, 'Deletes a single user'
         key :operationId, 'deleteUser'

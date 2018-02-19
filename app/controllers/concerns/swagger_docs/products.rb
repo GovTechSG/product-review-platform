@@ -14,6 +14,9 @@ module SwaggerDocs::Products
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Returns list of all products from specified company'
         key :operationId, 'findProductsByCompany'
@@ -29,6 +32,9 @@ module SwaggerDocs::Products
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Creates a new product belonging to specified company'
         key :operationId, 'addProductByCompany'
@@ -68,6 +74,9 @@ module SwaggerDocs::Products
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Update a product'
         key :operationId, 'updateProduct'
@@ -96,6 +105,9 @@ module SwaggerDocs::Products
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Returns a product'
         key :operationId, 'findProductById'
@@ -109,6 +121,9 @@ module SwaggerDocs::Products
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Deletes a single product'
         key :operationId, 'deleteProduct'

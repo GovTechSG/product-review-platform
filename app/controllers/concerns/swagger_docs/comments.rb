@@ -14,6 +14,9 @@ module SwaggerDocs::Comments
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['comment']
         key :description, 'Returns list of all comments from specified review'
         key :operationId, 'findCommentsByReview'
@@ -29,6 +32,9 @@ module SwaggerDocs::Comments
         end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['comment']
         key :description, 'Creates a new comment belonging to specified review'
         key :operationId, 'addCommentByReview'
@@ -68,6 +74,9 @@ module SwaggerDocs::Comments
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['comment']
         key :description, 'Update a comment'
         key :operationId, 'updateComment'
@@ -96,6 +105,9 @@ module SwaggerDocs::Comments
         end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['comment']
         key :description, 'Returns a comment'
         key :operationId, 'findCommentById'
@@ -109,6 +121,9 @@ module SwaggerDocs::Comments
         end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['comment']
         key :description, 'Deletes a single comment'
         key :operationId, 'deleteComment'
