@@ -94,11 +94,16 @@ RSpec.describe "Companies", type: :request do
 
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
-      patch company_path(company.id), params: { company: Company.new(aggregate_score: 6).as_json, id: company.id }, headers: header
+      patch company_path(company.id), params: { company: Company.new(aggregate_score: '').as_json, id: company.id }, headers: header
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
       expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+    end
+
+    it "returns not found if company id is not valid" do
+      patch company_path(0), params: { company: company.as_json }, headers: header
+      expect(response.status).to eq(404)
     end
   end
 
@@ -114,7 +119,7 @@ RSpec.describe "Companies", type: :request do
     let(:header) { request_login }
     it "returns a success response" do
       delete company_path(company.id), params: {}, headers: header
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it "returns a not found response if company is not found" do
