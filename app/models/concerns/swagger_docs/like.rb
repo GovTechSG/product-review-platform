@@ -30,7 +30,6 @@ module SwaggerDocs::Like
           property :agency_id do
             key :type, :integer
             key :format, :int64
-            key :example, "[Enter the Agency ID to be liked here. Example: 4]"
           end
         end
       end

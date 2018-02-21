@@ -24,11 +24,15 @@ module SwaggerDocs::Comments
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, comments of the given ID fetched'
           schema type: :array do
             items do
               key :'$ref', :Comment
             end
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
       operation :post do
@@ -36,21 +40,22 @@ module SwaggerDocs::Comments
           key :Authorization, []
         end
         key :tags, ['comment']
-        key :description, 'Creates a new comment belonging to specified review'
+        key :description, 'Creates a new comment that belong to a specified review'
         key :operationId, 'addCommentByReview'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :comment
+          key :name, :body
           key :in, :body
-          key :description, 'Comment to create'
+          key :description, 'Details of Comment to be created'
           key :required, true
           schema do
             key :'$ref', :CommentCreateInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, Comment is successfully created'
           schema do
             key :'$ref', :Comment
           end
@@ -60,6 +65,9 @@ module SwaggerDocs::Comments
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
@@ -84,15 +92,16 @@ module SwaggerDocs::Comments
           'application/json'
         ]
         parameter do
-          key :name, :comment
+          key :name, :body
           key :in, :body
-          key :description, 'Comment to update'
+          key :description, 'New details of the Comment to be updated'
           key :required, true
           schema do
             key :'$ref', :CommentUpdateInput
           end
         end
         response 200 do
+          key :description, 'OK, comment is successfully updated'
           schema do
             key :'$ref', :Comment
           end
@@ -102,6 +111,12 @@ module SwaggerDocs::Comments
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :get do
@@ -115,9 +130,16 @@ module SwaggerDocs::Comments
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, comment of the given ID fetched'
           schema do
             key :'$ref', :Comment
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :delete do
@@ -127,7 +149,15 @@ module SwaggerDocs::Comments
         key :tags, ['comment']
         key :description, 'Deletes a single comment'
         key :operationId, 'deleteComment'
-        response 204
+        response 204 do
+          key :description, 'No content success. Comment of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end

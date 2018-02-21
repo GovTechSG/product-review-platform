@@ -36,13 +36,11 @@ module SwaggerDocs::Comment
             key :type, :object
             property :content do
               key :type, :string
-              key :example, "[Enter the content for the comment here. Example: The postman API is very good]"
             end
 
             property :agency_id do
               key :type, :integer
               key :format, :int64
-              key :example, "[Enter the Agency ID for the comment here. Example: 5]"
             end
           end
         end
@@ -56,7 +54,6 @@ module SwaggerDocs::Comment
             key :type, :object
             property :content do
               key :type, :string
-              key :example, "[Enter the content for the comment here. Example: The postman API is very good]"
             end
           end
         end

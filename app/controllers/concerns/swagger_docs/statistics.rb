@@ -16,6 +16,7 @@ module SwaggerDocs::Statistics
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Statistic of app is fetched'
           schema do
             property :reviews do
               key :type, :integer
@@ -33,7 +34,9 @@ module SwaggerDocs::Statistics
               key :type, :integer
             end
           end
-
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
