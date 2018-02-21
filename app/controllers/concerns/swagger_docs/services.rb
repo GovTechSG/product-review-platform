@@ -24,11 +24,18 @@ module SwaggerDocs::Services
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Services of the given company ID fetched'
           schema type: :array do
             items do
               key :'$ref', :Service
             end
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :post do
@@ -36,21 +43,22 @@ module SwaggerDocs::Services
           key :Authorization, []
         end
         key :tags, ['service']
-        key :description, 'Creates a new service belonging to specified company'
+        key :description, 'Creates a new service belong to a specified company'
         key :operationId, 'addServiceByCompany'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :service
+          key :name, :body
           key :in, :body
-          key :description, 'Service to create'
+          key :description, 'Details of the service to be created'
           key :required, true
           schema do
             key :'$ref', :ServiceInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, Services is successfully created'
           schema do
             key :'$ref', :Service
           end
@@ -60,6 +68,9 @@ module SwaggerDocs::Services
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
@@ -84,9 +95,9 @@ module SwaggerDocs::Services
           'application/json'
         ]
         parameter do
-          key :name, :service
+          key :name, :body
           key :in, :body
-          key :description, 'Service to update'
+          key :description, 'New details of the service to be updated'
           key :required, true
           schema do
             key :'$ref', :ServiceInput
@@ -103,6 +114,12 @@ module SwaggerDocs::Services
             key :'$ref', :SwaggerError
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :get do
         security do
@@ -115,9 +132,16 @@ module SwaggerDocs::Services
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Service of the given ID is fetched'
           schema do
             key :'$ref', :Service
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :delete do
@@ -127,7 +151,15 @@ module SwaggerDocs::Services
         key :tags, ['service']
         key :description, 'Deletes a single service'
         key :operationId, 'deleteService'
-        response 204
+        response 204 do
+          key :description, 'No content success. Service of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end
