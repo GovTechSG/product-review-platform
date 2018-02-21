@@ -24,11 +24,15 @@ module SwaggerDocs::Reviews
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Reviews of the given product ID fetched'
           schema type: :array do
             items do
               key :'$ref', :Review
             end
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
       operation :post do
@@ -36,21 +40,22 @@ module SwaggerDocs::Reviews
           key :Authorization, []
         end
         key :tags, ['review']
-        key :description, 'Creates a new review belonging to specified product'
+        key :description, 'Creates a new review that belong to a specified product'
         key :operationId, 'addReviewByProduct'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :review
+          key :name, :body
           key :in, :body
-          key :description, 'Review to create'
+          key :description, 'Details of the review to be created'
           key :required, true
           schema do
             key :'$ref', :ProductReviewInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, review is successfully created'
           schema do
             key :'$ref', :Review
           end
@@ -60,6 +65,9 @@ module SwaggerDocs::Reviews
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
@@ -84,11 +92,15 @@ module SwaggerDocs::Reviews
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Reviews of the given service ID fetched'
           schema type: :array do
             items do
               key :'$ref', :Review
             end
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
       operation :post do
@@ -175,9 +187,13 @@ module SwaggerDocs::Reviews
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Review of the given ID fetched'
           schema do
             key :'$ref', :Review
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
       operation :delete do

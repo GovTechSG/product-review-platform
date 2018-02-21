@@ -17,6 +17,7 @@ module SwaggerDocs::Agencies
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, list of agencies fetched'
           schema type: :array do
             items do
               key :'$ref', :Agency

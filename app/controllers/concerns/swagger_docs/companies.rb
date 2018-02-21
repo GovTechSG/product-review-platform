@@ -46,7 +46,7 @@ module SwaggerDocs::Companies
             key :'$ref', :CompanyInput
           end
         end
-        response 200 do
+        response 201 do
           key :description, 'OK, company is successfully created'
           schema do
             key :'$ref', :Company
