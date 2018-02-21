@@ -32,7 +32,7 @@ module SwaggerDocs::App
             key :type, :string
           end
         end
-        end
+      end
     end
 
     swagger_schema :TokenRefreshInput do

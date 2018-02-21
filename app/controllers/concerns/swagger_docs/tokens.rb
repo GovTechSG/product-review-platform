@@ -44,7 +44,8 @@ module SwaggerDocs::Tokens
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Refresh with valid Username, Password and Access token, new access token will be shown from the response'
+          key :description, 'Refresh with valid Username, Password and Access token,
+new access token will be shown from the response'
           key :required, true
           schema do
             key :'$ref', :TokenRefreshInput
