@@ -1,12 +1,12 @@
 ActiveAdmin.register Comment, as: 'ReviewComment' do
-  permit_params :content, :agency_id, :review_id
+  permit_params :content, :user_id, :review_id
 
   form do |f|
     f.inputs do
       f.input :content
-      f.input :agency_id,
+      f.input :user_id,
               as: :select,
-              collection: Agency.all.map { |agency| [agency.name, agency.id] }
+              collection: User.all.map { |user| [user.name, user.id] }
       f.input :review_id,
               as: :select,
               collection: Review.all.map { |review| [review.content, review.id] }

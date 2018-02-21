@@ -7,7 +7,7 @@ class LikesController < ApplicationController
   def index
     @likes = Like.where(review_id: params[:review_id])
 
-    render json: @likes, methods: [:agency]
+    render json: @likes, methods: [:user]
   end
 
   # GET /likes/1
@@ -39,6 +39,6 @@ class LikesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      params.require(:like).permit(:agency_id).merge(review_id: params[:review_id])
+      params.require(:like).permit(:user_id).merge(review_id: params[:review_id])
     end
 end

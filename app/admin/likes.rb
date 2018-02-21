@@ -1,11 +1,11 @@
 ActiveAdmin.register Like do
-  permit_params :agency_id, :review_id
+  permit_params :user_id, :review_id
 
   form do |f|
     f.inputs do
-      f.input :agency_id,
+      f.input :user_id,
               as: :select,
-              collection: Agency.all.map { |agency| [agency.name, agency.id] }
+              collection: User.all.map { |user| [user.name, user.id] }
       f.input :review_id,
               as: :select,
               collection: Review.all.map { |review| [review.content, review.id] }
