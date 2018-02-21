@@ -80,12 +80,15 @@
 window.onload = function() {
   var path = '<%= "#{ENV['SWAGGER_API_BASE_PATH']}" %>';
   var head;
-  <% if request.ssl? %>
-    head = "https://"
-  <% else %>
+
+    <% puts Rails.env %>
+    <% if Rails.env == "development" %>
     head = "http://"
-  <% end %>
-  // Build a system
+    <% else %>
+    head = "https://"
+    <% end %>
+
+    // Build a system
   const ui = SwaggerUIBundle({
     url: head + path + "/apidocs",
     enableCORS: false,
