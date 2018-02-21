@@ -108,21 +108,22 @@ module SwaggerDocs::Reviews
           key :Authorization, []
         end
         key :tags, ['review']
-        key :description, 'Creates a new review belonging to specified service'
+        key :description, 'Creates a new review that belong to a specified service'
         key :operationId, 'addReviewByService'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :review
+          key :name, :body
           key :in, :body
-          key :description, 'Review to create'
+          key :description, 'Details of the review to be created'
           key :required, true
           schema do
             key :'$ref', :ServiceReviewInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, review is successfully created'
           schema do
             key :'$ref', :Review
           end
@@ -132,6 +133,9 @@ module SwaggerDocs::Reviews
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
         end
       end
     end
@@ -156,15 +160,16 @@ module SwaggerDocs::Reviews
           'application/json'
         ]
         parameter do
-          key :name, :review
+          key :name, :body
           key :in, :body
-          key :description, 'Review to update'
+          key :description, 'New details of Review to be updated'
           key :required, true
           schema do
             key :'$ref', :ReviewInput
           end
         end
         response 200 do
+          key :description, 'OK, review is successfully updated'
           schema do
             key :'$ref', :Review
           end
@@ -174,6 +179,12 @@ module SwaggerDocs::Reviews
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :get do
@@ -195,6 +206,9 @@ module SwaggerDocs::Reviews
         response 401 do
           key :'$ref', :UnauthorisedError
         end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :delete do
         security do
@@ -203,7 +217,15 @@ module SwaggerDocs::Reviews
         key :tags, ['review']
         key :description, 'Deletes a single review'
         key :operationId, 'deleteReview'
-        response 204
+        response 204 do
+          key :description, 'No content success. Review of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end
