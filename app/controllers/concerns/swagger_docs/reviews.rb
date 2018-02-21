@@ -34,6 +34,9 @@ module SwaggerDocs::Reviews
         response 401 do
           key :'$ref', :UnauthorisedError
         end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :post do
         security do
@@ -69,6 +72,12 @@ module SwaggerDocs::Reviews
         response 401 do
           key :'$ref', :UnauthorisedError
         end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
+        end
       end
     end
 
@@ -101,6 +110,9 @@ module SwaggerDocs::Reviews
         end
         response 401 do
           key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :post do
@@ -136,6 +148,12 @@ module SwaggerDocs::Reviews
         end
         response 401 do
           key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
     end
@@ -185,6 +203,9 @@ module SwaggerDocs::Reviews
         end
         response 404 do
           key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
       operation :get do

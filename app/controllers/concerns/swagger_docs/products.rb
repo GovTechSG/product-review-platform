@@ -72,6 +72,12 @@ module SwaggerDocs::Products
         response 401 do
           key :'$ref', :UnauthorisedError
         end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
+        end
       end
     end
 
@@ -120,6 +126,9 @@ module SwaggerDocs::Products
         end
         response 404 do
           key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
       operation :get do

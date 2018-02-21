@@ -23,6 +23,9 @@ module SwaggerDocs::Users
             end
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
       end
       operation :post do
         security do
@@ -35,15 +38,16 @@ module SwaggerDocs::Users
           'application/json'
         ]
         parameter do
-          key :name, :user
+          key :name, :body
           key :in, :body
-          key :description, 'User to create'
+          key :description, 'Details of User to be created'
           key :required, true
           schema do
             key :'$ref', :UserInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, User is successfully created'
           schema do
             key :'$ref', :User
           end
@@ -53,6 +57,12 @@ module SwaggerDocs::Users
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
     end
@@ -77,15 +87,16 @@ module SwaggerDocs::Users
           'application/json'
         ]
         parameter do
-          key :name, :user
+          key :name, :body
           key :in, :body
-          key :description, 'User to update'
+          key :description, 'New details of User to be updated'
           key :required, true
           schema do
             key :'$ref', :UserInput
           end
         end
         response 200 do
+          key :description, 'OK, User is successfully updated'
           schema do
             key :'$ref', :User
           end
@@ -95,6 +106,15 @@ module SwaggerDocs::Users
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
       operation :get do
@@ -108,9 +128,16 @@ module SwaggerDocs::Users
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, user of the given ID fetched'
           schema do
             key :'$ref', :User
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
         end
       end
       operation :delete do
@@ -120,7 +147,15 @@ module SwaggerDocs::Users
         key :tags, ['user']
         key :description, 'Deletes a single user'
         key :operationId, 'deleteUser'
-        response 204
+        response 204 do
+          key :description, 'No content success. User of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end

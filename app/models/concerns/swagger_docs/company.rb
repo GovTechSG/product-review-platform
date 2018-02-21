@@ -89,5 +89,10 @@ module SwaggerDocs::Company
     swagger_schema :UnauthorisedError do
       key :description, 'Unauthorized. Missing or invalid credentials. Please sign in/sign up first.'
     end
+
+    swagger_schema :BadRequestError do
+      key :description, 'Bad Request. Params is missing'
+    end
+
   end
 end
