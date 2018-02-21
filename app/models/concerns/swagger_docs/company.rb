@@ -93,6 +93,5 @@ module SwaggerDocs::Company
     swagger_schema :BadRequestError do
       key :description, 'Bad Request. Params is missing'
     end
-
   end
 end
