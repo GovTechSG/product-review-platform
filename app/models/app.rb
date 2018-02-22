@@ -32,7 +32,7 @@ class App < ApplicationRecord
   class << self
     def authenticate(name, password)
       app = App.find_for_authentication(name: name)
-      if app.discarded?
+      if app.nil? || app.discarded?
         nil
       else
         app.try(:valid_password?, password) ? app : nil
