@@ -20,10 +20,23 @@ class App < ApplicationRecord
     false
   end
 
+  def discard
+    super
+    @existing_token = Doorkeeper::AccessToken.find_by(resource_owner_id: id, revoked_at: nil)
+    if @existing_token
+      @existing_token.revoked_at = Time.current
+      @existing_token.save
+    end
+  end
+
   class << self
     def authenticate(name, password)
       app = App.find_for_authentication(name: name)
-      app.try(:valid_password?, password) ? app : nil
+      if app.discarded?
+        nil
+      else
+        app.try(:valid_password?, password) ? app : nil
+      end
     end
   end
 end
