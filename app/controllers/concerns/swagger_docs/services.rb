@@ -14,6 +14,9 @@ module SwaggerDocs::Services
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Returns list of all services from specified company'
         key :operationId, 'findServicesByCompany'
@@ -21,30 +24,41 @@ module SwaggerDocs::Services
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Services of the given company ID fetched'
           schema type: :array do
             items do
               key :'$ref', :Service
             end
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
-        key :description, 'Creates a new service belonging to specified company'
+        key :description, 'Creates a new service belong to a specified company'
         key :operationId, 'addServiceByCompany'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :service
+          key :name, :body
           key :in, :body
-          key :description, 'Service to create'
+          key :description, 'Details of the service to be created'
           key :required, true
           schema do
             key :'$ref', :ServiceInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, Services is successfully created'
           schema do
             key :'$ref', :Service
           end
@@ -54,6 +68,15 @@ module SwaggerDocs::Services
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
     end
@@ -68,6 +91,9 @@ module SwaggerDocs::Services
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Update a service'
         key :operationId, 'updateService'
@@ -75,9 +101,9 @@ module SwaggerDocs::Services
           'application/json'
         ]
         parameter do
-          key :name, :service
+          key :name, :body
           key :in, :body
-          key :description, 'Service to update'
+          key :description, 'New details of the service to be updated'
           key :required, true
           schema do
             key :'$ref', :ServiceInput
@@ -94,8 +120,20 @@ module SwaggerDocs::Services
             key :'$ref', :SwaggerError
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
+        end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Returns a service'
         key :operationId, 'findServiceById'
@@ -103,16 +141,34 @@ module SwaggerDocs::Services
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, Service of the given ID is fetched'
           schema do
             key :'$ref', :Service
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['service']
         key :description, 'Deletes a single service'
         key :operationId, 'deleteService'
-        response 204
+        response 204 do
+          key :description, 'No content success. Service of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end
