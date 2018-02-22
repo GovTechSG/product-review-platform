@@ -7,6 +7,7 @@ class App < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          authentication_keys: [:name]
 
+  validates :name, presence: true, uniqueness: true
   def email_required?
     false
   end

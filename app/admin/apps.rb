@@ -9,6 +9,7 @@ ActiveAdmin.register App do
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
+    column :discarded_at
     actions
   end
 
@@ -19,6 +20,7 @@ ActiveAdmin.register App do
   filter :created_at
 
   form do |f|
+    f.semantic_errors
     f.inputs do
       f.input :name
       f.input :description
