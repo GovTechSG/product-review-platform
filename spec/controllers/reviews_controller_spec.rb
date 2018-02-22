@@ -7,7 +7,7 @@ RSpec.describe ReviewsController, type: :controller do
   end
 
   let(:invalid_product) do
-    build(:product_review, name: nil, description: nil, company_id: nil).attributes
+    attributes_for(:product_review, score: nil, content: nil)
   end
 
   let(:valid_service) do
@@ -15,7 +15,7 @@ RSpec.describe ReviewsController, type: :controller do
   end
 
   let(:invalid_service) do
-    build(:service_review, name: nil, description: nil, company_id: nil).attributes
+    attributes_for(:service_review, score: nil, content: nil)
   end
 
   let(:token) { double acceptable?: true }
@@ -50,13 +50,6 @@ RSpec.describe ReviewsController, type: :controller do
 
         it "returns a not found response when service not found", authorized: true do
           get :index, params: { service_id: 0 }
-          expect(response).to be_not_found
-        end
-      end
-
-      context "missing product and service id" do
-        it "returns a not found response when no id is given", authorized: true do
-          get :index
           expect(response).to be_not_found
         end
       end
@@ -99,9 +92,16 @@ RSpec.describe ReviewsController, type: :controller do
         context "with invalid params", authorized: true do
           it "renders a JSON response with errors for the new review" do
             product = create(:product)
-
             post :create, params: { review: invalid_product, product_id: product.id }
             expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.content_type).to eq('application/json')
+          end
+        end
+
+        context "with non existent reviewable id", authorized: true do
+          it "renders a JSON response with errors for the new review" do
+            post :create, params: { review: valid_product, product_id: 0 }
+            expect(response).to be_not_found
             expect(response.content_type).to eq('application/json')
           end
         end
@@ -136,35 +136,36 @@ RSpec.describe ReviewsController, type: :controller do
             expect(response.content_type).to eq('application/json')
           end
         end
-      end
 
-      context "missing product and service id" do
-        it "returns a not found response when no id is given", authorized: true do
-          post :create, params: { review: valid_service }
-          expect(response).to be_not_found
+        context "with non existent reviewable id", authorized: true do
+          it "renders a JSON response with errors for the new review" do
+            post :create, params: { review: valid_service, service_id: 0 }
+            expect(response).to be_not_found
+            expect(response.content_type).to eq('application/json')
+          end
         end
       end
     end
 
     describe "PUT #update" do
+      let(:new_attributes) do
+        attributes_for(:product_review)
+      end
       context "with valid params" do
-        let(:new_attributes) do
-          attributes_for(:review)
-        end
 
         it "updates the requested review", authorized: true do
           review = Review.create! valid_product
-
-          put :update, params: { id: review.to_param, review: new_attributes }, session: valid_session
+          put :update, params: { id: review.to_param, review: new_attributes }
           review.reload
-          expect(review.name).to eq(new_attributes[:name])
-          expect(review.description).to eq(new_attributes[:description])
+          expect(review.score.to_s).to eq(new_attributes[:score])
+          expect(review.content).to eq(new_attributes[:content])
+          expect(review.strengths).to eq(new_attributes[:strengths])
         end
 
         it "renders a JSON response with the review", authorized: true do
           review = Review.create! valid_product
 
-          put :update, params: { id: review.to_param, review: valid_product }, session: valid_session
+          put :update, params: { id: review.to_param, review: valid_product }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -174,8 +175,16 @@ RSpec.describe ReviewsController, type: :controller do
         it "renders a JSON response with errors for the review", authorized: true do
           review = Review.create! valid_product
 
-          put :update, params: { id: review.to_param, review: invalid_product }, session: valid_session
+          put :update, params: { id: review.to_param, review: invalid_product }
           expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with non existent review id", authorized: true do
+        it "renders a not found JSON response" do
+          put :update, params: { id: 0, review: new_attributes }
+          expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
       end
@@ -185,7 +194,7 @@ RSpec.describe ReviewsController, type: :controller do
       it "soft deletes", authorized: true do
         review = Review.create! valid_product
         expect do
-          delete :destroy, params: { id: review.to_param }, session: valid_session
+          delete :destroy, params: { id: review.to_param }
         end.to change(Review, :count).by(0)
       end
 
@@ -214,7 +223,7 @@ RSpec.describe ReviewsController, type: :controller do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
         review = Review.create! valid_product
-        get :index, params: { product_id: review.product.id }
+        get :index, params: { product_id: review.reviewable_id }
 
         expect_unauthorized
       end
@@ -248,23 +257,27 @@ RSpec.describe ReviewsController, type: :controller do
 
     describe "PUT #update" do
       let(:new_attributes) do
-        attributes_for(:review)
+        attributes_for(:service_review)
       end
 
       it "does not update the requested review", authorized: false do
         review = Review.create! valid_product
         current_attributes = review.attributes
 
-        put :update, params: { id: review.to_param, review: new_attributes }, session: valid_session
+        put :update, params: { id: review.to_param, review: new_attributes }
         review.reload
-        expect(review.name).to eq(current_attributes["name"])
-        expect(review.description).to eq(current_attributes["description"])
+        expect(review.score).to eq(current_attributes["score"])
+        expect(review.content).to eq(current_attributes["content"])
+        expect(review.reviewable_id).to eq(current_attributes["reviewable_id"])
+        expect(review.reviewable_type).to eq(current_attributes["reviewable_type"])
+        expect(review.strengths).to eq(current_attributes["strengths"])
+        expect(review.company_id).to eq(current_attributes["company_id"])
       end
 
       it "returns an unauthorized response", authorized: false do
         review = Review.create! valid_product
 
-        put :update, params: { id: review.to_param, review: valid_product }, session: valid_session
+        put :update, params: { id: review.to_param, review: valid_product }
         expect_unauthorized
       end
     end
@@ -273,7 +286,7 @@ RSpec.describe ReviewsController, type: :controller do
       it "does not destroy the requested review", authorized: false do
         review = Review.create! valid_product
         expect do
-          delete :destroy, params: { id: review.to_param }, session: valid_session
+          delete :destroy, params: { id: review.to_param }
         end.to change(Review, :count).by(0)
       end
 
@@ -287,7 +300,7 @@ RSpec.describe ReviewsController, type: :controller do
       it "returns an unauthorized response", authorized: false do
         review = Review.create! valid_product
 
-        delete :destroy, params: { id: review.to_param }, session: valid_session
+        delete :destroy, params: { id: review.to_param }
         expect_unauthorized
       end
     end

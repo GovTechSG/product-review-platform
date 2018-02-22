@@ -2,19 +2,15 @@ class ReviewsController < ApplicationController
   include SwaggerDocs::Reviews
   before_action :doorkeeper_authorize!
   before_action :set_review, only: [:show, :update, :destroy]
+  before_action :validate_review_pressence, only: [:show, :update, :destroy]
+  before_action :set_reviwable, only: [:index, :create]
+  before_action :validate_reviewable_pressence, only: [:index, :create]
+  before_action :validate_score_type, only: [:create, :update]
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
-    @reviews = []
-    if params[:product_id].present?
-      @reviews = Product.find(params[:product_id]).reviews
-    elsif params[:service_id].present?
-      @reviews = Service.find(params[:service_id]).reviews
-    else
-      render_bad_request("No product_id or service_id specified")
-      return
-    end
+    @reviews = @reviewable.reviews
 
     render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end
@@ -28,18 +24,17 @@ class ReviewsController < ApplicationController
   # POST /services/:service_id/reviews
   def create
     # Store create_params in a temp variable to avoid
-    # repeatedly calling the method
+    # repeatedly calling the methode
     whitelisted = create_params
     if whitelisted.nil?
-      render_bad_request("No product_id or service_id specified")
+      render
       return
     end
-    reviewable = params[:product_id].present? ? Product.find(params[:product_id]) : Service.find(params[:service_id])
     @review = Review.new(whitelisted)
     # Update aggregate score of associated vendor company
-    company = add_company_score(reviewable.company, whitelisted[:score])
+    company = add_company_score(@reviewable.company, @score) if @score
 
-    if @review.save && company.save
+    if @review.save && (company.nil? || company.save)
       render json: @review, status: :created, location: @review
     else
       render json: @review.errors, status: :unprocessable_entity
@@ -52,9 +47,9 @@ class ReviewsController < ApplicationController
     # Store update_params in a temp variable to avoid
     # repeatedly calling the method
     whitelisted = update_params
-    if whitelisted[:score]
+    if !@score.nil?
       # Update aggregate score of associated vendor company
-      company = update_company_score(@review.reviewable.company, @review.score, whitelisted[:score])
+      company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(whitelisted) && (company.nil? || company.save)
       render json: @review
@@ -67,7 +62,7 @@ class ReviewsController < ApplicationController
   def destroy
     # Update aggregate score of associated vendor company
     company = subtract_company_score(@review.reviewable.company, @review.score)
-    @review.destroy && company.save
+    @review.discard && company.save
   end
 
   private
@@ -86,9 +81,42 @@ class ReviewsController < ApplicationController
       company
     end
 
+    def validate_score_type
+      score_param = params.require(:review).permit(:score)[:score]
+      if score_param
+        if score_param.is_a? String
+          @score = Float(score_param)
+        elsif score_param.is_a? Numeric
+          @score = score_param
+        else
+          render_unprocessable_entity("Score is not a number")
+        end
+      end
+    rescue ArgumentError
+      render_unprocessable_entity("Score is not a number")
+    end
+
+    def set_reviwable
+      if params[:product_id].present?
+        @reviewable = Product.find_by(id: params[:product_id])
+      elsif params[:service_id].present?
+        @reviewable = Service.find_by(id: params[:service_id])
+      else
+        render_bad_request("No product_id or service_id specified")
+      end
+    end
+
+    def validate_reviewable_pressence
+      render_id_not_found if @reviewable.nil?
+    end
+
+    def validate_review_pressence
+      render_id_not_found if @review.nil?
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_review
-      @review = Review.find(params[:id])
+      @review = Review.find_by(id: params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -23,17 +23,29 @@ module Statistics::Companies
       # Then divide by total number of reviews + 1 (+1 because latest review not yet
       # saved to database)
       count = reviews_count
-      ((count * aggregate_score) + score)/(count + 1)
+      if count > 0
+        ((count * aggregate_score) + score)/(count + 1)
+      else
+        score
+      end
     end
 
     def update_score(old_score, updated_score)
       count = reviews_count
-      ((count * aggregate_score) - old_score + updated_score)/count
+      if count > 0
+        ((count * aggregate_score) - old_score + updated_score)/count
+      else
+        updated_score
+      end
     end
 
     def subtract_score(score)
       count = reviews_count
-      ((count * aggregate_score) - score)/(count - 1)
+      if count > 0
+        ((count * aggregate_score) - score)/(count - 1)
+      else
+        0
+      end
     end
 
     private

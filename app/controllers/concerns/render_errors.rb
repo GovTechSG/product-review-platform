@@ -7,6 +7,14 @@ module RenderErrors
     render json: payload, status: :bad_request
   end
 
+  def render_unprocessable_entity(error)
+    payload = {
+      status: 422,
+      error: error
+    }
+    render json: payload, status: :unprocessable_entity
+  end
+
   def render_id_not_found
     payload = {
       status: 404,
