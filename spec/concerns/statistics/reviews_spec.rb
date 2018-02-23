@@ -16,9 +16,9 @@ shared_examples_for 'reviews' do
       expect(valid_review.likes_count).to eq(0)
     end
     it "returns number of likes" do
-      @review = valid_review
-      @review.likes.create! valid_like
-      @review.reload
+      review = valid_review
+      review.likes.create! valid_like
+      review.reload
       expect(valid_review.likes_count).to eq(1)
     end
   end
@@ -27,9 +27,9 @@ shared_examples_for 'reviews' do
       expect(valid_review.comments_count).to eq(0)
     end
     it "returns number of comments" do
-      @review = valid_review
-      @review.comments.create! valid_comment
-      @review.reload
+      review = valid_review
+      review.comments.create! valid_comment
+      review.reload
       expect(valid_review.comments_count).to eq(1)
     end
   end

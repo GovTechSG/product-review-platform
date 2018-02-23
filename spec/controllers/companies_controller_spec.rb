@@ -89,7 +89,7 @@ RSpec.describe CompaniesController, type: :controller do
       updated_company = build(:company)
       patch :update, params: { company: updated_company.as_json, id: company.id }
       company.reload
-      expect(company.attributes.except('id', 'created_at', 'updated_at')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at'))
+      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
     end
 
     it "returns Unprocessable Entity if company is not valid" do
@@ -98,7 +98,7 @@ RSpec.describe CompaniesController, type: :controller do
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
-      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description')
     end
 
     it "returns not found if company id is not valid" do

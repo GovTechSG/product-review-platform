@@ -18,43 +18,43 @@ shared_examples_for 'companies' do
   end
 
   describe "reviews_count" do
-    context "no product or service" do
+    context "no product and service" do
       it "returns 0" do
-        @company = Company.create! valid_company
-        expect(@company.reviews_count).to eq(0)
+        company = Company.create! valid_company
+        expect(company.reviews_count).to eq(0)
       end
     end
 
     context "no product" do
       it "returns service count" do
-        @company = Company.create! valid_company
-        @service = @company.services.create! valid_service
-        @service.reviews.create! valid_service_review
-        @service.reviews.create! valid_service_review
-        expect(@company.reviews_count).to eq(2)
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.create! valid_service_review
+        expect(company.reviews_count).to eq(2)
       end
     end
 
     context "no service" do
       it "returns product count" do
-        @company = Company.create! valid_company
-        @product = @company.products.create! valid_product
-        @product.reviews.create! valid_product_review
-        @product.reviews.create! valid_product_review
-        expect(@company.reviews_count).to eq(2)
+        company = Company.create! valid_company
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.create! valid_product_review
+        expect(company.reviews_count).to eq(2)
       end
     end
 
     context "product and service" do
       it "returns review count" do
-        @company = Company.create! valid_company
-        @service = @company.services.create! valid_service
-        @service.reviews.create! valid_service_review
-        @service.reviews.create! valid_service_review
-        @product = @company.products.create! valid_product
-        @product.reviews.create! valid_product_review
-        @product.reviews.create! valid_product_review
-        expect(@company.reviews_count).to eq(4)
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.create! valid_service_review
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.create! valid_product_review
+        expect(company.reviews_count).to eq(4)
       end
     end
   end
@@ -62,69 +62,69 @@ shared_examples_for 'companies' do
   describe "strengths" do
     context "no product and service" do
       it "returns empty array" do
-        @company = Company.create! valid_company
-        expect(@company.strengths).to eq([])
+        company = Company.create! valid_company
+        expect(company.strengths).to eq([])
       end
     end
 
     context "no product" do
       it "returns service strengths" do
-        @company = Company.create! valid_company
-        @service = @company.services.create! valid_service
-        @review = @service.reviews.create! valid_service_review
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        review = service.reviews.create! valid_service_review
 
-        expect(@company.strengths).to eq(@review.strengths)
+        expect(company.strengths).to eq(review.strengths)
       end
     end
 
     context "no service" do
       it "returns product strengths" do
-        @company = Company.create! valid_company
-        @product = @company.products.create! valid_product
-        @review = @product.reviews.create! valid_product_review
-        expect(@company.strengths).to eq(@review.strengths)
+        company = Company.create! valid_company
+        product = company.products.create! valid_product
+        review = product.reviews.create! valid_product_review
+        expect(company.strengths).to eq(review.strengths)
       end
     end
 
     context "product and service" do
       it "returns review strengths" do
-        @company = Company.create! valid_company
-        @service = @company.services.create! valid_service
-        @service_review = @service.reviews.create! valid_service_review
-        @product = @company.products.create! valid_product
-        @product_review = @product.reviews.create! valid_product_review
-        expect(@company.strengths).to eq((@product_review.strengths + @service_review.strengths)[0..5])
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service_review = service.reviews.create! valid_service_review
+        product = company.products.create! valid_product
+        product_review = product.reviews.create! valid_product_review
+        expect(company.strengths).to eq((product_review.strengths + service_review.strengths)[0..5])
       end
     end
   end
 
   describe "add_score" do
     it "returns the new score" do
-      @company = Company.new(valid_company)
-      @product = @company.products.new(valid_product)
-      @review = @product.reviews.new(valid_product_review)
-      expect(@company.add_score(@review.score)).to eq(@review.score)
+      company = Company.new(valid_company)
+      product = company.products.new(valid_product)
+      review = product.reviews.new(valid_product_review)
+      expect(company.add_score(review.score)).to eq(review.score)
     end
   end
 
   describe "update_score" do
     it "returns the new score" do
-      @company = Company.create! valid_company
-      @product = @company.products.create! valid_product
-      @review = @product.reviews.create! valid_product_review
-      @company.aggregate_score = @review.score
-      @newscore = Float(FFaker.numerify('#'))
-      expect(@company.update_score(@review.score, @newscore)).to eq(@newscore)
+      company = Company.create! valid_company
+      product = company.products.create! valid_product
+      review = product.reviews.create! valid_product_review
+      company.aggregate_score = review.score
+      newscore = Float(FFaker.numerify('#'))
+      expect(company.update_score(review.score, newscore)).to eq(newscore)
     end
   end
 
   describe "subtract_score" do
     it "returns the new score" do
-      @company = Company.create! valid_company
-      @product = @company.products.create! valid_product
-      @review = @product.reviews.create! valid_product_review
-      @company.aggregate_score = @review.score
-      expect(@company.subtract_score(@review.score)).to eq(0)
+      company = Company.create! valid_company
+      product = company.products.create! valid_product
+      review = product.reviews.create! valid_product_review
+      company.aggregate_score = review.score
+      expect(company.subtract_score(review.score)).to eq(0)
     end
   end
 end
