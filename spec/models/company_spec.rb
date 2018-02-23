@@ -1,6 +1,10 @@
 require 'rails_helper'
+require 'concerns/statistics/products_and_services_spec.rb'
+require 'concerns/statistics/companies_spec.rb'
 
 RSpec.describe Company, type: :model do
+  it_behaves_like "products_and_services"
+  it_behaves_like "companies"
   it "is valid with valid attributes" do
     expect(build(:company)).to be_valid
   end
