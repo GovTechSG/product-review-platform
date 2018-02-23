@@ -14,6 +14,9 @@ module SwaggerDocs::Products
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Returns list of all products from specified company'
         key :operationId, 'findProductsByCompany'
@@ -21,14 +24,24 @@ module SwaggerDocs::Products
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, list of products fetched from given company ID'
           schema type: :array do
             items do
               key :'$ref', :Product
             end
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Creates a new product belonging to specified company'
         key :operationId, 'addProductByCompany'
@@ -36,15 +49,16 @@ module SwaggerDocs::Products
           'application/json'
         ]
         parameter do
-          key :name, :product
+          key :name, :body
           key :in, :body
-          key :description, 'Product to create'
+          key :description, 'Details of the product to be created'
           key :required, true
           schema do
             key :'$ref', :ProductInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, company is successfully created'
           schema do
             key :'$ref', :Product
           end
@@ -54,6 +68,15 @@ module SwaggerDocs::Products
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
     end
@@ -68,6 +91,9 @@ module SwaggerDocs::Products
         key :format, :int64
       end
       operation :put do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Update a product'
         key :operationId, 'updateProduct'
@@ -75,15 +101,16 @@ module SwaggerDocs::Products
           'application/json'
         ]
         parameter do
-          key :name, :product
+          key :name, :body
           key :in, :body
-          key :description, 'Product to update'
+          key :description, 'New details of product to be updated'
           key :required, true
           schema do
             key :'$ref', :ProductInput
           end
         end
         response 200 do
+          key :description, 'OK, company is successfully updated'
           schema do
             key :'$ref', :Product
           end
@@ -94,8 +121,20 @@ module SwaggerDocs::Products
             key :'$ref', :SwaggerError
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
+        end
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Returns a product'
         key :operationId, 'findProductById'
@@ -103,16 +142,34 @@ module SwaggerDocs::Products
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, product fetched from the given product ID'
           schema do
             key :'$ref', :Product
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['product']
         key :description, 'Deletes a single product'
         key :operationId, 'deleteProduct'
-        response 204
+        response 204 do
+          key :description, 'No content success. Product of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end

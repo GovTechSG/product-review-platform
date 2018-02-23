@@ -8,14 +8,16 @@ module SwaggerDocs::App
       key :type, :object
       key :required, [:name, :password]
 
-      property :name do
+      property :access_token do
         key :type, :string
-        key :example, "validAccount"
       end
 
-      property :password do
+      property :token_type do
         key :type, :string
-        key :example, "validPassword"
+      end
+
+      property :created_at do
+        key :type, :integer
       end
     end
 
@@ -24,12 +26,28 @@ module SwaggerDocs::App
         schema do
           property :name do
             key :type, :string
-            key :example, "[Enter username here]"
           end
 
           property :password do
             key :type, :string
-            key :example, "[Enter password here]"
+          end
+        end
+      end
+    end
+
+    swagger_schema :TokenRefreshInput do
+      allOf do
+        schema do
+          property :token do
+            key :type, :string
+          end
+
+          property :name do
+            key :type, :string
+          end
+
+          property :password do
+            key :type, :string
           end
         end
       end
@@ -40,7 +58,6 @@ module SwaggerDocs::App
         schema do
           property :token do
             key :type, :string
-            key :example, "[Enter your access token here]"
           end
         end
       end

@@ -26,10 +26,6 @@ class ApidocsController < ApplicationController
       key :in, :header
       key :description, 'Enter "Bearer " before ur access key'
     end
-
-    security do
-      key :Authorization, []
-    end
   end
 
   # A list of all classes that have swagger_* declarations.
@@ -38,8 +34,8 @@ class ApidocsController < ApplicationController
     TokensController,
     CompaniesController,
     Company,
-    AgenciesController,
-    Agency,
+    UsersController,
+    User,
     ProductsController,
     Product,
     ServicesController,

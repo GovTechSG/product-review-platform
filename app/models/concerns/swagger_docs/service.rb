@@ -36,12 +36,10 @@ module SwaggerDocs::Service
             key :type, :object
             property :name do
               key :type, :string
-              key :example, "[Enter the Service name here. Example: Postman]"
             end
 
             property :description do
               key :type, :string
-              key :example, "[Enter the Service description here. Example: A postman API]"
             end
           end
         end
