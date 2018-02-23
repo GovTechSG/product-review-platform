@@ -8,18 +8,15 @@ module Statistics::Companies
     # (different from #reviews method on company, see models/company.rb)
     def reviews_count
       product_count = self.products.reduce(0) { |accum, pr| accum + pr.reviews.count }
-      product_count + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
+      total_count = product_count + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
+      total_count
     end
 
     def strengths
       product_strength_set = get_reviews(self.products)
       service_strength_set = get_reviews(self.services)
       whole_set = product_strength_set.merge(service_strength_set)
-      if whole_set.empty?
-        []
-      else
-        whole_set.first(6).to_a
-      end
+      whole_set.empty? ? [] : whole_set.first(6).to_a
     end
 
     def add_score(score)
