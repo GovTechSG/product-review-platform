@@ -24,7 +24,7 @@ class ReviewsController < ApplicationController
   # POST /services/:service_id/reviews
   def create
     # Store create_params in a temp variable to avoid
-    # repeatedly calling the methode
+    # repeatedly calling the method
     whitelisted = create_params
     if whitelisted.nil?
       render_error(400, "No product_id or service_id specified")
