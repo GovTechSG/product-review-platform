@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   end
 
   def validate_user_pressence
-    render_id_not_found if @user.nil?
+    render_error(404) if @user.nil?
   end
 
   # Only allow a trusted parameter "white list" through.

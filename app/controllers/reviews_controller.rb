@@ -12,7 +12,7 @@ class ReviewsController < ApplicationController
     elsif params[:service_id].present?
       @reviews = Service.find(params[:service_id]).reviews
     else
-      render_bad_request("No product_id or service_id specified")
+      render_error(400, "No product_id or service_id specified")
       return
     end
 
@@ -31,7 +31,7 @@ class ReviewsController < ApplicationController
     # repeatedly calling the method
     whitelisted = create_params
     if whitelisted.nil?
-      render_bad_request("No product_id or service_id specified")
+      render_error(400, "No product_id or service_id specified")
       return
     end
     reviewable = params[:product_id].present? ? Product.find(params[:product_id]) : Service.find(params[:service_id])

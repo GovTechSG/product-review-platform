@@ -59,10 +59,6 @@ module SwaggerDocs::Company
               key :type, :string
             end
 
-            property :aggregate_score do
-              key :type, :number
-            end
-
             property :description do
               key :type, :string
             end

@@ -48,7 +48,7 @@ class ProductsController < ApplicationController
     end
 
     def validate_product_pressence
-      render_id_not_found if @product.nil?
+      render_error(404) if @product.nil?
     end
 
     # Only allow a trusted parameter "white list" through.
