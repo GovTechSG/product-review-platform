@@ -14,6 +14,9 @@ module SwaggerDocs::Likes
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Returns list of all likes from specified review'
         key :operationId, 'findLikesByReview'
@@ -21,30 +24,41 @@ module SwaggerDocs::Likes
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, list of likes fetched'
           schema type: :array do
             items do
               key :'$ref', :Like
             end
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :post do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
-        key :description, 'Creates a new like belonging to specified review'
+        key :description, 'Creates a new like that belong to a specified review'
         key :operationId, 'addLikeByReview'
         key :produces, [
           'application/json'
         ]
         parameter do
-          key :name, :like
+          key :name, :body
           key :in, :body
-          key :description, 'Like to create'
+          key :description, 'Details of Like to be created'
           key :required, true
           schema do
             key :'$ref', :LikeInput
           end
         end
-        response 200 do
+        response 201 do
+          key :description, 'OK, like is successfully created'
           schema do
             key :'$ref', :Like
           end
@@ -54,6 +68,15 @@ module SwaggerDocs::Likes
           schema do
             key :'$ref', :SwaggerError
           end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
       end
     end
@@ -68,6 +91,9 @@ module SwaggerDocs::Likes
         key :format, :int64
       end
       operation :get do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Returns a like'
         key :operationId, 'findLikeById'
@@ -75,16 +101,34 @@ module SwaggerDocs::Likes
           'application/json'
         ]
         response 200 do
+          key :description, 'OK, like of the given ID fetched'
           schema do
             key :'$ref', :Like
           end
         end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
       operation :delete do
+        security do
+          key :Authorization, []
+        end
         key :tags, ['like']
         key :description, 'Deletes a single like'
         key :operationId, 'deleteLike'
-        response 204
+        response 204 do
+          key :description, 'No content success. Like of the given ID is deleted'
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
   end
