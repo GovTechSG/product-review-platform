@@ -27,7 +27,7 @@ class ReviewsController < ApplicationController
     # repeatedly calling the methode
     whitelisted = create_params
     if whitelisted.nil?
-      render
+      render_error(400, "No product_id or service_id specified")
       return
     end
     @review = Review.new(whitelisted)

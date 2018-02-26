@@ -18,6 +18,11 @@ RSpec.describe "Products", type: :request do
 
         expect(response).to be_success
       end
+
+      it "returns not found when company id is not found" do
+        get company_products_path(0), headers: request_login
+        expect(response).to be_not_found
+      end
     end
 
     describe "GET #show" do

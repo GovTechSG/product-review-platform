@@ -53,27 +53,20 @@ module SwaggerDocs::Company
             key :type, :object
             property :name do
               key :type, :string
-              key :example, "[Enter the company name here. Example: GovTech]"
             end
 
             property :UEN do
               key :type, :string
-              key :example, "[Enter the UEN of the company here. Example: 987654321]"
-            end
-
-            property :aggregate_score do
-              key :type, :number
-              key :example, "[Enter the aggregate score of the company here. Example: 3]"
             end
 
             property :description do
               key :type, :string
-              key :example, "[Enter the description of the company here]"
             end
           end
         end
       end
     end
+
     swagger_schema :SwaggerError do
       key :required, [:code, :message]
       property :code do
@@ -83,6 +76,18 @@ module SwaggerDocs::Company
       property :message do
         key :type, :string
       end
+    end
+
+    swagger_schema :NotFoundError do
+      key :description, 'Not found. Given ID is invalid/not found'
+    end
+
+    swagger_schema :UnauthorisedError do
+      key :description, 'Unauthorized. Missing or invalid credentials. Please sign in/sign up first.'
+    end
+
+    swagger_schema :BadRequestError do
+      key :description, 'Bad Request. Params is missing'
     end
   end
 end

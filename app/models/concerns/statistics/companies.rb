@@ -7,15 +7,16 @@ module Statistics::Companies
     # These refer to the aggregate number of reviews of a vendor company's products and services
     # (different from #reviews method on company, see models/company.rb)
     def reviews_count
-      self.products.reduce(0) { |accum, p| accum + p.reviews.count }
-      + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
+      product_count = self.products.reduce(0) { |accum, product| accum + product.reviews.count }
+      total_count = product_count + self.services.reduce(0) { |accum, service| accum + service.reviews.count }
+      total_count
     end
 
     def strengths
-      strengths = Set.new()
-      strengths = get_product_reviews(strengths)
-      strengths = get_service_reviews(strengths)
-      strengths.to_a
+      product_strength_set = get_reviews(self.products)
+      service_strength_set = get_reviews(self.services)
+      whole_set = product_strength_set.merge(service_strength_set)
+      whole_set.empty? ? [] : whole_set.first(6).to_a
     end
 
     def add_score(score)
@@ -41,35 +42,20 @@ module Statistics::Companies
 
     def subtract_score(score)
       count = reviews_count
-      if count > 0
-        ((count * aggregate_score) - score)/(count - 1)
-      else
-        0
-      end
+      final_score = ((count * aggregate_score) - score)/(count - 1)
+      final_score.nan? ? 0 : final_score
     end
 
     private
 
-    def get_product_reviews(set)
-      products.first(3).each do |p|
-        p.reviews.first(3).each do |r|
-          if set.length >= 5
-            return set.to_a[0, 5]
-          end
-          set.merge(r.strengths)
+    def get_reviews(product_service)
+      strengths_set = Set.new
+      product_service.first(3).each do |reviewable|
+        reviewable.reviews.first(3).each do |review|
+          strengths_set.merge(review.strengths)
         end
       end
-    end
-
-    def get_service_reviews(set)
-      services.first(3).each do |s|
-        s.reviews.first(3).each do |r|
-          if set.length >= 5
-            return set.to_a[0, 5]
-          end
-          set.merge(r.strengths)
-        end
-      end
+      strengths_set
     end
   end
 end

@@ -31,6 +31,23 @@ RSpec.describe TokensController, type: :controller do
     end
   end
 
+  describe "POST #token discarded app" do
+    it "returns a unauthorized response" do
+      @expected = wrong_credentials_response
+      unauthorized_app = create(:app)
+      unauthorized_app.discard
+      unauthorized_app.reload
+      @app_params = {
+        "password": unauthorized_app.password,
+        "name": unauthorized_app.name
+      }
+      post :create, params: @app_params
+      expect(response.body).to look_like_json
+      expect(response).to be_unauthorized
+      expect(parsed_response).to match(@expected)
+    end
+  end
+
   describe "POST #revoke" do
     it "returns a success response" do
       token = controller_login
