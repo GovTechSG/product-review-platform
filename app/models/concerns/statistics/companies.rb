@@ -43,7 +43,7 @@ module Statistics::Companies
     def subtract_score(score)
       count = reviews_count
       final_score = ((count * aggregate_score) - score)/(count - 1)
-      final_score.nan? ? 0 : final_score
+      final_score.nan? || final_score.infinite? ? 0 : final_score
     end
 
     private

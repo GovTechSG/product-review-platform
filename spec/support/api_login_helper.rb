@@ -1,10 +1,10 @@
 def request_login
   authorized_app = create(:app)
-  @app_params = {
+  app_params = {
     "password": authorized_app.password,
     "name": authorized_app.name
   }.as_json
-  post oauth_sign_in_path, params: @app_params
+  post oauth_sign_in_path, params: app_params
   env ||= {}
   env['Authorization'] = "Bearer " + JSON.parse(response.body)["access_token"]
   env
@@ -12,11 +12,11 @@ end
 
 def controller_login
   authorized_app = create(:app)
-  @app_params = {
+  app_params = {
     "password": authorized_app.password,
     "name": authorized_app.name
   }
-  post :create, params: @app_params
+  post :create, params: app_params
   JSON.parse(response.body)["access_token"]
 end
 
