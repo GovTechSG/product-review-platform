@@ -11,7 +11,7 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "Authorised user" do
-    describe "GET #index" do
+    describe "GET /api/v1/companies/:company_id/products" do
       it "returns a success response" do
         product = Product.create! valid_attributes
         get company_products_path(product.company.id), headers: request_login
@@ -20,7 +20,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "GET #show" do
+    describe "GET /api/v1/products/:id" do
       it "returns a success response" do
         product = Product.create! valid_attributes
         get product_path(product.id), headers: request_login
@@ -33,7 +33,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "POST #create" do
+    describe "POST /api/v1/companies/:company_id/products" do
       context "with valid params" do
         it "creates a new Product" do
           company = create(:company)
@@ -64,7 +64,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "PUT #update" do
+    describe "PUT /api/v1/products/:id" do
       context "with valid params" do
         let(:new_attributes) do
           attributes_for(:product)
@@ -99,7 +99,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "DELETE #destroy" do
+    describe "DELETE /api/v1/products/:id" do
       it "soft deletes" do
         product = Product.create! valid_attributes
         expect do
@@ -129,7 +129,7 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "Unauthorised user" do
-    describe "GET #index" do
+    describe "GET /api/v1/companies/:company_id/products" do
       it "returns an unauthorized response" do
         product = Product.create! valid_attributes
         get company_products_path(product.company.id), headers: nil
@@ -138,7 +138,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "GET #show" do
+    describe "GET /api/v1/products/:id" do
       it "returns an unauthorized response" do
         product = Product.create! valid_attributes
         get product_path(product.id), headers: nil
@@ -147,7 +147,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "POST #create" do
+    describe "POST /api/v1/companies/:company_id/products" do
       it "does not create a new Product" do
         company = create(:company)
 
@@ -164,7 +164,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "PUT #update" do
+    describe "PUT /api/v1/products/:id" do
       let(:new_attributes) do
         attributes_for(:product)
       end
@@ -187,7 +187,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    describe "DELETE #destroy" do
+    describe "DELETE /api/v1/products/:id" do
       it "does not destroy the requested product" do
         product = Product.create! valid_attributes
         expect do
