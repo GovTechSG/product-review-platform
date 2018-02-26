@@ -11,6 +11,7 @@ require "action_view/railtie"
 require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
+require './app/middleware/catch_json_parse_errors'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -36,7 +37,7 @@ module ProductReviewPlatform
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.app_generators.scaffold_controller = :scaffold_controller
-
+    config.middleware.use CatchJsonParseErrors
     # added because api has a frontend
 
     config.middleware.use Rack::MethodOverride
