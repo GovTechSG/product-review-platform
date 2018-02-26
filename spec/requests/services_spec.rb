@@ -14,13 +14,13 @@ RSpec.describe "Services", type: :request do
 
   describe "GET /services/:id" do
     it "should return unauthorized response" do
-      @expected = unauthorized_response
+      expected = unauthorized_response
       service = create(:service)
       get service_path(service.id), params: {}, headers: nil
 
       expect(response).to have_http_status(401)
       expect(response.body).to look_like_json
-      expect(parsed_response).to match(@expected)
+      expect(parsed_response).to match(expected)
     end
   end
 end

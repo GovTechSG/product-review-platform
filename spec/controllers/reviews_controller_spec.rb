@@ -17,14 +17,14 @@ RSpec.describe ReviewsController, type: :controller do
 
   describe "GET #show", authorized: false do
     it "returns an unauthorized response" do
-      @expected = unauthorized_response
+      expected = unauthorized_response
 
       product_review = create(:product_review)
       get :show, params: { id: product_review.id }
 
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
-      expect(parsed_response).to match(@expected)
+      expect(parsed_response).to match(expected)
     end
   end
 end

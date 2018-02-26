@@ -18,14 +18,14 @@ RSpec.describe ServicesController, type: :controller do
 
   describe "GET #show", authorized: false do
     it "returns an unauthorized response" do
-      @expected = unauthorized_response
+      expected = unauthorized_response
 
       service = create(:service)
       get :show, params: { id: service.id }
 
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
-      expect(parsed_response).to match(@expected)
+      expect(parsed_response).to match(expected)
     end
   end
 end
