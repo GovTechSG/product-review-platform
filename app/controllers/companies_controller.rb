@@ -36,7 +36,6 @@ class CompaniesController < ApplicationController
   rescue ActiveRecord::RecordNotUnique
     render_error(422, 'UEN already exists')
     return
-
   rescue ActionController::ParameterMissing
     render_error(400, "Company is missing or empty from params")
     return
@@ -61,6 +60,5 @@ class CompaniesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def company_params
       params.require(:company).permit(:name, :UEN, :description)
-    
     end
 end

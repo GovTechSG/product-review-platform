@@ -108,7 +108,7 @@ RSpec.describe CompaniesController, type: :controller do
       expect(company).to match(original_company)
       expect(response.status).to eq(404)
     end
-    
+
     it "returns 400 if company is not provided" do
       original_company = company
       patch :update, params: { id: original_company.id }

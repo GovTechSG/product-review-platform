@@ -89,7 +89,7 @@ RSpec.describe "Companies", type: :request do
       updated_company = build(:company)
       patch company_path(company.id), params: { company: updated_company.as_json }, headers: header
       company.reload
-      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at','aggregate_score'))
+      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
     end
 
     it "returns Unprocessable Entity if company is not valid" do

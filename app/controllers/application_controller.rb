@@ -1,7 +1,7 @@
 # Front facing routes inherit this
 class ApplicationController < ActionController::Base
   include RenderErrors
-  
+
   rescue_from ActiveRecord::RecordNotFound do |error|
     render_error(404, error)
   end
