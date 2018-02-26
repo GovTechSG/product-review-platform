@@ -6,9 +6,15 @@ class ServicesController < ApplicationController
 
   # GET /companies/:company_id/services
   def index
-    @services = Service.where(company_id: params[:company_id])
-
+    @services = Service.find_by(company_id: params[:company_id]) or not_found
     render json: @services, methods: [:reviews_count, :aggregate_score]
+
+    # if @services != nil
+    #   render json: @services, methods: [:reviews_count, :aggregate_score]
+    # else
+    #   render json: @service.errors, status: :not_found
+    # end
+
   end
 
   # GET /services/1
