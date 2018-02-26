@@ -89,11 +89,11 @@ class ReviewsController < ApplicationController
         elsif score_param.is_a? Numeric
           @score = score_param
         else
-          render_unprocessable_entity("Score is not a number")
+          render_error(422, "Score is not a number")
         end
       end
     rescue ArgumentError
-      render_unprocessable_entity("Score is not a number")
+      render_error(422, "Score is not a number")
     end
 
     def set_reviwable
@@ -102,16 +102,16 @@ class ReviewsController < ApplicationController
       elsif params[:service_id].present?
         @reviewable = Service.find_by(id: params[:service_id])
       else
-        render_bad_request("No product_id or service_id specified")
+        render_error(400, "No product_id or service_id specified")
       end
     end
 
     def validate_reviewable_pressence
-      render_id_not_found if @reviewable.nil?
+      render_error(404, "Product/service id not found") if @reviewable.nil?
     end
 
     def validate_review_pressence
-      render_id_not_found if @review.nil?
+      render_error(404, "Review id not found") if @review.nil?
     end
 
     # Use callbacks to share common setup or constraints between actions.

@@ -2,19 +2,19 @@ require 'rails_helper'
 require 'support/api_login_helper'
 
 RSpec.describe ReviewsController, type: :controller do
-  let(:valid_product) do
+  let(:valid_product_review) do
     build(:product_review).attributes
   end
 
-  let(:invalid_product) do
+  let(:invalid_product_review) do
     attributes_for(:product_review, score: nil, content: nil)
   end
 
-  let(:valid_service) do
+  let(:valid_service_review) do
     build(:service_review).attributes
   end
 
-  let(:invalid_service) do
+  let(:invalid_service_review) do
     attributes_for(:service_review, score: nil, content: nil)
   end
 
@@ -28,7 +28,7 @@ RSpec.describe ReviewsController, type: :controller do
     describe "GET #index" do
       context "product review" do
         it "returns a success response", authorized: true do
-          review = Review.create! valid_product
+          review = Review.create! valid_product_review
           get :index, params: { product_id: review.reviewable_id }
 
           expect(response).to be_success
@@ -42,7 +42,7 @@ RSpec.describe ReviewsController, type: :controller do
 
       context "service review" do
         it "returns a success response", authorized: true do
-          review = Review.create! valid_service
+          review = Review.create! valid_service_review
           get :index, params: { service_id: review.reviewable_id }
 
           expect(response).to be_success
@@ -57,7 +57,7 @@ RSpec.describe ReviewsController, type: :controller do
 
     describe "GET #show" do
       it "returns a success response", authorized: true do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         get :show, params: { id: review.to_param }
         expect(response).to be_success
       end
@@ -75,14 +75,14 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
 
             expect do
-              post :create, params: { review: valid_product, product_id: product.id }
+              post :create, params: { review: valid_product_review, product_id: product.id }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             product = create(:product)
 
-            post :create, params: { review: valid_product, product_id: product.id }
+            post :create, params: { review: valid_product_review, product_id: product.id }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -92,7 +92,7 @@ RSpec.describe ReviewsController, type: :controller do
         context "with invalid params", authorized: true do
           it "renders a JSON response with errors for the new review" do
             product = create(:product)
-            post :create, params: { review: invalid_product, product_id: product.id }
+            post :create, params: { review: invalid_product_review, product_id: product.id }
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.content_type).to eq('application/json')
           end
@@ -100,7 +100,7 @@ RSpec.describe ReviewsController, type: :controller do
 
         context "with non existent reviewable id", authorized: true do
           it "renders a JSON response with errors for the new review" do
-            post :create, params: { review: valid_product, product_id: 0 }
+            post :create, params: { review: valid_product_review, product_id: 0 }
             expect(response).to be_not_found
             expect(response.content_type).to eq('application/json')
           end
@@ -113,14 +113,14 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
 
             expect do
-              post :create, params: { review: valid_service, service_id: service.id }
+              post :create, params: { review: valid_service_review, service_id: service.id }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             service = create(:service)
 
-            post :create, params: { review: valid_service, service_id: service.id }
+            post :create, params: { review: valid_service_review, service_id: service.id }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -131,7 +131,7 @@ RSpec.describe ReviewsController, type: :controller do
           it "renders a JSON response with errors for the new review" do
             service = create(:service)
 
-            post :create, params: { review: invalid_service, service_id: service.id }
+            post :create, params: { review: invalid_service_review, service_id: service.id }
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.content_type).to eq('application/json')
           end
@@ -139,7 +139,7 @@ RSpec.describe ReviewsController, type: :controller do
 
         context "with non existent reviewable id", authorized: true do
           it "renders a JSON response with errors for the new review" do
-            post :create, params: { review: valid_service, service_id: 0 }
+            post :create, params: { review: valid_service_review, service_id: 0 }
             expect(response).to be_not_found
             expect(response.content_type).to eq('application/json')
           end
@@ -152,20 +152,19 @@ RSpec.describe ReviewsController, type: :controller do
         attributes_for(:product_review)
       end
       context "with valid params" do
-
         it "updates the requested review", authorized: true do
-          review = Review.create! valid_product
+          review = Review.create! valid_product_review
           put :update, params: { id: review.to_param, review: new_attributes }
           review.reload
-          expect(review.score.to_s).to eq(new_attributes[:score])
+          expect(review.score).to eq(new_attributes[:score])
           expect(review.content).to eq(new_attributes[:content])
           expect(review.strengths).to eq(new_attributes[:strengths])
         end
 
         it "renders a JSON response with the review", authorized: true do
-          review = Review.create! valid_product
+          review = Review.create! valid_product_review
 
-          put :update, params: { id: review.to_param, review: valid_product }
+          put :update, params: { id: review.to_param, review: valid_product_review }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -173,9 +172,9 @@ RSpec.describe ReviewsController, type: :controller do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the review", authorized: true do
-          review = Review.create! valid_product
+          review = Review.create! valid_product_review
 
-          put :update, params: { id: review.to_param, review: invalid_product }
+          put :update, params: { id: review.to_param, review: invalid_product_review }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -192,21 +191,21 @@ RSpec.describe ReviewsController, type: :controller do
 
     describe "DELETE #destroy" do
       it "soft deletes", authorized: true do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         expect do
           delete :destroy, params: { id: review.to_param }
         end.to change(Review, :count).by(0)
       end
 
       it "sets discarded_at datetime", authorized: true do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         delete :destroy, params: { id: review.to_param }
         review.reload
         expect(review.discarded?).to be true
       end
 
       it "renders a JSON response with the review", authorized: true do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
 
         delete :destroy, params: { id: review.to_param }
         expect(response).to have_http_status(204)
@@ -222,7 +221,7 @@ RSpec.describe ReviewsController, type: :controller do
   describe "Unauthorised user" do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         get :index, params: { product_id: review.reviewable_id }
 
         expect_unauthorized
@@ -231,7 +230,7 @@ RSpec.describe ReviewsController, type: :controller do
 
     describe "GET #show" do
       it "returns an unauthorized response", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         get :show, params: { id: review.to_param }
 
         expect_unauthorized
@@ -243,14 +242,14 @@ RSpec.describe ReviewsController, type: :controller do
         product = create(:product)
 
         expect do
-          post :create, params: { review: valid_product, product_id: product.id }
+          post :create, params: { review: valid_product_review, product_id: product.id }
         end.to change(Review, :count).by(0)
       end
 
       it "returns an unauthorized response", authorized: false do
         product = create(:product)
 
-        post :create, params: { review: valid_product, product_id: product.id }
+        post :create, params: { review: valid_product_review, product_id: product.id }
         expect_unauthorized
       end
     end
@@ -261,7 +260,7 @@ RSpec.describe ReviewsController, type: :controller do
       end
 
       it "does not update the requested review", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         current_attributes = review.attributes
 
         put :update, params: { id: review.to_param, review: new_attributes }
@@ -275,30 +274,30 @@ RSpec.describe ReviewsController, type: :controller do
       end
 
       it "returns an unauthorized response", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
 
-        put :update, params: { id: review.to_param, review: valid_product }
+        put :update, params: { id: review.to_param, review: valid_product_review }
         expect_unauthorized
       end
     end
 
     describe "DELETE #destroy" do
       it "does not destroy the requested review", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         expect do
           delete :destroy, params: { id: review.to_param }
         end.to change(Review, :count).by(0)
       end
 
       it "does not set discarded_at datetime", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
         delete :destroy, params: { id: review.to_param }
         review.reload
         expect(review.discarded?).to be false
       end
 
       it "returns an unauthorized response", authorized: false do
-        review = Review.create! valid_product
+        review = Review.create! valid_product_review
 
         delete :destroy, params: { id: review.to_param }
         expect_unauthorized
