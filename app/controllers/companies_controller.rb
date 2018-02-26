@@ -33,12 +33,6 @@ class CompaniesController < ApplicationController
     else
       render json: @company.errors, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotUnique
-    render_error(422, 'UEN already exists')
-    return
-  rescue ActionController::ParameterMissing
-    render_error(400, "Company is missing or empty from params")
-    return
   end
 
   # DELETE /companies/1
