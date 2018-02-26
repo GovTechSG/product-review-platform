@@ -224,10 +224,8 @@ RSpec.describe ServicesController, type: :controller do
         service.reload
         expect(service.discarded?).to be false
       end
-
       it "returns an unauthorized response", authorized: false do
         service = Service.create! valid_attributes
-
         delete :destroy, params: { id: service.to_param }, session: valid_session
         expect_unauthorized
       end

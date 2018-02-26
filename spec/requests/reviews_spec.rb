@@ -288,7 +288,6 @@ RSpec.describe "Reviews", type: :request do
 
       it "returns an unauthorized response" do
         review = Review.create! valid_product_review
-
         delete review_path(review.id), headers: nil
         expect_unauthorized
       end

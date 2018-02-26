@@ -298,7 +298,6 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "returns an unauthorized response", authorized: false do
         review = Review.create! valid_product_review
-
         delete :destroy, params: { id: review.to_param }
         expect_unauthorized
       end

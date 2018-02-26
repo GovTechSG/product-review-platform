@@ -16,12 +16,12 @@ RSpec.describe StatisticsController, type: :controller do
 
   describe "GET #index", authorized: false do
     it "returns an unauthorized response" do
-      @expected = unauthorized_response
+      expected = unauthorized_response
 
       get :index, params: {}
       expect(response.body).to look_like_json
       expect(response).to be_unauthorized
-      expect(parsed_response).to match(@expected)
+      expect(parsed_response).to match(expected)
     end
   end
 end
