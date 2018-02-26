@@ -6,14 +6,14 @@ module SwaggerDocs::Like
 
     swagger_schema :Like do
       key :type, :object
-      key :required, [:id, :agency_id, :review_id]
+      key :required, [:id, :user_id, :review_id]
 
       property :id do
         key :type, :integer
         key :format, :int64
       end
 
-      property :agency_id do
+      property :user_id do
         key :type, :integer
         key :format, :int64
       end
@@ -27,10 +27,9 @@ module SwaggerDocs::Like
     swagger_schema :LikeInput do
       allOf do
         schema do
-          property :agency_id do
+          property :user_id do
             key :type, :integer
             key :format, :int64
-            key :example, "[Enter the Agency ID to be liked here. Example: 4]"
           end
         end
       end

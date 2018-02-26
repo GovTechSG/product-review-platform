@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180214053122) do
+ActiveRecord::Schema.define(version: 20180219022023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,16 +48,6 @@ ActiveRecord::Schema.define(version: 20180214053122) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "agencies", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "email", default: "", null: false
-    t.string "number", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "discarded_at"
-    t.index ["discarded_at"], name: "index_agencies_on_discarded_at"
-  end
-
   create_table "apps", force: :cascade do |t|
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -80,14 +70,14 @@ ActiveRecord::Schema.define(version: 20180214053122) do
 
   create_table "comments", force: :cascade do |t|
     t.text "content", default: "", null: false
-    t.bigint "agency_id"
+    t.bigint "user_id"
     t.bigint "review_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.index ["agency_id"], name: "index_comments_on_agency_id"
     t.index ["discarded_at"], name: "index_comments_on_discarded_at"
     t.index ["review_id"], name: "index_comments_on_review_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -104,14 +94,14 @@ ActiveRecord::Schema.define(version: 20180214053122) do
 
   create_table "likes", force: :cascade do |t|
     t.bigint "review_id"
-    t.bigint "agency_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.index ["agency_id", "review_id"], name: "index_likes_on_agency_id_and_review_id", unique: true
-    t.index ["agency_id"], name: "index_likes_on_agency_id"
     t.index ["discarded_at"], name: "index_likes_on_discarded_at"
     t.index ["review_id"], name: "index_likes_on_review_id"
+    t.index ["user_id", "review_id"], name: "index_likes_on_user_id_and_review_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -166,10 +156,20 @@ ActiveRecord::Schema.define(version: 20180214053122) do
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
   end
 
-  add_foreign_key "comments", "agencies"
+  create_table "users", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "email", default: "", null: false
+    t.string "number", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
+  end
+
   add_foreign_key "comments", "reviews"
-  add_foreign_key "likes", "agencies"
+  add_foreign_key "comments", "users"
   add_foreign_key "likes", "reviews"
+  add_foreign_key "likes", "users"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "companies"

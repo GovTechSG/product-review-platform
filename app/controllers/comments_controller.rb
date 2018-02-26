@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   def index
     @comments = Comment.where(review_id: params[:review_id])
 
-    render json: @comments, methods: [:agency]
+    render json: @comments, methods: [:user]
   end
 
   # GET /comments/1
@@ -47,7 +47,7 @@ class CommentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      params.require(:comment).permit(:content, :agency_id)
+      params.require(:comment).permit(:content, :user_id)
     end
 
     def update_params

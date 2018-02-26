@@ -1,18 +1,24 @@
 module RenderErrors
-  def render_bad_request(error)
+  def render_error(status, error = nil)
+    if error.nil?
+      error = case status
+              when 400
+                "Bad request, missing parameters."
+              when 404
+                "No resource with given ID found."
+              when 422
+                "Unprocessable entity, invalid parameters"
+              when 401
+                "Unauthorized. Please provide valid credentials"
+              else
+                "Unexpected error"
+              end
+    end
     payload = {
-      status: 400,
+      status: status,
       error: error
     }
-    render json: payload, status: :bad_request
-  end
-
-  def render_id_not_found
-    payload = {
-      status: 404,
-      error: 'No resource with given ID found.'
-    }
-    render json: payload, status: 404
+    render json: payload, status: status
   end
 
   def doorkeeper_unauthorized_render_options(*)

@@ -89,16 +89,32 @@ RSpec.describe CompaniesController, type: :controller do
       updated_company = build(:company)
       patch :update, params: { company: updated_company.as_json, id: company.id }
       company.reload
-      expect(company.attributes.except('id', 'created_at', 'updated_at')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at'))
+      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
     end
 
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
-      patch :update, params: { company: Company.new(aggregate_score: 6).as_json, id: company.id }
+      another_company = create(:company)
+      patch :update, params: { company: attributes_for(:company, UEN: another_company.UEN).as_json, id: company.id }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
-      expect(parsed_response.keys).to contain_exactly('name', 'UEN', 'description', 'aggregate_score')
+    end
+
+    it "returns not found if company id is not valid" do
+      original_company = company
+      patch :update, params: { company: build(:company).as_json, id: 0 }
+      company.reload
+      expect(company).to match(original_company)
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 400 if company is not provided" do
+      original_company = company
+      patch :update, params: { id: original_company.id }
+      company.reload
+      expect(company).to match(original_company)
+      expect(response.status).to eq(400)
     end
   end
 
@@ -113,7 +129,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns a success response" do
       company = create(:company)
       delete :destroy, params: { id: company.id }
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it "sets company's discarded_at column" do
