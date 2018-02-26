@@ -7,8 +7,8 @@ module Statistics::Companies
     # These refer to the aggregate number of reviews of a vendor company's products and services
     # (different from #reviews method on company, see models/company.rb)
     def reviews_count
-      product_count = self.products.reduce(0) { |accum, pr| accum + pr.reviews.count }
-      total_count = product_count + self.services.reduce(0) { |accum, s| accum + s.reviews.count }
+      product_count = self.products.reduce(0) { |accum, product| accum + product.reviews.count }
+      total_count = product_count + self.services.reduce(0) { |accum, service| accum + service.reviews.count }
       total_count
     end
 
@@ -42,20 +42,17 @@ module Statistics::Companies
 
     def subtract_score(score)
       count = reviews_count
-      if count > 1
-        ((count * aggregate_score) - score)/(count - 1)
-      else
-        0
-      end
+      final_score = ((count * aggregate_score) - score)/(count - 1)
+      final_score.nan? ? 0 : final_score
     end
 
     private
 
     def get_reviews(product_service)
       strengths_set = Set.new
-      product_service.first(3).each do |ps|
-        ps.reviews.first(3).each do |r|
-          strengths_set.merge(r.strengths)
+      product_service.first(3).each do |reviewable|
+        reviewable.reviews.first(3).each do |review|
+          strengths_set.merge(review.strengths)
         end
       end
       strengths_set
