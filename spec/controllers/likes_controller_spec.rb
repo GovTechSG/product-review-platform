@@ -7,7 +7,7 @@ RSpec.describe LikesController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    build(:product_review_like, review_id: nil, agency_id: nil).attributes
+    build(:product_review_like, review_id: nil, user_id: nil).attributes
   end
 
   let(:valid_session) {}
@@ -90,8 +90,7 @@ RSpec.describe LikesController, type: :controller do
         like = Like.create! valid_attributes
 
         delete :destroy, params: { id: like.to_param }
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json')
+        expect(response).to have_http_status(204)
       end
 
       it "returns a not found response when like not found", authorized: true do
