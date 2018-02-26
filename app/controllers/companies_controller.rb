@@ -33,6 +33,13 @@ class CompaniesController < ApplicationController
     else
       render json: @company.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotUnique
+    render_error(422, 'UEN already exists')
+    return
+
+  rescue ActionController::ParameterMissing
+    render_error(400, "Company is missing or empty from params")
+    return
   end
 
   # DELETE /companies/1
@@ -45,7 +52,7 @@ class CompaniesController < ApplicationController
     def set_company
       @company = Company.find_by(id: params[:id])
       if @company.nil?
-        render_id_not_found
+        render_error(404)
       else
         @company
       end
@@ -53,6 +60,7 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :description, :aggregate_score)
+      params.require(:company).permit(:name, :UEN, :description)
+    
     end
 end
