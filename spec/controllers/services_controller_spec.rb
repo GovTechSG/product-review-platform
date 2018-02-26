@@ -26,6 +26,12 @@ RSpec.describe ServicesController, type: :controller do
 
         expect(response).to be_success
       end
+
+      it "returns not found when service's company ID not found", authorized: true do
+        get :index, params: { company_id: 0 }
+        expect(response).to be_not_found
+      end
+
     end
 
     describe "GET #show" do
@@ -58,6 +64,11 @@ RSpec.describe ServicesController, type: :controller do
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(service_url(Service.last))
+        end
+
+        it "returns not found when service's company ID not found", authorized: true do
+          post :create, params: { service: valid_attributes, company_id: 0 }
+          expect(response).to be_not_found
         end
       end
 
@@ -93,6 +104,11 @@ RSpec.describe ServicesController, type: :controller do
           put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
+        end
+
+        it "returns not found when service ID not found", authorized: true do
+          put :update, params: { id: 0, service: valid_attributes }, session: valid_session
+          expect(response).to be_not_found
         end
       end
 
