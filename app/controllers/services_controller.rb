@@ -2,6 +2,7 @@ class ServicesController < ApplicationController
   include SwaggerDocs::Services
   before_action :doorkeeper_authorize!
   before_action :set_service, only: [:show, :update, :destroy]
+  before_action :validate_service_pressence, only: [:show, :update, :destroy]
 
   # GET /companies/:company_id/services
   def index
@@ -37,13 +38,17 @@ class ServicesController < ApplicationController
 
   # DELETE /services/1
   def destroy
-    @service.destroy
+    @service.discard
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_service
-      @service = Service.find(params[:id])
+      @service = Service.find_by(id: params[:id])
+    end
+
+    def validate_service_pressence
+      render_id_not_found if @service.nil?
     end
 
     # Only allow a trusted parameter "white list" through.
