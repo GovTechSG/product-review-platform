@@ -31,7 +31,6 @@ RSpec.describe ServicesController, type: :controller do
         get :index, params: { company_id: 0 }
         expect(response).to be_not_found
       end
-
     end
 
     describe "GET #show" do
@@ -234,5 +233,4 @@ RSpec.describe ServicesController, type: :controller do
       end
     end
   end
-
 end

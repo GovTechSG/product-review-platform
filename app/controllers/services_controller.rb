@@ -8,8 +8,6 @@ class ServicesController < ApplicationController
   before_action :set_new_service, only: [:create]
   before_action :validate_new_creation, only: [:create]
 
-
-
   # GET /companies/:company_id/services
   def index
     render json: @services, methods: [:reviews_count, :aggregate_score]
@@ -66,7 +64,7 @@ class ServicesController < ApplicationController
     end
 
     def validate_new_creation
-      render_error(404, "Company_id entered does not exist") if (Company.find_by(id: @services.company_id)).nil?
+      render_error(404, "Company_id entered does not exist") if Company.find_by(id: @services.company_id).nil?
     end
 
     # Only allow a trusted parameter "white list" through.
