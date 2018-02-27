@@ -5,5 +5,5 @@ class Industry < ApplicationRecord
   has_many :industry_companies, dependent: :destroy
   has_many :companies, through: :industry_companies
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 end
