@@ -31,7 +31,7 @@ Rails.application.routes.draw do
           end
         end
       end
-
+      resources :grants
       resources :users
     end
   end
