@@ -1,3 +1,3 @@
 class IndustrySerializer < ActiveModel::Serializer
-  attributes :id, :name, :company
+  attributes :id, :name
 end

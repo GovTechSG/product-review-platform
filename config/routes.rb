@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :industries
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   scope :api do
@@ -32,7 +31,7 @@ Rails.application.routes.draw do
           end
         end
       end
-
+      resources :industries
       resources :users
     end
   end

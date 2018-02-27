@@ -1,5 +1,8 @@
 class IndustriesController < ApplicationController
+  include SwaggerDocs::Industries
+  before_action :doorkeeper_authorize!
   before_action :set_industry, only: [:show, :update, :destroy]
+  before_action :validate_industry_presence, only: [:show, :update, :destroy]
 
   # GET /industries
   def index
@@ -35,17 +38,22 @@ class IndustriesController < ApplicationController
 
   # DELETE /industries/1
   def destroy
-    @industry.destroy
+    @industry.discard
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_industry
-      @industry = Industry.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def industry_params
-      params.require(:industry).permit(:name, :company)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_industry
+    @industry = Industry.find_by(id: params[:id])
+  end
+
+  def validate_industry_presence
+    render_error(404, "Industry id not found.") if @industry.nil?
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def industry_params
+    params.require(:industry).permit(:name)
+  end
 end
