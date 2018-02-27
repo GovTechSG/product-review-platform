@@ -27,9 +27,12 @@ module SwaggerDocs::Like
     swagger_schema :LikeInput do
       allOf do
         schema do
-          property :user_id do
-            key :type, :integer
-            key :format, :int64
+          property :like do
+            key :type, :object
+            property :user_id do
+              key :type, :integer
+              key :format, :int64
+            end
           end
         end
       end
