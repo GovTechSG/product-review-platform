@@ -31,7 +31,7 @@ Rails.application.routes.draw do
           end
         end
       end
-
+      resources :industries
       resources :users
     end
   end
