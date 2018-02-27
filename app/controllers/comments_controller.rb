@@ -8,7 +8,6 @@ class CommentsController < ApplicationController
   before_action :validate_new_creation, only: [:create]
   before_action :validate_user_presence, only: [:create]
 
-
   # GET /reviews/:review_id/comments
   def index
     render json: @comments, methods: [:user]
