@@ -20,6 +20,11 @@ class LikesController < ApplicationController
 
   # POST /reviews/:review_id/likes
   def create
+    @user = User.find_by(id: create_params[:user_id])
+    if @user.nil?
+      render_error(404, "User id not found")
+      return
+    end
     @like = Like.new(create_params)
 
     if @like.save

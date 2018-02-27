@@ -45,7 +45,6 @@ RSpec.describe LikesController, type: :controller do
       context "with valid params" do
         it "creates a new Like", authorized: true do
           review = create(:product_review)
-
           expect do
             post :create, params: { like: valid_attributes, review_id: review.id }
           end.to change(Like, :count).by(1)
@@ -62,10 +61,18 @@ RSpec.describe LikesController, type: :controller do
       end
 
       context "with invalid params", authorized: true do
-        it "renders a JSON response with errors for the new like" do
+        it "renders 422 if user likes twice" do
+          like = create(:product_review_like)
+          duplicate_like = attributes_for(:product_review_like, user_id: like.user_id)
+          post :create, params: { like: duplicate_like, review_id: like.review_id }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "renders 404 if user doesnt exist" do
           review = create(:product_review)
           post :create, params: { like: invalid_attributes, review_id: review.id }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
       end
