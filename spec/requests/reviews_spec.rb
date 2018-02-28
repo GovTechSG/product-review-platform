@@ -31,6 +31,30 @@ RSpec.describe "Reviews", type: :request do
         get product_reviews_path(0), headers: request_login
         expect(response).to be_not_found
       end
+
+      it "returns a not found response when the product is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewable.discard
+        get product_reviews_path(review.reviewable_id), headers: request_login
+
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the company is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewable.company.discard
+        get product_reviews_path(review.reviewable_id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "does not return deleted reviews", authorized: true do
+        review = Review.create! valid_product_review
+        review.discard
+        get product_reviews_path(review.reviewable_id), headers: request_login
+
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
     end
 
     describe "GET api/v1/services/:service_id/reviews" do
@@ -45,6 +69,30 @@ RSpec.describe "Reviews", type: :request do
         get service_reviews_path(0), headers: request_login
         expect(response).to be_not_found
       end
+
+      it "returns a not found response when the service is deleted", authorized: true do
+        review = Review.create! valid_service_review
+        review.reviewable.discard
+        get service_reviews_path(review.reviewable_id), headers: request_login
+
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the company is deleted", authorized: true do
+        review = Review.create! valid_service_review
+        review.reviewable.discard
+        get service_reviews_path(review.reviewable_id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "does not return deleted reviews", authorized: true do
+        review = Review.create! valid_service_review
+        review.discard
+        get service_reviews_path(review.reviewable_id), headers: request_login
+
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
     end
 
     describe "GET api/v1/reviews/:id" do
@@ -56,6 +104,27 @@ RSpec.describe "Reviews", type: :request do
 
       it "returns not found when review not found" do
         get review_path(0), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found when the review is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.discard
+        get review_path(review.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found when the reviewable is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewable.discard
+        get review_path(review.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found when the review is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.company.discard
+        get review_path(review.id), headers: request_login
         expect(response).to be_not_found
       end
     end
@@ -77,6 +146,42 @@ RSpec.describe "Reviews", type: :request do
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
+        end
+      end
+
+      context "with deleted product" do
+        it "does not creates a new Review", authorized: true do
+          product = create(:product)
+          product.discard
+          expect do
+            post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          end.to change(Review, :count).by(0)
+        end
+
+        it "renders a not found response", authorized: true do
+          product = create(:product)
+          product.discard
+          post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted company" do
+        it "does not creates a new Review", authorized: true do
+          product = create(:product)
+          product.company.discard
+          expect do
+            post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          end.to change(Review, :count).by(0)
+        end
+
+        it "renders a not found response", authorized: true do
+          product = create(:product)
+          product.company.discard
+          post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -115,6 +220,42 @@ RSpec.describe "Reviews", type: :request do
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
+        end
+      end
+
+      context "with deleted service" do
+        it "does not creates a new Review", authorized: true do
+          service = create(:service)
+          service.discard
+          expect do
+            post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          end.to change(Review, :count).by(0)
+        end
+
+        it "renders a not found response", authorized: true do
+          service = create(:service)
+          service.discard
+          post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted company" do
+        it "does not creates a new Review", authorized: true do
+          service = create(:service)
+          service.company.discard
+          expect do
+            post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          end.to change(Review, :count).by(0)
+        end
+
+        it "renders a not found response", authorized: true do
+          service = create(:service)
+          service.company.discard
+          post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -160,6 +301,72 @@ RSpec.describe "Reviews", type: :request do
         end
       end
 
+      context "with deleted review" do
+        it "does not updates the requested review", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          review.reload
+          expect(review.score).to eq(original_review[:score])
+          expect(review.content).to eq(original_review[:content])
+          expect(review.strengths).to eq(original_review[:strengths])
+        end
+
+        it "renders a not found response", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted reviewable" do
+        it "does not updates the requested review", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.reviewable.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          review.reload
+          expect(review.score).to eq(original_review[:score])
+          expect(review.content).to eq(original_review[:content])
+          expect(review.strengths).to eq(original_review[:strengths])
+        end
+
+        it "renders a not found response", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.reviewable.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted company" do
+        it "does not updates the requested review", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.company.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          review.reload
+          expect(review.score).to eq(original_review[:score])
+          expect(review.content).to eq(original_review[:content])
+          expect(review.strengths).to eq(original_review[:strengths])
+        end
+
+        it "renders a not found response", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.company.discard
+          put review_path(review.id), params: { review: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
       context "with invalid params" do
         it "renders a JSON response with errors for the review" do
           review = Review.create! valid_product_review
@@ -199,6 +406,27 @@ RSpec.describe "Reviews", type: :request do
 
         delete review_path(review.id), headers: request_login
         expect(response).to have_http_status(204)
+      end
+
+      it "returns a not found response when review deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.discard
+        delete review_path(review.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when reviewable deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewable.discard
+        delete review_path(review.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when review deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.company.discard
+        delete review_path(review.id), headers: request_login
+        expect(response).to be_not_found
       end
 
       it "returns a not found response when review not found" do

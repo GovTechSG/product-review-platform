@@ -2,15 +2,15 @@ class ReviewsController < ApplicationController
   include SwaggerDocs::Reviews
   before_action :doorkeeper_authorize!
   before_action :set_review, only: [:show, :update, :destroy]
-  before_action :validate_review_pressence, only: [:show, :update, :destroy]
+  before_action :validate_review_presence, only: [:show, :update, :destroy]
   before_action :set_reviwable, only: [:index, :create]
-  before_action :validate_reviewable_pressence, only: [:index, :create]
+  before_action :validate_reviewable_presence, only: [:index, :create]
   before_action :validate_score_type, only: [:create, :update]
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
-    @reviews = @reviewable.reviews
+    @reviews = @reviewable.reviews.where(discarded_at: nil)
 
     render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end
@@ -106,12 +106,12 @@ class ReviewsController < ApplicationController
       end
     end
 
-    def validate_reviewable_pressence
-      render_error(404, "Product/service id not found") if @reviewable.nil?
+    def validate_reviewable_presence
+      render_error(404, "Product/service id not found") if @reviewable.nil? || @reviewable.discarded? || @reviewable.company.discarded?
     end
 
-    def validate_review_pressence
-      render_error(404, "Review id not found") if @review.nil?
+    def validate_review_presence
+      render_error(404, "Review id not found") if @review.nil? || @review.discarded? || @review.reviewable.discarded? || @review.company.discarded?
     end
 
     # Use callbacks to share common setup or constraints between actions.
