@@ -18,6 +18,29 @@ RSpec.describe "Services", type: :request do
 
         expect(response).to be_success
       end
+
+      it "returns not found if the company is deleted" do
+        service = Service.create! valid_attributes
+        service.company.discard
+        get company_services_path(service.company.id), headers: request_login
+
+        expect(response).to be_not_found
+      end
+
+      it "returns not found if the company is not found" do
+        get company_services_path(0), headers: request_login
+
+        expect(response).to be_not_found
+      end
+
+      it "does not return deleted services" do
+        service = Service.create! valid_attributes
+        service.discard
+        get company_services_path(service.company.id), headers: request_login
+
+        expect(response).to be_success
+        expect(parsed_response).to match([])
+      end
     end
 
     describe "GET /services/:id" do
@@ -25,6 +48,20 @@ RSpec.describe "Services", type: :request do
         service = Service.create! valid_attributes
         get service_path(service.id), headers: request_login
         expect(response).to be_success
+      end
+
+      it "returns not found when the service is deleted" do
+        service = Service.create! valid_attributes
+        service.discard
+        get service_path(service.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when the company is deleted" do
+        service = Service.create! valid_attributes
+        service.company.discard
+        get service_path(service.id), headers: request_login
+        expect(response).to be_not_found
       end
 
       it "returns not found when service not found" do
@@ -50,6 +87,21 @@ RSpec.describe "Services", type: :request do
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(service_url(Service.last))
+        end
+
+        it "renders not found if the company is not found" do
+          post company_services_path(0), params: { service: valid_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "renders not found if the company is deleted" do
+          company = create(:company)
+          company.discard
+
+          post company_services_path(company.id), params: { service: valid_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -77,6 +129,42 @@ RSpec.describe "Services", type: :request do
           service.reload
           expect(service.name).to eq(new_attributes[:name])
           expect(service.description).to eq(new_attributes[:description])
+        end
+
+        it "renders a JSON response with the service" do
+          service = Service.create! valid_attributes
+
+          put service_path(service), params: { service: new_attributes }, headers: request_login
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update the requested service when the company is deleted" do
+          service = Service.create! valid_attributes
+          original_service = service
+          service.company.discard
+          put service_path(service), params: { service: new_attributes }, headers: request_login
+          service.reload
+          expect(service.name).to eq(original_service[:name])
+          expect(service.description).to eq(original_service[:description])
+        end
+
+        it "does not update the requested service when the service is deleted" do
+          service = Service.create! valid_attributes
+          original_service = service
+          service.discard
+          put service_path(service), params: { service: new_attributes }, headers: request_login
+          service.reload
+          expect(service.name).to eq(original_service[:name])
+          expect(service.description).to eq(original_service[:description])
+        end
+
+        it "renders not found when the service is not found" do
+          Service.create! valid_attributes
+
+          put service_path(0), params: { service: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
 
         it "renders a JSON response with the service" do
@@ -119,6 +207,20 @@ RSpec.describe "Services", type: :request do
 
         delete service_path(service.id), params: {}, headers: request_login
         expect(response).to have_http_status(204)
+      end
+
+      it "render not found when the service is deleted" do
+        service = Service.create! valid_attributes
+        service.discard
+        delete service_path(service.id), params: {}, headers: request_login
+        expect(response).to have_http_status(404)
+      end
+
+      it "render not found when the company is deleted" do
+        service = Service.create! valid_attributes
+        service.company.discard
+        delete service_path(service.id), params: {}, headers: request_login
+        expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when service not found" do

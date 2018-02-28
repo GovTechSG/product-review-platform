@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies
   def index
-    @companies = Company.all
+    @companies = Company.where(discarded_at: nil)
 
     render json: @companies, methods: [:reviews_count, :strengths]
   end
@@ -44,7 +44,7 @@ class CompaniesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_company
       @company = Company.find_by(id: params[:id])
-      if @company.nil?
+      if @company.nil? || @company.discarded?
         render_error(404)
       else
         @company
