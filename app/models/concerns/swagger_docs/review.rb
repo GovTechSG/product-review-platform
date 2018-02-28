@@ -22,7 +22,7 @@ module SwaggerDocs::Review
         key :example, "Spring frameworks was not developed in spring"
       end
 
-      property :company_id do
+      property :reviewable_id do
         key :type, :integer
         key :format, :int64
       end
@@ -30,11 +30,6 @@ module SwaggerDocs::Review
       property :reviewable_type do
         key :type, :string
         key :example, "Product"
-      end
-
-      property :reviewable_id do
-        key :type, :integer
-        key :format, :int64
       end
 
       property :strengths do
@@ -46,6 +41,11 @@ module SwaggerDocs::Review
             "Explanation of Resources"
           ]
         end
+      end
+
+      property :company_id do
+        key :type, :integer
+        key :format, :int64
       end
     end
 
