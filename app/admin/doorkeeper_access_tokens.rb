@@ -1,4 +1,5 @@
-ActiveAdmin.register Doorkeeper::AccessToken do
+ActiveAdmin.register Doorkeeper::AccessToken, as: 'AcessToken' do
+  actions :all, except: [:create, :edit, :new]
   index do
     selectable_column
     id_column
@@ -7,6 +8,7 @@ ActiveAdmin.register Doorkeeper::AccessToken do
     end
 
     column :created_at
+    column :revoked_at
     actions
   end
 
@@ -16,5 +18,13 @@ ActiveAdmin.register Doorkeeper::AccessToken do
   controller do
     resources_configuration[:self][:instance_name] = 'AccessToken'
     actions :all, except: [:edit, :create]
+
+    def destroy(options = {}, &block)
+      object = resource
+      options[:location] ||= smart_collection_url
+
+      object.revoke
+      respond_with_dual_blocks(object, options, &block)
+    end
   end
 end
