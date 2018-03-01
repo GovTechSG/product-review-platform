@@ -121,7 +121,7 @@ RSpec.describe "Reviews", type: :request do
         expect(response).to be_not_found
       end
 
-      it "returns a not found when the review is deleted", authorized: true do
+      it "returns a not found when the company is deleted", authorized: true do
         review = Review.create! valid_product_review
         review.reviewable.company.discard
         get review_path(review.id), headers: request_login
