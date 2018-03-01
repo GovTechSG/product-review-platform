@@ -18,6 +18,14 @@ RSpec.describe "Users", type: :request do
 
         expect(response).to be_success
       end
+
+      it "does not return a deleted user", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
+        get users_path, headers: request_login
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
     end
 
     describe "GET /api/v1/users/:id" do
@@ -28,6 +36,13 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns not found when user not found" do
+        get user_path(0), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when user is deleted", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
         get user_path(0), headers: request_login
         expect(response).to be_not_found
       end
@@ -81,6 +96,26 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
+
+        it "does not update a deleted user", authorized: true do
+          user = User.create! valid_attributes
+          original_user = user
+          user.discard
+          put user_path(user.id), params: { user: new_attributes }, headers: request_login
+          user.reload
+          expect(user.name).to eq(original_user[:name])
+          expect(user.email).to eq(original_user[:email])
+          expect(user.number).to eq(original_user[:number])
+        end
+
+        it "returns not found on a deleted user", authorized: true do
+          user = User.create! valid_attributes
+          user.discard
+          put user_path(user.id), params: { user: new_attributes }, headers: request_login
+          user.reload
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
       end
 
       context "with invalid id" do
@@ -126,6 +161,13 @@ RSpec.describe "Users", type: :request do
       it "returns a not found response when user not found" do
         delete user_path(0), headers: request_login
         expect(response).to be_not_found
+      end
+
+      it "renders not found when the user is already deleted", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
+        delete user_path(user.id), headers: request_login
+        expect(response).to have_http_status(404)
       end
     end
   end

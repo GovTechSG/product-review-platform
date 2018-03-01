@@ -26,6 +26,14 @@ RSpec.describe UsersController, type: :controller do
 
         expect(response).to be_success
       end
+
+      it "does not return a deleted user", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
+        get :index
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
     end
 
     describe "GET #show" do
@@ -37,6 +45,13 @@ RSpec.describe UsersController, type: :controller do
 
       it "returns not found when user not found", authorized: true do
         get :show, params: { id: 0 }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when user is deleted", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
+        get :show, params: { id: user.to_param }
         expect(response).to be_not_found
       end
     end
@@ -89,6 +104,26 @@ RSpec.describe UsersController, type: :controller do
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
+
+        it "does not update a deleted user", authorized: true do
+          user = User.create! valid_attributes
+          original_user = user
+          user.discard
+          put :update, params: { id: user.to_param, user: new_attributes }, session: valid_session
+          user.reload
+          expect(user.name).to eq(original_user[:name])
+          expect(user.email).to eq(original_user[:email])
+          expect(user.number).to eq(original_user[:number])
+        end
+
+        it "returns not found on a deleted user", authorized: true do
+          user = User.create! valid_attributes
+          user.discard
+          put :update, params: { id: user.to_param, user: new_attributes }, session: valid_session
+          user.reload
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
       end
 
       context "with invalid id" do
@@ -129,6 +164,13 @@ RSpec.describe UsersController, type: :controller do
 
         delete :destroy, params: { id: user.to_param }
         expect(response).to have_http_status(204)
+      end
+
+      it "renders not found when the user is already deleted", authorized: true do
+        user = User.create! valid_attributes
+        user.discard
+        delete :destroy, params: { id: user.to_param }
+        expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when user not found", authorized: true do

@@ -118,7 +118,6 @@ RSpec.describe "Products", type: :request do
         attributes_for(:product)
       end
       context "with valid params" do
-
         it "updates the requested product" do
           product = Product.create! valid_attributes
 

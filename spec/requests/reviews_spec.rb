@@ -123,7 +123,7 @@ RSpec.describe "Reviews", type: :request do
 
       it "returns a not found when the review is deleted", authorized: true do
         review = Review.create! valid_product_review
-        review.company.discard
+        review.reviewable.company.discard
         get review_path(review.id), headers: request_login
         expect(response).to be_not_found
       end
@@ -315,7 +315,6 @@ RSpec.describe "Reviews", type: :request do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
           review.discard
           put review_path(review.id), params: { review: new_attributes }, headers: request_login
           expect(response).to have_http_status(404)
@@ -337,7 +336,6 @@ RSpec.describe "Reviews", type: :request do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
           review.reviewable.discard
           put review_path(review.id), params: { review: new_attributes }, headers: request_login
           expect(response).to have_http_status(404)
@@ -359,8 +357,7 @@ RSpec.describe "Reviews", type: :request do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
-          review.company.discard
+          review.reviewable.company.discard
           put review_path(review.id), params: { review: new_attributes }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
@@ -424,7 +421,7 @@ RSpec.describe "Reviews", type: :request do
 
       it "returns a not found response when review deleted", authorized: true do
         review = Review.create! valid_product_review
-        review.company.discard
+        review.reviewable.company.discard
         delete review_path(review.id), headers: request_login
         expect(response).to be_not_found
       end

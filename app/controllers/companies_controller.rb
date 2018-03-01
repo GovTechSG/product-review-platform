@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies
   def index
-    @companies = Company.where(discarded_at: nil)
+    @companies = Company.kept
 
     render json: @companies, methods: [:reviews_count, :strengths]
   end

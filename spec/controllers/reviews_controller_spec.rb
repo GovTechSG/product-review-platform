@@ -131,7 +131,7 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "returns a not found when the review is deleted", authorized: true do
         review = Review.create! valid_product_review
-        review.company.discard
+        review.reviewable.company.discard
         get :show, params: { id: review.to_param }
         expect(response).to be_not_found
       end
@@ -325,7 +325,6 @@ RSpec.describe ReviewsController, type: :controller do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
           review.discard
           put :update, params: { id: review.to_param, review: new_attributes }
           expect(response).to have_http_status(404)
@@ -347,7 +346,6 @@ RSpec.describe ReviewsController, type: :controller do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
           review.reviewable.discard
           put :update, params: { id: review.to_param, review: new_attributes }
           expect(response).to have_http_status(404)
@@ -359,7 +357,7 @@ RSpec.describe ReviewsController, type: :controller do
         it "does not updates the requested review", authorized: true do
           review = Review.create! valid_product_review
           original_review = review
-          review.company.discard
+          review.reviewable.company.discard
           put :update, params: { id: review.to_param, review: new_attributes }
           review.reload
           expect(review.score).to eq(original_review[:score])
@@ -369,8 +367,7 @@ RSpec.describe ReviewsController, type: :controller do
 
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
-          original_review = review
-          review.company.discard
+          review.reviewable.company.discard
           put :update, params: { id: review.to_param, review: new_attributes }
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
@@ -434,7 +431,7 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "returns a not found response when review deleted", authorized: true do
         review = Review.create! valid_product_review
-        review.company.discard
+        review.reviewable.company.discard
         delete :destroy, params: { id: review.id }
         expect(response).to be_not_found
       end
