@@ -9,7 +9,7 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['company']
+        key :tags, ['Company']
         key :description, 'Returns list of all companies'
         key :operationId, 'findCompanies'
         key :produces, [
@@ -31,7 +31,7 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['company']
+        key :tags, ['Company']
         key :description, 'Creates a new company'
         key :operationId, 'addCompany'
         key :produces, [
@@ -80,7 +80,7 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['company']
+        key :tags, ['Company']
         key :description, 'Update a company'
         key :operationId, 'updateCompany'
         key :produces, [
@@ -121,7 +121,7 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['company']
+        key :tags, ['Company']
         key :description, 'Returns a company'
         key :operationId, 'findCompanyById'
         key :produces, [
@@ -144,7 +144,7 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['company']
+        key :tags, ['Company']
         key :description, 'Deletes a single company'
         key :operationId, 'deleteCompany'
         response 204 do

@@ -27,6 +27,22 @@ RSpec.describe ServicesController, type: :controller do
         expect(response).to be_success
       end
 
+      it "does not return deleted services", authorized: true do
+        service = Service.create! valid_attributes
+        service.discard
+        get :index, params: { company_id: service.company.id }
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
+
+      it "returns not found when the service's company is deleted", authorized: true do
+        service = Service.create! valid_attributes
+        service.company.discard
+        get :index, params: { company_id: service.company.id }
+
+        expect(response).to be_not_found
+      end
+
       it "returns not found when service's company ID not found", authorized: true do
         get :index, params: { company_id: 0 }
         expect(response).to be_not_found
@@ -38,6 +54,20 @@ RSpec.describe ServicesController, type: :controller do
         service = Service.create! valid_attributes
         get :show, params: { id: service.to_param }
         expect(response).to be_success
+      end
+
+      it "returns a not found when the service is deleted", authorized: true do
+        service = Service.create! valid_attributes
+        service.discard
+        get :show, params: { id: service.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found when the company is deleted", authorized: true do
+        service = Service.create! valid_attributes
+        service.company.discard
+        get :show, params: { id: service.to_param }
+        expect(response).to be_not_found
       end
 
       it "returns not found when service not found", authorized: true do
@@ -68,6 +98,21 @@ RSpec.describe ServicesController, type: :controller do
         it "returns not found when service's company ID not found", authorized: true do
           post :create, params: { service: valid_attributes, company_id: 0 }
           expect(response).to be_not_found
+        end
+
+        it "renders not found when the service's company is deleted", authorized: true do
+          company = create(:company)
+          company.discard
+          post :create, params: { service: valid_attributes, company_id: company.id }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+        it "does not create when the service's company is deleted", authorized: true do
+          company = create(:company)
+          company.discard
+          expect do
+            post :create, params: { service: valid_attributes, company_id: company.id }
+          end.to change(Service, :count).by(0)
         end
       end
 
@@ -109,6 +154,42 @@ RSpec.describe ServicesController, type: :controller do
           put :update, params: { id: 0, service: valid_attributes }, session: valid_session
           expect(response).to be_not_found
         end
+
+        it "renders not found when service is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          service.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update when service is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          original_attributes = service
+          service.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          service.reload
+          expect(service.name).to eq(original_attributes[:name])
+          expect(service.description).to eq(original_attributes[:description])
+        end
+
+        it "renders not found when company is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          service.company.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update when company is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          original_attributes = service
+          service.company.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          service.reload
+          expect(service.name).to eq(original_attributes[:name])
+          expect(service.description).to eq(original_attributes[:description])
+        end
       end
 
       context "with invalid params" do
@@ -142,6 +223,20 @@ RSpec.describe ServicesController, type: :controller do
 
         delete :destroy, params: { id: service.to_param }
         expect(response).to have_http_status(204)
+      end
+
+      it "renders a not found if the service is deleted", authorized: true do
+        service = Service.create! valid_attributes
+        service.discard
+        delete :destroy, params: { id: service.to_param }
+        expect(response).to have_http_status(404)
+      end
+
+      it "renders a not found if the company is deleted", authorized: true do
+        service = Service.create! valid_attributes
+        service.company.discard
+        delete :destroy, params: { id: service.to_param }
+        expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when service not found", authorized: true do

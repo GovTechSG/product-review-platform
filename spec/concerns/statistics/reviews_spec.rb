@@ -21,6 +21,12 @@ shared_examples_for 'reviews' do
       review.reload
       expect(valid_review.likes_count).to eq(1)
     end
+    it "does not compute discarded likes" do
+      review = valid_review
+      discarded_likes = review.likes.create! valid_like
+      discarded_likes.discard
+      expect(valid_review.likes_count).to eq(0)
+    end
   end
   describe "comments" do
     it "returns 0 with no comments" do
@@ -30,6 +36,13 @@ shared_examples_for 'reviews' do
       review = valid_review
       review.comments.create! valid_comment
       review.reload
+      expect(valid_review.comments_count).to eq(1)
+    end
+    it "does not compute discarded comments" do
+      review = valid_review
+      review.comments.create! valid_comment
+      discarded_comments = review.comments.create! valid_comment
+      discarded_comments.discard
       expect(valid_review.comments_count).to eq(1)
     end
   end
