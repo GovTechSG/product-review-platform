@@ -43,7 +43,7 @@ RSpec.describe "Users", type: :request do
       it "returns not found when user is deleted", authorized: true do
         user = User.create! valid_attributes
         user.discard
-        get user_path(0), headers: request_login
+        get user_path(user.id), headers: request_login
         expect(response).to be_not_found
       end
     end
