@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
+    @users = User.kept
 
     render json: @users
   end
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   end
 
   def validate_user_pressence
-    render_error(404) if @user.nil?
+    render_error(404) if @user.nil? || !@user.presence?
   end
 
   # Only allow a trusted parameter "white list" through.

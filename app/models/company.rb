@@ -1,7 +1,6 @@
 class Company < ApplicationRecord
   include SwaggerDocs::Company
   include Statistics::Companies
-  include Discard::Model
 
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)

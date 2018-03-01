@@ -17,7 +17,7 @@ module SwaggerDocs::Products
         security do
           key :Authorization, []
         end
-        key :tags, ['product']
+        key :tags, ['Product']
         key :description, 'Returns list of all products from specified company'
         key :operationId, 'findProductsByCompany'
         key :produces, [
@@ -42,7 +42,7 @@ module SwaggerDocs::Products
         security do
           key :Authorization, []
         end
-        key :tags, ['product']
+        key :tags, ['Product']
         key :description, 'Creates a new product belonging to specified company'
         key :operationId, 'addProductByCompany'
         key :produces, [
@@ -94,7 +94,7 @@ module SwaggerDocs::Products
         security do
           key :Authorization, []
         end
-        key :tags, ['product']
+        key :tags, ['Product']
         key :description, 'Update a product'
         key :operationId, 'updateProduct'
         key :produces, [
@@ -135,7 +135,7 @@ module SwaggerDocs::Products
         security do
           key :Authorization, []
         end
-        key :tags, ['product']
+        key :tags, ['Product']
         key :description, 'Returns a product'
         key :operationId, 'findProductById'
         key :produces, [
@@ -158,7 +158,7 @@ module SwaggerDocs::Products
         security do
           key :Authorization, []
         end
-        key :tags, ['product']
+        key :tags, ['Product']
         key :description, 'Deletes a single product'
         key :operationId, 'deleteProduct'
         response 204 do

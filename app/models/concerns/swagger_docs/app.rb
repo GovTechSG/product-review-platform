@@ -10,14 +10,19 @@ module SwaggerDocs::App
 
       property :access_token do
         key :type, :string
+        key :example, 'abCdEfgHIJKlmnOpQrSTUvWXyzJIUzI1NiJ9.eyJpc3MiOiJwcm9kdWN0X3Jldmlld1
+9wbGF0Zm9ybSIsImlhdCI6MTUxOTcwMjk0MCwianRpIjoiNjJkOWIyNzYtNDdhNi00NjY5LThhYmItMWMxNjY5Zj
+MwMzZlIiwiYXBwIjp7ImlkIjoxLCJuYW1lIjoiYmdwIn19.wVEqsnbJ99eRem4claAwJfZV82ddzRCzYJouJCQGpM0'
       end
 
       property :token_type do
         key :type, :string
+        key :example, 'Bearer'
       end
 
       property :created_at do
         key :type, :integer
+        key :example, 1519702940
       end
     end
 

@@ -9,7 +9,7 @@ module SwaggerDocs::Statistics
         security do
           key :Authorization, []
         end
-        key :tags, ['statistics']
+        key :tags, ['Statistics']
         key :description, 'Returns some general statistics about the app'
         key :operationId, 'findStatistics'
         key :produces, [

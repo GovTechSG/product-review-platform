@@ -17,7 +17,7 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['comment']
+        key :tags, ['Comment']
         key :description, 'Returns list of all comments from specified review'
         key :operationId, 'findCommentsByReview'
         key :produces, [
@@ -42,7 +42,7 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['comment']
+        key :tags, ['Comment']
         key :description, 'Creates a new comment that belong to a specified review'
         key :operationId, 'addCommentByReview'
         key :produces, [
@@ -94,7 +94,7 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['comment']
+        key :tags, ['Comment']
         key :description, 'Update a comment'
         key :operationId, 'updateComment'
         key :produces, [
@@ -135,7 +135,7 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['comment']
+        key :tags, ['Comment']
         key :description, 'Returns a comment'
         key :operationId, 'findCommentById'
         key :produces, [
@@ -158,7 +158,7 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['comment']
+        key :tags, ['Comment']
         key :description, 'Deletes a single comment'
         key :operationId, 'deleteComment'
         response 204 do

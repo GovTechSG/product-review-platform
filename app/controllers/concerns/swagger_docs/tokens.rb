@@ -83,7 +83,7 @@ new access token will be shown from the response'
         response 200 do
           key :description, 'OK, Sign Out is successful.'
           schema do
-            key :example, "{}"
+            key :example, {}
           end
         end
         response 404 do

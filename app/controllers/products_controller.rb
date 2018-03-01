@@ -2,13 +2,13 @@ class ProductsController < ApplicationController
   include SwaggerDocs::Products
   before_action :doorkeeper_authorize!
   before_action :set_product, only: [:show, :update, :destroy]
-  before_action :validate_product_pressence, only: [:show, :update, :destroy]
+  before_action :validate_product_presence, only: [:show, :update, :destroy]
   before_action :set_company, only: [:index, :create]
-  before_action :validate_company_pressence, only: [:index, :create]
+  before_action :validate_company_presence, only: [:index, :create]
 
   # GET /companies/:company_id/products
   def index
-    @products = Product.where(company_id: params[:company_id])
+    @products = Product.kept.where(company_id: params[:company_id])
 
     render json: @products, methods: [:reviews_count, :aggregate_score]
   end
@@ -49,16 +49,16 @@ class ProductsController < ApplicationController
       @product = Product.find_by(id: params[:id])
     end
 
-    def validate_product_pressence
-      render_error(404) if @product.nil?
+    def validate_product_presence
+      render_error(404) if @product.nil? || !@product.presence?
     end
 
     def set_company
       @company = Company.find_by(id: params[:company_id])
     end
 
-    def validate_company_pressence
-      render_error(404, "Company id not found.") if @company.nil?
+    def validate_company_presence
+      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.
