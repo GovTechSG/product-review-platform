@@ -17,7 +17,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Returns list of all reviews from specified product'
         key :operationId, 'findProductsByReview'
         key :produces, [
@@ -42,7 +42,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Creates a new review that belong to a specified product'
         key :operationId, 'addReviewByProduct'
         key :produces, [
@@ -94,7 +94,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Returns list of all reviews from specified service'
         key :operationId, 'findReviewsByService'
         key :produces, [
@@ -119,7 +119,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Creates a new review that belong to a specified service'
         key :operationId, 'addReviewByService'
         key :produces, [
@@ -171,7 +171,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Update a review'
         key :operationId, 'updateReview'
         key :produces, [
@@ -212,7 +212,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Returns a review'
         key :operationId, 'findReviewById'
         key :produces, [
@@ -235,7 +235,7 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['review']
+        key :tags, ['Review']
         key :description, 'Deletes a single review'
         key :operationId, 'deleteReview'
         response 204 do

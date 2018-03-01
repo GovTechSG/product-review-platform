@@ -17,7 +17,7 @@ module SwaggerDocs::Services
         security do
           key :Authorization, []
         end
-        key :tags, ['service']
+        key :tags, ['Service']
         key :description, 'Returns list of all services from specified company'
         key :operationId, 'findServicesByCompany'
         key :produces, [
@@ -42,7 +42,7 @@ module SwaggerDocs::Services
         security do
           key :Authorization, []
         end
-        key :tags, ['service']
+        key :tags, ['Service']
         key :description, 'Creates a new service belong to a specified company'
         key :operationId, 'addServiceByCompany'
         key :produces, [
@@ -94,7 +94,7 @@ module SwaggerDocs::Services
         security do
           key :Authorization, []
         end
-        key :tags, ['service']
+        key :tags, ['Service']
         key :description, 'Update a service'
         key :operationId, 'updateService'
         key :produces, [
@@ -134,7 +134,7 @@ module SwaggerDocs::Services
         security do
           key :Authorization, []
         end
-        key :tags, ['service']
+        key :tags, ['Service']
         key :description, 'Returns a service'
         key :operationId, 'findServiceById'
         key :produces, [
@@ -157,7 +157,7 @@ module SwaggerDocs::Services
         security do
           key :Authorization, []
         end
-        key :tags, ['service']
+        key :tags, ['Service']
         key :description, 'Deletes a single service'
         key :operationId, 'deleteService'
         response 204 do

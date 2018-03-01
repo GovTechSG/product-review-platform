@@ -18,14 +18,14 @@ module SwaggerDocs::Service
         key :example, "Spring Frameworks"
       end
 
-      property :description do
-        key :type, :string
-        key :example, "Spring frameworks was not developed in spring"
-      end
-
       property :company_id do
         key :type, :integer
         key :format, :int64
+      end
+
+      property :description do
+        key :type, :string
+        key :example, "Spring frameworks was not developed in spring"
       end
     end
 

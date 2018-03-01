@@ -89,9 +89,10 @@ window.onload = function() {
 
     // Build a system
   const ui = SwaggerUIBundle({
-    url: head + path + "/apidocs",
+    url: head + path + "/api/json",
     enableCORS: false,
     dom_id: '#swagger-ui',
+      validatorUrl: null,
     deepLinking: true,
     presets: [
       SwaggerUIBundle.presets.apis,
