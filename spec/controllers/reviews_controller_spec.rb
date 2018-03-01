@@ -429,7 +429,7 @@ RSpec.describe ReviewsController, type: :controller do
         expect(response).to be_not_found
       end
 
-      it "returns a not found response when review deleted", authorized: true do
+      it "returns a not found response when company deleted", authorized: true do
         review = Review.create! valid_product_review
         review.reviewable.company.discard
         delete :destroy, params: { id: review.id }
