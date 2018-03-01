@@ -1,4 +1,4 @@
-ActiveAdmin.register Doorkeeper::AccessToken, as: 'AcessToken' do
+ActiveAdmin.register Doorkeeper::AccessToken, as: 'AccessToken' do
   actions :all, except: [:create, :edit, :new]
   index do
     selectable_column
