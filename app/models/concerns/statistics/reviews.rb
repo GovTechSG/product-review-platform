@@ -3,11 +3,11 @@ module Statistics::Reviews
 
   included do
     def likes_count
-      self.likes.count
+      self.likes.kept.count
     end
 
     def comments_count
-      self.comments.count
+      self.comments.kept.count
     end
   end
 end

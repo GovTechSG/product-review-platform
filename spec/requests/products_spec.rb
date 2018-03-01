@@ -23,6 +23,20 @@ RSpec.describe "Products", type: :request do
         get company_products_path(0), headers: request_login
         expect(response).to be_not_found
       end
+
+      it "returns not found when company is deleted" do
+        product = Product.create! valid_attributes
+        product.company.discard
+        get company_products_path(product.company.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "does not return deleted products" do
+        product = Product.create! valid_attributes
+        product.discard
+        get company_products_path(product.company.id), headers: request_login
+        expect(parsed_response).to match([])
+      end
     end
 
     describe "GET /api/v1/products/:id" do
@@ -30,6 +44,20 @@ RSpec.describe "Products", type: :request do
         product = Product.create! valid_attributes
         get product_path(product.id), headers: request_login
         expect(response).to be_success
+      end
+
+      it "returns not found when the product is deleted" do
+        product = Product.create! valid_attributes
+        product.discard
+        get product_path(product.id), headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when the company is deleted" do
+        product = Product.create! valid_attributes
+        product.company.discard
+        get product_path(product.id), headers: request_login
+        expect(response).to be_not_found
       end
 
       it "returns not found when product not found" do
@@ -56,6 +84,22 @@ RSpec.describe "Products", type: :request do
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(product_url(Product.last))
         end
+
+        it "renders a not found if the company is deleted" do
+          company = create(:company)
+          company.discard
+          post company_products_path(company.id), params: { product: valid_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not create if the company is deleted" do
+          company = create(:company)
+          company.discard
+          expect do
+            post company_products_path(company.id), params: { product: valid_attributes }, headers: request_login
+          end.to change(Product, :count).by(0)
+        end
       end
 
       context "with invalid params" do
@@ -70,11 +114,10 @@ RSpec.describe "Products", type: :request do
     end
 
     describe "PUT /api/v1/products/:id" do
+      let(:new_attributes) do
+        attributes_for(:product)
+      end
       context "with valid params" do
-        let(:new_attributes) do
-          attributes_for(:product)
-        end
-
         it "updates the requested product" do
           product = Product.create! valid_attributes
 
@@ -89,6 +132,26 @@ RSpec.describe "Products", type: :request do
 
           put product_path(product), params: { product: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "on a deleted product" do
+        it "renders not found" do
+          product = Product.create! valid_attributes
+          product.discard
+          put product_path(product), params: { product: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "on a deleted company" do
+        it "renders not found" do
+          product = Product.create! valid_attributes
+          product.company.discard
+          put product_path(product), params: { product: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
       end
@@ -128,6 +191,20 @@ RSpec.describe "Products", type: :request do
 
       it "returns a not found response when product not found" do
         delete product_path(0), params: {}, headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when product already deleted" do
+        product = Product.create! valid_attributes
+        product.discard
+        delete product_path(product.id), params: {}, headers: request_login
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when company already deleted" do
+        product = Product.create! valid_attributes
+        product.company.discard
+        delete product_path(product.id), params: {}, headers: request_login
         expect(response).to be_not_found
       end
     end

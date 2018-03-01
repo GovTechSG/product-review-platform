@@ -18,6 +18,13 @@ RSpec.describe CompaniesController, type: :controller do
       get :index
       expect(parsed_response.length).to eq(5)
     end
+
+    it "does not return deleted companies" do
+      create_list(:company, 5)
+      Company.first.discard
+      get :index
+      expect(parsed_response.length).to eq(4)
+    end
   end
 
   describe "GET #index", authorized: false do
@@ -41,6 +48,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns not found if the company does not exist" do
       get :show, params: { id: 0 }, format: :json
+      expect_not_found
+    end
+    it "returns 404 if company has already been soft deleted" do
+      company.discard
+      get :show, params: { id: company.id }
       expect_not_found
     end
   end
@@ -116,6 +128,15 @@ RSpec.describe CompaniesController, type: :controller do
       expect(company).to match(original_company)
       expect(response.status).to eq(400)
     end
+
+    it "returns 404 if company has already been soft deleted" do
+      original_company = company
+      original_company.discard
+      patch :update, params: { company: company.as_json, id: company.id }
+      company.reload
+      expect(company).to match(original_company)
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "PATCH #update", authorized: false do
@@ -141,6 +162,13 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns a not found response if company is not found" do
       delete :destroy, params: { id: 0 }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a not found response if company is already deleted" do
+      company = create(:company)
+      company.discard
+      delete :destroy, params: { id: company.id }
       expect(response.status).to eq(404)
     end
   end

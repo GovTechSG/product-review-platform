@@ -25,6 +25,36 @@ shared_examples_for 'companies' do
       end
     end
 
+    context "does not count discarded products and services" do
+      it "returns 0" do
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.create! valid_service_review
+        service.discard
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.create! valid_product_review
+        product.discard
+        expect(company.reviews_count).to eq(0)
+      end
+    end
+
+    context "does not count discarded reviews" do
+      it "returns 0" do
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.create! valid_service_review
+        service.reviews.first.discard
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.create! valid_product_review
+        product.reviews.first.discard
+        expect(company.reviews_count).to eq(2)
+      end
+    end
+
     context "no product" do
       it "returns service count" do
         company = Company.create! valid_company
@@ -83,6 +113,32 @@ shared_examples_for 'companies' do
         product = company.products.create! valid_product
         review = product.reviews.create! valid_product_review
         expect(company.strengths).to eq(review.strengths)
+      end
+    end
+
+    context "does not add discarded products and services" do
+      it "returns 0" do
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        service.discard
+        product.discard
+        expect(company.strengths).to eq([])
+      end
+    end
+
+    context "does not count discarded reviews" do
+      it "returns 0" do
+        company = Company.create! valid_company
+        service = company.services.create! valid_service
+        service.reviews.create! valid_service_review
+        product = company.products.create! valid_product
+        product.reviews.create! valid_product_review
+        service.reviews.first.discard
+        product.reviews.first.discard
+        expect(company.strengths).to eq([])
       end
     end
 
