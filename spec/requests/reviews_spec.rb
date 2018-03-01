@@ -347,7 +347,7 @@ RSpec.describe "Reviews", type: :request do
         it "does not updates the requested review", authorized: true do
           review = Review.create! valid_product_review
           original_review = review
-          review.company.discard
+          review.reviewable.company.discard
           put review_path(review.id), params: { review: new_attributes }, headers: request_login
           review.reload
           expect(review.score).to eq(original_review[:score])
@@ -419,7 +419,7 @@ RSpec.describe "Reviews", type: :request do
         expect(response).to be_not_found
       end
 
-      it "returns a not found response when review deleted", authorized: true do
+      it "returns a not found response when company deleted", authorized: true do
         review = Review.create! valid_product_review
         review.reviewable.company.discard
         delete review_path(review.id), headers: request_login
