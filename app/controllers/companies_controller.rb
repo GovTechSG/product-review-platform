@@ -44,7 +44,7 @@ class CompaniesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_company
       @company = Company.find_by(id: params[:id])
-      if @company.nil? || @company.discarded?
+      if @company.nil? || !@company.presence?
         render_error(404)
       else
         @company

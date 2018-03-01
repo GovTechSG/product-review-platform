@@ -50,7 +50,7 @@ class ProductsController < ApplicationController
     end
 
     def validate_product_presence
-      render_error(404) if @product.nil? || @product.discarded? || @product.company.discarded?
+      render_error(404) if @product.nil? || !@product.presence?
     end
 
     def set_company
@@ -58,7 +58,7 @@ class ProductsController < ApplicationController
     end
 
     def validate_company_presence
-      render_error(404, "Company id not found.") if @company.nil? || @company.discarded?
+      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

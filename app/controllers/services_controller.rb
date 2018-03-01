@@ -50,7 +50,7 @@ class ServicesController < ApplicationController
     end
 
     def validate_service_presence
-      render_error(404) if @service.nil? || @service.discarded? || @service.company.discarded?
+      render_error(404) if @service.nil? || !@service.presence?
     end
 
     def set_company
@@ -58,7 +58,7 @@ class ServicesController < ApplicationController
     end
 
     def validate_company_presence
-      render_error(404, "Company id not found.") if @company.nil? || @company.discarded?
+      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

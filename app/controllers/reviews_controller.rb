@@ -107,16 +107,11 @@ class ReviewsController < ApplicationController
     end
 
     def validate_reviewable_presence
-      render_error(404, "Product/service id not found") if @reviewable.nil? ||
-                                                           @reviewable.discarded? || 
-                                                           @reviewable.company.discarded?
+      render_error(404, "Product/service id not found") if @reviewable.nil? || !@reviewable.presence?
     end
 
     def validate_review_presence
-      render_error(404, "Review id not found") if @review.nil? ||
-                                                  @review.discarded? ||
-                                                  @review.reviewable.discarded? ||
-                                                  @review.reviewable.company.discarded?
+      render_error(404, "Review id not found") if @review.nil? || !@review.presence?
     end
 
     # Use callbacks to share common setup or constraints between actions.
