@@ -26,6 +26,21 @@ RSpec.describe ProductsController, type: :controller do
 
         expect(response).to be_success
       end
+
+      it "does not return deleted products", authorized: true do
+        product = Product.create! valid_attributes
+        product.discard
+        get :index, params: { company_id: product.company.id }
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
+
+      it "returns not found if the company is deleted", authorized: true do
+        product = Product.create! valid_attributes
+        product.company.discard
+        get :index, params: { company_id: product.company.id }
+        expect(response).to be_not_found
+      end
     end
 
     describe "GET #show" do
@@ -33,6 +48,20 @@ RSpec.describe ProductsController, type: :controller do
         product = Product.create! valid_attributes
         get :show, params: { id: product.to_param }
         expect(response).to be_success
+      end
+
+      it "returns not found when the product is deleted", authorized: true do
+        product = Product.create! valid_attributes
+        product.discard
+        get :show, params: { id: product.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when the company is deleted", authorized: true do
+        product = Product.create! valid_attributes
+        product.company.discard
+        get :show, params: { id: product.to_param }
+        expect(response).to be_not_found
       end
 
       it "returns not found when product not found", authorized: true do
@@ -49,6 +78,20 @@ RSpec.describe ProductsController, type: :controller do
           expect do
             post :create, params: { product: valid_attributes, company_id: company.id }
           end.to change(Product, :count).by(1)
+        end
+
+        it "returns not found if the company is deleted", authorized: true do
+          company = create(:company)
+          company.discard
+          post :create, params: { product: valid_attributes, company_id: company.id }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "returns not found if the company is not found", authorized: true do
+          post :create, params: { product: valid_attributes, company_id: 0 }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
 
         it "renders a JSON response with the new product", authorized: true do
@@ -85,6 +128,26 @@ RSpec.describe ProductsController, type: :controller do
           product.reload
           expect(product.name).to eq(new_attributes[:name])
           expect(product.description).to eq(new_attributes[:description])
+        end
+
+        it "returns not found if the product is deleted", authorized: true do
+          product = Product.create! valid_attributes
+          original_product = product
+          product.discard
+          put :update, params: { id: product.to_param, product: new_attributes }, session: valid_session
+          product.reload
+          expect(product.name).to eq(original_product[:name])
+          expect(product.description).to eq(original_product[:description])
+        end
+
+        it "returns not found if the company is deleted", authorized: true do
+          product = Product.create! valid_attributes
+          original_product = product
+          product.company.discard
+          put :update, params: { id: product.to_param, product: new_attributes }, session: valid_session
+          product.reload
+          expect(product.name).to eq(original_product[:name])
+          expect(product.description).to eq(original_product[:description])
         end
 
         it "renders a JSON response with the product", authorized: true do
@@ -127,6 +190,20 @@ RSpec.describe ProductsController, type: :controller do
 
         delete :destroy, params: { id: product.to_param }
         expect(response).to have_http_status(204)
+      end
+
+      it "returns not found if the product is deleted", authorized: true do
+        product = Product.create! valid_attributes
+        product.discard
+        delete :destroy, params: { id: product.to_param }, session: valid_session
+        expect(response).to have_http_status(404)
+      end
+
+      it "returns not found if the company is deleted", authorized: true do
+        product = Product.create! valid_attributes
+        product.company.discard
+        delete :destroy, params: { id: product.to_param }, session: valid_session
+        expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when product not found", authorized: true do

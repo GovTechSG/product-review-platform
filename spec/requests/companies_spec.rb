@@ -14,6 +14,13 @@ RSpec.describe "Companies", type: :request do
       get companies_path, params: {}, headers: header
       expect(parsed_response.length).to eq(5)
     end
+
+    it "should not return discarded companies" do
+      create_list(:company, 5)
+      Company.first.discard
+      get companies_path, params: {}, headers: header
+      expect(parsed_response.length).to eq(4)
+    end
   end
 
   describe "GET /companies unauthorized" do
@@ -39,6 +46,12 @@ RSpec.describe "Companies", type: :request do
 
     it "returns not found if the company does not exist" do
       get company_path(0), params: {}, headers: header
+      expect_not_found
+    end
+
+    it "returns a not found response if the company is deleted" do
+      company.discard
+      get company_path(company.id), params: {}, headers: header
       expect_not_found
     end
   end
@@ -105,6 +118,14 @@ RSpec.describe "Companies", type: :request do
       patch company_path(0), params: { company: company.as_json }, headers: header
       expect(response.status).to eq(404)
     end
+
+    it "returns a not found response if the company is deleted" do
+      original_company = company
+      original_company.discard
+      patch company_path(company.id), params: { company: company.as_json }, headers: header
+      expect(company).to match(original_company)
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "PATCH #update", authorized: false do
@@ -124,6 +145,12 @@ RSpec.describe "Companies", type: :request do
 
     it "returns a not found response if company is not found" do
       delete company_path(0), params: {}, headers: header
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a not found response if the company is already deleted" do
+      company.discard
+      delete company_path(company.id), params: {}, headers: header
       expect(response.status).to eq(404)
     end
   end

@@ -2,14 +2,14 @@ class ServicesController < ApplicationController
   include SwaggerDocs::Services
   before_action :doorkeeper_authorize!
   before_action :set_service, only: [:show, :update, :destroy]
-  before_action :validate_service_pressence, only: [:show, :update, :destroy]
-  before_action :set_service_by_company, only: [:index]
-  before_action :validate_company_pressence, only: [:index]
-  before_action :set_new_service, only: [:create]
-  before_action :validate_new_creation, only: [:create]
+  before_action :validate_service_presence, only: [:show, :update, :destroy]
+  before_action :set_company, only: [:index, :create]
+  before_action :validate_company_presence, only: [:index, :create]
 
   # GET /companies/:company_id/services
   def index
+    @services = Service.kept.where(company_id: params[:company_id])
+
     render json: @services, methods: [:reviews_count, :aggregate_score]
   end
 
@@ -20,10 +20,12 @@ class ServicesController < ApplicationController
 
   # POST /companies/:company_id/services
   def create
-    if @services.save
-      render json: @services, status: :created, location: @services
+    @service = Service.new(service_params.merge(company_id: params[:company_id]))
+
+    if @service.save
+      render json: @service, status: :created, location: @service
     else
-      render json: @services.errors, status: :unprocessable_entity
+      render json: @service.errors, status: :unprocessable_entity
     end
   end
 
@@ -47,24 +49,16 @@ class ServicesController < ApplicationController
       @service = Service.find_by(id: params[:id])
     end
 
-    def set_service_by_company
-      @services = Service.find_by(company_id: params[:company_id])
+    def validate_service_presence
+      render_error(404) if @service.nil? || !@service.presence?
     end
 
-    def set_new_service
-      @services = Service.new(service_params.merge(company_id: params[:company_id]))
+    def set_company
+      @company = Company.find_by(id: params[:company_id])
     end
 
-    def validate_service_pressence
-      render_error(404) if @service.nil?
-    end
-
-    def validate_company_pressence
-      render_error(404, "Company_id entered does not exist") if @services.nil?
-    end
-
-    def validate_new_creation
-      render_error(404, "Company_id entered does not exist") if Company.find_by(id: @services.company_id).nil?
+    def validate_company_presence
+      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

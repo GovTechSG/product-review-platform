@@ -7,14 +7,14 @@ module Statistics::Companies
     # These refer to the aggregate number of reviews of a vendor company's products and services
     # (different from #reviews method on company, see models/company.rb)
     def reviews_count
-      product_count = self.products.reduce(0) { |accum, product| accum + product.reviews.count }
-      total_count = product_count + self.services.reduce(0) { |accum, service| accum + service.reviews.count }
+      product_count = self.products.kept.reduce(0) { |accum, product| accum + product.reviews.kept.count }
+      total_count = product_count + self.services.kept.reduce(0) { |accum, service| accum + service.reviews.kept.count }
       total_count
     end
 
     def strengths
-      product_strength_set = get_reviews(self.products)
-      service_strength_set = get_reviews(self.services)
+      product_strength_set = get_reviews(self.products.kept)
+      service_strength_set = get_reviews(self.services.kept)
       whole_set = product_strength_set.merge(service_strength_set)
       whole_set.empty? ? [] : whole_set.first(6).to_a
     end
@@ -51,7 +51,7 @@ module Statistics::Companies
     def get_reviews(product_service)
       strengths_set = Set.new
       product_service.first(3).each do |reviewable|
-        reviewable.reviews.first(3).each do |review|
+        reviewable.reviews.kept.first(3).each do |review|
           strengths_set.merge(review.strengths)
         end
       end
