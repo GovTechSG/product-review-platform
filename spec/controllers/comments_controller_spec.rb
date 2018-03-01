@@ -50,8 +50,16 @@ RSpec.describe CommentsController, type: :controller do
         expect(response).to be_success
       end
 
-      it "returns not found when product not found", authorized: true do
-        get :show, params: { id: 0 }
+      it "returns not found when review not found", authorized: true do
+        get :index, params: { review_id: 0 }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the review is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewable.discard
+        get :index, params: { product_id: review.reviewable_id }
+
         expect(response).to be_not_found
       end
     end
