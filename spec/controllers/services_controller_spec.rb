@@ -172,6 +172,24 @@ RSpec.describe ServicesController, type: :controller do
           expect(service.name).to eq(original_attributes[:name])
           expect(service.description).to eq(original_attributes[:description])
         end
+
+        it "renders not found when company is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          service.company.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update when company is deleted", authorized: true do
+          service = Service.create! valid_attributes
+          original_attributes = service
+          service.company.discard
+          put :update, params: { id: service.to_param, service: valid_attributes }, session: valid_session
+          service.reload
+          expect(service.name).to eq(original_attributes[:name])
+          expect(service.description).to eq(original_attributes[:description])
+        end
       end
 
       context "with invalid params" do
