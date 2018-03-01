@@ -10,7 +10,7 @@ class ReviewsController < ApplicationController
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
-    @reviews = @reviewable.reviews.where(discarded_at: nil)
+    @reviews = @reviewable.reviews.kept
 
     render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end

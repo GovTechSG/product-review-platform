@@ -8,7 +8,7 @@ class ServicesController < ApplicationController
 
   # GET /companies/:company_id/services
   def index
-    @services = Service.where(company_id: params[:company_id], discarded_at: nil)
+    @services = Service.kept.where(company_id: params[:company_id])
 
     render json: @services, methods: [:reviews_count, :aggregate_score]
   end

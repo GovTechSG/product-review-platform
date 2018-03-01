@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
 
   # GET /companies/:company_id/products
   def index
-    @products = Product.where(company_id: params[:company_id], discarded_at: nil)
+    @products = Product.kept.where(company_id: params[:company_id])
 
     render json: @products, methods: [:reviews_count, :aggregate_score]
   end
