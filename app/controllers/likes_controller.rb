@@ -8,7 +8,7 @@ class LikesController < ApplicationController
 
   # GET /reviews/:review_id/likes
   def index
-    @likes = Like.where(review_id: params[:review_id])
+    @likes = Like.kept.where(review_id: params[:review_id])
 
     render json: @likes, methods: [:user]
   end
@@ -20,7 +20,7 @@ class LikesController < ApplicationController
 
   # POST /reviews/:review_id/likes
   def create
-    @user = User.find_by(id: create_params[:user_id])
+    @user = User.kept.find_by(id: create_params[:user_id])
     if @user.nil?
       render_error(404, "User id not found")
       return
@@ -42,19 +42,19 @@ class LikesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_like
-      @like = Like.find_by(id: params[:id])
+      @like = Like.kept.find_by(id: params[:id])
     end
 
     def validate_like_pressence
-      render_error(404, "Like id not found") if @like.nil?
+      render_error(404, "Like id not found") if @like.nil? || !@like.presence?
     end
 
     def set_review
-      @review = Review.find_by(id: params[:review_id])
+      @review = Review.kept.find_by(id: params[:review_id])
     end
 
     def validate_review_pressence
-      render_error(404, "Review id not found") if @review.nil?
+      render_error(404, "Review id not found") if @review.nil? || !@review.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

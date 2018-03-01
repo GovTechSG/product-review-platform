@@ -26,6 +26,39 @@ RSpec.describe LikesController, type: :controller do
 
         expect(response).to be_success
       end
+
+      it "returns not found if review is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.discard
+        get :index, params: { review_id: like.review.id }
+
+        expect(response).to be_not_found
+      end
+
+      it "returns not found if reviewable is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.discard
+        get :index, params: { review_id: like.review.id }
+
+        expect(response).to be_not_found
+      end
+
+      it "returns not found if company is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.company.discard
+        get :index, params: { review_id: like.review.id }
+
+        expect(response).to be_not_found
+      end
+
+      it "does not return deleted likes", authorized: true do
+        like = Like.create! valid_attributes
+        like.discard
+        get :index, params: { review_id: like.review.id }
+
+        expect(response).to be_success
+        expect(parsed_response).to match([])
+      end
     end
 
     describe "GET #show" do
@@ -37,6 +70,34 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns not found when like not found", authorized: true do
         get :show, params: { id: 0 }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when like is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.discard
+        get :show, params: { id: like.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when review is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.discard
+        get :show, params: { id: like.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when reviewable is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.discard
+        get :show, params: { id: like.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when company is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.company.discard
+        get :show, params: { id: like.to_param }
         expect(response).to be_not_found
       end
     end
@@ -57,6 +118,66 @@ RSpec.describe LikesController, type: :controller do
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(like_url(Like.last))
+        end
+      end
+
+      context "with deleted review" do
+        it "does not create Like", authorized: true do
+          review = create(:product_review)
+          review.discard
+
+          expect do
+            post :create, params: { like: valid_attributes, review_id: review.id }
+          end.to change(Like, :count).by(0)
+        end
+
+        it "renders not found response", authorized: true do
+          review = create(:product_review)
+          review.discard
+
+          post :create, params: { like: valid_attributes, review_id: review.id }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted reviewable" do
+        it "does not create Like", authorized: true do
+          review = create(:product_review)
+          review.reviewable.discard
+
+          expect do
+            post :create, params: { like: valid_attributes, review_id: review.id }
+          end.to change(Like, :count).by(0)
+        end
+
+        it "renders not found response", authorized: true do
+          review = create(:product_review)
+          review.reviewable.discard
+
+          post :create, params: { like: valid_attributes, review_id: review.id }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted company" do
+        it "does not create Like", authorized: true do
+          review = create(:product_review)
+          review.reviewable.company.discard
+
+          expect do
+            post :create, params: { like: valid_attributes, review_id: review.id }
+          end.to change(Like, :count).by(0)
+        end
+
+        it "renders not found response", authorized: true do
+          review = create(:product_review)
+          review.reviewable.company.discard
+
+          post :create, params: { like: valid_attributes, review_id: review.id }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -103,6 +224,34 @@ RSpec.describe LikesController, type: :controller do
       it "returns a not found response when like not found", authorized: true do
         delete :destroy, params: { id: 0 }
         expect(response).to be_not_found
+      end
+
+      it "returns a not found response when like is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.discard
+        delete :destroy, params: { id: like.to_param }
+        expect(response).to have_http_status(404)
+      end
+
+      it "returns a not found response when review is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.discard
+        delete :destroy, params: { id: like.to_param }
+        expect(response).to have_http_status(404)
+      end
+
+      it "returns a not found response when reviewable is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.discard
+        delete :destroy, params: { id: like.to_param }
+        expect(response).to have_http_status(404)
+      end
+
+      it "returns a not found response when company is deleted", authorized: true do
+        like = Like.create! valid_attributes
+        like.review.reviewable.company.discard
+        delete :destroy, params: { id: like.to_param }
+        expect(response).to have_http_status(404)
       end
     end
   end
