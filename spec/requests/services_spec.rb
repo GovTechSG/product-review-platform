@@ -160,8 +160,6 @@ RSpec.describe "Services", type: :request do
         end
 
         it "renders not found when the service is not found" do
-          Service.create! valid_attributes
-
           put service_path(0), params: { service: new_attributes }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
