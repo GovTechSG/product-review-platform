@@ -80,7 +80,7 @@ RSpec.describe "Reviews", type: :request do
 
       it "returns a not found response when the company is deleted", authorized: true do
         review = Review.create! valid_service_review
-        review.reviewable.discard
+        review.reviewable.company.discard
         get service_reviews_path(review.reviewable_id), headers: request_login
         expect(response).to be_not_found
       end
