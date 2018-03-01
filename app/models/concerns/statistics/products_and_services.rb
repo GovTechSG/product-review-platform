@@ -3,14 +3,14 @@ module Statistics::ProductsAndServices
 
   included do
     def reviews_count
-      self.reviews.count
+      self.reviews.kept.count
     end
 
     def aggregate_score
       score = 0
-      if self.reviews.count > 0
-        score = self.reviews.sum(:score)
-        return score.to_f/self.reviews.count
+      if self.reviews.kept.count > 0
+        score = self.reviews.kept.sum(:score)
+        return score.to_f/self.reviews.kept.count
       end
       score
     end
