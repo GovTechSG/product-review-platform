@@ -3,7 +3,7 @@ class ReviewsController < ApplicationController
   before_action :doorkeeper_authorize!
   before_action :set_review, only: [:show, :update, :destroy]
   before_action :validate_review_presence, only: [:show, :update, :destroy]
-  before_action :set_reviwable, only: [:index, :create]
+  before_action :set_reviewable, only: [:index, :create]
   before_action :validate_reviewable_presence, only: [:index, :create]
   before_action :validate_score_type, only: [:create, :update]
 
@@ -96,7 +96,7 @@ class ReviewsController < ApplicationController
       render_error(422, "Score is not a number")
     end
 
-    def set_reviwable
+    def set_reviewable
       if params[:product_id].present?
         @reviewable = Product.find_by(id: params[:product_id])
       elsif params[:service_id].present?
