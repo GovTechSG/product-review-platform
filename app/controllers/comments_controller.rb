@@ -2,14 +2,15 @@ class CommentsController < ApplicationController
   include SwaggerDocs::Comments
   before_action :doorkeeper_authorize!
   before_action :set_comment, only: [:show, :update, :destroy]
-  before_action :set_comment_by_review, only: [:index]
-  before_action :validate_review_pressence, only: [:index]
+  before_action :validate_comment_pressence, only: [:show, :update, :destroy]
+  before_action :set_review, only: [:index, :create]
+  before_action :validate_review_presence, only: [:index, :create]
   before_action :set_new_comment, only: [:create]
-  before_action :validate_new_creation, only: [:create]
   before_action :validate_user_presence, only: [:create]
 
   # GET /reviews/:review_id/comments
   def index
+    @comments = Comment.kept.where(review_id: params[:review_id])
     render json: @comments, methods: [:user]
   end
 
@@ -47,24 +48,24 @@ class CommentsController < ApplicationController
       @comment = Comment.find(params[:id])
     end
 
-    def set_comment_by_review
-      @comments = Comment.find_by(review_id: params[:review_id])
+    def set_review
+      @review = Review.find_by(id: params[:review_id])
     end
 
     def set_new_comment
       @comments = Comment.new(create_params.merge(review_id: params[:review_id]))
     end
 
+    def validate_comment_pressence
+      render_error(404, "Comment id not found") if @comment.nil? || !@comment.presence?
+    end
+
     def validate_user_presence
-      render_error(404, "User_id entered does not exist") if User.find_by(id: @comments.user_id).nil?
+      render_error(404, "User id entered does not exist") if User.find_by(id: @comments.user_id).nil?
     end
 
-    def validate_review_pressence
-      render_error(404, "Review_id entered does not exist") if @comments.nil?
-    end
-
-    def validate_new_creation
-      render_error(404, "Review_id entered does not exist") if Review.find_by(id: @comments.review_id).nil?
+    def validate_review_presence
+      render_error(404, "Review id entered does not exist") if @review.nil? || !@review.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

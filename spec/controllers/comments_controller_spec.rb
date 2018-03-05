@@ -50,16 +50,39 @@ RSpec.describe CommentsController, type: :controller do
         expect(response).to be_success
       end
 
+      it "does not return deleted comments", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.discard
+        get :index, params: { review_id: comment.review.id }
+
+        expect(parsed_response).to match([])
+        expect(response).to be_success
+      end
+
       it "returns not found when review not found", authorized: true do
         get :index, params: { review_id: 0 }
         expect(response).to be_not_found
       end
 
       it "returns a not found response when the review is deleted", authorized: true do
-        review = Review.create! valid_product_review
-        review.reviewable.discard
-        get :index, params: { product_id: review.reviewable_id }
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.discard
+        get :index, params: { review_id: comment.review.id }
 
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the reviewable is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.reviewable.discard
+        get :index, params: { review_id: comment.review.id }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the company is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.reviewable.company.discard
+        get :index, params: { review_id: comment.review.id }
         expect(response).to be_not_found
       end
     end
@@ -79,6 +102,35 @@ RSpec.describe CommentsController, type: :controller do
 
       it "returns not found when comment not found", authorized: true do
         get :show, params: { id: 0 }
+        expect(response).to be_not_found
+      end
+
+      it "returns not found when comment is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.discard
+        get :show, params: { id: comment.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the review is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.discard
+        get :show, params: { id: comment.to_param }
+
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the reviewable is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.reviewable.discard
+        get :show, params: { id: comment.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when the company is deleted", authorized: true do
+        comment = Comment.create! product_comment_valid_attributes
+        comment.review.reviewable.company.discard
+        get :show, params: { id: comment.id }
         expect(response).to be_not_found
       end
     end
@@ -142,6 +194,60 @@ RSpec.describe CommentsController, type: :controller do
           post :create, params: { comment: service_comment_missing_userid_attributes, review_id: review.id }
           expect(response).to be_not_found
         end
+
+        it "does not create Comment when review is deleted", authorized: true do
+          review = create(:product_review)
+          review.discard
+
+          expect do
+            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          end.to change(Comment, :count).by(0)
+        end
+
+        it "returns a not found response when the review is deleted", authorized: true do
+          review = create(:product_review)
+          review.discard
+          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not create Comment when reviewable is deleted", authorized: true do
+          review = create(:product_review)
+          review.reviewable.discard
+
+          expect do
+            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          end.to change(Comment, :count).by(0)
+        end
+
+        it "returns a not found response when the reviewable is deleted", authorized: true do
+          review = create(:product_review)
+          review.reviewable.discard
+          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not create Comment when company is deleted", authorized: true do
+          review = create(:product_review)
+          review.reviewable.company.discard
+
+          expect do
+            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          end.to change(Comment, :count).by(0)
+        end
+
+        it "returns a not found response when the company is deleted", authorized: true do
+          review = create(:product_review)
+          review.reviewable.company.discard
+          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
+        end
       end
 
       context "with invalid params", authorized: true do
@@ -158,6 +264,14 @@ RSpec.describe CommentsController, type: :controller do
 
           post :create, params: { comment: service_comment_invalid_attributes, review_id: review.id }
           expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "returns a not found response when user doesn't exist" do
+          review = create(:product_review)
+
+          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
       end
@@ -208,6 +322,63 @@ RSpec.describe CommentsController, type: :controller do
         it "returns not found when comment ID not found", authorized: true do
           put :update, params: { id: 0, comment: service_comment_new_attributes }, session: valid_session
           expect(response).to be_not_found
+        end
+
+        it "does not update Comment when review is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          original_comment = comment
+          comment.review.discard
+
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+          comment.reload
+          expect(comment.content).to eq(original_comment[:content])
+        end
+
+        it "returns a not found response when the review is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          comment.review.discard
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update Comment when reviewable is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          original_comment = comment
+          comment.review.reviewable.discard
+
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+          comment.reload
+          expect(comment.content).to eq(original_comment[:content])
+        end
+
+        it "returns a not found response when the reviewable is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          comment.review.reviewable.discard
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update Comment when company is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          original_comment = comment
+          comment.review.reviewable.company.discard
+
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+          comment.reload
+          expect(comment.content).to eq(original_comment[:content])
+        end
+
+        it "returns a not found response when the company is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          comment.review.reviewable.company.discard
+          put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
+
+          expect(response).to be_not_found
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -275,6 +446,34 @@ RSpec.describe CommentsController, type: :controller do
 
       it "returns a not found response when comment not found", authorized: true do
         delete :destroy, params: { id: 0 }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when comment is deleted", authorized: true do
+        comment = Comment.create! service_comment_valid_attributes
+        comment.discard
+        delete :destroy, params: { id: comment.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when review is deleted", authorized: true do
+        comment = Comment.create! service_comment_valid_attributes
+        comment.review.discard
+        delete :destroy, params: { id: comment.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when reviewable is deleted", authorized: true do
+        comment = Comment.create! service_comment_valid_attributes
+        comment.review.reviewable.discard
+        delete :destroy, params: { id: comment.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found response when company is deleted", authorized: true do
+        comment = Comment.create! service_comment_valid_attributes
+        comment.review.reviewable.company.discard
+        delete :destroy, params: { id: comment.to_param }
         expect(response).to be_not_found
       end
     end
