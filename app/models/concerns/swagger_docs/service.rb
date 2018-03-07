@@ -6,7 +6,7 @@ module SwaggerDocs::Service
 
     swagger_schema :Service do
       key :type, :object
-      key :required, [:id, :name, :description, :company_id]
+      key :required, [:id, :name, :description, :company]
 
       property :id do
         key :type, :integer
@@ -18,14 +18,13 @@ module SwaggerDocs::Service
         key :example, "Spring Frameworks"
       end
 
-      property :company_id do
-        key :type, :integer
-        key :format, :int64
-      end
-
       property :description do
         key :type, :string
         key :example, "Spring frameworks was not developed in spring"
+      end
+
+      property :company do
+        key :'$ref', :Company
       end
     end
 
