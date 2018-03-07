@@ -1,0 +1,22 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Product Review Platform</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="mailto:<%= "#{ENV['ADMIN_EMAIL']}" %>?Subject=PRP%20account%20creation&Body=Please%20fill%20up%20the%20following%20fields.%0A%0AApplication%20name:%0ADescription:%0A%0A%0ANOTE:%20We%20will%20send%20you%20the%20password%20to%20access%20the%20API%20upon%20successful%20account%20creation">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/api/docs">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="mailto:<%= "#{ENV['ADMIN_EMAIL']}" %>?Subject=PRP%20Feedback/Enquiry">Contact Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
