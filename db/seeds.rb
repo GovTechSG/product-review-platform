@@ -61,7 +61,7 @@ User.create!(name: "IMDA", email: "user_5@foo.com", number: "51512237")
   c.products.create!(name: "Greenplum", description: lorem_ipsum)
   c.services.create!(name: "Spring Framework", description: lorem_ipsum)
   c.services.create!(name: "Agile Development", description: lorem_ipsum)
-  c.industries.create!(name: industry_names[i-1])
+  c.industries.create!(name: industry_names[i-1], description: lorem_ipsum)
 end
 
 SMEs = [
