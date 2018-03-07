@@ -9,7 +9,7 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['user']
+        key :tags, ['User']
         key :description, 'Returns list of all users'
         key :operationId, 'findUsers'
         key :produces, [
@@ -31,7 +31,7 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['user']
+        key :tags, ['User']
         key :description, 'Creates a new user'
         key :operationId, 'addUser'
         key :produces, [
@@ -80,7 +80,7 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['user']
+        key :tags, ['User']
         key :description, 'Update an user'
         key :operationId, 'updateUser'
         key :produces, [
@@ -121,7 +121,7 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['user']
+        key :tags, ['User']
         key :description, 'Returns an user'
         key :operationId, 'findUserById'
         key :produces, [
@@ -144,7 +144,7 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['user']
+        key :tags, ['User']
         key :description, 'Deletes a single user'
         key :operationId, 'deleteUser'
         response 204 do

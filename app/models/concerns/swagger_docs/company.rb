@@ -36,11 +36,11 @@ module SwaggerDocs::Company
         key :example, 'Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis.'
       end
 
-      property :review_count do
+      property :reviews_count do
         key :type, :number
       end
 
-      property :strength do
+      property :strengths do
         key :type, :array
         key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
       end
@@ -68,12 +68,8 @@ module SwaggerDocs::Company
     end
 
     swagger_schema :SwaggerError do
-      key :required, [:code, :message]
-      property :code do
-        key :type, :integer
-        key :format, :int32
-      end
-      property :message do
+      key :required, [:error]
+      property :error do
         key :type, :string
       end
     end

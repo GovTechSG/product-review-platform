@@ -29,6 +29,13 @@ shared_examples_for 'products_and_services' do
         product.reload
         expect(product.reviews_count).to eq(1)
       end
+
+      it "does not count discarded reviews" do
+        product = Product.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.first.discard
+        expect(product.reviews_count).to eq(0)
+      end
     end
 
     context "services" do
@@ -41,6 +48,12 @@ shared_examples_for 'products_and_services' do
         service.reviews.create! valid_service_review
         service.reload
         expect(service.reviews_count).to eq(1)
+      end
+      it "does not count discarded reviews" do
+        service = Service.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.first.discard
+        expect(service.reviews_count).to eq(0)
       end
     end
   end
@@ -55,8 +68,16 @@ shared_examples_for 'products_and_services' do
         product = Product.create! valid_product
         product.reviews.create! valid_product_review
         product.reviews.create! valid_product_review
-        product.reload
         expected_score = product.reviews.sum(:score) / 2
+        expect(product.aggregate_score).to eq(expected_score)
+      end
+      it "does not compute discarded score" do
+        product = Product.create! valid_product
+        product.reviews.create! valid_product_review
+        product.reviews.create! valid_product_review
+        expected_score = product.reviews.sum(:score) / 2
+        discarded_review = product.reviews.create! valid_product_review
+        discarded_review.discard
         expect(product.aggregate_score).to eq(expected_score)
       end
     end
@@ -72,6 +93,15 @@ shared_examples_for 'products_and_services' do
         service.reviews.create! valid_service_review
         service.reload
         expected_score = service.reviews.sum(:score) / 2
+        expect(service.aggregate_score).to eq(expected_score)
+      end
+      it "does not compute discarded score" do
+        service = Service.create! valid_service
+        service.reviews.create! valid_service_review
+        service.reviews.create! valid_service_review
+        expected_score = service.reviews.sum(:score) / 2
+        discarded_review = service.reviews.create! valid_service_review
+        discarded_review.discard
         expect(service.aggregate_score).to eq(expected_score)
       end
     end
