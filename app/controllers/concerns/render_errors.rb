@@ -15,7 +15,6 @@ module RenderErrors
               end
     end
     payload = {
-      status: status,
       error: error
     }
     render json: payload, status: status
@@ -24,8 +23,7 @@ module RenderErrors
   def doorkeeper_unauthorized_render_options(*)
     {
       json: {
-        error: "Invalid or missing access token. Please sign in/sign up first.",
-        "status_code": "401"
+        error: "Invalid or missing access token. Please sign in/sign up first."
       }
     }
   end
