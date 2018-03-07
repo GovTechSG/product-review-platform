@@ -22,42 +22,36 @@ end
 
 def unauthorized_response
   {
-    error: "Invalid or missing access token. Please sign in/sign up first.",
-    "status_code": "401"
+    error: "Invalid or missing access token. Please sign in/sign up first."
   }
 end
 
 def wrong_credentials_response
   {
-    error: "Missing or invalid credentials.",
-    "status_code": "401"
+    error: "Missing or invalid credentials."
   }
 end
 
 def incorrect_token_response
   {
-    error: "Invalid token.",
-    "status_code": "404"
+    error: "Invalid token."
   }
 end
 
 def revoked_token_response
   {
-    error: "Inaccessible token. May have already been revoked.",
-    "status_code": "404"
+    error: "Inaccessible token. May have already been revoked."
   }
 end
 
 def refresh_wrong_parameter_response
   {
-    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body",
-    "status_code": "401"
+    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body"
   }
 end
 
 def refresh_no_header_response
   {
-    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body",
-    "status_code": "401"
+    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body"
   }
 end

@@ -1,8 +1,7 @@
 module CustomTokenErrorResponse
   def body
     {
-      error: "Missing or invalid credentials.",
-      "status_code": "401"
+      error: "Missing or invalid credentials."
     }
     # or merge with existing values by
     # super.merge({key: value})
