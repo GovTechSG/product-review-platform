@@ -9,7 +9,7 @@ module SwaggerDocs::Industries
         security do
           key :Authorization, []
         end
-        key :tags, ['industry']
+        key :tags, ['Industry']
         key :description, 'Returns list of all industries'
         key :operationId, 'findIndustries'
         key :produces, [

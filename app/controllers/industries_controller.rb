@@ -49,7 +49,7 @@ class IndustriesController < ApplicationController
   end
 
   def validate_industry_presence
-    render_error(404, "Industry id not found.") if @industry.nil?
+    render_error(404, "Industry id not found.") if @industry.nil? || !@industry.presence?
   end
 
   # Only allow a trusted parameter "white list" through.
