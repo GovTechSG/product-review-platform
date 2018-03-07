@@ -6,14 +6,14 @@ RSpec.describe ProductSerializer, type: :serializer do
       @product = create(:product)
     end
 
-    subject { ProductSerializer.new(@product, root: false).as_json["object"] }
+    subject { ProductSerializer.new(@product, root: false).as_json["object"].merge("company" => @product.company) }
 
     it 'has a name' do
       expect(subject['name']).to eql(@product.name)
     end
 
-    it 'has a company id' do
-      expect(subject['company_id']).to eql(@product.company_id)
+    it 'has a company' do
+      expect(subject['company']).to eql(@product.company)
     end
 
     it 'has a description' do
