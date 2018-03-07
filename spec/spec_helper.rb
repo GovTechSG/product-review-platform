@@ -34,7 +34,6 @@ end
 
 def expect_not_found
   expect(parsed_response['error']).to eq("No resource with given ID found.")
-  expect(parsed_response['status']).to eq(404)
   expect(response).to be_not_found
 end
 
