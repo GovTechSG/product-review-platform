@@ -1,3 +1,5 @@
 class ServiceSerializer < ActiveModel::Serializer
-  attributes :id, :name, :company_id, :description
+  attributes :id, :name, :description
+
+  belongs_to :company, serializer: CompanySerializer
 end
