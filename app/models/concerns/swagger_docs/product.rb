@@ -6,7 +6,7 @@ module SwaggerDocs::Product
 
     swagger_schema :Product do
       key :type, :object
-      key :required, [:id, :name, :description, :company_id]
+      key :required, [:id, :name, :description, :company]
 
       property :id do
         key :type, :integer
@@ -18,14 +18,13 @@ module SwaggerDocs::Product
         key :example, "Postman Product"
       end
 
-      property :company_id do
-        key :type, :integer
-        key :format, :int64
-      end
-
       property :description do
         key :type, :string
         key :example, "A postman API"
+      end
+
+      property :company do
+        key :'$ref', :Company
       end
     end
 
