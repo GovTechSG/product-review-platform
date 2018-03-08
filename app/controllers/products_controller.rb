@@ -25,7 +25,7 @@ class ProductsController < ApplicationController
     if @product.save
       render json: @product, status: :created, location: @product, has_type: false
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
     if @product.update(product_params)
       render json: @product, has_type: false
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
