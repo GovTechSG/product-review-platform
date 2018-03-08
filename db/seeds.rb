@@ -12,6 +12,18 @@ company_names = [
   "Hubspot",
   "RingCentral"
 ]
+industry_names = [
+  "Manufacturing",
+  "Sales",
+  "Finance",
+  "Marketing",
+  "Electronics",
+  "Product",
+  "Investment",
+  "Advertising",
+  "Technology",
+  "Internet"
+]
 UENs = [
   "984208875",
   "984208874",
@@ -49,6 +61,7 @@ User.create!(name: "IMDA", email: "user_5@foo.com", number: "51512237")
   c.products.create!(name: "Greenplum", description: lorem_ipsum)
   c.services.create!(name: "Spring Framework", description: lorem_ipsum)
   c.services.create!(name: "Agile Development", description: lorem_ipsum)
+  c.industries.create!(name: industry_names[i-1], description: lorem_ipsum)
 end
 
 SMEs = [
@@ -104,4 +117,5 @@ Review.all.each_with_index do |r, i|
   r.likes.create!(user_id: 4)
   r.likes.create!(user_id: 5)
 end
+
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)

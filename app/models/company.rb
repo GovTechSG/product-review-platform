@@ -8,6 +8,8 @@ class Company < ApplicationRecord
 
   has_many :products, dependent: :destroy
   has_many :services, dependent: :destroy
+  has_many :industry_companies, dependent: :destroy
+  has_many :industries, through: :industry_companies
 
   validates_presence_of :name, :UEN, :aggregate_score, :description
 end
