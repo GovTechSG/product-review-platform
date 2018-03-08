@@ -6,7 +6,6 @@ class CompaniesController < ApplicationController
   # GET /companies
   def index
     @companies = Company.kept
-
     render json: @companies, methods: [:reviews_count, :strengths]
   end
 
@@ -22,7 +21,7 @@ class CompaniesController < ApplicationController
     if @company.save
       render json: @company, status: :created, location: @company
     else
-      render json: @company.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -31,7 +30,7 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       render json: @company
     else
-      render json: @company.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 

@@ -25,7 +25,7 @@ class ServicesController < ApplicationController
     if @service.save
       render json: @service, status: :created, location: @service, has_type: false
     else
-      render json: @service.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -34,7 +34,7 @@ class ServicesController < ApplicationController
     if @service.update(service_params)
       render json: @service, has_type: false
     else
-      render json: @service.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 

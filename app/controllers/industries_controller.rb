@@ -23,7 +23,7 @@ class IndustriesController < ApplicationController
     if @industry.save
       render json: @industry, status: :created, location: @industry
     else
-      render json: @industry.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -32,7 +32,7 @@ class IndustriesController < ApplicationController
     if @industry.update(industry_params)
       render json: @industry
     else
-      render json: @industry.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 

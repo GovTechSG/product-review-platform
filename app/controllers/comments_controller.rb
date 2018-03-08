@@ -24,7 +24,7 @@ class CommentsController < ApplicationController
     if @comments.save
       render json: @comments, status: :created, location: @comments
     else
-      render json: @comments.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -33,7 +33,7 @@ class CommentsController < ApplicationController
     if @comment.update(update_params)
       render json: @comment
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
