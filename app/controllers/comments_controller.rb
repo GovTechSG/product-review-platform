@@ -2,10 +2,15 @@ class CommentsController < ApplicationController
   include SwaggerDocs::Comments
   before_action :doorkeeper_authorize!
   before_action :set_comment, only: [:show, :update, :destroy]
+  before_action :validate_comment_pressence, only: [:show, :update, :destroy]
+  before_action :set_review, only: [:index, :create]
+  before_action :validate_review_presence, only: [:index, :create]
+  before_action :set_new_comment, only: [:create]
+  before_action :validate_user_presence, only: [:create]
+
   # GET /reviews/:review_id/comments
   def index
-    @comments = Comment.where(review_id: params[:review_id])
-
+    @comments = Comment.kept.where(review_id: params[:review_id])
     render json: @comments, methods: [:user]
   end
 
@@ -16,12 +21,10 @@ class CommentsController < ApplicationController
 
   # POST /reviews/:review_id/comments
   def create
-    @comment = Comment.new(create_params.merge(review_id: params[:review_id]))
-
-    if @comment.save
-      render json: @comment, status: :created, location: @comment
+    if @comments.save
+      render json: @comments, status: :created, location: @comments
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: @comments.errors, status: :unprocessable_entity
     end
   end
 
@@ -36,13 +39,33 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
-    @comment.destroy
+    @comment.discard
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
-      @comment = Comment.find(params[:id])
+      @comment = Comment.find_by(id: params[:id])
+    end
+
+    def set_review
+      @review = Review.find_by(id: params[:review_id])
+    end
+
+    def set_new_comment
+      @comments = Comment.new(create_params.merge(review_id: params[:review_id]))
+    end
+
+    def validate_comment_pressence
+      render_error(404, "Comment id not found") if @comment.nil? || !@comment.presence?
+    end
+
+    def validate_user_presence
+      render_error(404, "User id entered does not exist") if User.find_by(id: @comments.user_id).nil?
+    end
+
+    def validate_review_presence
+      render_error(404, "Review id entered does not exist") if @review.nil? || !@review.presence?
     end
 
     # Only allow a trusted parameter "white list" through.
