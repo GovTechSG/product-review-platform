@@ -92,15 +92,6 @@ ActiveRecord::Schema.define(version: 20180307063047) do
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
   end
 
-  create_table "grants", force: :cascade do |t|
-    t.string "name"
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_grants_on_discarded_at"
-    t.index ["name"], name: "index_grants_on_name", unique: true
-  end
-
   create_table "industries", force: :cascade do |t|
     t.string "name"
     t.datetime "discarded_at"
