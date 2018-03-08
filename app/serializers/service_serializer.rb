@@ -1,3 +1,16 @@
 class ServiceSerializer < ActiveModel::Serializer
-  attributes :id, :name, :company_id, :description
+  attribute :type, if: :type?
+  attributes :id, :name, :description
+
+  def type
+    'Service'
+  end
+
+  def type?
+    if instance_options[:has_type]
+      false
+    elsif instance_options[:has_type].nil?
+      true
+    end
+  end
 end

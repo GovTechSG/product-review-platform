@@ -10,12 +10,12 @@ class ProductsController < ApplicationController
   def index
     @products = Product.kept.where(company_id: params[:company_id])
 
-    render json: @products, methods: [:reviews_count, :aggregate_score]
+    render json: @products, methods: [:reviews_count, :aggregate_score], has_type: false
   end
 
   # GET /products/1
   def show
-    render json: @product, methods: [:reviews_count, :aggregate_score, :company_name]
+    render json: @product, methods: [:reviews_count, :aggregate_score, :company_name], has_type: false
   end
 
   # POST /companies/:company_id/products
@@ -23,7 +23,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params.merge(company_id: params[:company_id]))
 
     if @product.save
-      render json: @product, status: :created, location: @product
+      render json: @product, status: :created, location: @product, has_type: false
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1
   def update
     if @product.update(product_params)
-      render json: @product
+      render json: @product, has_type: false
     else
       render json: @product.errors, status: :unprocessable_entity
     end
