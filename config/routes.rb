@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
       shallow do
         resources :companies do
+          resources :grants, only: [:index]
           resources :products do
             resources :reviews do
               resources :comments
