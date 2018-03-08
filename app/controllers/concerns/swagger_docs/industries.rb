@@ -31,7 +31,7 @@ module SwaggerDocs::Industries
         security do
           key :Authorization, []
         end
-        key :tags, ['industry']
+        key :tags, ['Industry']
         key :description, 'Creates a new industry'
         key :operationId, 'addIndustry'
         key :produces, [
@@ -80,7 +80,7 @@ module SwaggerDocs::Industries
         security do
           key :Authorization, []
         end
-        key :tags, ['industry']
+        key :tags, ['Industry']
         key :description, 'Update a industry'
         key :operationId, 'updateIndustry'
         key :produces, [
@@ -121,7 +121,7 @@ module SwaggerDocs::Industries
         security do
           key :Authorization, []
         end
-        key :tags, ['industry']
+        key :tags, ['Industry']
         key :description, 'Returns a industry'
         key :operationId, 'findIndustryById'
         key :produces, [
@@ -144,7 +144,7 @@ module SwaggerDocs::Industries
         security do
           key :Authorization, []
         end
-        key :tags, ['industry']
+        key :tags, ['Industry']
         key :description, 'Deletes a single industry'
         key :operationId, 'deleteIndustry'
         response 204 do
