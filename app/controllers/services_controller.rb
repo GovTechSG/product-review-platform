@@ -10,12 +10,12 @@ class ServicesController < ApplicationController
   def index
     @services = Service.kept.where(company_id: params[:company_id])
 
-    render json: @services, methods: [:reviews_count, :aggregate_score]
+    render json: @services, methods: [:reviews_count, :aggregate_score], has_type: false
   end
 
   # GET /services/1
   def show
-    render json: @service, methods: [:reviews_count, :aggregate_score, :company_name]
+    render json: @service, methods: [:reviews_count, :aggregate_score, :company_name], has_type: false
   end
 
   # POST /companies/:company_id/services
@@ -23,7 +23,7 @@ class ServicesController < ApplicationController
     @service = Service.new(service_params.merge(company_id: params[:company_id]))
 
     if @service.save
-      render json: @service, status: :created, location: @service
+      render json: @service, status: :created, location: @service, has_type: false
     else
       render json: @service.errors, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class ServicesController < ApplicationController
   # PATCH/PUT /services/1
   def update
     if @service.update(service_params)
-      render json: @service
+      render json: @service, has_type: false
     else
       render json: @service.errors, status: :unprocessable_entity
     end

@@ -2,14 +2,16 @@ class GrantsController < ApplicationController
   before_action :doorkeeper_authorize!
   before_action :set_grant, only: [:show, :update, :destroy]
   before_action :validate_grant_presence, only: [:show, :update, :destroy]
-  before_action :set_agency, only: [:index, :create]
-  before_action :validate_agency_presence, only: [:index, :create]
+  before_action :set_company_if_present, only: [:index]
 
   # GET /grants
   # GET /companies/:company_id/grants
   def index
-    @grants = Grant.all
-
+    if @company
+      # @grants = 
+    else
+      @grants = Grant.kept
+    end
     render json: @grants
   end
 
@@ -40,18 +42,28 @@ class GrantsController < ApplicationController
 
   # DELETE /grants/1
   def destroy
-    @grant.destroy
+    @grant.discard
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_grant
-    @grant = Grant.find(params[:id])
+    @grant = Grant.find_by(id: params[:id])
+  end
+
+  def validate_grant_presence
+    render_error(404) if @grant.nil? || !@grant.presence?
+  end
+
+  def set_company_if_present
+    if params[:company_id].present?
+      @company = Company.find_by(id: params[:company_id])
+      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
+    end
   end
 
   # Only allow a trusted parameter "white list" through.
   def grant_params
-    params.require(:grant).permit(:name)
+    params.require(:grant).permit(:name, :description)
   end
 end

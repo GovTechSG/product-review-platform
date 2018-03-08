@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 20180308052230) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["discarded_at"], name: "index_industries_on_discarded_at"
     t.index ["name"], name: "index_industries_on_name", unique: true
   end
