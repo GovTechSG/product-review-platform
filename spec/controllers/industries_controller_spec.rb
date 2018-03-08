@@ -33,6 +33,13 @@ RSpec.describe IndustriesController, type: :controller do
         expect(response).to be_success
       end
 
+      it "returns not found when industry is deleted", authorized: true do
+        industry = Industry.create! valid_attributes
+        industry.discard
+        get :show, params: { id: industry.to_param }
+        expect(response.status).to eq(404)
+      end
+
       it "returns not found when industry not found", authorized: true do
         get :show, params: { id: 0 }
         expect(response).to be_not_found
@@ -96,6 +103,29 @@ RSpec.describe IndustriesController, type: :controller do
         end
       end
 
+      context "with deleted industry" do
+        let(:new_attributes) do
+          attributes_for(:industry)
+        end
+
+        it "does not updates the requested industry", authorized: true do
+          industry = Industry.create! valid_attributes
+          original_industry = industry
+          industry.discard
+          put :update, params: { id: industry.to_param, industry: new_attributes }
+          industry.reload
+          expect(industry.name).to eq(original_industry[:name])
+        end
+
+        it "renders a not found response", authorized: true do
+          industry = Industry.create! valid_attributes
+          industry.discard
+          put :update, params: { id: industry.to_param, industry: valid_attributes }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
       context "with invalid params" do
         it "renders a JSON response with errors for the industry", authorized: true do
           industry = Industry.create! valid_attributes
@@ -135,6 +165,13 @@ RSpec.describe IndustriesController, type: :controller do
 
         delete :destroy, params: { id: industry.to_param }
         expect(response).to have_http_status(204)
+      end
+
+      it "renders a not found JSON response when the industry is deleted", authorized: true do
+        industry = Industry.create! valid_attributes
+        industry.discard
+        delete :destroy, params: { id: industry.to_param }
+        expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when industry not found", authorized: true do

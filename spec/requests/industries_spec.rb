@@ -27,6 +27,13 @@ RSpec.describe "Industries", type: :request do
         expect(response).to be_success
       end
 
+      it "returns not found when industry is deleted", authorized: true do
+        industry = Industry.create! valid_attributes
+        industry.discard
+        get industry_path(industry.id), headers: request_login
+        expect(response.status).to eq(404)
+      end
+
       it "returns not found when industry not found" do
         get industry_path(0), headers: request_login
         expect(response).to be_not_found
@@ -90,6 +97,29 @@ RSpec.describe "Industries", type: :request do
         end
       end
 
+      context "with deleted industry" do
+        let(:new_attributes) do
+          attributes_for(:industry)
+        end
+
+        it "does not updates the requested industry", authorized: true do
+          industry = Industry.create! valid_attributes
+          original_industry = industry
+          industry.discard
+          put industry_path(industry.id), params: { industry: new_attributes }, headers: request_login
+          industry.reload
+          expect(industry.name).to eq(original_industry[:name])
+        end
+
+        it "renders a not found response", authorized: true do
+          industry = Industry.create! valid_attributes
+          industry.discard
+          put industry_path(industry.id), params: { industry: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
       context "with invalid params" do
         it "renders a JSON response with errors for the industry" do
           industry = Industry.create! valid_attributes
@@ -122,6 +152,13 @@ RSpec.describe "Industries", type: :request do
         delete industry_path(industry.id), headers: request_login
         industry.reload
         expect(industry.discarded?).to be true
+      end
+
+      it "renders a not found JSON response when the industry is deleted", authorized: true do
+        industry = Industry.create! valid_attributes
+        industry.discard
+        delete industry_path(industry.id), headers: request_login
+        expect(response).to have_http_status(404)
       end
 
       it "renders a JSON response with the industry" do
