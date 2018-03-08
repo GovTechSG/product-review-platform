@@ -10,7 +10,7 @@ module SwaggerDocs::Grant
 
     swagger_schema :Grant do
       key :type, :object
-      key :required, [:id, :name, :UEN, :aggregate_score]
+      key :required, [:id, :name, :acronym, :description, :user]
 
       property :id do
         key :type, :integer
@@ -19,7 +19,21 @@ module SwaggerDocs::Grant
 
       property :name do
         key :type, :string
-        key :example, 'Pivotal Software'
+        key :example, 'Operation & Technology Roadmapping'
+      end
+
+      property :acronym do
+        key :type, :string
+        key :example, 'OTR'
+      end
+
+      property :description do
+        key :type, :string
+        key :example, 'Want to maximise returns from your investments in technology? Get a grant for expert help from A*STAR to create a technology roadmap.'
+      end
+
+      property :user do
+        key :'$ref', :User
       end
     end
 
@@ -31,32 +45,19 @@ module SwaggerDocs::Grant
             property :name do
               key :type, :string
             end
+            property :description do
+              key :type, :string
+            end
+            property :acronym do
+              key :type, :string
+            end
+            property :user_id do
+              key :type, :integer
+              key :format, :int64
+            end
           end
         end
       end
-    end
-
-    swagger_schema :SwaggerError do
-      key :required, [:code, :message]
-      property :code do
-        key :type, :integer
-        key :format, :int32
-      end
-      property :message do
-        key :type, :string
-      end
-    end
-
-    swagger_schema :NotFoundError do
-      key :description, 'Not found. Given ID is invalid/not found'
-    end
-
-    swagger_schema :UnauthorisedError do
-      key :description, 'Unauthorized. Missing or invalid credentials. Please sign in/sign up first.'
-    end
-
-    swagger_schema :BadRequestError do
-      key :description, 'Bad Request. Params is missing'
     end
   end
 end

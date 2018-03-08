@@ -1,4 +1,5 @@
 class GrantsController < ApplicationController
+  include SwaggerDocs::Grants
   before_action :doorkeeper_authorize!
   before_action :set_grant, only: [:show, :update, :destroy]
   before_action :validate_grant_presence, only: [:show, :update, :destroy]
