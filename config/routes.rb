@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
   resources :apidocs, only: [:index]
   root to: 'swagger_ui#index'
-  get 'api/docs', to: 'swagger_ui#index'
+  get 'api/docs', to: 'swagger_ui#apidoc'
+
   get 'api/json', to: 'apidocs#index'
 end

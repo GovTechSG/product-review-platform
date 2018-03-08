@@ -58,7 +58,7 @@ module SwaggerDocs::Products
           end
         end
         response 201 do
-          key :description, 'OK, company is successfully created'
+          key :description, 'OK, product is successfully created'
           schema do
             key :'$ref', :Product
           end
@@ -110,7 +110,7 @@ module SwaggerDocs::Products
           end
         end
         response 200 do
-          key :description, 'OK, company is successfully updated'
+          key :description, 'OK, product is successfully updated'
           schema do
             key :'$ref', :Product
           end
