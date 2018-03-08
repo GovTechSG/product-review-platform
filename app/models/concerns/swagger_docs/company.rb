@@ -4,10 +4,6 @@ module SwaggerDocs::Company
   included do
     include Swagger::Blocks
 
-    # example :Company do
-    #   key :strength, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
-    # end
-
     swagger_schema :Company do
       key :type, :object
       key :required, [:id, :name, :UEN, :aggregate_score]
@@ -65,6 +61,10 @@ module SwaggerDocs::Company
           end
         end
       end
+    end
+
+    swagger_schema :SwaggerError do
+      key :description, 'Unprocessable Entity'
     end
 
     swagger_schema :NotFoundError do
