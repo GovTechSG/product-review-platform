@@ -11,7 +11,7 @@ class ReviewsController < ApplicationController
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @reviewable
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end
 
   # GET /reviews/1
