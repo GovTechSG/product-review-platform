@@ -29,7 +29,8 @@ module SwaggerDocs::Grant
 
       property :description do
         key :type, :string
-        key :example, 'Want to maximise returns from your investments in technology? Get a grant for expert help from A*STAR to create a technology roadmap.'
+        key :example, 'Want to maximise returns from your investments in technology?
+                       Get a grant for expert help from A*STAR to create a technology roadmap.'
       end
 
       property :user do
