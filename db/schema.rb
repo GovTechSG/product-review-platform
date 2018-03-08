@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180227065808) do
+ActiveRecord::Schema.define(version: 20180307075158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,8 +97,12 @@ ActiveRecord::Schema.define(version: 20180227065808) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "acronym"
+    t.string "description"
+    t.bigint "user_id"
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
     t.index ["name"], name: "index_grants_on_name", unique: true
+    t.index ["user_id"], name: "index_grants_on_user_id"
   end
 
   create_table "industries", force: :cascade do |t|
@@ -197,6 +201,7 @@ ActiveRecord::Schema.define(version: 20180227065808) do
 
   add_foreign_key "comments", "reviews"
   add_foreign_key "comments", "users"
+  add_foreign_key "grants", "users"
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
   add_foreign_key "likes", "reviews"

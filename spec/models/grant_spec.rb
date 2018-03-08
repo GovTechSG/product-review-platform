@@ -14,5 +14,9 @@ RSpec.describe Grant, type: :model do
       grant = create(:grant)
       expect(build(:grant, name: grant.name)).not_to be_valid
     end
+
+    it 'is invalid without a description' do
+      expect(build(:grant, description: nil)).not_to be_valid
+    end
   end
 end
