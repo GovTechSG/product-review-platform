@@ -67,13 +67,6 @@ module SwaggerDocs::Company
       end
     end
 
-    swagger_schema :SwaggerError do
-      key :required, [:error]
-      property :error do
-        key :type, :string
-      end
-    end
-
     swagger_schema :NotFoundError do
       key :description, 'Not found. Given ID is invalid/not found'
     end
