@@ -6,6 +6,10 @@ RSpec.describe GrantsController, type: :routing do
       expect(get: "/api/v1/grants").to route_to("grants#index")
     end
 
+    it "routes to #index" do
+      expect(get: "/api/v1/companies/1/grants").to route_to("grants#index", company_id: "1")
+    end
+
     it "routes to #show" do
       expect(get: "/api/v1/grants/1").to route_to("grants#show", id: "1")
     end

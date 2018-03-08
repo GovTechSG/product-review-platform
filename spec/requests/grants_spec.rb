@@ -7,7 +7,7 @@ RSpec.describe "Grants", type: :request do
   end
 
   let(:invalid_attributes) do
-    build(:grant, name: nil).attributes
+    attributes_for(:grant, name: nil, acronym: nil, user_id: nil)
   end
 
   describe "Authorised user" do
@@ -25,6 +25,13 @@ RSpec.describe "Grants", type: :request do
         grant = Grant.create! valid_attributes
         get grant_path(grant.id), headers: request_login
         expect(response).to be_success
+      end
+
+      it "returns not found when grant is deleted" do
+        grant = Grant.create! valid_attributes
+        grant.discard
+        get grant_path(grant.id), headers: request_login
+        expect(response.status).to eq(404)
       end
 
       it "returns not found when grant not found" do
@@ -67,7 +74,7 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
-    describe "PUT #update" do
+    describe "PUT /api/v1/grants/:id" do
       context "with valid params" do
         let(:new_attributes) do
           attributes_for(:grant)
@@ -79,6 +86,8 @@ RSpec.describe "Grants", type: :request do
           put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
           grant.reload
           expect(grant.name).to eq(new_attributes[:name])
+          expect(grant.description).to eq(new_attributes[:description])
+          expect(grant.acronym).to eq(new_attributes[:acronym])
         end
 
         it "renders a JSON response with the grant" do
@@ -86,6 +95,31 @@ RSpec.describe "Grants", type: :request do
 
           put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted grant" do
+        let(:new_attributes) do
+          attributes_for(:grant)
+        end
+
+        it "does not updates the requested grant" do
+          grant = Grant.create! valid_attributes
+          original_grant = grant
+          grant.discard
+          put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
+          grant.reload
+          expect(grant.name).to eq(original_grant[:name])
+          expect(grant.description).to eq(original_grant[:description])
+          expect(grant.acronym).to eq(original_grant[:acronym])
+        end
+
+        it "renders a not found response" do
+          grant = Grant.create! valid_attributes
+          grant.discard
+          put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
+          expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
       end
@@ -102,14 +136,25 @@ RSpec.describe "Grants", type: :request do
         it "renders a 422 error for duplicate names" do
           grant = Grant.create! valid_attributes
           another_grant = create(:grant)
-          put grant_path(grant.id), params: { grant: attributes_for(:grant, name: another_grant.name) }, headers: request_login
+          put grant_path(grant.id), params: { grant: another_grant.attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update the requested grant" do
+          grant = Grant.create! valid_attributes
+          original_grant = grant
+
+          put grant_path(grant.id), params: { grant: invalid_attributes }, headers: request_login
+          grant.reload
+          expect(grant.name).to eq(original_grant[:name])
+          expect(grant.description).to eq(original_grant[:description])
+          expect(grant.acronym).to eq(original_grant[:acronym])
         end
       end
     end
 
-    describe "DELETE #destroy" do
+    describe "DELETE /api/v1/grants/:id" do
       it "soft deletes" do
         grant = Grant.create! valid_attributes
         expect do
@@ -131,6 +176,13 @@ RSpec.describe "Grants", type: :request do
         expect(response).to have_http_status(204)
       end
 
+      it "renders a not found JSON response when the grant is deleted" do
+        grant = Grant.create! valid_attributes
+        grant.discard
+        delete grant_path(grant.id), headers: request_login
+        expect(response).to have_http_status(404)
+      end
+
       it "returns a not found response when grant not found" do
         delete grant_path(0), headers: request_login
         expect(response).to be_not_found
@@ -139,7 +191,7 @@ RSpec.describe "Grants", type: :request do
   end
 
   describe "Unauthorised user" do
-    describe "GET #index" do
+    describe "GET /api/v1/grants" do
       it "returns an unauthorized response" do
         Grant.create! valid_attributes
         get grants_path
@@ -148,7 +200,7 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
-    describe "GET #show" do
+    describe "GET /api/v1/grants/:id" do
       it "returns an unauthorized response" do
         grant = Grant.create! valid_attributes
         get grant_path(grant.id)
@@ -157,7 +209,7 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
-    describe "POST #create" do
+    describe "POST /api/v1/grants" do
       it "does not create a new Grant" do
         expect do
           post grants_path, params: { grant: valid_attributes }
@@ -170,7 +222,7 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
-    describe "PUT #update" do
+    describe "PUT /api/v1/grants/:id" do
       let(:new_attributes) do
         attributes_for(:grant)
       end
@@ -182,6 +234,8 @@ RSpec.describe "Grants", type: :request do
         put grant_path(grant.id), params: { grant: new_attributes }
         grant.reload
         expect(grant.name).to eq(current_attributes["name"])
+        expect(grant.description).to eq(current_attributes["description"])
+        expect(grant.acronym).to eq(current_attributes["acronym"])
       end
 
       it "returns an unauthorized response" do
@@ -192,7 +246,7 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
-    describe "DELETE #destroy" do
+    describe "DELETE /api/v1/grants/:id" do
       it "does not destroy the requested grant" do
         grant = Grant.create! valid_attributes
         expect do

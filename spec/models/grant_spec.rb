@@ -18,5 +18,9 @@ RSpec.describe Grant, type: :model do
     it 'is invalid without a description' do
       expect(build(:grant, description: nil)).not_to be_valid
     end
+
+    it 'is invalid without a user' do
+      expect(build(:grant, user_id: nil)).not_to be_valid
+    end
   end
 end

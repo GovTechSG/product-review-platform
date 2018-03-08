@@ -8,7 +8,7 @@ class GrantsController < ApplicationController
   # GET /companies/:company_id/grants
   def index
     if @company
-      # @grants = 
+      # @grants =
     else
       @grants = Grant.kept
     end
@@ -27,7 +27,7 @@ class GrantsController < ApplicationController
     if @grant.save
       render json: @grant, status: :created, location: @grant
     else
-      render json: @grant.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -36,7 +36,7 @@ class GrantsController < ApplicationController
     if @grant.update(grant_params)
       render json: @grant
     else
-      render json: @grant.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -64,6 +64,6 @@ class GrantsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def grant_params
-    params.require(:grant).permit(:name, :description)
+    params.require(:grant).permit(:name, :description, :user_id, :acronym)
   end
 end
