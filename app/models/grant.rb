@@ -4,6 +4,8 @@ class Grant < ApplicationRecord
 
   belongs_to :user
 
+  has_many :reviews, dependent: :destroy
+
   validates :description, :name, presence: true
   validates :name, uniqueness: true
 

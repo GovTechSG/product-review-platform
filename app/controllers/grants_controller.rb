@@ -1,7 +1,12 @@
 class GrantsController < ApplicationController
+  before_action :doorkeeper_authorize!
   before_action :set_grant, only: [:show, :update, :destroy]
+  before_action :validate_grant_presence, only: [:show, :update, :destroy]
+  before_action :set_agency, only: [:index, :create]
+  before_action :validate_agency_presence, only: [:index, :create]
 
   # GET /grants
+  # GET /companies/:company_id/grants
   def index
     @grants = Grant.all
 

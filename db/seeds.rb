@@ -223,18 +223,18 @@ SME_UENs = [
 end
 
 Product.all.each do |p|
-  p.reviews.create!(score: 4, content: lorem_ipsum, company_id: 11, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
-  p.reviews.create!(score: 1, content: lorem_ipsum, company_id: 12, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
-  p.reviews.create!(score: 3, content: lorem_ipsum, company_id: 13, strengths: ["Reliable", "Explanation of Project and Resources", "Responsive to Messages"])
-  p.reviews.create!(score: 3, content: lorem_ipsum, company_id: 14, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
-  p.reviews.create!(score: 4, content: lorem_ipsum, company_id: 15, strengths: ["Reliable", "Responsive to Messages"])
-  p.reviews.create!(score: 5, content: lorem_ipsum, company_id: 16, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
+  p.reviews.create!(score: 4, content: lorem_ipsum, company_id: 11, grant_id: 1, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
+  p.reviews.create!(score: 1, content: lorem_ipsum, company_id: 12, grant_id: 2, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
+  p.reviews.create!(score: 3, content: lorem_ipsum, company_id: 13, grant_id: 3, strengths: ["Reliable", "Explanation of Project and Resources", "Responsive to Messages"])
+  p.reviews.create!(score: 3, content: lorem_ipsum, company_id: 14, grant_id: 4, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
+  p.reviews.create!(score: 4, content: lorem_ipsum, company_id: 15, grant_id: 5, strengths: ["Reliable", "Responsive to Messages"])
+  p.reviews.create!(score: 5, content: lorem_ipsum, company_id: 16, grant_id: 6, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
 end
 
 Service.all.each do |s|
-  s.reviews.create!(score: 4, content: lorem_ipsum, company_id: 11, strengths: ["Reliable", "Responsive to Messages"])
-  s.reviews.create!(score: 2, content: lorem_ipsum, company_id: 14, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
-  s.reviews.create!(score: 5, content: lorem_ipsum, company_id: 15, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
+  s.reviews.create!(score: 4, content: lorem_ipsum, company_id: 11, grant_id: 7, strengths: ["Reliable", "Responsive to Messages"])
+  s.reviews.create!(score: 2, content: lorem_ipsum, company_id: 14, grant_id: 8, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
+  s.reviews.create!(score: 5, content: lorem_ipsum, company_id: 15, grant_id: 9, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
 end
 
 Review.all.each_with_index do |r, i|

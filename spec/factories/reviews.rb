@@ -4,5 +4,6 @@ FactoryBot.define do
     content { FFaker::Lorem.paragraph }
     strengths { FFaker::Lorem.sentences }
     company
+    grant
   end
 end

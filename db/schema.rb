@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180307075158) do
+ActiveRecord::Schema.define(version: 20180308052230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,8 +172,10 @@ ActiveRecord::Schema.define(version: 20180307075158) do
     t.string "strengths", default: [], array: true
     t.bigint "company_id"
     t.datetime "discarded_at"
+    t.bigint "grant_id"
     t.index ["company_id"], name: "index_reviews_on_company_id"
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
+    t.index ["grant_id"], name: "index_reviews_on_grant_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["strengths"], name: "index_reviews_on_strengths", using: :gin
   end
@@ -209,5 +211,6 @@ ActiveRecord::Schema.define(version: 20180307075158) do
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "companies"
+  add_foreign_key "reviews", "grants"
   add_foreign_key "services", "companies"
 end
