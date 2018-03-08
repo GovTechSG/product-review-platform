@@ -44,6 +44,8 @@ class ApidocsController < ApplicationController
     Comment,
     LikesController,
     Like,
+    Industry,
+    IndustriesController,
     StatisticsController,
     self
   ].freeze
