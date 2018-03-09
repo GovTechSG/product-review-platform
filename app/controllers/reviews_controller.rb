@@ -36,7 +36,7 @@ class ReviewsController < ApplicationController
     if @review.save && (company.nil? || company.save)
       render json: @review, status: :created, location: @review
     else
-      render json: @review.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 
@@ -53,7 +53,7 @@ class ReviewsController < ApplicationController
     if @review.update(whitelisted) && (company.nil? || company.save)
       render json: @review
     else
-      render json: @review.errors, status: :unprocessable_entity
+      render_error(422)
     end
   end
 

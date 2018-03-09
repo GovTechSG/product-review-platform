@@ -64,10 +64,7 @@ module SwaggerDocs::Reviews
           end
         end
         response 422 do
-          key :description, 'Unprocessable Entity'
-          schema do
-            key :'$ref', :SwaggerError
-          end
+          key :'$ref', :SwaggerError
         end
         response 401 do
           key :'$ref', :UnauthorisedError
@@ -104,7 +101,7 @@ module SwaggerDocs::Reviews
           key :description, 'OK, Reviews of the given service ID fetched'
           schema type: :array do
             items do
-              key :'$ref', :Review
+              key :'$ref', :Review_Service
             end
           end
         end
@@ -137,7 +134,7 @@ module SwaggerDocs::Reviews
         response 201 do
           key :description, 'OK, review is successfully created'
           schema do
-            key :'$ref', :Review
+            key :'$ref', :Review_Service
           end
         end
         response 422 do
@@ -193,10 +190,7 @@ module SwaggerDocs::Reviews
           end
         end
         response 422 do
-          key :description, 'Unprocessable Entity'
-          schema do
-            key :'$ref', :SwaggerError
-          end
+          key :'$ref', :SwaggerError
         end
         response 401 do
           key :'$ref', :UnauthorisedError
