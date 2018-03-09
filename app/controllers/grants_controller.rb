@@ -10,7 +10,7 @@ class GrantsController < ApplicationController
   def index
     @grants =
       if @company
-        @company.grants
+        Grant.kept.find_by_sql [company_grants_sql_string, { company_id: @company.id }]
       else
         Grant.kept
       end
@@ -48,6 +48,28 @@ class GrantsController < ApplicationController
   end
 
   private
+
+  def company_grants_sql_string
+    "SELECT *
+     FROM grants
+     WHERE id IN (
+       SELECT DISTINCT r.grant_id
+       FROM reviews r
+       JOIN products p
+       ON r.reviewable_id = p.id
+       WHERE r.reviewable_type = 'Product'
+       AND r.reviewer_type = 'Company'
+       AND p.company_id = :company_id
+       UNION
+       SELECT DISTINCT r.grant_id
+       FROM reviews r
+       JOIN services s
+       ON r.reviewable_id = s.id
+       WHERE r.reviewable_type = 'Service'
+       AND r.reviewer_type = 'Company'
+       AND s.company_id = :company_id
+     )"
+  end
 
   def set_grant
     @grant = Grant.find_by(id: params[:id])
