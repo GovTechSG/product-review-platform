@@ -8,11 +8,12 @@ class GrantsController < ApplicationController
   # GET /grants
   # GET /companies/:company_id/grants
   def index
-    if @company
-      # @grants =
-    else
-      @grants = Grant.kept
-    end
+    @grants =
+      if @company
+        @company.grants
+      else
+        Grant.kept
+      end
     render json: @grants
   end
 

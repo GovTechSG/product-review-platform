@@ -53,10 +53,7 @@ module SwaggerDocs::Grants
           end
         end
         response 422 do
-          key :description, 'Unprocessable Entity'
-          schema do
-            key :'$ref', :SwaggerError
-          end
+          key :'$ref', :SwaggerError
         end
         response 401 do
           key :'$ref', :UnauthorisedError
@@ -127,10 +124,7 @@ module SwaggerDocs::Grants
     #       end
     #     end
     #     response 422 do
-    #       key :description, 'Unprocessable Entity'
-    #       schema do
-    #         key :'$ref', :SwaggerError
-    #       end
+    #       key :'$ref', :SwaggerError
     #     end
     #     response 401 do
     #       key :'$ref', :UnauthorisedError
@@ -179,10 +173,7 @@ module SwaggerDocs::Grants
           end
         end
         response 422 do
-          key :description, 'Unprocessable Entity'
-          schema do
-            key :'$ref', :SwaggerError
-          end
+          key :'$ref', :SwaggerError
         end
         response 401 do
           key :'$ref', :UnauthorisedError
