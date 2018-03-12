@@ -30,7 +30,7 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       render json: @company
     else
-      render_error(422)
+      render json: @company.errors.messages, status: :unprocessable_entity
     end
   end
 

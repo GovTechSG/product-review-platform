@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     render_error(404, error)
   end
 
-  rescue_from ActiveRecord::RecordNotUnique do
+  rescue_from ActiveRecord::RecordNotUnique do |error|
     render_error(422, "Object already exists")
   end
 
