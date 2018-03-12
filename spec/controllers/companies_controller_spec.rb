@@ -146,6 +146,14 @@ RSpec.describe CompaniesController, type: :controller do
       expect(company).to match(original_company)
       expect(response.status).to eq(404)
     end
+
+    it "renders a 422 error for duplicate UEN", authorized: true do
+      @dupcompany = create(:company)
+
+      patch :update, params: { company: company.as_json, id: @dupcompany.id }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
+    end
   end
 
   describe "PATCH #update", authorized: false do
