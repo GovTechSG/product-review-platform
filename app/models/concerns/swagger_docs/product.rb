@@ -30,7 +30,7 @@ module SwaggerDocs::Product
 
     swagger_schema :Product_Review do
       key :type, :object
-      key :required, [:type, :id, :name, :description, :company]
+      key :required, [:type, :id, :name, :description]
 
       property :type do
         key :type, :string
