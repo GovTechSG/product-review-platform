@@ -25,7 +25,7 @@ class ProductsController < ApplicationController
     if @product.save
       render json: @product, status: :created, location: @product, has_type: false
     else
-      render_error(422)
+      render json: @product.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
     if @product.update(product_params)
       render json: @product, has_type: false
     else
-      render_error(422)
+      render json: @product.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -50,7 +50,7 @@ class ProductsController < ApplicationController
     end
 
     def validate_product_presence
-      render_error(404) if @product.nil? || !@product.presence?
+      render_error(404, "Product id": ["not found"]) if @product.nil? || !@product.presence?
     end
 
     def set_company
@@ -58,7 +58,7 @@ class ProductsController < ApplicationController
     end
 
     def validate_company_presence
-      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
+      render_error(404, "Company id": ["not found."]) if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -23,7 +23,7 @@ class IndustriesController < ApplicationController
     if @industry.save
       render json: @industry, status: :created, location: @industry
     else
-      render_error(422)
+      render json: @industry.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +32,7 @@ class IndustriesController < ApplicationController
     if @industry.update(industry_params)
       render json: @industry
     else
-      render_error(422)
+      render json: @industry.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -49,7 +49,7 @@ class IndustriesController < ApplicationController
   end
 
   def validate_industry_presence
-    render_error(404, "Industry id not found.") if @industry.nil? || !@industry.presence?
+    render_error(404, "Industry id": ["not found."]) if @industry.nil? || !@industry.presence?
   end
 
   # Only allow a trusted parameter "white list" through.
