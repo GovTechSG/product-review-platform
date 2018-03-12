@@ -20,6 +20,55 @@ RSpec.describe "Grants", type: :request do
       end
     end
 
+    describe "GET /api/v1/companies/:company_id/grants" do
+      it "returns a success response" do
+        review = create(:product_review)
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+
+        expect(response).to be_success
+      end
+
+      it "returns only the companies grants" do
+        review = create(:product_review)
+        create_list(:product_review, 5)
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+        expect(parsed_response.length).to eq(1)
+      end
+
+      it "does not return deleted grants" do
+        review = create(:product_review)
+        review.grant.discard
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted reviews" do
+        review = create(:product_review)
+        review.discard
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted product" do
+        review = create(:product_review)
+        review.reviewable.discard
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted company" do
+        review = create(:product_review)
+        review.reviewable.company.discard
+        get company_grants_path(review.reviewable.company_id), headers: request_login
+        expect(response.status).to eq(404)
+      end
+
+      it "returns not found if the company is not found" do
+        get company_grants_path(0), headers: request_login
+        expect(response.status).to eq(404)
+      end
+    end
+
     describe "GET /api/v1/grants/:id" do
       it "returns a success response" do
         grant = Grant.create! valid_attributes
@@ -195,6 +244,15 @@ RSpec.describe "Grants", type: :request do
       it "returns an unauthorized response" do
         Grant.create! valid_attributes
         get grants_path
+
+        expect_unauthorized
+      end
+    end
+
+    describe "GET /api/v1/companies/:company_id/grants" do
+      it "returns an unauthorized response" do
+        review = create(:product_review)
+        get company_grants_path(review.reviewable.company_id)
 
         expect_unauthorized
       end

@@ -17,12 +17,61 @@ RSpec.describe GrantsController, type: :controller do
   end
 
   describe "Authorised user" do
-    describe "GET #index" do
+    describe "GET #index grant" do
       it "returns a success response", authorized: true do
         Grant.create! valid_attributes
         get :index
 
         expect(response).to be_success
+      end
+    end
+
+    describe "GET #index company" do
+      it "returns a success response", authorized: true do
+        review = create(:product_review)
+        get :index, params: { company_id: review.reviewable.company_id }
+
+        expect(response).to be_success
+      end
+
+      it "returns only the companies grants", authorized: true do
+        review = create(:product_review)
+        create_list(:product_review, 5)
+        get :index, params: { company_id: review.reviewable.company_id }
+        expect(parsed_response.length).to eq(1)
+      end
+
+      it "does not return deleted grants", authorized: true do
+        review = create(:product_review)
+        review.grant.discard
+        get :index, params: { company_id: review.reviewable.company_id }
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted reviews", authorized: true do
+        review = create(:product_review)
+        review.discard
+        get :index, params: { company_id: review.reviewable.company_id }
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted product", authorized: true do
+        review = create(:product_review)
+        review.reviewable.discard
+        get :index, params: { company_id: review.reviewable.company_id }
+        expect(parsed_response.length).to eq(0)
+      end
+
+      it "does not return grants from deleted company", authorized: true do
+        review = create(:product_review)
+        review.reviewable.company.discard
+        get :index, params: { company_id: review.reviewable.company_id }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns not found if the company is not found", authorized: true do
+        get :index, params: { company_id: 0 }
+        expect(response.status).to eq(404)
       end
     end
 
@@ -201,6 +250,15 @@ RSpec.describe GrantsController, type: :controller do
       it "returns an unauthorized response", authorized: false do
         Grant.create! valid_attributes
         get :index
+
+        expect_unauthorized
+      end
+    end
+
+    describe "GET #index company" do
+      it "returns a nunauthorized response", authorized: false do
+        review = create(:product_review)
+        get :index, params: { company_id: review.reviewable.company_id }
 
         expect_unauthorized
       end

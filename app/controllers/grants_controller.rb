@@ -55,20 +55,21 @@ class GrantsController < ApplicationController
      WHERE id IN (
        SELECT DISTINCT r.grant_id
        FROM reviews r
-       JOIN products p
-       ON r.reviewable_id = p.id
+       JOIN products p ON r.reviewable_id = p.id
        WHERE r.reviewable_type = 'Product'
        AND r.reviewer_type = 'Company'
        AND p.company_id = :company_id
+       AND r.discarded_at IS NULL AND p.discarded_at IS NULL
        UNION
        SELECT DISTINCT r.grant_id
        FROM reviews r
-       JOIN services s
-       ON r.reviewable_id = s.id
+       JOIN services s ON r.reviewable_id = s.id
        WHERE r.reviewable_type = 'Service'
        AND r.reviewer_type = 'Company'
        AND s.company_id = :company_id
-     )"
+       AND r.discarded_at IS NULL AND s.discarded_at IS NULL
+     )
+     AND discarded_at IS NULL"
   end
 
   def set_grant

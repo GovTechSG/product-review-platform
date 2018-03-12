@@ -144,14 +144,14 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
 
             expect do
-              post :create, params: { review: valid_product_review, product_id: product.id }
+              post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             product = create(:product)
 
-            post :create, params: { review: valid_product_review, product_id: product.id }
+            post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -163,14 +163,14 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
             product.discard
             expect do
-              post :create, params: { review: valid_product_review, product_id: product.id }
+              post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             end.to change(Review, :count).by(0)
           end
 
           it "renders a not found response", authorized: true do
             product = create(:product)
             product.discard
-            post :create, params: { review: valid_product_review, product_id: product.id }
+            post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             expect(response).to have_http_status(404)
             expect(response.content_type).to eq('application/json')
           end
@@ -181,14 +181,14 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
             product.company.discard
             expect do
-              post :create, params: { review: valid_product_review, product_id: product.id }
+              post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             end.to change(Review, :count).by(0)
           end
 
           it "renders a not found response", authorized: true do
             product = create(:product)
             product.company.discard
-            post :create, params: { review: valid_product_review, product_id: product.id }
+            post :create, params: { review: valid_product_review, product_id: product.id, company_id: product.company.id }
             expect(response).to have_http_status(404)
             expect(response.content_type).to eq('application/json')
           end
@@ -197,7 +197,7 @@ RSpec.describe ReviewsController, type: :controller do
         context "with invalid params", authorized: true do
           it "renders a JSON response with errors for the new review" do
             product = create(:product)
-            post :create, params: { review: invalid_product_review, product_id: product.id }
+            post :create, params: { review: invalid_product_review, product_id: product.id, company_id: product.company.id }
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.content_type).to eq('application/json')
           end
@@ -205,7 +205,7 @@ RSpec.describe ReviewsController, type: :controller do
 
         context "with non existent reviewable id", authorized: true do
           it "renders a JSON response with errors for the new review" do
-            post :create, params: { review: valid_product_review, product_id: 0 }
+            post :create, params: { review: valid_product_review, product_id: 0, company_id: 0 }
             expect(response).to be_not_found
             expect(response.content_type).to eq('application/json')
           end
@@ -218,14 +218,14 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
 
             expect do
-              post :create, params: { review: valid_service_review, service_id: service.id }
+              post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             service = create(:service)
 
-            post :create, params: { review: valid_service_review, service_id: service.id }
+            post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -237,14 +237,14 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
             service.discard
             expect do
-              post :create, params: { review: valid_service_review, service_id: service.id }
+              post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             end.to change(Review, :count).by(0)
           end
 
           it "renders a not found response", authorized: true do
             service = create(:service)
             service.discard
-            post :create, params: { review: valid_service_review, service_id: service.id }
+            post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             expect(response).to have_http_status(404)
             expect(response.content_type).to eq('application/json')
           end
@@ -255,14 +255,14 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
             service.company.discard
             expect do
-              post :create, params: { review: valid_service_review, service_id: service.id }
+              post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             end.to change(Review, :count).by(0)
           end
 
           it "renders a not found response", authorized: true do
             service = create(:service)
             service.company.discard
-            post :create, params: { review: valid_service_review, service_id: service.id }
+            post :create, params: { review: valid_service_review, service_id: service.id, company_id: service.company.id }
             expect(response).to have_http_status(404)
             expect(response.content_type).to eq('application/json')
           end
@@ -272,7 +272,7 @@ RSpec.describe ReviewsController, type: :controller do
           it "renders a JSON response with errors for the new review" do
             service = create(:service)
 
-            post :create, params: { review: invalid_service_review, service_id: service.id }
+            post :create, params: { review: invalid_service_review, service_id: service.id, company_id: service.company.id }
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.content_type).to eq('application/json')
           end
@@ -280,7 +280,7 @@ RSpec.describe ReviewsController, type: :controller do
 
         context "with non existent reviewable id", authorized: true do
           it "renders a JSON response with errors for the new review" do
-            post :create, params: { review: valid_service_review, service_id: 0 }
+            post :create, params: { review: valid_service_review, service_id: 0, company_id: 0 }
             expect(response).to be_not_found
             expect(response.content_type).to eq('application/json')
           end
@@ -495,7 +495,6 @@ RSpec.describe ReviewsController, type: :controller do
         expect(review.reviewable_id).to eq(current_attributes["reviewable_id"])
         expect(review.reviewable_type).to eq(current_attributes["reviewable_type"])
         expect(review.strengths).to eq(current_attributes["strengths"])
-        expect(review.company_id).to eq(current_attributes["company_id"])
       end
 
       it "returns an unauthorized response", authorized: false do

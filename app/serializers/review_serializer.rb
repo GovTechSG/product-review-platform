@@ -2,7 +2,7 @@ class ReviewSerializer < ActiveModel::Serializer
   attributes :id, :score, :content, :strengths
   belongs_to :reviewable, key: "object", serializer: ProductSerializer, if: :product?
   belongs_to :reviewable, key: "object", serializer: ServiceSerializer, if: :service?
-  belongs_to :company, serializer: CompanySerializer
+  belongs_to :reviewer, serializer: CompanySerializer
   belongs_to :grant, serializer: GrantSerializer
 
   def product?

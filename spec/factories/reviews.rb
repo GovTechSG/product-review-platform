@@ -3,7 +3,7 @@ FactoryBot.define do
     score { rand(1..10) }
     content { FFaker::Lorem.paragraph }
     strengths { FFaker::Lorem.sentences }
-    company
+    association :reviewer, factory: :company
     grant
   end
 end
