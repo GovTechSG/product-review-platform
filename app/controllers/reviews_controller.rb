@@ -34,7 +34,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review
+      render json: @review, status: :created, location: @review, reviewable: @reviewable
     else
       render_error(422)
     end
@@ -51,7 +51,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(whitelisted) && (company.nil? || company.save)
-      render json: @review
+      render json: @review, reviewable: @review.reviewable
     else
       render_error(422)
     end
