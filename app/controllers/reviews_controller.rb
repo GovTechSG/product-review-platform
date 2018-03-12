@@ -16,7 +16,7 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths]
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable
   end
 
   # POST /products/:product_id/reviews
