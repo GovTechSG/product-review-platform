@@ -10,14 +10,14 @@
     <title>Product Review Platform - Start Reviewing</title>
 
     <!-- Nav Bar CSS -->
-    <%= stylesheet_link_tag    "bootstrap.min", :media => "all" %>
+    <%= stylesheet_link_tag "bootstrap.min", :media => "all" %>
 
     <!-- Custom fonts for this template -->
     <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <%= stylesheet_link_tag    "one-page-wonder.min", :media => "all" %>
+    <%= stylesheet_link_tag "one-page-wonder.min", :media => "all" %>
 
     <!-- Bootstrap core JavaScript -->
     <%= javascript_include_tag "jquery.min" %>
@@ -72,7 +72,7 @@
           </div>
           <div class="col-lg-6">
             <div class="p-5">
-              <h2 class="display-4">Leave feedback to help others</h2>
+              <h2 class="display-4">Leave Feedback to Help Others</h2>
               <p>Businesses do not know which consultant to engage for their
               grant projects. Evaluating officers spend a sizable amount of
             time and effort to assess the background of consultants. These
@@ -113,4 +113,19 @@
     </footer>
   </body>
 
+  <script>
+    $(document).ready(function(){
+      $("a").on('click', function(event) {
+        if (this.hash !== "") {
+          event.preventDefault();
+          var hash = this.hash;
+          $('html, body').animate({
+            scrollTop: $(hash).offset().top
+          }, 800, function(){
+            window.location.hash = hash;
+          });
+        }
+      });
+    });
+  </script>
 </html>

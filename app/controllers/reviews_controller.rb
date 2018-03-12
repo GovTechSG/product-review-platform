@@ -18,7 +18,7 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths]
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable
   end
 
   # POST /products/:product_id/reviews
@@ -36,7 +36,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review
+      render json: @review, status: :created, location: @review, reviewable: @reviewable
     else
       render_error(422)
     end
@@ -53,7 +53,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(whitelisted) && (company.nil? || company.save)
-      render json: @review
+      render json: @review, reviewable: @review.reviewable
     else
       render_error(422)
     end
