@@ -58,6 +58,12 @@ module SwaggerDocs::Company
             property :description do
               key :type, :string
             end
+            property :industry_ids do
+              key :type, :object
+              property :id do
+                key :type, :integer
+              end
+            end
           end
         end
       end

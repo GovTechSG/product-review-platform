@@ -52,6 +52,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :description)
+      params.require(:company).permit(:name, :UEN, :description).merge(industry_ids: params[:industry_ids])
     end
 end
