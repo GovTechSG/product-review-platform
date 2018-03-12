@@ -13,12 +13,12 @@ module SwaggerDocs::Like
         key :format, :int64
       end
 
-      property :user_id do
+      property :review_id do
         key :type, :integer
         key :format, :int64
       end
 
-      property :review_id do
+      property :user_id do
         key :type, :integer
         key :format, :int64
       end
