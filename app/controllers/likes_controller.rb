@@ -30,7 +30,7 @@ class LikesController < ApplicationController
     if @like.save
       render json: @like, status: :created, location: @like
     else
-      render_error(422)
+      render json: @like.errors.messages, status: :unprocessable_entity
     end
   end
 

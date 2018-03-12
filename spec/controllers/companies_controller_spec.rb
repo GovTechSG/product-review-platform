@@ -81,6 +81,15 @@ RSpec.describe CompaniesController, type: :controller do
       post :create, params: { company: company.as_json }
       expect(response.status).to eq(422)
     end
+
+    it "renders a 422 error for duplicate UEN", authorized: true do
+      @dupcompany = build(:company)
+      @dupcompany.UEN = company.UEN
+      @dupcompany.save
+      post :create, params: { company: company.as_json }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
+    end
   end
 
   describe "POST #create", authorized: false do
@@ -136,6 +145,14 @@ RSpec.describe CompaniesController, type: :controller do
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(404)
+    end
+
+    it "renders a 422 error for duplicate UEN", authorized: true do
+      @dupcompany = create(:company)
+
+      patch :update, params: { company: company.as_json, id: @dupcompany.id }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 
