@@ -37,8 +37,12 @@ module SwaggerDocs::Review
         key :'$ref', :Product_Review
       end
 
-      property :company do
+      property :reviewer do
         key :'$ref', :Company
+      end
+
+      property :grant do
+        key :'$ref', :ReviewGrant
       end
     end
 
@@ -75,8 +79,12 @@ module SwaggerDocs::Review
         key :'$ref', :Service_Review
       end
 
-      property :company do
+      property :reviewer do
         key :'$ref', :Company
+      end
+
+      property :grant do
+        key :'$ref', :ReviewGrant
       end
     end
 
@@ -117,7 +125,12 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :company_id do
+            property :reviewer_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
+            property :grant_id do
               key :type, :integer
               key :format, :int64
             end
@@ -146,7 +159,12 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :company_id do
+            property :reviewer_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
+            property :grant_id do
               key :type, :integer
               key :format, :int64
             end

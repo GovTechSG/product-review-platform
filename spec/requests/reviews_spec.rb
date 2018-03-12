@@ -135,14 +135,14 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
 
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+            post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           end.to change(Review, :count).by(1)
         end
 
         it "renders a JSON response with the new review" do
           product = create(:product)
 
-          post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+          post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
@@ -154,14 +154,14 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
           product.discard
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+            post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           product = create(:product)
           product.discard
-          post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+          post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -172,14 +172,14 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
           product.company.discard
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+            post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           product = create(:product)
           product.company.discard
-          post product_reviews_path(product.id), params: { review: valid_product_review, company_id: product.company.id }, headers: request_login
+          post product_reviews_path(product.id), params: { review: valid_product_review, reviewer_id: product.company.id }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -188,7 +188,7 @@ RSpec.describe "Reviews", type: :request do
       context "with invalid params" do
         it "renders a JSON response with errors for the new review" do
           product = create(:product)
-          post product_reviews_path(product.id), params: { review: invalid_product_review, company_id: product.company.id }, headers: request_login
+          post product_reviews_path(product.id), params: { review: invalid_product_review, reviewer_id: product.company.id }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -196,7 +196,7 @@ RSpec.describe "Reviews", type: :request do
 
       context "with non existent reviewable id" do
         it "renders a JSON response with errors for the new review" do
-          post product_reviews_path(0), params: { review: valid_product_review, company_id: 0 }, headers: request_login
+          post product_reviews_path(0), params: { review: valid_product_review, reviewer_id: 0 }, headers: request_login
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
@@ -209,14 +209,14 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
 
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+            post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           end.to change(Review, :count).by(1)
         end
 
         it "renders a JSON response with the new review" do
           service = create(:service)
 
-          post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+          post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
@@ -228,14 +228,14 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
           service.discard
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+            post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           service = create(:service)
           service.discard
-          post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+          post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -246,14 +246,14 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
           service.company.discard
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+            post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           service = create(:service)
           service.company.discard
-          post service_reviews_path(service.id), params: { review: valid_service_review, company_id: service.company.id }, headers: request_login
+          post service_reviews_path(service.id), params: { review: valid_service_review, reviewer_id: service.company.id }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -263,7 +263,7 @@ RSpec.describe "Reviews", type: :request do
         it "renders a JSON response with errors for the new review" do
           service = create(:service)
 
-          post service_reviews_path(service.id), params: { review: invalid_service_review, company_id: service.company.id }, headers: request_login
+          post service_reviews_path(service.id), params: { review: invalid_service_review, reviewer_id: service.company.id }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -271,7 +271,7 @@ RSpec.describe "Reviews", type: :request do
 
       context "with non existent reviewable id" do
         it "renders a JSON response with errors for the new review" do
-          post service_reviews_path(0), params: { review: valid_service_review, company_id: 0 }, headers: request_login
+          post service_reviews_path(0), params: { review: valid_service_review, reviewer_id: 0 }, headers: request_login
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end

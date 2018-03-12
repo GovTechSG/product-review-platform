@@ -38,6 +38,32 @@ module SwaggerDocs::Grant
       end
     end
 
+    swagger_schema :ReviewGrant do
+      key :type, :object
+      key :required, [:id, :name, :acronym, :description, :user]
+
+      property :id do
+        key :type, :integer
+        key :format, :int64
+      end
+
+      property :name do
+        key :type, :string
+        key :example, 'Operation & Technology Roadmapping'
+      end
+
+      property :acronym do
+        key :type, :string
+        key :example, 'OTR'
+      end
+
+      property :description do
+        key :type, :string
+        key :example, 'Want to maximise returns from your investments in technology?
+                       Get a grant for expert help from A*STAR to create a technology roadmap.'
+      end
+    end
+
     swagger_schema :GrantInput do
       allOf do
         schema do
