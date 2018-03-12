@@ -6,7 +6,7 @@ RSpec.describe ReviewSerializer, type: :serializer do
       @review = create(:product_review)
     end
 
-    subject { ReviewSerializer.new(@review, root: false).as_json["object"] }
+    subject { ReviewSerializer.new(@review, root: false).as_json["object"].merge("reviewer" => @review.reviewer, "reviewable" => @review.reviewable, "grant" => @review.grant) }
 
     it 'has a id' do
       expect(subject['id']).to eql(@review.id)
@@ -20,20 +20,20 @@ RSpec.describe ReviewSerializer, type: :serializer do
       expect(subject['content']).to eql(@review.content)
     end
 
-    it 'has a reviewable id' do
-      expect(subject['reviewable_id']).to eql(@review.reviewable_id)
-    end
-
-    it 'has a reviewable type' do
-      expect(subject['reviewable_type']).to eql(@review.reviewable_type)
-    end
-
     it 'has a strengths' do
       expect(subject['strengths']).to eql(@review.strengths)
     end
 
-    it 'has a company id' do
-      expect(subject['company_id']).to eql(@review.company_id)
+    it 'has a reviewer' do
+      expect(subject['reviewer']).to eql(@review.reviewer)
+    end
+
+    it 'has a grant' do
+      expect(subject['grant']).to eql(@review.grant)
+    end
+
+    it 'has a reviewable' do
+      expect(subject['reviewable']).to eql(@review.reviewable)
     end
   end
 end

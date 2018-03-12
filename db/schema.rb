@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180307063047) do
+ActiveRecord::Schema.define(version: 20180308092219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,19 @@ ActiveRecord::Schema.define(version: 20180307063047) do
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
   end
 
+  create_table "grants", force: :cascade do |t|
+    t.string "name"
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "acronym"
+    t.string "description"
+    t.bigint "user_id"
+    t.index ["discarded_at"], name: "index_grants_on_discarded_at"
+    t.index ["name"], name: "index_grants_on_name", unique: true
+    t.index ["user_id"], name: "index_grants_on_user_id"
+  end
+
   create_table "industries", force: :cascade do |t|
     t.string "name"
     t.datetime "discarded_at"
@@ -158,11 +171,14 @@ ActiveRecord::Schema.define(version: 20180307063047) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "strengths", default: [], array: true
-    t.bigint "company_id"
     t.datetime "discarded_at"
-    t.index ["company_id"], name: "index_reviews_on_company_id"
+    t.bigint "grant_id"
+    t.string "reviewer_type"
+    t.bigint "reviewer_id"
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
+    t.index ["grant_id"], name: "index_reviews_on_grant_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
+    t.index ["reviewer_type", "reviewer_id"], name: "index_reviews_on_reviewer_type_and_reviewer_id"
     t.index ["strengths"], name: "index_reviews_on_strengths", using: :gin
   end
 
@@ -189,12 +205,13 @@ ActiveRecord::Schema.define(version: 20180307063047) do
 
   add_foreign_key "comments", "reviews"
   add_foreign_key "comments", "users"
+  add_foreign_key "grants", "users"
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
   add_foreign_key "likes", "reviews"
   add_foreign_key "likes", "users"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
-  add_foreign_key "reviews", "companies"
+  add_foreign_key "reviews", "grants"
   add_foreign_key "services", "companies"
 end

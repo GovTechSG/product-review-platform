@@ -46,6 +46,8 @@ class ApidocsController < ApplicationController
     Like,
     Industry,
     IndustriesController,
+    Grant,
+    GrantsController,
     StatisticsController,
     self
   ].freeze

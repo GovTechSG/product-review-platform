@@ -22,7 +22,7 @@ RSpec.describe Review, type: :model do
     end
 
     it 'is invalid without a company' do
-      expect(build(:product_review, company: nil)).not_to be_valid
+      expect(build(:product_review, reviewer: nil)).not_to be_valid
     end
 
     it 'is invalid without a reviewable' do
