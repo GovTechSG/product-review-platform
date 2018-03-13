@@ -7,7 +7,7 @@ RSpec.describe "Likes", type: :request do
   end
 
   let(:invalid_attributes) do
-    build(:product_review_like, review_id: nil, user_id: nil).attributes
+    build(:product_review_like, review_id: nil, agency_id: nil).attributes
   end
 
   let(:valid_session) {}
@@ -177,15 +177,15 @@ RSpec.describe "Likes", type: :request do
       end
 
       context "with invalid params" do
-        it "renders 422 if user likes twice" do
+        it "renders 422 if agency likes twice" do
           like = create(:product_review_like)
-          duplicate_like = attributes_for(:product_review_like, user_id: like.user_id)
+          duplicate_like = attributes_for(:product_review_like, agency_id: like.agency_id)
           post review_likes_path(like.review_id), params: { like: duplicate_like }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
 
-        it "renders 404 if user doesnt exist" do
+        it "renders 404 if agency doesnt exist" do
           review = create(:product_review)
           post review_likes_path(review.id), params: { like: invalid_attributes }, headers: request_login
           expect(response).to be_not_found

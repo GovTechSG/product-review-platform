@@ -2,7 +2,7 @@ class Grant < ApplicationRecord
   include SwaggerDocs::Grant
   include Discard::Model
 
-  belongs_to :user
+  belongs_to :agency
 
   has_many :reviews, dependent: :destroy
 
@@ -10,6 +10,6 @@ class Grant < ApplicationRecord
   validates :name, uniqueness: true
 
   def presence?
-    !discarded? && user.presence?
+    !discarded? && agency.presence?
   end
 end

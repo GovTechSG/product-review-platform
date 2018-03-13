@@ -18,12 +18,12 @@ RSpec.describe CommentsController, type: :controller do
     build(:service_review_comment, content: nil).attributes
   end
 
-  let(:product_comment_missing_userid_attributes) do
-    build(:product_review_comment, user_id: 0).attributes
+  let(:product_comment_missing_agencyid_attributes) do
+    build(:product_review_comment, agency_id: 0).attributes
   end
 
-  let(:service_comment_missing_userid_attributes) do
-    build(:service_review_comment, user_id: 0).attributes
+  let(:service_comment_missing_agencyid_attributes) do
+    build(:service_review_comment, agency_id: 0).attributes
   end
 
   let(:valid_session) {}
@@ -34,7 +34,7 @@ RSpec.describe CommentsController, type: :controller do
     allow(controller).to receive(:doorkeeper_token) { token }
   end
 
-  describe "Authorised user" do
+  describe "Authorised agency" do
     describe "GET #index" do
       it "returns a success response from a product comment", authorized: true do
         comment = Comment.create! product_comment_valid_attributes
@@ -181,17 +181,17 @@ RSpec.describe CommentsController, type: :controller do
           expect(response).to be_not_found
         end
 
-        it "returns not found when product_user_id not found", authorized: true do
+        it "returns not found when product_agency_id not found", authorized: true do
           review = create(:product_review)
 
-          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
           expect(response).to be_not_found
         end
 
-        it "returns not found when service_user_id not found", authorized: true do
+        it "returns not found when service_agency_id not found", authorized: true do
           review = create(:service_review)
 
-          post :create, params: { comment: service_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: service_comment_missing_agencyid_attributes, review_id: review.id }
           expect(response).to be_not_found
         end
 
@@ -200,14 +200,14 @@ RSpec.describe CommentsController, type: :controller do
           review.discard
 
           expect do
-            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+            post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
           end.to change(Comment, :count).by(0)
         end
 
         it "returns a not found response when the review is deleted", authorized: true do
           review = create(:product_review)
           review.discard
-          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
 
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
@@ -218,14 +218,14 @@ RSpec.describe CommentsController, type: :controller do
           review.reviewable.discard
 
           expect do
-            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+            post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
           end.to change(Comment, :count).by(0)
         end
 
         it "returns a not found response when the reviewable is deleted", authorized: true do
           review = create(:product_review)
           review.reviewable.discard
-          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
 
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
@@ -236,14 +236,14 @@ RSpec.describe CommentsController, type: :controller do
           review.reviewable.company.discard
 
           expect do
-            post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+            post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
           end.to change(Comment, :count).by(0)
         end
 
         it "returns a not found response when the company is deleted", authorized: true do
           review = create(:product_review)
           review.reviewable.company.discard
-          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
 
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
@@ -267,10 +267,10 @@ RSpec.describe CommentsController, type: :controller do
           expect(response.content_type).to eq('application/json')
         end
 
-        it "returns a not found response when user doesn't exist" do
+        it "returns a not found response when agency doesn't exist" do
           review = create(:product_review)
 
-          post :create, params: { comment: product_comment_missing_userid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
@@ -479,7 +479,7 @@ RSpec.describe CommentsController, type: :controller do
     end
   end
 
-  describe "Unauthorised user" do
+  describe "Unauthorised agency" do
     describe "GET #index" do
       it "returns an unauthorized response from product_comment", authorized: false do
         comment = Comment.create! product_comment_valid_attributes

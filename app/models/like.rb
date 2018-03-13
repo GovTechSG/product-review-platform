@@ -1,12 +1,12 @@
 class Like < ApplicationRecord
   include SwaggerDocs::Like
-  belongs_to :user
+  belongs_to :agency
   belongs_to :review
 
-  validates_presence_of :user, :review
-  validates :review_id, uniqueness: { scope: :user_id }
+  validates_presence_of :agency, :review
+  validates :review_id, uniqueness: { scope: :agency_id }
 
   def presence?
-    !discarded? && user.presence? && review.presence?
+    !discarded? && agency.presence? && review.presence?
   end
 end

@@ -1,17 +1,17 @@
-module SwaggerDocs::Users
+module SwaggerDocs::Agencies
   extend ActiveSupport::Concern
 
   included do
     include Swagger::Blocks
 
-    swagger_path '/api/v1/users' do
+    swagger_path '/api/v1/agencies' do
       operation :get do
         security do
           key :Authorization, []
         end
-        key :tags, ['User']
-        key :description, 'Returns list of all users'
-        key :operationId, 'findUsers'
+        key :tags, ['Agency']
+        key :description, 'Returns list of all agencies'
+        key :operationId, 'findAgencies'
         key :produces, [
           'application/json'
         ]
@@ -19,7 +19,7 @@ module SwaggerDocs::Users
           key :description, 'OK, list of agencies fetched'
           schema type: :array do
             items do
-              key :'$ref', :User
+              key :'$ref', :Agency
             end
           end
         end
@@ -31,25 +31,25 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['User']
-        key :description, 'Creates a new user'
-        key :operationId, 'addUser'
+        key :tags, ['Agency']
+        key :description, 'Creates a new agency'
+        key :operationId, 'addAgency'
         key :produces, [
           'application/json'
         ]
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of User to be created'
+          key :description, 'Details of Agency to be created'
           key :required, true
           schema do
-            key :'$ref', :UserInput
+            key :'$ref', :AgencyInput
           end
         end
         response 201 do
-          key :description, 'OK, User is successfully created'
+          key :description, 'OK, Agency is successfully created'
           schema do
-            key :'$ref', :User
+            key :'$ref', :Agency
           end
         end
         response 422 do
@@ -64,11 +64,11 @@ module SwaggerDocs::Users
       end
     end
 
-    swagger_path '/api/v1/users/{id}' do
+    swagger_path '/api/v1/agencies/{id}' do
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of user'
+        key :description, 'ID of agency'
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -77,25 +77,25 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['User']
-        key :description, 'Update an user'
-        key :operationId, 'updateUser'
+        key :tags, ['Agency']
+        key :description, 'Update an agency'
+        key :operationId, 'updateAgency'
         key :produces, [
           'application/json'
         ]
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of User to be updated'
+          key :description, 'New details of Agency to be updated'
           key :required, true
           schema do
-            key :'$ref', :UserInput
+            key :'$ref', :AgencyInput
           end
         end
         response 200 do
-          key :description, 'OK, User is successfully updated'
+          key :description, 'OK, Agency is successfully updated'
           schema do
-            key :'$ref', :User
+            key :'$ref', :Agency
           end
         end
         response 422 do
@@ -115,16 +115,16 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['User']
-        key :description, 'Returns an user'
-        key :operationId, 'findUserById'
+        key :tags, ['Agency']
+        key :description, 'Returns an agency'
+        key :operationId, 'findAgencyById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, user of the given ID fetched'
+          key :description, 'OK, agency of the given ID fetched'
           schema do
-            key :'$ref', :User
+            key :'$ref', :Agency
           end
         end
         response 401 do
@@ -138,11 +138,11 @@ module SwaggerDocs::Users
         security do
           key :Authorization, []
         end
-        key :tags, ['User']
-        key :description, 'Deletes a single user'
-        key :operationId, 'deleteUser'
+        key :tags, ['Agency']
+        key :description, 'Deletes a single agency'
+        key :operationId, 'deleteAgency'
         response 204 do
-          key :description, 'No content success. User of the given ID is deleted'
+          key :description, 'No content success. Agency of the given ID is deleted'
         end
         response 401 do
           key :'$ref', :UnauthorisedError
