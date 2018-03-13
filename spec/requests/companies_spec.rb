@@ -83,12 +83,17 @@ RSpec.describe "Companies", type: :request do
     end
 
     it "renders a 422 error for duplicate UEN" do
-      @dupcompany = build(:company)
-      @dupcompany.UEN = company.UEN
-      @dupcompany.save
+      dupcompany = build(:company)
+      dupcompany.UEN = company.UEN
+      dupcompany.save
       post companies_path, params: { company: company.as_json }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
+    end
+
+    it "return 404 when industry ID is invalid" do
+      post companies_path, params: { company: company.as_json.merge(industry_ids: [0]) }, headers: request_login
+      expect_not_found
     end
   end
 
@@ -134,6 +139,21 @@ RSpec.describe "Companies", type: :request do
       patch company_path(company.id), params: { company: company.as_json }, headers: header
       expect(company).to match(original_company)
       expect(response.status).to eq(404)
+    end
+
+    it "renders a 422 error for duplicate UEN" do
+      dupcompany = build(:company)
+      # dupcompany.UEN = company.UEN
+      dupcompany.save
+      company.UEN = dupcompany.UEN
+      patch company_path(company.id), params: { company: company.as_json }, headers: request_login
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
+    end
+
+    it "return 404 when industry ID is invalid" do
+      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [0]) }, headers: header
+      expect_not_found
     end
   end
 

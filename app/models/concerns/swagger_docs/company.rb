@@ -59,8 +59,8 @@ module SwaggerDocs::Company
               key :type, :string
             end
             property :industry_ids do
-              key :type, :object
-              property :id do
+              key :type, :array
+              items do
                 key :type, :integer
               end
             end

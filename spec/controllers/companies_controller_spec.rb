@@ -90,6 +90,11 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
+
+    it "return 404 when industry ID is invalid" do
+      post :create, params: { company: company.as_json.merge(industry_ids: [0]) }
+      expect_not_found
+    end
   end
 
   describe "POST #create", authorized: false do
@@ -153,6 +158,11 @@ RSpec.describe CompaniesController, type: :controller do
       patch :update, params: { company: company.as_json, id: @dupcompany.id }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
+    end
+
+    it "return 404 when industry ID is invalid" do
+      patch :update, params: { company: company.as_json.merge(industry_ids: [0]), id: company.id }
+      expect_not_found
     end
   end
 
