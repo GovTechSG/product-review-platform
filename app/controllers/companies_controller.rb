@@ -44,7 +44,7 @@ class CompaniesController < ApplicationController
     def set_company
       @company = Company.find_by(id: params[:id])
       if @company.nil? || !@company.presence?
-        render_error(404)
+        render_error(404, Company: ["not found"])
       else
         @company
       end

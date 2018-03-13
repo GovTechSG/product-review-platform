@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     if @user.save
       render json: @user, status: :created, location: @user
     else
-      render_error(422)
+      render json: @user.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       render json: @user
     else
-      render_error(422)
+      render json: @user.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   end
 
   def validate_user_pressence
-    render_error(404) if @user.nil? || !@user.presence?
+    render_error(404, "User id": ["not found"]) if @user.nil? || !@user.presence?
   end
 
   # Only allow a trusted parameter "white list" through.

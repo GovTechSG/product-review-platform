@@ -30,7 +30,7 @@ class ReviewsController < ApplicationController
     # repeatedly calling the method
     whitelisted = create_params
     if whitelisted.nil?
-      render_error(400, "No product_id or service_id specified")
+      render_error(400, "Product/Service id": ["not specified"])
       return
     end
     @review = Review.new(whitelisted)
@@ -40,7 +40,7 @@ class ReviewsController < ApplicationController
     if @review.save && (company.nil? || company.save)
       render json: @review, status: :created, location: @review, reviewable: @reviewable
     else
-      render_error(422)
+      render json: @review.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -57,7 +57,7 @@ class ReviewsController < ApplicationController
     if @review.update(whitelisted) && (company.nil? || company.save)
       render json: @review, reviewable: @review.reviewable
     else
-      render_error(422)
+      render json: @review.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -92,11 +92,11 @@ class ReviewsController < ApplicationController
         elsif score_param.is_a? Numeric
           @score = score_param
         else
-          render_error(422, "Score is not a number")
+          render_error(422, "Score": ["is not a number"])
         end
       end
     rescue ArgumentError
-      render_error(422, "Score is not a number")
+      render_error(422, "Score": ["is not a number"])
     end
 
     def set_reviewable
@@ -105,16 +105,16 @@ class ReviewsController < ApplicationController
       elsif params[:service_id].present?
         @reviewable = Service.find_by(id: params[:service_id])
       else
-        render_error(400, "No product_id or service_id specified")
+        render_error(400, "Product/Service id": ["not specified"])
       end
     end
 
     def validate_reviewable_presence
-      render_error(404, "Product/service id not found") if @reviewable.nil? || !@reviewable.presence?
+      render_error(404, "Product/Service id": ["not found"]) if @reviewable.nil? || !@reviewable.presence?
     end
 
     def validate_review_presence
-      render_error(404, "Review id not found") if @review.nil? || !@review.presence?
+      render_error(404, "Review id": ["not found"]) if @review.nil? || !@review.presence?
     end
 
     # Use callbacks to share common setup or constraints between actions.
@@ -126,24 +126,24 @@ class ReviewsController < ApplicationController
       if params[:review][:reviewer_id].present?
         @company = Company.find_by(id: params[:review][:reviewer_id])
       else
-        render_error(422, "No reviewer id provided")
+        render_error(422, "Reviewer id": ["not provided"])
       end
     end
 
     def validate_company_presence
-      render_error(404, "Reviewer id not found") if @company.nil? || !@company.presence?
+      render_error(404, "Reviewer id": ["not found"]) if @company.nil? || !@company.presence?
     end
 
     def set_grant
       if params[:review][:grant_id].present?
         @grant = Grant.find_by(id: params[:review][:grant_id])
       else
-        render_error(422, "No grant id provided")
+        render_error(422, "Grant id": ["not provided"])
       end
     end
 
     def validate_grant_presence
-      render_error(404, "Grant id not found") if @grant.nil? || !@grant.presence?
+      render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
     end
 
     # Only allow a trusted parameter "white list" through.
