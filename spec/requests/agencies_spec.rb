@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/api_login_helper'
 
-RSpec.describe "Agencys", type: :request do
+RSpec.describe "Agencies", type: :request do
   let(:valid_attributes) do
     build(:agency).attributes
   end
