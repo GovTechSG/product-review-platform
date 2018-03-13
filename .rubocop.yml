@@ -967,6 +967,8 @@ Metrics/LineLength:
   Exclude:
     - spec/**/*.rb
     - config/initializers/*
+    - app/controllers/concerns/swagger_docs/*
+    - app/models/concerns/swagger_docs/*
   URISchemes:
     - http
     - https

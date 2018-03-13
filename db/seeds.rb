@@ -13,16 +13,34 @@ company_names = [
   "RingCentral"
 ]
 industry_names = [
-  "Manufacturing",
-  "Sales",
-  "Finance",
-  "Marketing",
-  "Electronics",
-  "Product",
-  "Investment",
-  "Advertising",
-  "Technology",
-  "Internet"
+  "Agriculture",
+  "Building & Construction",
+  "Food & Beverages",
+  "IT",
+  "Landscape",
+  "Logistics",
+  "Manufacturing & Engineering",
+  "Maritime",
+  "Media",
+  "Retail Distributors",
+  "Services",
+  "Tourism",
+  "Other"
+]
+industry_description = [
+  "The agricultural industry, which includes enterprises engaged in growing crops, raising fish and animals, and logging wood, encompasses farms, dairies, hatcheries, and ranches.",
+  "The Building & Construtction industry, heavy civil or heavy engineering that includes large public works, dams, bridges, highways, railways, water or wastewater and utility distribution.",
+  "The F&B industry can be broadly defined as the process of preparing, presenting and serving of food and beverages to the customers.",
+  "The IT industry, application of computers to store, retrieve, transmit and manipulate data, or information, often in the context of a business or other enterprise.",
+  "The landscaping industry includes companies that care for and maintain landscapes for residences, and areas around residential complexes and business establishments.",
+  "The logistics industry comprises establishments primarily engaged in transporting and warehousing goods as well as providing logistics services.",
+  "The Manufacturing & Engineering industry include enterprises which handle the process of adding value to raw materials by turning them into products: electrical goods, vehicles, aircraft, food, beverages, medical supplies, pharmaceuticals, and so on.",
+  "The Maritime industry includes all enterprises engaged in the business of designing, constructing, manufacturing, acquiring, operating, supplying, repairing and/or maintaining vessels, or component parts thereof: of managing and/or operating shipping lines, and customs brokerage services, shipyards, dry docks, marine railways, Marine fishing, repair shops, shipping and freight forwarding services and similar enterprises.",
+  "The Media industry consists of film, print, radio, and television. These segments include movies, TV shows, radio shows, news, music, newspapers, magazines, and books.",
+  "The Retail Distributors industry involves the process of selling consumer goods or Services to customers through multiple channels of distribution to earn a profit.",
+  "The Services industry involve the provision of services to businesses as well as final consumers. Such services include accounting, tradesmanship (like mechanic or plumber services), computer services, restaurants, tourism, etc.",
+  "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment.",
+  "Any other industry."
 ]
 UENs = [
   "984208875",
@@ -208,7 +226,7 @@ end
   c.products.create!(name: "Greenplum", description: lorem_ipsum)
   c.services.create!(name: "Spring Framework", description: lorem_ipsum)
   c.services.create!(name: "Agile Development", description: lorem_ipsum)
-  c.industries.create!(name: industry_names[i-1], description: lorem_ipsum)
+  c.industries.create!(name: industry_names[i-1], description: industry_description[i-1])
 end
 
 SMEs = [

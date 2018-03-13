@@ -15,7 +15,12 @@ module SwaggerDocs::Industry
 
       property :name do
         key :type, :string
-        key :example, 'Finance'
+        key :example, 'Agriculture'
+      end
+
+      property :description do
+        key :type, :string
+        key :example, 'The agricultural industry, which includes enterprises engaged in growing crops, raising fish and animals, and logging wood, encompasses farms, dairies, hatcheries, and ranches.'
       end
     end
 
@@ -25,6 +30,9 @@ module SwaggerDocs::Industry
           property :industry do
             key :type, :object
             property :name do
+              key :type, :string
+            end
+            property :description do
               key :type, :string
             end
           end

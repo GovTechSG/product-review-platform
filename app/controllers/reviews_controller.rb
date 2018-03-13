@@ -100,17 +100,16 @@ class ReviewsController < ApplicationController
     end
 
     def set_reviewable
-      if params[:product_id].present?
-        @reviewable = Product.find_by(id: params[:product_id])
-      elsif params[:service_id].present?
-        @reviewable = Service.find_by(id: params[:service_id])
-      else
-        render_error(400, "Product/Service id": ["not specified"])
+      params.each do |name, value|
+        if name =~ /(.+)_id$/
+          @reviewable_type = Regexp.last_match[1].classify.safe_constantize
+          @reviewable = @reviewable_type.find_by(id: value) if !@reviewable_type.nil?
+        end
       end
     end
 
     def validate_reviewable_presence
-      render_error(404, "Product/Service id": ["not found"]) if @reviewable.nil? || !@reviewable.presence?
+      render_error(404, "#{@reviewable_type} id": ["not found"]) if @reviewable.nil? || !@reviewable.presence?
     end
 
     def validate_review_presence
