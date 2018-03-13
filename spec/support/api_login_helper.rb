@@ -22,36 +22,36 @@ end
 
 def unauthorized_response
   {
-    error: "Invalid or missing access token. Please sign in/sign up first."
-  }
+    token: ["Invalid or missing access token. Please sign in/sign up first."]
+  }.with_indifferent_access
 end
 
 def wrong_credentials_response
   {
-    error: "Missing or invalid credentials."
-  }
+    token: ["Missing or invalid credentials."]
+  }.with_indifferent_access
 end
 
 def incorrect_token_response
   {
-    error: "Invalid token."
-  }
+    token: ["Invalid token."]
+  }.with_indifferent_access
 end
 
 def revoked_token_response
   {
-    error: "Inaccessible token. May have already been revoked."
-  }
+    token: ["Inaccessible token. May have already been revoked."]
+  }.with_indifferent_access
 end
 
 def refresh_wrong_parameter_response
   {
-    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body"
-  }
+    token: ["Invalid or missing token/credentials. Please include token in request header and credentials in request body"]
+  }.with_indifferent_access
 end
 
 def refresh_no_header_response
   {
-    error: "Invalid or missing token/credentials. Please include token in request header and credentials in request body"
-  }
+    token: ["Invalid or missing token/credentials. Please include token in request header and credentials in request body"]
+  }.with_indifferent_access
 end

@@ -29,7 +29,7 @@ class GrantsController < ApplicationController
     if @grant.save
       render json: @grant, status: :created, location: @grant
     else
-      render_error(422)
+      render json: @grant.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -38,7 +38,7 @@ class GrantsController < ApplicationController
     if @grant.update(grant_params)
       render json: @grant
     else
-      render_error(422)
+      render json: @grant.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -77,13 +77,13 @@ class GrantsController < ApplicationController
   end
 
   def validate_grant_presence
-    render_error(404) if @grant.nil? || !@grant.presence?
+    render_error(404, "Grant id": ["not found."]) if @grant.nil? || !@grant.presence?
   end
 
   def set_company_if_present
     if params[:company_id].present?
       @company = Company.find_by(id: params[:company_id])
-      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
+      render_error(404, "Company id": ["not found."]) if @company.nil? || !@company.presence?
     end
   end
 

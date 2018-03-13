@@ -25,7 +25,7 @@ class ServicesController < ApplicationController
     if @service.save
       render json: @service, status: :created, location: @service, has_type: false
     else
-      render_error(422)
+      render json: @service.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +34,7 @@ class ServicesController < ApplicationController
     if @service.update(service_params)
       render json: @service, has_type: false
     else
-      render_error(422)
+      render json: @service.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -50,7 +50,7 @@ class ServicesController < ApplicationController
     end
 
     def validate_service_presence
-      render_error(404) if @service.nil? || !@service.presence?
+      render_error(404, "Service id": ["not found"]) if @service.nil? || !@service.presence?
     end
 
     def set_company
@@ -58,7 +58,7 @@ class ServicesController < ApplicationController
     end
 
     def validate_company_presence
-      render_error(404, "Company id not found.") if @company.nil? || !@company.presence?
+      render_error(404, "Company id": ["not found"]) if @company.nil? || !@company.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

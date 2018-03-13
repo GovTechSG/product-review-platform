@@ -33,7 +33,6 @@ def parsed_response
 end
 
 def expect_not_found
-  expect(parsed_response['error']).to eq("No resource with given ID found.")
   expect(response).to be_not_found
 end
 

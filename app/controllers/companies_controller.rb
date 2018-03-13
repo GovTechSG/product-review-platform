@@ -22,7 +22,7 @@ class CompaniesController < ApplicationController
       # @company.industries.create!(name: Industry.find_by(company_params[:industry_ids].name), description: Industry.find_by(company_params[:industry_ids].description))
       render json: @company, status: :created, location: @company
     else
-      render_error(422)
+      render json: @company.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       render json: @company
     else
-      render_error(422)
+      render json: @company.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -45,7 +45,7 @@ class CompaniesController < ApplicationController
     def set_company
       @company = Company.find_by(id: params[:id])
       if @company.nil? || !@company.presence?
-        render_error(404)
+        render_error(404, Company: ["not found"])
       else
         @company
       end

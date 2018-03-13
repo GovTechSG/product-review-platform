@@ -24,7 +24,7 @@ class CommentsController < ApplicationController
     if @comments.save
       render json: @comments, status: :created, location: @comments
     else
-      render_error(422)
+      render json: @comments.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -33,7 +33,7 @@ class CommentsController < ApplicationController
     if @comment.update(update_params)
       render json: @comment
     else
-      render_error(422)
+      render json: @comment.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -57,15 +57,15 @@ class CommentsController < ApplicationController
     end
 
     def validate_comment_pressence
-      render_error(404, "Comment id not found") if @comment.nil? || !@comment.presence?
+      render_error(404, "Comment id": ["not found"]) if @comment.nil? || !@comment.presence?
     end
 
     def validate_user_presence
-      render_error(404, "User id entered does not exist") if User.find_by(id: @comments.user_id).nil?
+      render_error(404, "User id": ["not found"]) if User.find_by(id: @comments.user_id).nil?
     end
 
     def validate_review_presence
-      render_error(404, "Review id entered does not exist") if @review.nil? || !@review.presence?
+      render_error(404, "Review id": ["not found"]) if @review.nil? || !@review.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

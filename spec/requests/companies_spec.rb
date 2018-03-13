@@ -81,6 +81,15 @@ RSpec.describe "Companies", type: :request do
       post companies_path, params: { company: company.as_json }, headers: header
       expect(response.status).to eq(422)
     end
+
+    it "renders a 422 error for duplicate UEN" do
+      @dupcompany = build(:company)
+      @dupcompany.UEN = company.UEN
+      @dupcompany.save
+      post companies_path, params: { company: company.as_json }, headers: request_login
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
+    end
   end
 
   describe "POST /companies unauthorized" do

@@ -22,7 +22,7 @@ class LikesController < ApplicationController
   def create
     @user = User.kept.find_by(id: create_params[:user_id])
     if @user.nil?
-      render_error(404, "User id not found")
+      render_error(404, "User id": ["not found"])
       return
     end
     @like = Like.new(create_params)
@@ -30,7 +30,7 @@ class LikesController < ApplicationController
     if @like.save
       render json: @like, status: :created, location: @like
     else
-      render_error(422)
+      render json: @like.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -46,7 +46,7 @@ class LikesController < ApplicationController
     end
 
     def validate_like_pressence
-      render_error(404, "Like id not found") if @like.nil? || !@like.presence?
+      render_error(404, "Like id": ["not found"]) if @like.nil? || !@like.presence?
     end
 
     def set_review
@@ -54,7 +54,7 @@ class LikesController < ApplicationController
     end
 
     def validate_review_pressence
-      render_error(404, "Review id not found") if @review.nil? || !@review.presence?
+      render_error(404, "Review id": ["not found"]) if @review.nil? || !@review.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

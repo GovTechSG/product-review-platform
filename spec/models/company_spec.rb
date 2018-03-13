@@ -26,4 +26,9 @@ RSpec.describe Company, type: :model do
     company.aggregate_score = ''
     expect(company).to_not be_valid
   end
+  it 'is invalid with a duplicate UEN' do
+    company = build(:company)
+    company.save
+    expect(build(:company, UEN: company.UEN)).not_to be_valid
+  end
 end
