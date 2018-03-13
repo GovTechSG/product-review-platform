@@ -54,6 +54,6 @@ class IndustriesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def industry_params
-    params.require(:industry).permit(:name)
+    params.require(:industry).permit(:name, :description)
   end
 end
