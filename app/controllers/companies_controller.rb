@@ -19,6 +19,7 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
 
     if @company.save
+      # @company.industries.create!(name: Industry.find_by(company_params[:industry_ids].name), description: Industry.find_by(company_params[:industry_ids].description))
       render json: @company, status: :created, location: @company
     else
       render_error(422)
@@ -52,6 +53,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :UEN, :description).merge(industry_ids: params[:industry_ids])
+      params.require(:company).permit(:name, :UEN, :description, :industry_ids =>[])
     end
 end
