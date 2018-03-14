@@ -43,10 +43,7 @@ module SwaggerDocs::Company
 
       property :industries do
         key :type, :array
-        items do
-          key :type, :hash
-          key :example, "id": 1, "name": "Manufacturing"
-        end
+        key :'$ref', :Industry
       end
     end
 
