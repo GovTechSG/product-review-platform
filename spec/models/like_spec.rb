@@ -14,9 +14,9 @@ RSpec.describe Like, type: :model do
     it "is not valid without a review" do
       expect(build(:product_review_like, review: nil)).to_not be_valid
     end
-    it "is not valid with a duplicate review_id with the same user_id" do
+    it "is not valid with a duplicate review_id with the same agency_id" do
       product_review_like = create(:product_review_like)
-      expect(build(:product_review_like, review: product_review_like.review, user: product_review_like.user)).to_not be_valid
+      expect(build(:product_review_like, review: product_review_like.review, agency: product_review_like.agency)).to_not be_valid
     end
   end
 end

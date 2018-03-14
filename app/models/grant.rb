@@ -6,7 +6,7 @@ class Grant < ApplicationRecord
 
   has_many :reviews, dependent: :destroy
 
-  validates :description, :acronym, :user, :name, presence: true
+  validates :description, :acronym, :agency, :name, presence: true
   validates :name, uniqueness: true
 
   def presence?
