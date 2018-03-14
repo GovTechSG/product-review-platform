@@ -88,9 +88,8 @@ GEM
       railties (>= 4.2)
     doorkeeper-jwt (0.2.1)
       jwt (~> 1.5.2, >= 1.5.2)
-    email_address (0.1.8)
-      netaddr (~> 1.5.1)
-      simpleidn
+    email_validator (1.6.0)
+      activemodel
     erubi (1.7.0)
     execjs (2.7.0)
     factory_bot (4.8.2)
@@ -148,7 +147,6 @@ GEM
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
-    netaddr (1.5.1)
     nio4r (2.2.0)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
@@ -240,8 +238,6 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    simpleidn (0.1.1)
-      unf (~> 0.1.4)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -259,9 +255,6 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.5)
     unicode-display_width (1.3.0)
     warden (1.2.7)
       rack (>= 1.0)
@@ -282,7 +275,7 @@ DEPENDENCIES
   discard
   doorkeeper
   doorkeeper-jwt
-  email_address
+  email_validator
   factory_bot_rails
   ffaker
   figaro
