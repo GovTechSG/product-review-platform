@@ -40,6 +40,11 @@ module SwaggerDocs::Company
         key :type, :array
         key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
       end
+
+      property :industries do
+        key :type, :array
+        key :'$ref', :Industry
+      end
     end
 
     swagger_schema :CompanyInput do
@@ -57,6 +62,12 @@ module SwaggerDocs::Company
 
             property :description do
               key :type, :string
+            end
+            property :industry_ids do
+              key :type, :array
+              items do
+                key :type, :integer
+              end
             end
           end
         end
