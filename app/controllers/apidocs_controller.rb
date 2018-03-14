@@ -5,8 +5,8 @@ class ApidocsController < ApplicationController
     key :swagger, '2.0'
     info do
       key :version, '1.0.0'
-      key :title, 'Product Review Platform'
-      key :description, 'API for GDS Product Review Platform'
+      key :title, 'Company Review Platform'
+      key :description, 'API for GDS Company Review Platform'
       contact do
         key :name, 'Government Digital Services'
       end

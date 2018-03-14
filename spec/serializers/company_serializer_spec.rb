@@ -6,7 +6,7 @@ RSpec.describe CompanySerializer, type: :serializer do
       @company = create(:company)
     end
 
-    subject { CompanySerializer.new(@company, root: false).as_json["object"].merge("reviews_count" => @company.reviews_count, "strengths" => @company.strengths) }
+    subject { CompanySerializer.new(@company, root: false).as_json["object"].merge("reviews_count" => @company.reviews_count, "strengths" => @company.strengths, "industries" => @company.industries) }
     it 'has a name' do
       expect(subject['name']).to eql(@company.name)
     end
@@ -29,6 +29,10 @@ RSpec.describe CompanySerializer, type: :serializer do
 
     it 'has a strengths' do
       expect(subject['strengths']).to eql(@company.strengths)
+    end
+
+    it 'has a industries' do
+      expect(subject['industries']).to eql(@company.industries)
     end
   end
 end

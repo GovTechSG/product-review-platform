@@ -22,5 +22,8 @@ RSpec.describe Grant, type: :model do
     it 'is invalid without a agency' do
       expect(build(:grant, agency_id: nil)).not_to be_valid
     end
+    it 'is invalid without a acronym' do
+      expect(build(:grant, acronym: nil)).not_to be_valid
+    end
   end
 end

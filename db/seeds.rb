@@ -154,7 +154,7 @@ Grants = [
   ]},
   { "Info-Communications Media Development Authority": [ 
     { name: "Critical Infocomm Technology Resource Programme Plus", acronym: "CITREP+", description: "To build a strong core of specialised Singaporean ICT professionals with Smart Nation capabilities, CITREP+ is now expanded to support entry-level professionals to build specialised ICT skills through broad-based training and certifications." },
-    { name: "Marketing Assistance", acronym: "", description: "Helps media companies market their productions to their target audience and grow overseas demand for Singapore-produced content." },
+    { name: "Marketing Assistance", acronym: "MA", description: "Helps media companies market their productions to their target audience and grow overseas demand for Singapore-produced content." },
     { name: "Talent Assistance", acronym: "TA", description: "Helps media professionals to upgrade, upskill and secure work attachment opportunities." }
   ]},
   { "International Enterprise Singapore": [ 
@@ -164,7 +164,7 @@ Grants = [
     { name: "Market Readiness Assistance Grant", acronym: "MRA", description: "Designed to accelerate the international expansion of Singapore SMEs, the Market Readiness Assistance Grant supports pre-determined activities focused on helping you in overseas set-ups, identification of business partners and overseas market promotion." }
   ]},
   { "Maritime And Port Authority Of Singapore": [
-    { name: "Training@Maritime Singapore", acronym: "", description: "Upgrade knowledge and expertise of local maritime personnel through attending approved training programmes under the Maritime Cluster Fund (MCF)." }
+    { name: "Training@Maritime Singapore", acronym: "TMS", description: "Upgrade knowledge and expertise of local maritime personnel through attending approved training programmes under the Maritime Cluster Fund (MCF)." }
   ]},
   { "Ministry Of Manpower": [ 
     { name: "WorkPro", acronym: "WorkPro", description: "Encourage employers to implement progressive employment practices to benefit Singaporeans through job redesign, age management practices and flexible work arrangements." }
@@ -177,7 +177,7 @@ Grants = [
     { name: "Training Industry Professionals In Tourism", acronym: "TIP-iT", description: "Is your business in the tourism industry? Get a grant to send your staff for upgrading as well as talent and leadership development." }
   ]},
   { "Skillsfuture Singapore": [ 
-    { name: "Enhanced Training Support for SMEs", acronym: "", description: "Enhanced Training Support for SMEs is a scheme aimed at encouraging small and medium enterprises (SMEs) to send employees for training and skills upgrading." },
+    { name: "Enhanced Training Support for SMEs", acronym: "ETS", description: "Enhanced Training Support for SMEs is a scheme aimed at encouraging small and medium enterprises (SMEs) to send employees for training and skills upgrading." },
     { name: "Enterprise Training Support", acronym: "ETS", description: "The Enterprise Training Support scheme encourages businesses to implement progressive and innovative human resource systems that would help raise the skills and productivity of employees." }
   ]},
   { "Spring Singapore": [ 
