@@ -19,6 +19,10 @@ RSpec.describe Grant, type: :model do
       expect(build(:grant, description: nil)).not_to be_valid
     end
 
+    it 'is invalid without a acronym' do
+      expect(build(:grant, acronym: nil)).not_to be_valid
+    end
+
     it 'is invalid without a user' do
       expect(build(:grant, user_id: nil)).not_to be_valid
     end

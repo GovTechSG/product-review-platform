@@ -9,14 +9,19 @@ RSpec.describe User, type: :model do
     user.name = ''
     expect(user).to_not be_valid
   end
-  it "is not valid without a number" do
+  it "is valid without a number" do
     user = build(:user)
     user.number = ''
-    expect(user).to_not be_valid
+    expect(user).to be_valid
   end
-  it "is not valid without a email" do
+  it "is valid without a email" do
     user = build(:user)
     user.email = ''
-    expect(user).to_not be_valid
+    expect(user).to be_valid
+  end
+  it 'is invalid with a duplicate name' do
+    user = build(:user)
+    user.save
+    expect(build(:user, name: user.name)).not_to be_valid
   end
 end

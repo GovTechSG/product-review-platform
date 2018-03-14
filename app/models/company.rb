@@ -12,5 +12,5 @@ class Company < ApplicationRecord
   has_many :industries, through: :industry_companies
 
   validates_presence_of :name, :UEN, :aggregate_score, :description
-  validates_uniqueness_of :UEN
+  validates_uniqueness_of :UEN, :name
 end

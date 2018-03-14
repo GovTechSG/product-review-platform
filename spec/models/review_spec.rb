@@ -17,8 +17,8 @@ RSpec.describe Review, type: :model do
       expect(build(:product_review, score: nil)).not_to be_valid
     end
 
-    it 'is invalid without a content' do
-      expect(build(:product_review, content: nil)).not_to be_valid
+    it 'is valid without a content' do
+      expect(build(:product_review, content: nil)).to be_valid
     end
 
     it 'is invalid without a company' do
@@ -27,6 +27,10 @@ RSpec.describe Review, type: :model do
 
     it 'is invalid without a reviewable' do
       expect(build(:product_review, reviewable: nil)).not_to be_valid
+    end
+
+    it 'is invalid without a grant' do
+      expect(build(:product_review, grant: nil)).not_to be_valid
     end
   end
 end

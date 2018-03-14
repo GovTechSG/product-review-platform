@@ -9,7 +9,7 @@ class Review < ApplicationRecord
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
 
-  validates_presence_of :score, :content, :reviewer, :reviewable, :grant
+  validates_presence_of :score, :reviewer, :reviewable, :grant
 
   def presence?
     !discarded? && reviewable.presence? && grant.presence? && reviewer.presence?
