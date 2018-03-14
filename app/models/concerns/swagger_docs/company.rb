@@ -41,10 +41,11 @@ module SwaggerDocs::Company
         key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
       end
 
-      property :industry_ids do
+      property :industries do
         key :type, :array
         items do
-          key :type, :integer
+          key :type, :hash
+          key :example, {"id":1,"name": "Manufacturing"}
         end
       end
     end
