@@ -96,7 +96,7 @@ class ReviewsController < ApplicationController
         end
       end
     rescue ArgumentError
-      render_error(422, "Score": ["is not a number"])
+      render_error(400, "Score": ["is not a number"])
     end
 
     def set_reviewable
@@ -122,10 +122,10 @@ class ReviewsController < ApplicationController
     end
 
     def set_company
-      if params[:review][:reviewer_id].present?
+      if params[:review].present? && params[:review][:reviewer_id].present?
         @company = Company.find_by(id: params[:review][:reviewer_id])
       else
-        render_error(422, "Reviewer id": ["not provided"])
+        render_error(400, "Reviewer id": ["not provided"])
       end
     end
 
@@ -137,7 +137,7 @@ class ReviewsController < ApplicationController
       if params[:review][:grant_id].present?
         @grant = Grant.find_by(id: params[:review][:grant_id])
       else
-        render_error(422, "Grant id": ["not provided"])
+        render_error(400, "Grant id": ["not provided"])
       end
     end
 
