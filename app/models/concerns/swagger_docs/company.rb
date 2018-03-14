@@ -45,7 +45,7 @@ module SwaggerDocs::Company
         key :type, :array
         items do
           key :type, :hash
-          key :example, {"id":1,"name": "Manufacturing"}
+          key :example, "id": 1, "name": "Manufacturing"
         end
       end
     end
