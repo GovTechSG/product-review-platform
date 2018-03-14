@@ -47,6 +47,54 @@ module SwaggerDocs::Company
       end
     end
 
+    swagger_schema :Company_review do
+      key :type, :object
+      key :required, [:id, :name, :UEN, :aggregate_score]
+
+      property :type do
+        key :type, :string
+        key :example, 'Company'
+      end
+
+      property :id do
+        key :type, :integer
+        key :format, :int64
+      end
+
+      property :name do
+        key :type, :string
+        key :example, 'Pivotal Software'
+      end
+
+      property :UEN do
+        key :type, :string
+        key :example, '984208875'
+      end
+
+      property :aggregate_score do
+        key :type, :number
+      end
+
+      property :description do
+        key :type, :string
+        key :example, 'Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis.'
+      end
+
+      property :reviews_count do
+        key :type, :number
+      end
+
+      property :strengths do
+        key :type, :array
+        key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
+      end
+
+      property :industries do
+        key :type, :array
+        key :'$ref', :Industry
+      end
+    end
+
     swagger_schema :CompanyInput do
       allOf do
         schema do

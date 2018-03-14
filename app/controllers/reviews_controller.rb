@@ -158,6 +158,6 @@ class ReviewsController < ApplicationController
     end
 
     def update_params
-      params.require(:review).permit(:score, :content, :strengths => [])
+      params.require(:review).permit(:score, :content, :reviewer_id, :grant_id, :strengths => [])
     end
 end

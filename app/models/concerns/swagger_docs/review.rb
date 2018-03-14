@@ -37,8 +37,8 @@ module SwaggerDocs::Review
         key :'$ref', :Product_Review
       end
 
-      property :reviewer do
-        key :'$ref', :Company
+      property :from do
+        key :'$ref', :Company_review
       end
 
       property :grant do
@@ -107,6 +107,11 @@ module SwaggerDocs::Review
                 key :type, :string
               end
             end
+            property :grant_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
           end
         end
       end
