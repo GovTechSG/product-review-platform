@@ -6,6 +6,7 @@ class CreateCompanies < ActiveRecord::Migration[5.1]
       t.decimal :aggregate_score, :null => false, :default => 0
 
       t.index :UEN, :unique => true
+      t.index :name, :unique => true
 
       t.timestamps
     end

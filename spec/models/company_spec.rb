@@ -31,4 +31,9 @@ RSpec.describe Company, type: :model do
     company.save
     expect(build(:company, UEN: company.UEN)).not_to be_valid
   end
+  it 'is invalid with a duplicate name' do
+    company = build(:company)
+    company.save
+    expect(build(:company, name: company.name)).not_to be_valid
+  end
 end
