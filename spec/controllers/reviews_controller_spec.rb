@@ -198,7 +198,7 @@ RSpec.describe ReviewsController, type: :controller do
           it "renders a JSON response with errors for the new review" do
             product = create(:product)
             post :create, params: { review: invalid_product_review, product_id: product.id }
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(400)
             expect(response.content_type).to eq('application/json')
           end
         end
@@ -273,7 +273,7 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
 
             post :create, params: { review: invalid_service_review, service_id: service.id }
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(400)
             expect(response.content_type).to eq('application/json')
           end
         end
@@ -379,7 +379,7 @@ RSpec.describe ReviewsController, type: :controller do
           review = Review.create! valid_product_review
 
           put :update, params: { id: review.to_param, review: invalid_product_review }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(400)
           expect(response.content_type).to eq('application/json')
         end
       end
