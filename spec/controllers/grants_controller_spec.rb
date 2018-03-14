@@ -7,7 +7,7 @@ RSpec.describe GrantsController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    attributes_for(:grant, name: nil, acronym: nil, user_id: nil)
+    attributes_for(:grant, name: nil, acronym: nil, agency_id: nil)
   end
 
   let(:token) { double acceptable?: true }

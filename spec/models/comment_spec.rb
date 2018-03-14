@@ -10,8 +10,8 @@ RSpec.describe Comment, type: :model do
       expect(build(:product_review_comment, content: nil)).not_to be_valid
     end
 
-    it 'is invalid without a user for product_review_comment' do
-      expect(build(:product_review_comment, user: nil)).not_to be_valid
+    it 'is invalid without a agency for product_review_comment' do
+      expect(build(:product_review_comment, agency: nil)).not_to be_valid
     end
 
     it 'is invalid without a review for product_review_comment' do
@@ -26,8 +26,8 @@ RSpec.describe Comment, type: :model do
       expect(build(:service_review_comment, content: nil)).not_to be_valid
     end
 
-    it 'is invalid without a user for service_review_comment' do
-      expect(build(:service_review_comment, user: nil)).not_to be_valid
+    it 'is invalid without a agency for service_review_comment' do
+      expect(build(:service_review_comment, agency: nil)).not_to be_valid
     end
 
     it 'is invalid without a review for service_review_comment' do

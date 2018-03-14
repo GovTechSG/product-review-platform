@@ -1,5 +1,5 @@
-class User < ApplicationRecord
-  include SwaggerDocs::User
+class Agency < ApplicationRecord
+  include SwaggerDocs::Agency
 
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy

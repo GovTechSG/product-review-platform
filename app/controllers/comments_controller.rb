@@ -6,12 +6,12 @@ class CommentsController < ApplicationController
   before_action :set_review, only: [:index, :create]
   before_action :validate_review_presence, only: [:index, :create]
   before_action :set_new_comment, only: [:create]
-  before_action :validate_user_presence, only: [:create]
+  before_action :validate_agency_presence, only: [:create]
 
   # GET /reviews/:review_id/comments
   def index
     @comments = Comment.kept.where(review_id: params[:review_id])
-    render json: @comments, methods: [:user]
+    render json: @comments, methods: [:agency]
   end
 
   # GET /comments/1
@@ -60,8 +60,8 @@ class CommentsController < ApplicationController
       render_error(404, "Comment id": ["not found"]) if @comment.nil? || !@comment.presence?
     end
 
-    def validate_user_presence
-      render_error(404, "User id": ["not found"]) if User.find_by(id: @comments.user_id).nil?
+    def validate_agency_presence
+      render_error(404, "Agency id": ["not found"]) if Agency.find_by(id: @comments.agency_id).nil?
     end
 
     def validate_review_presence
@@ -70,7 +70,7 @@ class CommentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      params.require(:comment).permit(:content, :user_id)
+      params.require(:comment).permit(:content, :agency_id)
     end
 
     def update_params

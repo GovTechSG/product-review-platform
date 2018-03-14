@@ -10,7 +10,7 @@ class LikesController < ApplicationController
   def index
     @likes = Like.kept.where(review_id: params[:review_id])
 
-    render json: @likes, methods: [:user]
+    render json: @likes, methods: [:agency]
   end
 
   # GET /likes/1
@@ -20,9 +20,9 @@ class LikesController < ApplicationController
 
   # POST /reviews/:review_id/likes
   def create
-    @user = User.kept.find_by(id: create_params[:user_id])
-    if @user.nil?
-      render_error(404, "User id": ["not found"])
+    @agency = Agency.kept.find_by(id: create_params[:agency_id])
+    if @agency.nil?
+      render_error(404, "Agency id": ["not found"])
       return
     end
     @like = Like.new(create_params)
@@ -59,6 +59,6 @@ class LikesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      params.require(:like).permit(:user_id).merge(review_id: params[:review_id])
+      params.require(:like).permit(:agency_id).merge(review_id: params[:review_id])
     end
 end

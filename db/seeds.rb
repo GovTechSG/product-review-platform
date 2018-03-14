@@ -56,86 +56,86 @@ UENs = [
 ]
 
 Agencies = [
-  { name: "Ministry Of Communications And Information", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Culture, Community And Youth", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Defence", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Education", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Finance", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Foreign Affairs", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Health", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Home Affairs", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Law", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Manpower", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of National Development", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Social And Family Development", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of The Environment And Water Resources", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Trade And Industry", email: "user_@u.com", number: "34434543" },
-  { name: "Ministry Of Transport", email: "user_@u.com", number: "34434543" },
-  { name: "Prime Minister'S Office", email: "user_@u.com", number: "34434543" },
-  { name: "Accounting And Corporate Regulatory Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Agency For Science, Technology And Research", email: "user_@u.com", number: "34434543" },
-  { name: "Agri-Food & Veterinary Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Board Of Architects", email: "user_@u.com", number: "34434543" },
-  { name: "Building And Construction Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Casino Regulatory Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Central Provident Fund Board", email: "user_@u.com", number: "34434543" },
-  { name: "Civil Aviation Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Civil Service College", email: "user_@u.com", number: "34434543" },
-  { name: "Competition Commission Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Council For Estate Agencies", email: "user_@u.com", number: "34434543" },
-  { name: "Defence Science And Technology Agency", email: "user_@u.com", number: "34434543" },
-  { name: "Economic Development Board", email: "user_@u.com", number: "34434543" },
-  { name: "Energy Market Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Government Technology Agency", email: "user_@u.com", number: "34434543" },
-  { name: "Health Promotion Board", email: "user_@u.com", number: "34434543" },
-  { name: "Health Sciences Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Hotels Licensing Board", email: "user_@u.com", number: "34434543" },
-  { name: "Housing & Development Board", email: "user_@u.com", number: "34434543" },
-  { name: "Info-Communications Media Development Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Inland Revenue Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Institute Of Technical Education", email: "user_@u.com", number: "34434543" },
-  { name: "Intellectual Property Office Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "International Enterprise Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Iseas-Yusof Ishak Institute", email: "user_@u.com", number: "34434543" },
-  { name: "Jtc Corporation", email: "user_@u.com", number: "34434543" },
-  { name: "Land Transport Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Majlis Ugama Islam, Singapura", email: "user_@u.com", number: "34434543" },
-  { name: "Maritime And Port Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Monetary Authority Of Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Nanyang Polytechnic", email: "user_@u.com", number: "34434543" },
-  { name: "National Arts Council", email: "user_@u.com", number: "34434543" },
-  { name: "National Council Of Social Service", email: "user_@u.com", number: "34434543" },
-  { name: "National Environment Agency", email: "user_@u.com", number: "34434543" },
-  { name: "National Heritage Board", email: "user_@u.com", number: "34434543" },
-  { name: "National Library Board", email: "user_@u.com", number: "34434543" },
-  { name: "National Parks Board", email: "user_@u.com", number: "34434543" },
-  { name: "Ngee Ann Polytechnic", email: "user_@u.com", number: "34434543" },
-  { name: "People'S Association", email: "user_@u.com", number: "34434543" },
-  { name: "Professional Engineers Board, Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Pub, Singapore'S National Water Agency", email: "user_@u.com", number: "34434543" },
-  { name: "Public Transport Council", email: "user_@u.com", number: "34434543" },
-  { name: "Republic Polytechnic", email: "user_@u.com", number: "34434543" },
-  { name: "Science Centre Board", email: "user_@u.com", number: "34434543" },
-  { name: "Sentosa Development Corporation", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Accountancy Commission", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Corporation Of Rehabilitative Enterprises", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Dental Council", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Examinations And Assessment Board", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Labour Foundation", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Land Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Medical Council", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Nursing Board", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Pharmacy Council", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Polytechnic", email: "user_@u.com", number: "34434543" },
-  { name: "Singapore Tourism Board", email: "user_@u.com", number: "34434543" },
-  { name: "Skillsfuture Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Sport Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Spring Singapore", email: "user_@u.com", number: "34434543" },
-  { name: "Tcm Practitioners Board", email: "user_@u.com", number: "34434543" },
-  { name: "Temasek Polytechnic", email: "user_@u.com", number: "34434543" },
-  { name: "Tote Board", email: "user_@u.com", number: "34434543" },
-  { name: "Urban Redevelopment Authority", email: "user_@u.com", number: "34434543" },
-  { name: "Workforce Singapore", email: "user_@u.com", number: "34434543" }
+  { name: "Ministry Of Communications And Information", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Culture, Community And Youth", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Defence", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Education", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Finance", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Foreign Affairs", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Health", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Home Affairs", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Law", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Manpower", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of National Development", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Social And Family Development", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of The Environment And Water Resources", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Trade And Industry", email: "agency_@u.com", number: "34434543" },
+  { name: "Ministry Of Transport", email: "agency_@u.com", number: "34434543" },
+  { name: "Prime Minister'S Office", email: "agency_@u.com", number: "34434543" },
+  { name: "Accounting And Corporate Regulatory Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Agency For Science, Technology And Research", email: "agency_@u.com", number: "34434543" },
+  { name: "Agri-Food & Veterinary Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Board Of Architects", email: "agency_@u.com", number: "34434543" },
+  { name: "Building And Construction Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Casino Regulatory Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Central Provident Fund Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Civil Aviation Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Civil Service College", email: "agency_@u.com", number: "34434543" },
+  { name: "Competition Commission Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Council For Estate Agencies", email: "agency_@u.com", number: "34434543" },
+  { name: "Defence Science And Technology Agency", email: "agency_@u.com", number: "34434543" },
+  { name: "Economic Development Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Energy Market Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Government Technology Agency", email: "agency_@u.com", number: "34434543" },
+  { name: "Health Promotion Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Health Sciences Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Hotels Licensing Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Housing & Development Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Info-Communications Media Development Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Inland Revenue Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Institute Of Technical Education", email: "agency_@u.com", number: "34434543" },
+  { name: "Intellectual Property Office Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "International Enterprise Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Iseas-Yusof Ishak Institute", email: "agency_@u.com", number: "34434543" },
+  { name: "Jtc Corporation", email: "agency_@u.com", number: "34434543" },
+  { name: "Land Transport Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Majlis Ugama Islam, Singapura", email: "agency_@u.com", number: "34434543" },
+  { name: "Maritime And Port Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Monetary Authority Of Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Nanyang Polytechnic", email: "agency_@u.com", number: "34434543" },
+  { name: "National Arts Council", email: "agency_@u.com", number: "34434543" },
+  { name: "National Council Of Social Service", email: "agency_@u.com", number: "34434543" },
+  { name: "National Environment Agency", email: "agency_@u.com", number: "34434543" },
+  { name: "National Heritage Board", email: "agency_@u.com", number: "34434543" },
+  { name: "National Library Board", email: "agency_@u.com", number: "34434543" },
+  { name: "National Parks Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Ngee Ann Polytechnic", email: "agency_@u.com", number: "34434543" },
+  { name: "People'S Association", email: "agency_@u.com", number: "34434543" },
+  { name: "Professional Engineers Board, Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Pub, Singapore'S National Water Agency", email: "agency_@u.com", number: "34434543" },
+  { name: "Public Transport Council", email: "agency_@u.com", number: "34434543" },
+  { name: "Republic Polytechnic", email: "agency_@u.com", number: "34434543" },
+  { name: "Science Centre Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Sentosa Development Corporation", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Accountancy Commission", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Corporation Of Rehabilitative Enterprises", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Dental Council", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Examinations And Assessment Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Labour Foundation", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Land Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Medical Council", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Nursing Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Pharmacy Council", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Polytechnic", email: "agency_@u.com", number: "34434543" },
+  { name: "Singapore Tourism Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Skillsfuture Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Sport Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Spring Singapore", email: "agency_@u.com", number: "34434543" },
+  { name: "Tcm Practitioners Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Temasek Polytechnic", email: "agency_@u.com", number: "34434543" },
+  { name: "Tote Board", email: "agency_@u.com", number: "34434543" },
+  { name: "Urban Redevelopment Authority", email: "agency_@u.com", number: "34434543" },
+  { name: "Workforce Singapore", email: "agency_@u.com", number: "34434543" }
 ]
 
 Grants = [
@@ -206,13 +206,13 @@ end
 # c_1.services.create!(name: "Carpenters R'Us", description: "Got a fixer-upper? Look no further!")
 
 Agencies.each do |agency|
-  user = User.create!(agency)
+  agency = Agency.create!(agency)
   Grants.each do |grant_hash|
     grants = grant_hash.with_indifferent_access
     if grants.key?(agency[:name])
       grantsList = grants[agency[:name]]
       grantsList.each do |grant|
-        user.grants.create!(grant)
+        agency.grants.create!(grant)
       end
     end
   end
@@ -269,18 +269,18 @@ Service.all.each do |s|
 end
 
 Review.all.each_with_index do |r, i|
-  r.comments.create!(content: lorem_ipsum, user_id: 1)
-  r.comments.create!(content: lorem_ipsum, user_id: 2)
-  r.comments.create!(content: lorem_ipsum, user_id: 3)
-  r.comments.create!(content: lorem_ipsum, user_id: 2)
-  r.comments.create!(content: lorem_ipsum, user_id: 4)
-  r.comments.create!(content: lorem_ipsum, user_id: 5)
+  r.comments.create!(content: lorem_ipsum, agency_id: 1)
+  r.comments.create!(content: lorem_ipsum, agency_id: 2)
+  r.comments.create!(content: lorem_ipsum, agency_id: 3)
+  r.comments.create!(content: lorem_ipsum, agency_id: 2)
+  r.comments.create!(content: lorem_ipsum, agency_id: 4)
+  r.comments.create!(content: lorem_ipsum, agency_id: 5)
 
-  r.likes.create!(user_id: 1)
-  r.likes.create!(user_id: 2)
-  r.likes.create!(user_id: 3)
-  r.likes.create!(user_id: 4)
-  r.likes.create!(user_id: 5)
+  r.likes.create!(agency_id: 1)
+  r.likes.create!(agency_id: 2)
+  r.likes.create!(agency_id: 3)
+  r.likes.create!(agency_id: 4)
+  r.likes.create!(agency_id: 5)
 end
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)

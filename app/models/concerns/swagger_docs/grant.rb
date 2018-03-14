@@ -10,7 +10,7 @@ module SwaggerDocs::Grant
 
     swagger_schema :Grant do
       key :type, :object
-      key :required, [:id, :name, :acronym, :description, :user]
+      key :required, [:id, :name, :acronym, :description, :agency]
 
       property :id do
         key :type, :integer
@@ -33,14 +33,14 @@ module SwaggerDocs::Grant
                        Get a grant for expert help from A*STAR to create a technology roadmap.'
       end
 
-      property :user do
-        key :'$ref', :User
+      property :agency do
+        key :'$ref', :Agency
       end
     end
 
     swagger_schema :ReviewGrant do
       key :type, :object
-      key :required, [:id, :name, :acronym, :description, :user]
+      key :required, [:id, :name, :acronym, :description, :agency]
 
       property :id do
         key :type, :integer
@@ -77,7 +77,7 @@ module SwaggerDocs::Grant
             property :acronym do
               key :type, :string
             end
-            property :user_id do
+            property :agency_id do
               key :type, :integer
               key :format, :int64
             end
