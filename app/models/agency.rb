@@ -1,5 +1,6 @@
 class Agency < ApplicationRecord
   include SwaggerDocs::Agency
+  include Validations
 
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -7,4 +8,5 @@ class Agency < ApplicationRecord
 
   validates :name, presence: true
   validates :name, uniqueness: true
+  validate :valid_email?
 end

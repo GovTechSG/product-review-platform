@@ -12,6 +12,7 @@ gem 'doorkeeper'
 gem 'doorkeeper-jwt'
 gem 'discard'
 gem 'devise'
+gem 'email_address'
 gem 'rails', '~> 5.1.4'
 gem 'rubocop'
 # Use postgresql as the database for Active Record

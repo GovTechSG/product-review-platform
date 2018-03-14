@@ -19,4 +19,9 @@ RSpec.describe Agency, type: :model do
     agency.email = ''
     expect(agency).to be_valid
   end
+  it "is not valid with an invalid email" do
+    agency = build(:agency)
+    agency.email = 'hey'
+    expect(agency).to_not be_valid
+  end
 end
