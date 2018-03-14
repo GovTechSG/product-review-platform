@@ -65,9 +65,10 @@ RSpec.describe "Companies", type: :request do
 
   describe "POST /companies" do
     let(:company) { build(:company) }
+    let(:industry) { create(:industry) }
     let(:header) { request_login }
     it "returns a success response" do
-      post companies_path, params: { company: company.as_json }, headers: header
+      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(201)
     end
 
@@ -78,7 +79,7 @@ RSpec.describe "Companies", type: :request do
 
     it "returns Unprocessable Entity if company is not valid" do
       company.name = ""
-      post companies_path, params: { company: company.as_json }, headers: header
+      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(422)
     end
 
@@ -86,13 +87,19 @@ RSpec.describe "Companies", type: :request do
       dupcompany = build(:company)
       dupcompany.UEN = company.UEN
       dupcompany.save
-      post companies_path, params: { company: company.as_json }, headers: request_login
+      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
 
     it "return 404 when industry ID is invalid" do
       post companies_path, params: { company: company.as_json.merge(industry_ids: [0]) }, headers: request_login
+      expect_not_found
+    end
+
+    it "return 404 when industry ID is deleted" do
+      industry.discard
+      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect_not_found
     end
   end
@@ -106,15 +113,16 @@ RSpec.describe "Companies", type: :request do
 
   describe "PATCH /company/:id" do
     let(:company) { create(:company) }
+    let(:industry) { create(:industry) }
     let(:header) { request_login }
     it "returns a success response" do
-      patch company_path(company.id), params: { company: company.as_json }, headers: header
+      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(200)
     end
 
     it "returns data of the single updated company" do
       updated_company = build(:company)
-      patch company_path(company.id), params: { company: updated_company.as_json }, headers: header
+      patch company_path(company.id), params: { company: updated_company.as_json.merge(industry_ids: [industry.id]) }, headers: header
       company.reload
       expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
     end
@@ -122,7 +130,7 @@ RSpec.describe "Companies", type: :request do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch company_path(company.id), params: { company: attributes_for(:company, UEN: another_company.UEN).as_json, id: company.id }, headers: header
+      patch company_path(company.id), params: { company: attributes_for(:company, UEN: another_company.UEN).as_json.merge(industry_ids: [industry.id]), id: company.id }, headers: header
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -143,16 +151,22 @@ RSpec.describe "Companies", type: :request do
 
     it "renders a 422 error for duplicate UEN" do
       dupcompany = build(:company)
-      # dupcompany.UEN = company.UEN
       dupcompany.save
       company.UEN = dupcompany.UEN
-      patch company_path(company.id), params: { company: company.as_json }, headers: request_login
+      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
 
     it "return 404 when industry ID is invalid" do
       patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [0]) }, headers: header
+      expect_not_found
+    end
+
+    it "return 404 when industry ID is deleted" do
+      industry.discard
+      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
+
       expect_not_found
     end
   end

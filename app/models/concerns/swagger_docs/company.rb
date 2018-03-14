@@ -40,6 +40,13 @@ module SwaggerDocs::Company
         key :type, :array
         key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
       end
+
+      property :industry_ids do
+        key :type, :array
+        items do
+          key :type, :integer
+        end
+      end
     end
 
     swagger_schema :CompanyInput do

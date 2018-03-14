@@ -66,19 +66,20 @@ RSpec.describe CompaniesController, type: :controller do
 
   describe "POST #create", authorized: true do
     let(:company) { build(:company) }
+    let(:industry) { create(:industry) }
     it "returns a success response" do
-      post :create, params: { company: company.as_json }
+      post :create, params: { company: company.as_json.merge(industry_ids: [industry.id]) }
       expect(response.status).to eq(201)
     end
 
     it "returns data of the single created company" do
-      post :create, params: { company: company.as_json }
+      post :create, params: { company: company.as_json.merge(industry_ids: [industry.id]) }
       expect_show_response
     end
 
     it "returns Unprocessable Entity if company is not valid" do
       company.name = ""
-      post :create, params: { company: company.as_json }
+      post :create, params: { company: company.as_json.merge(industry_ids: [industry.id]) }
       expect(response.status).to eq(422)
     end
 
@@ -86,13 +87,20 @@ RSpec.describe CompaniesController, type: :controller do
       @dupcompany = build(:company)
       @dupcompany.UEN = company.UEN
       @dupcompany.save
-      post :create, params: { company: company.as_json }
+      post :create, params: { company: company.as_json.merge(industry_ids: [industry.id]) }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
 
     it "return 404 when industry ID is invalid" do
       post :create, params: { company: company.as_json.merge(industry_ids: [0]) }
+      expect_not_found
+    end
+
+    it "return 404 when industry ID is deleted" do
+      @industry = build(:industry)
+      @industry.discard
+      post :create, params: { company: company.as_json.merge(industry_ids: [@industry.id]) }
       expect_not_found
     end
   end
@@ -106,14 +114,15 @@ RSpec.describe CompaniesController, type: :controller do
 
   describe "PATCH #update", authorized: true do
     let(:company) { create(:company) }
+    let(:industry) { create(:industry) }
     it "returns a success response" do
-      patch :update, params: { company: company.as_json, id: company.id }
+      patch :update, params: { company: company.as_json.merge(industry_ids: [industry.id]), id: company.id }
       expect(response.status).to eq(200)
     end
 
     it "returns data of the single updated company" do
       updated_company = build(:company)
-      patch :update, params: { company: updated_company.as_json, id: company.id }
+      patch :update, params: { company: updated_company.as_json.merge(industry_ids: [industry.id]), id: company.id }
       company.reload
       expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
     end
@@ -121,7 +130,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch :update, params: { company: attributes_for(:company, UEN: another_company.UEN).as_json, id: company.id }
+      patch :update, params: { company: attributes_for(:company, UEN: another_company.UEN).as_json.merge(industry_ids: [industry.id]), id: company.id }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -155,12 +164,19 @@ RSpec.describe CompaniesController, type: :controller do
     it "renders a 422 error for duplicate UEN", authorized: true do
       @dupcompany = create(:company)
 
-      patch :update, params: { company: company.as_json, id: @dupcompany.id }
+      patch :update, params: { company: company.as_json.merge(industry_ids: [industry.id]), id: @dupcompany.id }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
 
     it "return 404 when industry ID is invalid" do
+      patch :update, params: { company: company.as_json.merge(industry_ids: [0]), id: company.id }
+      expect_not_found
+    end
+
+    it "return 404 when industry ID is deleted" do
+      @industry = build(:industry)
+      @industry.discard
       patch :update, params: { company: company.as_json.merge(industry_ids: [0]), id: company.id }
       expect_not_found
     end
