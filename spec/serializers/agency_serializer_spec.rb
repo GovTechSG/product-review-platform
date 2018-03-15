@@ -19,5 +19,14 @@ RSpec.describe AgencySerializer, type: :serializer do
     it 'has a email' do
       expect(subject['email']).to eql(@agency.email)
     end
+    it 'has a acronym' do
+      expect(subject['acronym']).to eql(@agency.acronym)
+    end
+    it 'has a kind' do
+      expect(subject['kind']).to eql(@agency.kind)
+    end
+    it 'has a description' do
+      expect(subject['description']).to eql(@agency.description)
+    end
   end
 end

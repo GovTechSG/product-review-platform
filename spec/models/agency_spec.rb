@@ -9,6 +9,21 @@ RSpec.describe Agency, type: :model do
     agency.name = ''
     expect(agency).to_not be_valid
   end
+  it "is not valid without a acronym" do
+    agency = build(:agency)
+    agency.acronym = ''
+    expect(agency).to_not be_valid
+  end
+  it "is not valid without a kind" do
+    agency = build(:agency)
+    agency.kind = ''
+    expect(agency).to_not be_valid
+  end
+  it "is not valid without a description" do
+    agency = build(:agency)
+    agency.description = ''
+    expect(agency).to_not be_valid
+  end
   it "is valid without a number" do
     agency = build(:agency)
     agency.number = ''
