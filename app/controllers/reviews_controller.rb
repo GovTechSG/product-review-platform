@@ -33,6 +33,10 @@ class ReviewsController < ApplicationController
       render_error(400, "Product/Service id": ["not specified"])
       return
     end
+    whitelisted["reviewer_id"] = whitelisted["from_id"]
+    whitelisted.delete("from_id")
+    whitelisted["reviewer_type"] = whitelisted["from_type"]
+    whitelisted.delete("from_type")
     @review = Review.new(whitelisted)
     # Update aggregate score of associated vendor company
     company = add_company_score(@reviewable.company, @score) if @score
@@ -122,15 +126,15 @@ class ReviewsController < ApplicationController
     end
 
     def set_company
-      if params[:review].present? && params[:review][:reviewer_id].present?
-        @company = Company.find_by(id: params[:review][:reviewer_id])
+      if params[:review].present? && params[:review][:from_id].present?
+        @company = Company.find_by(id: params[:review][:from_id])
       else
-        render_error(400, "Reviewer id": ["not provided"])
+        render_error(400, "From id": ["not provided"])
       end
     end
 
     def validate_company_presence
-      render_error(404, "Reviewer id": ["not found"]) if @company.nil? || !@company.presence?
+      render_error(404, "From id": ["not found"]) if @company.nil? || !@company.presence?
     end
 
     def set_grant
@@ -147,17 +151,17 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      whitelisted = params.require(:review).permit(:score, :content, :reviewer_id, :grant_id, :strengths => [])
+      whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
       if params[:product_id].present?
         whitelisted = whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
       elsif params[:service_id].present?
         whitelisted = whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
       else return nil
       end
-      whitelisted.merge({ reviewer_type: "Company" })
+      # whitelisted.merge({ reviewer_type: "Company" })
     end
 
     def update_params
-      params.require(:review).permit(:score, :content, :reviewer_id, :grant_id, :strengths => [])
+      params.require(:review).permit(:score, :content, :reviewer_id, :reivewer_type, :grant_id, :strengths => [])
     end
 end
