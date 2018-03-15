@@ -89,6 +89,6 @@ class GrantsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def grant_params
-    params.require(:grant).permit(:name, :description, :user_id, :acronym)
+    params.require(:grant).permit(:name, :description, :agency_id, :acronym)
   end
 end

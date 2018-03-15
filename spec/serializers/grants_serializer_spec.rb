@@ -6,7 +6,7 @@ RSpec.describe GrantSerializer, type: :serializer do
       @grant = create(:grant)
     end
 
-    subject { GrantSerializer.new(@grant, root: false).as_json["object"].merge("user" => @grant.user) }
+    subject { GrantSerializer.new(@grant, root: false).as_json["object"].merge("agency" => @grant.agency) }
 
     it 'has a name' do
       expect(subject['name']).to eql(@grant.name)
@@ -20,8 +20,8 @@ RSpec.describe GrantSerializer, type: :serializer do
       expect(subject['acronym']).to eql(@grant.acronym)
     end
 
-    it 'has a user' do
-      expect(subject['user']).to eql(@grant.user)
+    it 'has a agency' do
+      expect(subject['agency']).to eql(@grant.agency)
     end
   end
 end

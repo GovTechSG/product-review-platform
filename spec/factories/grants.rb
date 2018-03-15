@@ -3,6 +3,6 @@ FactoryBot.define do
     name { FFaker::Name.name }
     acronym { FFaker::Name.name }
     description { FFaker::Lorem.paragraph }
-    user
+    agency
   end
 end

@@ -6,7 +6,7 @@ module SwaggerDocs::Comment
 
     swagger_schema :Comment do
       key :type, :object
-      key :required, [:id, :content, :user_id, :review_id]
+      key :required, [:id, :content, :agency_id, :review_id]
 
       property :id do
         key :type, :integer
@@ -18,7 +18,7 @@ module SwaggerDocs::Comment
         key :example, "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis."
       end
 
-      property :user_id do
+      property :agency_id do
         key :type, :integer
         key :format, :int64
       end
@@ -38,7 +38,7 @@ module SwaggerDocs::Comment
               key :type, :string
             end
 
-            property :user_id do
+            property :agency_id do
               key :type, :integer
               key :format, :int64
             end

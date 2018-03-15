@@ -1,4 +1,4 @@
-ActiveAdmin.register User do
+ActiveAdmin.register Agency do
   permit_params :name, :email, :number
 
   form do |f|
