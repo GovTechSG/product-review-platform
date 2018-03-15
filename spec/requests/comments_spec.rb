@@ -18,12 +18,12 @@ RSpec.describe "Comments", type: :request do
     build(:service_review_comment, content: nil).attributes
   end
 
-  let(:product_comment_missing_userid_attributes) do
-    build(:product_review_comment, user_id: 0).attributes
+  let(:product_comment_missing_agencyid_attributes) do
+    build(:product_review_comment, agency_id: 0).attributes
   end
 
-  let(:service_comment_missing_userid_attributes) do
-    build(:service_review_comment, user_id: 0).attributes
+  let(:service_comment_missing_agencyid_attributes) do
+    build(:service_review_comment, agency_id: 0).attributes
   end
 
   describe "Authorised user" do
@@ -113,17 +113,17 @@ RSpec.describe "Comments", type: :request do
           expect(response).to be_not_found
         end
 
-        it "returns not found when product_user_id not found" do
+        it "returns not found when product_agency_id not found" do
           review = create(:product_review)
 
-          post review_comments_path(review.id), params: { comment: product_comment_missing_userid_attributes }, headers: request_login
+          post review_comments_path(review.id), params: { comment: product_comment_missing_agencyid_attributes }, headers: request_login
           expect(response).to be_not_found
         end
 
-        it "returns not found when service_user_id not found" do
+        it "returns not found when service_agency_id not found" do
           review = create(:service_review)
 
-          post review_comments_path(review.id), params: { comment: service_comment_missing_userid_attributes }, headers: request_login
+          post review_comments_path(review.id), params: { comment: service_comment_missing_agencyid_attributes }, headers: request_login
           expect(response).to be_not_found
         end
       end

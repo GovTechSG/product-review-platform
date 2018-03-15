@@ -88,6 +88,8 @@ GEM
       railties (>= 4.2)
     doorkeeper-jwt (0.2.1)
       jwt (~> 1.5.2, >= 1.5.2)
+    email_validator (1.6.0)
+      activemodel
     erubi (1.7.0)
     execjs (2.7.0)
     factory_bot (4.8.2)
@@ -273,6 +275,7 @@ DEPENDENCIES
   discard
   doorkeeper
   doorkeeper-jwt
+  email_validator
   factory_bot_rails
   ffaker
   figaro

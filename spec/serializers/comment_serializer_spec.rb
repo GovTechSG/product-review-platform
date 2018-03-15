@@ -12,8 +12,8 @@ RSpec.describe CommentSerializer, type: :serializer do
       expect(subject['content']).to eql(@comment.content)
     end
 
-    it 'has a user' do
-      expect(subject['user_id']).to eql(@comment.user_id)
+    it 'has a agency' do
+      expect(subject['agency_id']).to eql(@comment.agency_id)
     end
 
     it 'has a review' do
