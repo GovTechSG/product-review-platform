@@ -24,9 +24,9 @@ RSpec.describe Agency, type: :model do
     agency.description = ''
     expect(agency).to_not be_valid
   end
-  it "is valid without a number" do
+  it "is valid without a phone_number" do
     agency = build(:agency)
-    agency.number = ''
+    agency.phone_number = ''
     expect(agency).to be_valid
   end
   it "is valid without a email" do

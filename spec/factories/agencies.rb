@@ -5,6 +5,6 @@ FactoryBot.define do
     kind { ["Ministry", "Statutory Board", "Agency"].sample }
     description { FFaker::Lorem.paragraph }
     email { FFaker::Internet.email }
-    number { FFaker::PhoneNumberSG.fixed_line_number }
+    phone_number { FFaker::PhoneNumberSG.fixed_line_number }
   end
 end

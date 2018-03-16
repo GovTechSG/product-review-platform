@@ -12,8 +12,8 @@ RSpec.describe AgencySerializer, type: :serializer do
       expect(subject['name']).to eql(@agency.name)
     end
 
-    it 'has a number' do
-      expect(subject['number']).to eql(@agency.number)
+    it 'has a phone_number' do
+      expect(subject['phone_number']).to eql(@agency.phone_number)
     end
 
     it 'has a email' do

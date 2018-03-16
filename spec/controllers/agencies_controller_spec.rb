@@ -7,7 +7,7 @@ RSpec.describe AgenciesController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    build(:agency, name: nil, email: nil, number: nil, acronym: nil, description: nil, kind: nil).attributes
+    build(:agency, name: nil, email: nil, phone_number: nil, acronym: nil, description: nil, kind: nil).attributes
   end
 
   let(:valid_session) {}
@@ -94,7 +94,7 @@ RSpec.describe AgenciesController, type: :controller do
           agency.reload
           expect(agency.name).to eq(new_attributes[:name])
           expect(agency.email).to eq(new_attributes[:email])
-          expect(agency.number).to eq(new_attributes[:number])
+          expect(agency.phone_number).to eq(new_attributes[:phone_number])
           expect(agency.acronym).to eq(new_attributes[:acronym])
           expect(agency.kind).to eq(new_attributes[:kind])
           expect(agency.description).to eq(new_attributes[:description])
@@ -116,7 +116,7 @@ RSpec.describe AgenciesController, type: :controller do
           agency.reload
           expect(agency.name).to eq(original_agency[:name])
           expect(agency.email).to eq(original_agency[:email])
-          expect(agency.number).to eq(original_agency[:number])
+          expect(agency.phone_number).to eq(original_agency[:phone_number])
           expect(agency.acronym).to eq(original_agency[:acronym])
           expect(agency.kind).to eq(original_agency[:kind])
           expect(agency.description).to eq(original_agency[:description])
@@ -230,7 +230,7 @@ RSpec.describe AgenciesController, type: :controller do
         put :update, params: { id: agency.to_param, agency: new_attributes }, session: valid_session
         agency.reload
         expect(agency.name).to eq(current_attributes["name"])
-        expect(agency.number).to eq(current_attributes["number"])
+        expect(agency.phone_number).to eq(current_attributes["phone_number"])
         expect(agency.email).to eq(current_attributes["email"])
       end
 

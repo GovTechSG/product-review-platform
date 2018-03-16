@@ -1,3 +1,3 @@
 class AgencySerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :number, :acronym, :kind, :description
+  attributes :id, :name, :email, :phone_number, :acronym, :kind, :description
 end

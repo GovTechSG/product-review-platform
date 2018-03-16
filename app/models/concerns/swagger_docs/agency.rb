@@ -6,7 +6,7 @@ module SwaggerDocs::Agency
 
     swagger_schema :Agency do
       key :type, :object
-      key :required, [:id, :name, :email, :number]
+      key :required, [:id, :name, :email, :phone_number]
 
       property :id do
         key :type, :integer
@@ -23,7 +23,7 @@ module SwaggerDocs::Agency
         key :example, "MCI_Connects@mci.gov.sg"
       end
 
-      property :number do
+      property :phone_number do
         key :type, :string
         key :example, "1800-8379655"
       end
@@ -57,7 +57,7 @@ module SwaggerDocs::Agency
               key :type, :string
             end
 
-            property :number do
+            property :phone_number do
               key :type, :string
             end
 

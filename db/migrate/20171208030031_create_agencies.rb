@@ -6,7 +6,7 @@ class CreateAgencies < ActiveRecord::Migration[5.1]
       t.string :acronym, :null => false, :default => ""
       t.string :description, :null => false, :default => ""
       t.string :email
-      t.string :number
+      t.string :phone_number
 
       t.index :name, :unique => true
 
