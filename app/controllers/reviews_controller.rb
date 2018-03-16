@@ -30,7 +30,7 @@ class ReviewsController < ApplicationController
     # repeatedly calling the method
     whitelisted = create_params
     if whitelisted.nil?
-      render_error(400, "Product/Service id": ["not specified"])
+      render_error(400, "Parameter missing": ["param is missing or the value is empty: product_id/service_id"])
       return
     end
     @review = Review.new(whitelisted)
@@ -125,7 +125,7 @@ class ReviewsController < ApplicationController
       if params[:review].present? && params[:review][:reviewer_id].present?
         @company = Company.find_by(id: params[:review][:reviewer_id])
       else
-        render_error(400, "Reviewer id": ["not provided"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: reviewer_id"])
       end
     end
 
@@ -137,7 +137,7 @@ class ReviewsController < ApplicationController
       if params[:review][:grant_id].present?
         @grant = Grant.find_by(id: params[:review][:grant_id])
       else
-        render_error(400, "Grant id": ["not provided"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: grant_id"])
       end
     end
 
