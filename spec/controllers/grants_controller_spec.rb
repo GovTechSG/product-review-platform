@@ -7,7 +7,7 @@ RSpec.describe GrantsController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    attributes_for(:grant, name: nil, acronym: nil, agency_id: nil)
+    build(:grant, name: nil, acronym: nil).attributes
   end
 
   let(:token) { double acceptable?: true }
@@ -148,12 +148,11 @@ RSpec.describe GrantsController, type: :controller do
     describe "PUT #update" do
       context "with valid params" do
         let(:new_attributes) do
-          attributes_for(:grant)
+          build(:grant).attributes.with_indifferent_access
         end
 
         it "updates the requested grant", authorized: true do
           grant = Grant.create! valid_attributes
-
           put :update, params: { id: grant.to_param, grant: new_attributes }
           grant.reload
           expect(grant.name).to eq(new_attributes[:name])
@@ -165,7 +164,7 @@ RSpec.describe GrantsController, type: :controller do
         it "renders a JSON response with the grant", authorized: true do
           grant = Grant.create! valid_attributes
 
-          put :update, params: { id: grant.to_param, grant: valid_attributes }
+          put :update, params: { id: grant.to_param, grant: new_attributes }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
