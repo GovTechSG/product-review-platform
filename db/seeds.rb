@@ -42,7 +42,7 @@ industry_description = [
   "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment.",
   "Any other industry."
 ]
-UENs = [
+uens = [
   "984208875",
   "984208874",
   "984208873",
@@ -196,7 +196,7 @@ Grants = [
 
 lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
 10.times do |i|
-  Company.create!(name: company_names[i], UEN: UENs[i], aggregate_score: 4.2, description: lorem_ipsum)
+  Company.create!(name: company_names[i], uen: uens[i], aggregate_score: 4.2, description: lorem_ipsum)
 end
 # c_1.products.create!(name: "Step2 Children's Chair", description: "A great chair for your child!")
 # c_1.products.create!(name: "Rachio Router", description: "The best router for your money")
@@ -239,7 +239,7 @@ SMEs = [
   "SEA"
 ]
 
-SME_UENs = [
+SME_uens = [
   "332244643",
   "332244633",
   "332254643",
@@ -250,7 +250,7 @@ SME_UENs = [
 ]
 
 7.times do |i|
-  Company.create!(name: SMEs[i], UEN: SME_UENs[i], aggregate_score: 4.2, description: lorem_ipsum)
+  Company.create!(name: SMEs[i], uen: SME_uens[i], aggregate_score: 4.2, description: lorem_ipsum)
 end
 
 Product.all.each do |p|

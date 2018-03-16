@@ -1,10 +1,10 @@
 ActiveAdmin.register Company do
-  permit_params :name, :UEN, :aggregate_score, :description
+  permit_params :name, :uen, :aggregate_score, :description
 
   form do |f|
     f.inputs do
       f.input :name
-      f.input :UEN
+      f.input :uen
       f.input :aggregate_score
       f.input :description
     end

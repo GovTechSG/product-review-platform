@@ -16,9 +16,9 @@ RSpec.describe Company, type: :model do
     company.description = ''
     expect(company).to_not be_valid
   end
-  it "is not valid without a UEN" do
+  it "is not valid without a uen" do
     company = build(:company)
-    company.UEN = ''
+    company.uen = ''
     expect(company).to_not be_valid
   end
   it "is not valid without a aggregate_score" do
@@ -26,10 +26,10 @@ RSpec.describe Company, type: :model do
     company.aggregate_score = ''
     expect(company).to_not be_valid
   end
-  it 'is invalid with a duplicate UEN' do
+  it 'is invalid with a duplicate uen' do
     company = build(:company)
     company.save
-    expect(build(:company, UEN: company.UEN)).not_to be_valid
+    expect(build(:company, uen: company.uen)).not_to be_valid
   end
   it 'is invalid with a duplicate name' do
     company = build(:company)
