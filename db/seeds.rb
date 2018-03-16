@@ -196,7 +196,7 @@ Grants = [
 
 lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
 10.times do |i|
-  Company.create!(name: company_names[i], uen: uens[i], aggregate_score: 4.2, description: lorem_ipsum)
+  Company.create!(name: company_names[i], uen: uens[i], aggregate_score: 4.2, description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
 end
 # c_1.products.create!(name: "Step2 Children's Chair", description: "A great chair for your child!")
 # c_1.products.create!(name: "Rachio Router", description: "The best router for your money")

@@ -23,6 +23,14 @@ RSpec.describe CompanySerializer, type: :serializer do
       expect(subject['description']).to eql(@company.description)
     end
 
+    it 'has a phone_number' do
+      expect(subject['phone_number']).to eql(@company.phone_number)
+    end
+
+    it 'has a url' do
+      expect(subject['url']).to eql(@company.url)
+    end
+
     it 'has a reviews_count' do
       expect(subject['reviews_count']).to eql(@company.reviews_count)
     end

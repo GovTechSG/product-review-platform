@@ -50,12 +50,13 @@ ActiveRecord::Schema.define(version: 20180313070055) do
 
   create_table "agencies", force: :cascade do |t|
     t.string "name", default: "", null: false
-    t.string "email", default: "", null: false
-    t.string "number", default: "", null: false
+    t.string "email"
+    t.string "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_agencies_on_discarded_at"
+    t.index ["name"], name: "index_agencies_on_name", unique: true
   end
 
   create_table "apps", force: :cascade do |t|
@@ -93,22 +94,25 @@ ActiveRecord::Schema.define(version: 20180313070055) do
   create_table "companies", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "uen", default: "", null: false
+    t.string "phone_number"
+    t.string "url"
     t.decimal "aggregate_score", default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
     t.datetime "discarded_at"
-    t.index ["uen"], name: "index_companies_on_uen", unique: true
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
+    t.index ["name"], name: "index_companies_on_name", unique: true
+    t.index ["uen"], name: "index_companies_on_uen", unique: true
   end
 
   create_table "grants", force: :cascade do |t|
-    t.string "name"
+    t.string "name", default: "", null: false
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "acronym"
-    t.string "description"
+    t.string "acronym", default: "", null: false
+    t.string "description", default: "", null: false
     t.bigint "agency_id"
     t.index ["agency_id"], name: "index_grants_on_agency_id"
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
@@ -116,11 +120,11 @@ ActiveRecord::Schema.define(version: 20180313070055) do
   end
 
   create_table "industries", force: :cascade do |t|
-    t.string "name"
+    t.string "name", default: "", null: false
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
+    t.string "description", default: "", null: false
     t.index ["discarded_at"], name: "index_industries_on_discarded_at"
     t.index ["name"], name: "index_industries_on_name", unique: true
   end
@@ -175,7 +179,7 @@ ActiveRecord::Schema.define(version: 20180313070055) do
 
   create_table "reviews", force: :cascade do |t|
     t.integer "score", default: 0, null: false
-    t.text "content", default: "", null: false
+    t.text "content"
     t.string "reviewable_type"
     t.bigint "reviewable_id"
     t.datetime "created_at", null: false

@@ -23,6 +23,16 @@ module SwaggerDocs::Company
         key :example, '984208875'
       end
 
+      property :phone_number do
+        key :type, :string
+        key :example, '+1 (415) 777-4868'
+      end
+
+      property :url do
+        key :type, :string
+        key :example, 'https://pivotal.io/'
+      end
+
       property :aggregate_score do
         key :type, :number
       end
@@ -63,6 +73,15 @@ module SwaggerDocs::Company
             property :description do
               key :type, :string
             end
+
+            property :phone_number do
+              key :type, :string
+            end
+
+            property :url do
+              key :type, :string
+            end
+
             property :industry_ids do
               key :type, :array
               items do
