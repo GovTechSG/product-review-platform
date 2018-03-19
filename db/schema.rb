@@ -50,8 +50,11 @@ ActiveRecord::Schema.define(version: 20180313070055) do
 
   create_table "agencies", force: :cascade do |t|
     t.string "name", default: "", null: false
+    t.string "kind", default: "", null: false
+    t.string "acronym", default: "", null: false
+    t.string "description", default: "", null: false
     t.string "email"
-    t.string "number"
+    t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
