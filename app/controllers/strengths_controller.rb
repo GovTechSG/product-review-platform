@@ -1,9 +1,11 @@
 class StrengthsController < ApplicationController
+  before_action :doorkeeper_authorize!
   before_action :set_strength, only: [:show, :update, :destroy]
+  before_action :validate_strength_presence, only: [:show, :update, :destroy]
 
   # GET /strengths
   def index
-    @strengths = Strength.all
+    @strengths = Strength.kept
 
     render json: @strengths
   end
@@ -20,7 +22,7 @@ class StrengthsController < ApplicationController
     if @strength.save
       render json: @strength, status: :created, location: @strength
     else
-      render json: @strength.errors, status: :unprocessable_entity
+      render json: @strength.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -29,23 +31,28 @@ class StrengthsController < ApplicationController
     if @strength.update(strength_params)
       render json: @strength
     else
-      render json: @strength.errors, status: :unprocessable_entity
+      render json: @strength.errors.messages, status: :unprocessable_entity
     end
   end
 
   # DELETE /strengths/1
   def destroy
-    @strength.destroy
+    @strength.discard
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_strength
-      @strength = Strength.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def strength_params
-      params.require(:strength).permit(:name, :description)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_strength
+    @strength = Strength.find_by(id: params[:id])
+  end
+
+  def validate_strength_presence
+    render_error(404, "Strength id": ["not found."]) if @strength.nil? || !@strength.presence?
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def strength_params
+    params.require(:strength).permit(:name, :description)
+  end
 end
