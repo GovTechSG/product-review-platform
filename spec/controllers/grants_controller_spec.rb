@@ -7,7 +7,7 @@ RSpec.describe GrantsController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    attributes_for(:grant, name: nil, acronym: nil, agency_id: nil)
+    build(:grant, name: nil, acronym: nil).attributes
   end
 
   let(:token) { double acceptable?: true }
@@ -126,30 +126,93 @@ RSpec.describe GrantsController, type: :controller do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
+
+        it "renders 404 when agency is not found", authorized: true do
+          grant_with_no_agency = valid_attributes
+          grant_with_no_agency["agency_id"] = 0
+          post :create, params: { grant: grant_with_no_agency }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "renders 404 when agency is deleted", authorized: true do
+          grant_with_no_agency = valid_attributes
+          Agency.find_by(id: grant_with_no_agency["agency_id"]).discard
+          post :create, params: { grant: grant_with_no_agency }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
       end
     end
 
     describe "PUT #update" do
       context "with valid params" do
         let(:new_attributes) do
-          attributes_for(:grant)
+          build(:grant).attributes.with_indifferent_access
         end
 
         it "updates the requested grant", authorized: true do
           grant = Grant.create! valid_attributes
-
           put :update, params: { id: grant.to_param, grant: new_attributes }
           grant.reload
           expect(grant.name).to eq(new_attributes[:name])
           expect(grant.description).to eq(new_attributes[:description])
           expect(grant.acronym).to eq(new_attributes[:acronym])
+          expect(grant.agency_id).to eq(new_attributes[:agency_id])
         end
 
         it "renders a JSON response with the grant", authorized: true do
           grant = Grant.create! valid_attributes
 
-          put :update, params: { id: grant.to_param, grant: valid_attributes }
+          put :update, params: { id: grant.to_param, grant: new_attributes }
           expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "has an optional agency id field", authorized: true do
+          grant = Grant.create! valid_attributes
+          old_grant = grant
+          new_attributes_no_agency = new_attributes.except(:agency_id)
+          put :update, params: { id: grant.to_param, grant: new_attributes_no_agency }
+          grant.reload
+
+          expect(grant.name).to eq(new_attributes[:name])
+          expect(grant.description).to eq(new_attributes[:description])
+          expect(grant.acronym).to eq(new_attributes[:acronym])
+          expect(grant.agency_id).to eq(old_grant[:agency_id])
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "renders 404 when agency is not found", authorized: true do
+          grant = Grant.create! valid_attributes
+          old_grant = grant
+          new_attributes["agency_id"] = 0
+          put :update, params: { id: grant.to_param, grant: new_attributes }
+          grant.reload
+
+          expect(grant.name).to eq(old_grant[:name])
+          expect(grant.description).to eq(old_grant[:description])
+          expect(grant.acronym).to eq(old_grant[:acronym])
+          expect(grant.agency_id).to eq(old_grant[:agency_id])
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "renders 404 when agency is deleted", authorized: true do
+          grant = Grant.create! valid_attributes
+          old_grant = grant
+          agency = create(:agency)
+          agency.discard
+          new_attributes["agency_id"] = agency.id
+          put :update, params: { id: grant.to_param, grant: new_attributes }
+          grant.reload
+
+          expect(grant.name).to eq(old_grant[:name])
+          expect(grant.description).to eq(old_grant[:description])
+          expect(grant.acronym).to eq(old_grant[:acronym])
+          expect(grant.agency_id).to eq(old_grant[:agency_id])
+          expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
       end
