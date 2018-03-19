@@ -55,6 +55,15 @@ UENs = [
   "574208374",
 ]
 
+Strengths = [
+  { name: "Reliability", description: "The ability to deliver the promised product or service in a consistent and accurate manner." },
+  { name: "Explanation of Project and Resources", description: "The project and resources is definite, distinct, and clearly explained" },
+  { name: "Responsive to Messages", description: "Respond quickly and consistently to private messages" },
+  { name: "Quality Tools & Materials", description: "Delivers quality product/service" },
+  { name: "Skills & Knowledge", description: "Knowledge of business needs and skills to produce solution based on knowledge" },
+  { name: "Understanding Business Needs", description: "Understands business perspective and has good domain knowledge" }
+]
+
 Agencies = [
   { name: "Ministry Of Communications And Information", email: "MCI_Connects@mci.gov.sg", phone_number: "1800-8379655", acronym: "MCI", kind: "Ministry", description: "The Ministry of Communications and Information (MCI) oversees the development of the infocomm technology, cyber security, media and design sectors; the national library, national archives and public libraries; as well as Government’s information and public communication policies. MCI’s mission is to connect our people to community, government and opportunity, enabled by trustworthy infrastructure and technology." },
   { name: "Ministry Of Culture, Community And Youth", email: "", phone_number: "6338 3632", acronym: "MCCY", kind: "Ministry", description: "The Ministry of Culture, Community and Youth (MCCY) seeks to inspire Singaporeans through the arts and sports, deepen a sense of identity and belonging to the nation, strengthen community bonds, engage youths and promote volunteerism and philanthropy, to build a gracious and caring society we are proud to call home." },
@@ -253,19 +262,24 @@ SME_UENs = [
   Company.create!(name: SMEs[i], UEN: SME_UENs[i], aggregate_score: 4.2, description: lorem_ipsum)
 end
 
+Strengths.each do |strength|
+  Strength.create!(strength)
+end
+
+
 Product.all.each do |p|
-  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
-  p.reviews.create!(score: 1, content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
-  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3, strengths: ["Reliable", "Explanation of Project and Resources", "Responsive to Messages"])
-  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
-  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5, strengths: ["Reliable", "Responsive to Messages"])
-  p.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6, strengths: ["Explanation of Project and Resources", "Skilful & Knowledgeable"])
+  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  p.reviews.create!(score: 1, content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
+  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
+  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
+  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
+  p.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
 end
 
 Service.all.each do |s|
-  s.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1, strengths: ["Reliable", "Responsive to Messages"])
-  s.reviews.create!(score: 2, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2, strengths: ["Empathetic", "Skilful & Knowledgeable", "Responsive to Messages"])
-  s.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3, strengths: ["Empathetic", "Quality Tools & Materials", "Skilful & Knowledgeable"])
+  s.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  s.reviews.create!(score: 2, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
+  s.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
 end
 
 Review.all.each_with_index do |r, i|
@@ -275,6 +289,9 @@ Review.all.each_with_index do |r, i|
   r.comments.create!(content: lorem_ipsum, agency_id: 2)
   r.comments.create!(content: lorem_ipsum, agency_id: 4)
   r.comments.create!(content: lorem_ipsum, agency_id: 5)
+  
+  StrengthReview.create!(strength: Strength.first, review: r)
+  StrengthReview.create!(strength: Strength.last, review: r)
 
   r.likes.create!(agency_id: 1)
   r.likes.create!(agency_id: 2)

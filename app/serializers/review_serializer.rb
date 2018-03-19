@@ -4,6 +4,7 @@ class ReviewSerializer < ActiveModel::Serializer
   belongs_to :reviewable, key: "object", serializer: ServiceSerializer, if: :service?
   belongs_to :reviewer, serializer: CompanySerializer
   belongs_to :grant, serializer: GrantSerializer
+  has_many :strengths, serializer: StrengthSerializer
 
   def product?
     instance_options[:reviewable].class == Product
