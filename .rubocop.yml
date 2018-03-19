@@ -27,6 +27,7 @@ AllCops:
     - '**/Cheffile'
     - '**/Vagabondfile'
   Exclude:
+    - 'Gemfile'
     - 'vendor/**/*'
     - 'node_modules/**/*'
     - 'bin/**/*'
