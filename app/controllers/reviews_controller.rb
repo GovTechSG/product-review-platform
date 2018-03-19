@@ -10,6 +10,7 @@ class ReviewsController < ApplicationController
   before_action :set_reviewable, only: [:index, :create]
   before_action :validate_reviewable_presence, only: [:index, :create]
   before_action :validate_score_type, only: [:create, :update]
+  before_action :validate_from_type, only: [:create]
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
@@ -37,6 +38,7 @@ class ReviewsController < ApplicationController
     whitelisted.delete("from_id")
     whitelisted["reviewer_type"] = whitelisted["from_type"]
     whitelisted.delete("from_type")
+
     @review = Review.new(whitelisted)
     # Update aggregate score of associated vendor company
     company = add_company_score(@reviewable.company, @score) if @score
@@ -149,6 +151,10 @@ class ReviewsController < ApplicationController
       render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
     end
 
+    def validate_from_type
+      render_error(422, "From type": ["is invalid"]) if !Object.const_defined?(params[:review][:from_type]) && !(params[:review][:from_type]).superclass.name == "Reviewer"
+    end
+
     # Only allow a trusted parameter "white list" through.
     def create_params
       whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
@@ -158,7 +164,6 @@ class ReviewsController < ApplicationController
         whitelisted = whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
       else return nil
       end
-      # whitelisted.merge({ reviewer_type: "Company" })
     end
 
     def update_params
