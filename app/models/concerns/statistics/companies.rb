@@ -52,10 +52,17 @@ module Statistics::Companies
       strengths_set = Set.new
       product_service.first(3).each do |reviewable|
         reviewable.reviews.kept.first(3).each do |review|
-          strengths_set.merge(review.strengths)
+          strengths_set.merge(serialize(review.strengths))
         end
       end
       strengths_set
+    end
+
+    def serialize(strengths)
+      strengths.map do |strength|
+        strength = ActiveModel::SerializableResource.new(strength)
+        strength.as_json
+      end
     end
   end
 end

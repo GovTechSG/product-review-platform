@@ -24,13 +24,7 @@ module SwaggerDocs::Review
 
       property :strengths do
         key :type, :array
-        items do
-          key :type, :string
-          key :example, [
-            "Reliable",
-            "Explanation of Resources"
-          ]
-        end
+        key :'$ref', :Strength
       end
 
       property :object do
@@ -66,13 +60,7 @@ module SwaggerDocs::Review
 
       property :strengths do
         key :type, :array
-        items do
-          key :type, :string
-          key :example, [
-            "Reliable",
-            "Explanation of Resources"
-          ]
-        end
+        key :example, "Spring frameworks was not developed in spring"
       end
 
       property :object do
@@ -101,10 +89,10 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end
@@ -135,10 +123,10 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end
@@ -169,10 +157,10 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end

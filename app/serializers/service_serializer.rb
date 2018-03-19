@@ -1,7 +1,7 @@
 class ServiceSerializer < ActiveModel::Serializer
   attribute :type, if: :type?
   attributes :id, :name, :description
-  belongs_to :company, serializer: CompanySerializer
+  belongs_to :company, each_serializer: AssociateCompanySerializer
 
   def type
     'Service'
