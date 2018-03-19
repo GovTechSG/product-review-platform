@@ -211,8 +211,10 @@ ActiveRecord::Schema.define(version: 20180319025519) do
   create_table "strengths", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_strengths_on_discarded_at"
     t.index ["name"], name: "index_strengths_on_name", unique: true
   end
 
