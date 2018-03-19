@@ -1,11 +1,11 @@
 ActiveAdmin.register Agency do
-  permit_params :name, :email, :number
+  permit_params :name, :email, :phone_number
 
   form do |f|
     f.inputs do
       f.input :name
       f.input :email
-      f.input :number
+      f.input :phone_number
     end
     f.actions
   end

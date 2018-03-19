@@ -5,7 +5,8 @@ class Agency < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :grants, dependent: :destroy
 
-  validates :name, presence: true
+  validates :name, :acronym, :kind, :description, presence: true
   validates :name, uniqueness: true
   validates :email, allow_blank: true, email: true
+  validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"] }
 end
