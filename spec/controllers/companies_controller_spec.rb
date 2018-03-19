@@ -83,9 +83,9 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response.status).to eq(422)
     end
 
-    it "renders a 422 error for duplicate UEN", authorized: true do
+    it "renders a 422 error for duplicate uen", authorized: true do
       @dupcompany = build(:company)
-      @dupcompany.UEN = company.UEN
+      @dupcompany.uen = company.uen
       @dupcompany.save
       post :create, params: { company: company.as_json.merge(industry_ids: [industry.id]) }
       expect(response).to have_http_status(:unprocessable_entity)
@@ -130,7 +130,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch :update, params: { company: attributes_for(:company, UEN: another_company.UEN).as_json.merge(industry_ids: [industry.id]), id: company.id }
+      patch :update, params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.id]), id: company.id }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -161,7 +161,7 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response.status).to eq(404)
     end
 
-    it "renders a 422 error for duplicate UEN", authorized: true do
+    it "renders a 422 error for duplicate uen", authorized: true do
       @dupcompany = create(:company)
 
       patch :update, params: { company: company.as_json.merge(industry_ids: [industry.id]), id: @dupcompany.id }

@@ -6,7 +6,7 @@ module SwaggerDocs::Company
 
     swagger_schema :Company do
       key :type, :object
-      key :required, [:id, :name, :UEN, :aggregate_score]
+      key :required, [:id, :name, :uen, :aggregate_score]
 
       property :id do
         key :type, :integer
@@ -18,9 +18,19 @@ module SwaggerDocs::Company
         key :example, 'Pivotal Software'
       end
 
-      property :UEN do
+      property :uen do
         key :type, :string
         key :example, '984208875'
+      end
+
+      property :phone_number do
+        key :type, :string
+        key :example, '+1 (415) 777-4868'
+      end
+
+      property :url do
+        key :type, :string
+        key :example, 'https://pivotal.io/'
       end
 
       property :aggregate_score do
@@ -56,13 +66,22 @@ module SwaggerDocs::Company
               key :type, :string
             end
 
-            property :UEN do
+            property :uen do
               key :type, :string
             end
 
             property :description do
               key :type, :string
             end
+
+            property :phone_number do
+              key :type, :string
+            end
+
+            property :url do
+              key :type, :string
+            end
+
             property :industry_ids do
               key :type, :array
               items do
