@@ -139,6 +139,12 @@ class ReviewsController < ApplicationController
       render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
     end
 
+    def validate_update_grant_presence
+      if params[:review].present? && params[:review][:grant_id].present?
+
+      end
+    end
+
     def validate_set_create_from
       type = params[:review][:from_type].classify.safe_constantize
       if type != nil
