@@ -64,6 +64,39 @@ module SwaggerDocs::Companies
       end
     end
 
+    swagger_path '/api/v1/companies/{company_id}/clients' do
+      parameter do
+        key :name, :company_id
+        key :in, :path
+        key :description, 'ID of company'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      operation :get do
+        security do
+          key :Authorization, []
+        end
+        key :tags, ['Company']
+        key :description, 'Returns list of all company clients'
+        key :operationId, 'findCompaniesClients'
+        key :produces, [
+          'application/json'
+        ]
+        response 200 do
+          key :description, 'OK, list of companies fetched'
+          schema type: :array do
+            items do
+              key :'$ref', :Company
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+      end
+    end
+
     swagger_path '/api/v1/companies/{id}' do
       parameter do
         key :name, :id

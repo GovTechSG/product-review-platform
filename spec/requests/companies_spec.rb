@@ -51,6 +51,24 @@ RSpec.describe "Companies", type: :request do
       expect(parsed_response.length).to eq(1)
     end
 
+    it "does not display duplicate products reviews" do
+      product = company.products.create! build(:product).attributes
+      review = build(:product_review).attributes
+      product.reviews.create! review
+      product.reviews.create! review
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(1)
+    end
+
+    it "does not display duplicate service reviews" do
+      service = company.products.create! build(:product).attributes
+      review = build(:service_review).attributes
+      service.reviews.create! review
+      service.reviews.create! review
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(1)
+    end
+
     it "returns service clients if there are only service clients" do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
