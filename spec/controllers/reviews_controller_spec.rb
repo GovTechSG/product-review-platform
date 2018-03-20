@@ -162,7 +162,6 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
 
             expect do
-
               post :create, params: { review: create_update_product_review, product_id: product.id }
             end.to change(Review, :count).by(1)
           end
