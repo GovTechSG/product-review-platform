@@ -11,8 +11,8 @@ RSpec.describe AssociateCompanySerializer, type: :serializer do
       expect(subject['name']).to eql(@company.name)
     end
 
-    it 'has a UEN' do
-      expect(subject['UEN']).to eql(@company.UEN)
+    it 'has a uen' do
+      expect(subject['uen']).to eql(@company.uen)
     end
 
     it 'has a aggregate score' do
