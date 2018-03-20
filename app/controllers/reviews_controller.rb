@@ -12,6 +12,7 @@ class ReviewsController < ApplicationController
   before_action :validate_score_type, only: [:create, :update]
   before_action :validate_set_create_from, only: [:create]
   before_action :validate_set_update_from, only: [:update]
+  before_action :validate_set_update_grant_presence, only: [:update]
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
@@ -111,6 +112,7 @@ class ReviewsController < ApplicationController
     end
 
     # Use callbacks to share common setup or constraints between actions.
+    # Use callbacks to share common setup or constraints between actions.
     def set_review
       @review = Review.find_by(id: params[:id])
     end
@@ -139,9 +141,10 @@ class ReviewsController < ApplicationController
       render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
     end
 
-    def validate_update_grant_presence
+    def validate_set_update_grant_presence
       if params[:review].present? && params[:review][:grant_id].present?
-
+        @grant = Grant.find_by(id: params[:review][:grant_id])
+        render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
       end
     end
 
