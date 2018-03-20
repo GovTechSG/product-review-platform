@@ -1,4 +1,5 @@
 class StrengthsController < ApplicationController
+  include SwaggerDocs::Strengths
   before_action :doorkeeper_authorize!
   before_action :set_strength, only: [:show, :update, :destroy]
   before_action :validate_strength_presence, only: [:show, :update, :destroy]
