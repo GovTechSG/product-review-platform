@@ -63,7 +63,7 @@ module SwaggerDocs::Company
 
     swagger_schema :CompanyAssociation do
       key :type, :object
-      key :required, [:id, :name, :UEN, :aggregate_score]
+      key :required, [:id, :name, :uen, :aggregate_score]
 
       property :id do
         key :type, :integer
@@ -75,7 +75,7 @@ module SwaggerDocs::Company
         key :example, 'Pivotal Software'
       end
 
-      property :UEN do
+      property :uen do
         key :type, :string
         key :example, '984208875'
       end
