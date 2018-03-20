@@ -23,6 +23,10 @@ module SwaggerDocs::Service
         key :example, "Spring frameworks was not developed in spring"
       end
 
+      property :reviews_count do
+        key :type, :number
+      end
+
       property :company do
         key :'$ref', :CompanyAssociation
       end
@@ -50,6 +54,10 @@ module SwaggerDocs::Service
       property :description do
         key :type, :string
         key :example, "Spring frameworks was not developed in spring"
+      end
+
+      property :reviews_count do
+        key :type, :number
       end
 
       property :company do

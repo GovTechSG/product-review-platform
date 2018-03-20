@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
   # GET /companies
   def index
     @companies = Company.kept
-    render json: @companies, methods: [:reviews_count, :strengths]
+    render json: @companies, methods: [:strengths]
   end
 
   # GET /companies/:company_id/clients
@@ -24,7 +24,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/1
   def show
-    render json: @company, methods: [:reviews_count, :strengths]
+    render json: @company, methods: [:strengths]
   end
 
   # POST /companies
