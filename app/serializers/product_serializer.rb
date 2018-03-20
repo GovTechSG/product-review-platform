@@ -1,7 +1,7 @@
 class ProductSerializer < ActiveModel::Serializer
   attribute :type, if: :type?
   attributes :id, :name, :description
-  belongs_to :company, each_serializer: AssociateCompanySerializer
+  belongs_to :company, serializer: AssociateCompanySerializer
 
   def type
     'Product'
