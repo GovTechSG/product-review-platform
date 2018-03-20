@@ -50,8 +50,11 @@ ActiveRecord::Schema.define(version: 20180313070055) do
 
   create_table "agencies", force: :cascade do |t|
     t.string "name", default: "", null: false
+    t.string "kind", default: "", null: false
+    t.string "acronym", default: "", null: false
+    t.string "description", default: "", null: false
     t.string "email"
-    t.string "number"
+    t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
@@ -93,15 +96,17 @@ ActiveRecord::Schema.define(version: 20180313070055) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name", default: "", null: false
-    t.string "UEN", default: "", null: false
+    t.string "uen", default: "", null: false
+    t.string "phone_number"
+    t.string "url"
     t.decimal "aggregate_score", default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
     t.datetime "discarded_at"
-    t.index ["UEN"], name: "index_companies_on_UEN", unique: true
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
     t.index ["name"], name: "index_companies_on_name", unique: true
+    t.index ["uen"], name: "index_companies_on_uen", unique: true
   end
 
   create_table "grants", force: :cascade do |t|

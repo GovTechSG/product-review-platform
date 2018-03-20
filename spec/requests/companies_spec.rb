@@ -83,9 +83,9 @@ RSpec.describe "Companies", type: :request do
       expect(response.status).to eq(422)
     end
 
-    it "renders a 422 error for duplicate UEN" do
+    it "renders a 422 error for duplicate uen" do
       dupcompany = build(:company)
-      dupcompany.UEN = company.UEN
+      dupcompany.uen = company.uen
       dupcompany.save
       post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
@@ -130,7 +130,7 @@ RSpec.describe "Companies", type: :request do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch company_path(company.id), params: { company: attributes_for(:company, UEN: another_company.UEN).as_json.merge(industry_ids: [industry.id]), id: company.id }, headers: header
+      patch company_path(company.id), params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.id]), id: company.id }, headers: header
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -149,10 +149,10 @@ RSpec.describe "Companies", type: :request do
       expect(response.status).to eq(404)
     end
 
-    it "renders a 422 error for duplicate UEN" do
+    it "renders a 422 error for duplicate uen" do
       dupcompany = build(:company)
       dupcompany.save
-      company.UEN = dupcompany.UEN
+      company.uen = dupcompany.uen
       patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')

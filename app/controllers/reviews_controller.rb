@@ -119,7 +119,7 @@ class ReviewsController < ApplicationController
       if params[:review].present? && params[:review][:from_id].present?
         @company = Company.find_by(id: params[:review][:from_id])
       else
-        render_error(400, "From id": ["not provided"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id"])
       end
     end
 
@@ -131,7 +131,7 @@ class ReviewsController < ApplicationController
       if params[:review][:grant_id].present?
         @grant = Grant.find_by(id: params[:review][:grant_id])
       else
-        render_error(400, "Grant id": ["not provided"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: grant_id"])
       end
     end
 

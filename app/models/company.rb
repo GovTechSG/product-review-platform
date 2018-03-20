@@ -11,6 +11,6 @@ class Company < Reviewer
   has_many :industry_companies, dependent: :destroy
   has_many :industries, through: :industry_companies
 
-  validates_presence_of :name, :UEN, :aggregate_score, :description
-  validates_uniqueness_of :UEN, :name
+  validates_presence_of :name, :uen, :aggregate_score, :description
+  validates_uniqueness_of :uen, :name
 end
