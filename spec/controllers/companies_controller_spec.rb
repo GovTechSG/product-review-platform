@@ -34,6 +34,93 @@ RSpec.describe CompaniesController, type: :controller do
     end
   end
 
+  describe "GET #clients", authorized: true do
+    let(:company) { create(:company) }
+    it "returns a success response" do
+      get :clients, params: { company_id: company.id }
+      expect(response).to be_success
+    end
+
+    it "returns empty array if there are no clients" do
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response).to eq([])
+    end
+
+    it "returns product clients if there are only product clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(1)
+    end
+
+    it "returns service clients if there are only service clients" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(1)
+    end
+
+    it "does not return deleted products" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.discard
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted services" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.discard
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted products review" do
+      product = company.products.create! build(:product).attributes
+      review = product.reviews.create! build(:product_review).attributes
+      review.discard
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted services review" do
+      service = company.services.create! build(:service).attributes
+      review = service.reviews.create! build(:service_review).attributes
+      review.discard
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "returns product and service clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      get :clients, params: { company_id: company.id }
+      expect(parsed_response.length).to eq(2)
+    end
+
+    it "returns not found if company is not found" do
+      get :clients, params: { company_id: 0 }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns not found if company is deleted" do
+      company.discard
+      get :clients, params: { company_id: company.id }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "GET #clients", authorized: false do
+    let(:company) { create(:company) }
+    it "returns an unauthorized response" do
+      get :clients, params: { company_id: company.id }
+      expect_unauthorized
+    end
+  end
+
   describe "GET #show", authorized: true do
     let(:company) { create(:company) }
     it "returns a success response" do

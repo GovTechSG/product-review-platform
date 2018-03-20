@@ -31,6 +31,94 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
+  describe "GET companies/:company_id/clients" do
+    let(:header) { request_login }
+    let(:company) { create(:company) }
+    it "returns a success response" do
+      get companies_clients_path(company.id), headers: header
+      expect(response).to be_success
+    end
+
+    it "returns empty array if there are no clients" do
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response).to eq([])
+    end
+
+    it "returns product clients if there are only product clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(1)
+    end
+
+    it "returns service clients if there are only service clients" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(1)
+    end
+
+    it "does not return deleted products" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.discard
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted services" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.discard
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted products review" do
+      product = company.products.create! build(:product).attributes
+      review = product.reviews.create! build(:product_review).attributes
+      review.discard
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "does not return deleted services review" do
+      service = company.services.create! build(:service).attributes
+      review = service.reviews.create! build(:service_review).attributes
+      review.discard
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(0)
+    end
+
+    it "returns product and service clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      get companies_clients_path(company.id), headers: header
+      expect(parsed_response.length).to eq(2)
+    end
+
+    it "returns not found if company is not found" do
+      get companies_clients_path(0), headers: header
+      expect(response.status).to eq(404)
+    end
+
+    it "returns not found if company is deleted" do
+      company.discard
+      get companies_clients_path(company.id), headers: header
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "GET companies/:company_id/clients unauthorized" do
+    let(:company) { create(:company) }
+    it "returns an unauthorized response" do
+      get companies_clients_path(company.id)
+      expect_unauthorized
+    end
+  end
+
   describe "GET /companies/:id" do
     let(:company) { create(:company) }
     let(:header) { request_login }
@@ -171,14 +259,14 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
-  describe "PATCH #update", authorized: false do
+  describe "PATCH #update" do
     it "returns an unauthorized response" do
       patch company_path(0), params: { company: {}, id: 0 }
       expect_unauthorized
     end
   end
 
-  describe "DELETE #destroy", authorized: true do
+  describe "DELETE #destroy" do
     let(:company) { create(:company) }
     let(:header) { request_login }
     it "returns a success response" do
@@ -198,7 +286,7 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
-  describe "DELETE #destroy", authorized: false do
+  describe "DELETE #destroy" do
     it "returns an unauthorized response" do
       delete company_path(0), params: {}, headers: nil
       expect_unauthorized
