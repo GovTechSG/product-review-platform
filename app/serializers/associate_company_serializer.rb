@@ -1,6 +1,6 @@
 class AssociateCompanySerializer < ActiveModel::Serializer
   attribute :type, if: :type?
-  attributes :id, :name, :uen, :aggregate_score, :description
+  attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count
 
   def type
     'Company'

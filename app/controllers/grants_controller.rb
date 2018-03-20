@@ -86,9 +86,11 @@ class GrantsController < ApplicationController
   end
 
   def validate_update_params
-    if agency_id_present?
-      agency = set_agency
-      render_error(404, "Agency id": ["not found."]) if agency_not_found(agency)
+    if params[:grant].present?
+      if agency_id_present?
+        agency = set_agency
+        render_error(404, "Agency id": ["not found."]) if agency_not_found(agency)
+      end
     end
   end
 

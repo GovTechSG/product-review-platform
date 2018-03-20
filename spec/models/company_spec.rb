@@ -26,6 +26,11 @@ RSpec.describe Company, type: :model do
     company.aggregate_score = ''
     expect(company).to_not be_valid
   end
+  it "is not valid without a reviews_count" do
+    company = build(:company)
+    company.reviews_count = nil
+    expect(company).to_not be_valid
+  end
   it 'is invalid with a duplicate uen' do
     company = build(:company)
     company.save
@@ -35,5 +40,20 @@ RSpec.describe Company, type: :model do
     company = build(:company)
     company.save
     expect(build(:company, name: company.name)).not_to be_valid
+  end
+  it "is valid without a url" do
+    company = build(:company)
+    company.url = ''
+    expect(company).to be_valid
+  end
+  it "is not valid with an invalid url" do
+    company = build(:company)
+    company.url = 'hey'
+    expect(company).to_not be_valid
+  end
+
+  it "is valid with a valid url" do
+    company = build(:company)
+    expect(company).to be_valid
   end
 end

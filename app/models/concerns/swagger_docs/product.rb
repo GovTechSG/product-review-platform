@@ -26,6 +26,10 @@ module SwaggerDocs::Product
       property :company do
         key :'$ref', :CompanyAssociation
       end
+
+      property :reviews_count do
+        key :type, :number
+      end
     end
 
     swagger_schema :Product_Review do
@@ -50,6 +54,10 @@ module SwaggerDocs::Product
       property :description do
         key :type, :string
         key :example, "A postman API"
+      end
+
+      property :reviews_count do
+        key :type, :number
       end
     end
 

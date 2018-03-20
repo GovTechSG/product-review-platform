@@ -17,6 +17,12 @@ RSpec.describe Product, type: :model do
       expect(build(:product, description: nil)).not_to be_valid
     end
 
+    it "is not valid without a reviews_count" do
+      product = build(:company)
+      product.reviews_count = nil
+      expect(product).to_not be_valid
+    end
+
     it 'is invalid without a company' do
       expect(build(:product, company: nil)).not_to be_valid
     end
