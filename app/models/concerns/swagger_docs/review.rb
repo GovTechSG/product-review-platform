@@ -36,7 +36,9 @@ module SwaggerDocs::Review
 
       property :strengths do
         key :type, :array
-        key :'$ref', :Strength
+        items do
+          key :'$ref', :Strength
+        end
       end
     end
 
@@ -72,7 +74,9 @@ module SwaggerDocs::Review
 
       property :strengths do
         key :type, :array
-        key :example, "Spring frameworks was not developed in spring"
+        items do
+          key :'$ref', :Strength
+        end
       end
     end
 
