@@ -4,14 +4,6 @@ module Statistics::Companies
   extend ActiveSupport::Concern
 
   included do
-    # These refer to the aggregate number of reviews of a vendor company's products and services
-    # (different from #reviews method on company, see models/company.rb)
-    def reviews_count
-      product_count = self.products.kept.reduce(0) { |accum, product| accum + product.reviews.kept.count }
-      total_count = product_count + self.services.kept.reduce(0) { |accum, service| accum + service.reviews.kept.count }
-      total_count
-    end
-
     def strengths
       product_strength_set = get_reviews(self.products.kept)
       service_strength_set = get_reviews(self.services.kept)
@@ -23,26 +15,23 @@ module Statistics::Companies
       # Get current total score and add latest score to it
       # Then divide by total number of reviews + 1 (+1 because latest review not yet
       # saved to database)
-      count = reviews_count
-      if count > 0
-        ((count * aggregate_score) + score)/(count + 1)
+      if reviews_count > 0
+        ((reviews_count * aggregate_score) + score)/(reviews_count + 1)
       else
         score
       end
     end
 
     def update_score(old_score, updated_score)
-      count = reviews_count
-      if count > 0
-        ((count * aggregate_score) - old_score + updated_score)/count
+      if reviews_count > 0
+        ((reviews_count * aggregate_score) - old_score + updated_score)/reviews_count
       else
         updated_score
       end
     end
 
     def subtract_score(score)
-      count = reviews_count
-      final_score = ((count * aggregate_score) - score)/(count - 1)
+      final_score = ((reviews_count * aggregate_score) - score)/(reviews_count - 1)
       final_score.nan? || final_score.infinite? ? 0 : final_score
     end
 

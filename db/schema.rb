@@ -100,12 +100,14 @@ ActiveRecord::Schema.define(version: 20180319054011) do
     t.string "phone_number"
     t.string "url"
     t.decimal "aggregate_score", default: "0.0", null: false
+    t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
     t.index ["name"], name: "index_companies_on_name", unique: true
+    t.index ["reviews_count"], name: "index_companies_on_reviews_count"
     t.index ["uen"], name: "index_companies_on_uen", unique: true
   end
 
@@ -173,11 +175,13 @@ ActiveRecord::Schema.define(version: 20180319054011) do
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
     t.bigint "company_id"
+    t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["discarded_at"], name: "index_products_on_discarded_at"
+    t.index ["reviews_count"], name: "index_products_on_reviews_count"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -201,11 +205,13 @@ ActiveRecord::Schema.define(version: 20180319054011) do
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
     t.bigint "company_id"
+    t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.index ["company_id"], name: "index_services_on_company_id"
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
+    t.index ["reviews_count"], name: "index_services_on_reviews_count"
   end
 
   create_table "strength_reviews", force: :cascade do |t|

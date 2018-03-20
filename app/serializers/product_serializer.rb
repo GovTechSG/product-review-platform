@@ -1,6 +1,6 @@
 class ProductSerializer < ActiveModel::Serializer
   attribute :type, if: :type?
-  attributes :id, :name, :description
+  attributes :id, :name, :description, :reviews_count
   belongs_to :company, serializer: AssociateCompanySerializer
 
   def type
