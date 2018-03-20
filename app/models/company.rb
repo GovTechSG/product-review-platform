@@ -4,7 +4,7 @@ class Company < ApplicationRecord
 
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
-  has_many :reviews, dependent: :destroy
+  has_many :reviews, dependent: :destroy, as: :reviewer
 
   has_many :products, dependent: :destroy
   has_many :services, dependent: :destroy

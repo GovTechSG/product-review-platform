@@ -1078,3 +1078,8 @@ Rails/TimeZone:
 Rails/Validation:
   Include:
     - app/models/**/*.rb
+
+
+Rails/InverseOf:
+  Exclude:
+    - 'app/models/*.rb'
