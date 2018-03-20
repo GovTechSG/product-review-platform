@@ -16,6 +16,10 @@ RSpec.describe ProductSerializer, type: :serializer do
       expect(subject['company']).to eql(@product.company)
     end
 
+    it 'has a reviews_count' do
+      expect(subject['reviews_count']).to eql(@product.reviews_count)
+    end
+
     it 'has a description' do
       expect(subject['description']).to eql(@product.description)
     end

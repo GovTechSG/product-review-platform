@@ -51,6 +51,7 @@ shared_examples_for 'companies' do
         product.reviews.create! valid_product_review
         product.reviews.create! valid_product_review
         product.reviews.first.discard
+        company.reload
         expect(company.reviews_count).to eq(2)
       end
     end
@@ -61,6 +62,7 @@ shared_examples_for 'companies' do
         service = company.services.create! valid_service
         service.reviews.create! valid_service_review
         service.reviews.create! valid_service_review
+        company.reload
         expect(company.reviews_count).to eq(2)
       end
     end
@@ -71,6 +73,7 @@ shared_examples_for 'companies' do
         product = company.products.create! valid_product
         product.reviews.create! valid_product_review
         product.reviews.create! valid_product_review
+        company.reload
         expect(company.reviews_count).to eq(2)
       end
     end
@@ -84,6 +87,7 @@ shared_examples_for 'companies' do
         product = company.products.create! valid_product
         product.reviews.create! valid_product_review
         product.reviews.create! valid_product_review
+        company.reload
         expect(company.reviews_count).to eq(4)
       end
     end
@@ -179,6 +183,7 @@ shared_examples_for 'companies' do
       company = Company.create! valid_company
       product = company.products.create! valid_product
       review = product.reviews.create! valid_product_review
+      company.reload
       company.aggregate_score = review.score
       expect(company.subtract_score(review.score)).to eq(0)
     end

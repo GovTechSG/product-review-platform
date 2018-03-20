@@ -6,7 +6,9 @@ class CreateCompanies < ActiveRecord::Migration[5.1]
       t.string :phone_number
       t.string :url
       t.decimal :aggregate_score, :null => false, :default => 0
+      t.integer :reviews_count, :null => false, :default => 0
 
+      t.index :reviews_count
       t.index :uen, :unique => true
       t.index :name, :unique => true
 
