@@ -10,7 +10,8 @@ class ReviewsController < ApplicationController
   before_action :set_reviewable, only: [:index, :create]
   before_action :validate_reviewable_presence, only: [:index, :create]
   before_action :validate_score_type, only: [:create, :update]
-  before_action :validate_from_type, only: [:create]
+  before_action :validate_set_create_from, only: [:create]
+  before_action :validate_set_update_from, only: [:update]
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
@@ -27,19 +28,7 @@ class ReviewsController < ApplicationController
   # POST /products/:product_id/reviews
   # POST /services/:service_id/reviews
   def create
-    # Store create_params in a temp variable to avoid
-    # repeatedly calling the method
-    whitelisted = create_params
-    if whitelisted.nil?
-      render_error(400, "Product/Service id": ["not specified"])
-      return
-    end
-    whitelisted["reviewer_id"] = whitelisted["from_id"]
-    whitelisted.delete("from_id")
-    whitelisted["reviewer_type"] = whitelisted["from_type"]
-    whitelisted.delete("from_type")
-
-    @review = Review.new(whitelisted)
+    @review = Review.new(@whitelisted)
     # Update aggregate score of associated vendor company
     company = add_company_score(@reviewable.company, @score) if @score
 
@@ -55,12 +44,11 @@ class ReviewsController < ApplicationController
     company = nil
     # Store update_params in a temp variable to avoid
     # repeatedly calling the method
-    whitelisted = update_params
     if !@score.nil?
       # Update aggregate score of associated vendor company
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
-    if @review.update(whitelisted) && (company.nil? || company.save)
+    if @review.update(@whitelisted) && (company.nil? || company.save)
       render json: @review, reviewable: @review.reviewable
     else
       render json: @review.errors.messages, status: :unprocessable_entity
@@ -151,22 +139,71 @@ class ReviewsController < ApplicationController
       render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
     end
 
-    def validate_from_type
-      render_error(422, "From type": ["is invalid"]) if !Object.const_defined?(params[:review][:from_type]) && !(params[:review][:from_type]).superclass.name == "Reviewer"
+    def validate_set_create_from
+      type = params[:review][:from_type].classify.safe_constantize
+      if type != nil
+        if type.superclass.name != "Reviewer"
+          render_error(422, "From type": ["is invalid"])
+        else
+          # Store create_params in a temp variable to avoid
+          # repeatedly calling the method
+          @whitelisted = create_params
+          if @whitelisted.nil?
+            render_error(400, "Product/Service id": ["not specified"])
+            return
+          end
+          @whitelisted["reviewer_id"] = @whitelisted["from_id"]
+          @whitelisted.delete("from_id")
+          @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
+          @whitelisted.delete("from_type")
+        end
+      else
+        render_error(422, "From type": ["is invalid"])
+      end
+    end
+
+    def validate_set_update_from
+      type = nil
+      if params[:review].present? && params[:review][:from_type].present?
+        type = params[:review][:from_type].classify.safe_constantize
+        if type != nil
+          if type.superclass.name != "Reviewer"
+            render_error(422, "From type": ["is invalid"])
+          else
+            # Store create_params in a temp variable to avoid
+            # repeatedly calling the method
+            @whitelisted = update_params
+            if @whitelisted.nil?
+              render_error(400, "Review id": ["not specified"])
+              return
+            end
+            @whitelisted["reviewer_id"] = @whitelisted["from_id"]
+            @whitelisted.delete("from_id")
+            @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
+            @whitelisted.delete("from_type")
+          end
+        end
+      else
+        @whitelisted = update_params
+        if @whitelisted.nil?
+          render_error(400, "Review id": ["not specified"])
+          return
+        end
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
     def create_params
-      whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
+      @whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
       if params[:product_id].present?
-        whitelisted = whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
+        @whitelisted = @whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
       elsif params[:service_id].present?
-        whitelisted = whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
+        @whitelisted = @whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
       else return nil
       end
     end
 
     def update_params
-      params.require(:review).permit(:score, :content, :reviewer_id, :reivewer_type, :grant_id, :strengths => [])
+      params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
     end
 end

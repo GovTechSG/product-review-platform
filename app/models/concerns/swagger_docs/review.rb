@@ -101,17 +101,26 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
+            property :from_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
+            property :from_type do
+              key :type, :string
+            end
+
+            property :grant_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
             property :strengths do
               key :type, :array
               items do
                 key :type, :string
               end
             end
-            property :grant_id do
-              key :type, :integer
-              key :format, :int64
-            end
-
           end
         end
       end
@@ -168,9 +177,13 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :reviewer_id do
+            property :from_id do
               key :type, :integer
               key :format, :int64
+            end
+
+            property :from_type do
+              key :type, :string
             end
 
             property :grant_id do
