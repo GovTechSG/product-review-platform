@@ -24,7 +24,7 @@ module SwaggerDocs::Service
       end
 
       property :company do
-        key :'$ref', :Company
+        key :'$ref', :CompanyAssociation
       end
     end
 

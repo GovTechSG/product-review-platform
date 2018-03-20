@@ -22,27 +22,21 @@ module SwaggerDocs::Review
         key :example, "Spring frameworks was not developed in spring"
       end
 
-      property :strengths do
-        key :type, :array
-        items do
-          key :type, :string
-          key :example, [
-            "Reliable",
-            "Explanation of Resources"
-          ]
-        end
-      end
-
       property :object do
         key :'$ref', :Product_Review
       end
 
       property :reviewer do
-        key :'$ref', :Company
+        key :'$ref', :CompanyAssociation
       end
 
       property :grant do
         key :'$ref', :ReviewGrant
+      end
+
+      property :strengths do
+        key :type, :array
+        key :'$ref', :Strength
       end
     end
 
@@ -64,27 +58,21 @@ module SwaggerDocs::Review
         key :example, "Spring frameworks was not developed in spring"
       end
 
-      property :strengths do
-        key :type, :array
-        items do
-          key :type, :string
-          key :example, [
-            "Reliable",
-            "Explanation of Resources"
-          ]
-        end
-      end
-
       property :object do
         key :'$ref', :Service_Review
       end
 
       property :reviewer do
-        key :'$ref', :Company
+        key :'$ref', :CompanyAssociation
       end
 
       property :grant do
         key :'$ref', :ReviewGrant
+      end
+
+      property :strengths do
+        key :type, :array
+        key :example, "Spring frameworks was not developed in spring"
       end
     end
 
@@ -101,10 +89,10 @@ module SwaggerDocs::Review
               key :type, :string
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end
@@ -135,10 +123,10 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end
@@ -169,10 +157,10 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strengths do
+            property :strength_ids do
               key :type, :array
               items do
-                key :type, :string
+                key :type, :integer
               end
             end
           end

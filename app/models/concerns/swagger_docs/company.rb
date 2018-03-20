@@ -48,12 +48,49 @@ module SwaggerDocs::Company
 
       property :strengths do
         key :type, :array
-        key :example, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
+        items do
+          key :'$ref', :Strength
+        end
       end
 
       property :industries do
         key :type, :array
-        key :'$ref', :Industry
+        items do
+          key :'$ref', :Industry
+        end
+      end
+    end
+
+    swagger_schema :CompanyAssociation do
+      key :type, :object
+      key :required, [:id, :name, :UEN, :aggregate_score]
+
+      property :id do
+        key :type, :integer
+        key :format, :int64
+      end
+
+      property :name do
+        key :type, :string
+        key :example, 'Pivotal Software'
+      end
+
+      property :UEN do
+        key :type, :string
+        key :example, '984208875'
+      end
+
+      property :aggregate_score do
+        key :type, :number
+      end
+
+      property :description do
+        key :type, :string
+        key :example, 'Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis.'
+      end
+
+      property :reviews_count do
+        key :type, :number
       end
     end
 
