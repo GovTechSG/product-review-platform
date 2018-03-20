@@ -51,10 +51,6 @@ module SwaggerDocs::Service
         key :type, :string
         key :example, "Spring frameworks was not developed in spring"
       end
-
-      property :company do
-        key :'$ref', :Company
-      end
     end
 
     swagger_schema :ServiceInput do

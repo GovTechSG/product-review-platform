@@ -3,8 +3,9 @@ class ReviewsController < ApplicationController
   before_action :doorkeeper_authorize!
   before_action :set_review, only: [:show, :update, :destroy]
   before_action :validate_review_presence, only: [:show, :update, :destroy]
-  before_action :set_company, only: [:create]
-  before_action :validate_company_presence, only: [:create]
+  before_action :set_reviewer, only: [:create]
+  before_action :set_update_reviewer, only: [:update]
+  before_action :validate_reviewer_presence, only: [:create]
   before_action :set_grant, only: [:create]
   before_action :validate_grant_presence, only: [:create]
   before_action :set_reviewable, only: [:index, :create]
@@ -117,7 +118,7 @@ class ReviewsController < ApplicationController
       @review = Review.find_by(id: params[:id])
     end
 
-    def set_company
+    def set_reviewer
       if params[:review].present? && params[:review][:from_id].present?
         @company = Company.find_by(id: params[:review][:from_id])
       else
@@ -125,7 +126,14 @@ class ReviewsController < ApplicationController
       end
     end
 
-    def validate_company_presence
+    def set_update_reviewer
+      if params[:review].present? && params[:review][:from_id].present?
+        @company = Company.find_by(id: params[:review][:from_id])
+        render_error(404, "From id": ["not found"]) if @company.nil? || !@company.presence?
+      end
+    end
+
+    def validate_reviewer_presence
       render_error(404, "From id": ["not found"]) if @company.nil? || !@company.presence?
     end
 
@@ -150,7 +158,7 @@ class ReviewsController < ApplicationController
 
     def validate_set_create_from
       type = params[:review][:from_type].classify.safe_constantize
-      if type != nil
+      if !type.nil?
         if type.superclass.name != "Reviewer"
           render_error(422, "From type": ["is invalid"])
         else
@@ -171,32 +179,30 @@ class ReviewsController < ApplicationController
       end
     end
 
-    def validate_set_update_from
-      type = nil
-      if params[:review].present? && params[:review][:from_type].present?
-        type = params[:review][:from_type].classify.safe_constantize
-        if type != nil
-          if type.superclass.name != "Reviewer"
-            render_error(422, "From type": ["is invalid"])
-          else
-            # Store create_params in a temp variable to avoid
-            # repeatedly calling the method
-            @whitelisted = update_params
-            if @whitelisted.nil?
-              render_error(400, "Review id": ["not specified"])
-              return
-            end
-            @whitelisted["reviewer_id"] = @whitelisted["from_id"]
-            @whitelisted.delete("from_id")
-            @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
-            @whitelisted.delete("from_type")
-          end
-        end
-      else
+    def check_from_presence
+      if params[:review].present? && params[:review][:from_type].present? && params[:review][:from_id].present?
+        1
+      elsif params[:review][:from_type].blank? && params[:review][:from_id].blank?
         @whitelisted = update_params
-        if @whitelisted.nil?
-          render_error(400, "Review id": ["not specified"])
-          return
+        2
+      else
+        0
+      end
+    end
+
+    def validate_set_update_from
+      if check_from_presence.zero?
+        render_error(422, "Either From type or From ID": ["is missing"])
+      elsif check_from_presence == 1
+        type = params[:review][:from_type].classify.safe_constantize
+        if !type.nil? && type.superclass.name == "Reviewer"
+          @whitelisted = update_params
+          @whitelisted["reviewer_id"] = @whitelisted["from_id"]
+          @whitelisted.delete("from_id")
+          @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
+          @whitelisted.delete("from_type")
+        else
+          render_error(422, "From type": ["is invalid"])
         end
       end
     end
@@ -213,6 +219,6 @@ class ReviewsController < ApplicationController
     end
 
     def update_params
-      params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
+      @whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
     end
 end

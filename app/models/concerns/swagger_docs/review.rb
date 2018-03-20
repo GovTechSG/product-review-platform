@@ -36,7 +36,9 @@ module SwaggerDocs::Review
 
       property :strengths do
         key :type, :array
-        key :'$ref', :Strength
+        items do
+          key :'$ref', :Strength
+        end
       end
     end
 
@@ -62,7 +64,7 @@ module SwaggerDocs::Review
         key :'$ref', :Service_Review
       end
 
-      property :reviewer do
+      property :from do
         key :'$ref', :CompanyAssociation
       end
 
