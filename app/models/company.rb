@@ -13,4 +13,5 @@ class Company < ApplicationRecord
 
   validates_presence_of :name, :uen, :aggregate_score, :description
   validates_uniqueness_of :uen, :name
+  validates :url, allow_blank: true, url: true
 end

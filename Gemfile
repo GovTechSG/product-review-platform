@@ -21,6 +21,7 @@ gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.7'
 # Use Figaro to store secrets and env variables
 gem 'figaro'
+gem 'valid_url'
 # Generate swagger documentation
 gem 'swagger-blocks'
 gem 'simplecov', require: false, group: :test
