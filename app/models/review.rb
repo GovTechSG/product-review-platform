@@ -8,6 +8,8 @@ class Review < ApplicationRecord
 
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :strength_reviews, dependent: :destroy
+  has_many :strengths, through: :strength_reviews
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 

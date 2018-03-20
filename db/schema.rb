@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180313070055) do
+ActiveRecord::Schema.define(version: 20180319054011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,7 +187,6 @@ ActiveRecord::Schema.define(version: 20180313070055) do
     t.bigint "reviewable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "strengths", default: [], array: true
     t.datetime "discarded_at"
     t.bigint "grant_id"
     t.string "reviewer_type"
@@ -196,7 +195,6 @@ ActiveRecord::Schema.define(version: 20180313070055) do
     t.index ["grant_id"], name: "index_reviews_on_grant_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["reviewer_type", "reviewer_id"], name: "index_reviews_on_reviewer_type_and_reviewer_id"
-    t.index ["strengths"], name: "index_reviews_on_strengths", using: :gin
   end
 
   create_table "services", force: :cascade do |t|
@@ -210,6 +208,27 @@ ActiveRecord::Schema.define(version: 20180313070055) do
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
   end
 
+  create_table "strength_reviews", force: :cascade do |t|
+    t.bigint "strength_id"
+    t.bigint "review_id"
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_strength_reviews_on_discarded_at"
+    t.index ["review_id"], name: "index_strength_reviews_on_review_id"
+    t.index ["strength_id"], name: "index_strength_reviews_on_strength_id"
+  end
+
+  create_table "strengths", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_strengths_on_discarded_at"
+    t.index ["name"], name: "index_strengths_on_name", unique: true
+  end
+
   add_foreign_key "comments", "agencies"
   add_foreign_key "comments", "reviews"
   add_foreign_key "grants", "agencies"
@@ -221,4 +240,6 @@ ActiveRecord::Schema.define(version: 20180313070055) do
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "grants"
   add_foreign_key "services", "companies"
+  add_foreign_key "strength_reviews", "reviews"
+  add_foreign_key "strength_reviews", "strengths"
 end

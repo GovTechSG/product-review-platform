@@ -299,7 +299,6 @@ RSpec.describe ReviewsController, type: :controller do
           review.reload
           expect(review.score).to eq(new_attributes[:score])
           expect(review.content).to eq(new_attributes[:content])
-          expect(review.strengths).to eq(new_attributes[:strengths])
         end
 
         it "renders a JSON response with the review", authorized: true do
@@ -320,7 +319,6 @@ RSpec.describe ReviewsController, type: :controller do
           review.reload
           expect(review.score).to eq(original_review[:score])
           expect(review.content).to eq(original_review[:content])
-          expect(review.strengths).to eq(original_review[:strengths])
         end
 
         it "renders a not found response", authorized: true do
@@ -341,7 +339,6 @@ RSpec.describe ReviewsController, type: :controller do
           review.reload
           expect(review.score).to eq(original_review[:score])
           expect(review.content).to eq(original_review[:content])
-          expect(review.strengths).to eq(original_review[:strengths])
         end
 
         it "renders a not found response", authorized: true do
@@ -362,7 +359,6 @@ RSpec.describe ReviewsController, type: :controller do
           review.reload
           expect(review.score).to eq(original_review[:score])
           expect(review.content).to eq(original_review[:content])
-          expect(review.strengths).to eq(original_review[:strengths])
         end
 
         it "renders a not found response", authorized: true do
@@ -494,7 +490,6 @@ RSpec.describe ReviewsController, type: :controller do
         expect(review.content).to eq(current_attributes["content"])
         expect(review.reviewable_id).to eq(current_attributes["reviewable_id"])
         expect(review.reviewable_type).to eq(current_attributes["reviewable_type"])
-        expect(review.strengths).to eq(current_attributes["strengths"])
       end
 
       it "returns an unauthorized response", authorized: false do
