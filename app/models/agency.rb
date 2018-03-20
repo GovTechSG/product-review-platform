@@ -8,5 +8,6 @@ class Agency < ApplicationRecord
   validates :name, :acronym, :kind, :description, presence: true
   validates :name, uniqueness: true
   validates :email, allow_blank: true, email: true
-  validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"] }
+  validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"],
+                                message: "Kind must be any of these: Ministry, Statutory Board, Agency" }
 end
