@@ -15,11 +15,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:company_id/clients
   def clients
-    product_reviews = @company.products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
-    service_reviews = @company.services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
-    all_reviews = (product_reviews + service_reviews).uniq
-    clients = all_reviews.reduce([]) { |accum, review| accum.push(review.reviewer) if review.reviewer.presence? }
-    render json: clients.uniq
+    render json: @company.clients
   end
 
   # GET /companies/1

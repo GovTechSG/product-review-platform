@@ -12,7 +12,7 @@ class GrantsController < ApplicationController
   def index
     @grants =
       if @company
-        Grant.kept.find_by_sql [company_grants_sql_string, { company_id: @company.id }]
+        @company.grants
       else
         Grant.kept
       end
@@ -50,29 +50,6 @@ class GrantsController < ApplicationController
   end
 
   private
-
-  def company_grants_sql_string
-    "SELECT *
-     FROM grants
-     WHERE id IN (
-       SELECT DISTINCT r.grant_id
-       FROM reviews r
-       JOIN products p ON r.reviewable_id = p.id
-       WHERE r.reviewable_type = 'Product'
-       AND r.reviewer_type = 'Company'
-       AND p.company_id = :company_id
-       AND r.discarded_at IS NULL AND p.discarded_at IS NULL
-       UNION
-       SELECT DISTINCT r.grant_id
-       FROM reviews r
-       JOIN services s ON r.reviewable_id = s.id
-       WHERE r.reviewable_type = 'Service'
-       AND r.reviewer_type = 'Company'
-       AND s.company_id = :company_id
-       AND r.discarded_at IS NULL AND s.discarded_at IS NULL
-     )
-     AND discarded_at IS NULL"
-  end
 
   def validate_create_params
     if params[:grant].present?

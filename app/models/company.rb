@@ -14,4 +14,26 @@ class Company < Reviewer
   validates_presence_of :name, :uen, :aggregate_score, :description, :reviews_count
   validates_uniqueness_of :uen, :name
   validates :url, allow_blank: true, url: true
+
+  def grants
+    product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
+    service_grants = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
+    all_grants = product_grants + service_grants
+    if all_grants.nil?
+      []
+    else
+      Grant.kept.where(id: all_grants.uniq)
+    end
+  end
+
+  def clients
+    product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
+    service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
+    all_reviewers = product_reviewers + service_reviewers
+    if all_reviewers.nil?
+      []
+    else
+      Company.kept.where(id: all_reviewers.uniq)
+    end
+  end
 end
