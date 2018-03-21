@@ -8,7 +8,7 @@ module Statistics::Companies
       product_strength = Strength.match_product(self.products.kept.pluck(:id)).first(6)
       service_strength = Strength.match_service(self.services.kept.pluck(:id)).first(6)
       whole_set = product_strength + service_strength
-      whole_set.empty? ? [] : whole_set.uniq.first(6)
+      whole_set.empty? ? [] : serialize(whole_set.uniq.first(6))
     end
 
     def add_score(score)
