@@ -16,26 +16,24 @@ class Company < Reviewer
   validates :url, allow_blank: true, url: true
 
   def grants
-    product_reviews = products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
-    service_reviews = services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
-    all_reviews = (product_reviews + service_reviews).uniq
-    grants = all_reviews.reduce([]) { |accum, review| review.grant.presence? ? accum.push(review.grant) : accum }
-    if !grants.nil?
-      grants.uniq
-    else
+    product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
+    service_grants = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
+    all_grants = product_grants + service_grants
+    if all_grants.nil?
       []
+    else
+      Grant.kept.where(id: all_grants.uniq)
     end
   end
 
   def clients
-    product_reviews = products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
-    service_reviews = services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
-    all_reviews = (product_reviews + service_reviews).uniq
-    clients = all_reviews.reduce([]) { |accum, review| review.reviewer.presence? ? accum.push(review.reviewer) : accum }
-    if !clients.nil?
-      clients.uniq
-    else
+    product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
+    service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
+    all_reviewers = product_reviewers + service_reviewers
+    if all_reviewers.nil?
       []
+    else
+      Company.kept.where(id: all_reviewers.uniq)
     end
   end
 end
