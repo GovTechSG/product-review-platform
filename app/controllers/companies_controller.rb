@@ -2,7 +2,8 @@ class CompaniesController < ApplicationController
   include SwaggerDocs::Companies
   before_action :doorkeeper_authorize!
   before_action :set_company, only: [:show, :update, :destroy]
-  before_action :validate_company_presence, only: [:show, :update, :destroy]
+  before_action :set_company_by_company_id, only: [:clients]
+  before_action :validate_company_presence, only: [:show, :update, :destroy, :clients]
   before_action :set_industry, only: [:create, :update]
   before_action :validate_industry_presence, only: [:create, :update]
 
@@ -10,6 +11,15 @@ class CompaniesController < ApplicationController
   def index
     @companies = Company.kept
     render json: @companies, methods: [:strengths]
+  end
+
+  # GET /companies/:company_id/clients
+  def clients
+    product_reviews = @company.products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
+    service_reviews = @company.services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
+    all_reviews = (product_reviews + service_reviews).uniq
+    clients = all_reviews.reduce([]) { |accum, review| accum.push(review.reviewer) if review.reviewer.presence? }
+    render json: clients.uniq
   end
 
   # GET /companies/1
@@ -46,6 +56,10 @@ class CompaniesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_company
       @company = Company.find_by(id: params[:id])
+    end
+
+    def set_company_by_company_id
+      @company = Company.find_by(id: params[:company_id])
     end
 
     def validate_company_presence

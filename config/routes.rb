@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         controllers tokens: 'tokens'
       end
       get '/statistics', to: 'statistics#index'
+      get '/companies/:company_id/clients', to: 'companies#clients', as: 'companies_clients'
       post '/oauth/refresh', to: 'tokens#refresh'
       # Mount custom routes, removing view-only routes e.g. /new, /cancel
 
