@@ -101,6 +101,13 @@ RSpec.describe Company, type: :model do
       expect(company.clients).to eq([])
     end
 
+    it "does not return deleted clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.discard
+      expect(product.company.clients.length).to eq(0)
+    end
+
     it "returns product clients if there are only product clients" do
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
