@@ -59,10 +59,6 @@ module SwaggerDocs::Service
       property :reviews_count do
         key :type, :number
       end
-
-      property :company do
-        key :'$ref', :Company
-      end
     end
 
     swagger_schema :ServiceInput do
