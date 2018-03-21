@@ -3,6 +3,15 @@ class Review < ApplicationRecord
   include Statistics::Reviews
 
   belongs_to :reviewer, polymorphic: true
+  belongs_to :company, -> { where(reviews: { reviewer_type: 'Company' }) },
+             inverse_of: :reviews, foreign_key: 'reviewer_id', optional: true
+
+  # Check if its Company
+  def company
+    return unless reviewable_type == "Company"
+    super
+  end
+
   belongs_to :grant
   belongs_to :reviewable, polymorphic: true
 
@@ -14,6 +23,10 @@ class Review < ApplicationRecord
   validates_presence_of :score, :reviewer, :reviewable, :grant
 
   after_save :set_reviews_count, on: [:create, :update]
+
+  scope :kept, -> { undiscarded.joins(:grant).merge(Grant.kept) }
+  # scope :kept, -> { undiscarded.joins(:reviewer).merge(Reviewer.kept) }
+  scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
 
   def presence?
     !discarded? && reviewable.presence? && grant.presence? && reviewer.presence?

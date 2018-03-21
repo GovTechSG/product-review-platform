@@ -153,6 +153,20 @@ RSpec.describe ReviewsController, type: :controller do
         get :show, params: { id: review.to_param }
         expect(response).to be_not_found
       end
+
+      it "returns a not found when the grant is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.grant.discard
+        get :show, params: { id: review.to_param }
+        expect(response).to be_not_found
+      end
+
+      it "returns a not found when the reviewer is deleted", authorized: true do
+        review = Review.create! valid_product_review
+        review.reviewer.discard
+        get :show, params: { id: review.to_param }
+        expect(response).to be_not_found
+      end
     end
 
     describe "POST #create" do
@@ -230,6 +244,50 @@ RSpec.describe ReviewsController, type: :controller do
           it "renders a not found response", authorized: true do
             product = create(:product)
             product.company.discard
+            post :create, params: { review: create_update_product_review, product_id: product.id }
+            expect(response).to have_http_status(404)
+            expect(response.content_type).to eq('application/json')
+          end
+        end
+
+        context "with deleted grant" do
+          it "does not creates a new Review", authorized: true do
+            product = create(:product)
+            review = Review.create! valid_product_review
+            review.grant.discard
+            expect do
+              create_update_product_review["grant_id"] = review.grant.id
+              post :create, params: { review: create_update_product_review, product_id: product.id }
+            end.to change(Review, :count).by(0)
+          end
+
+          it "renders a not found response", authorized: true do
+            product = create(:product)
+            review = Review.create! valid_product_review
+            review.grant.discard
+            create_update_product_review["grant_id"] = review.grant.id
+            post :create, params: { review: create_update_product_review, product_id: product.id }
+            expect(response).to have_http_status(404)
+            expect(response.content_type).to eq('application/json')
+          end
+        end
+
+        context "with deleted reviewer" do
+          it "does not creates a new Review", authorized: true do
+            product = create(:product)
+            review = Review.create! valid_product_review
+            review.reviewer.discard
+            expect do
+              create_update_product_review["from_id"] = review.reviewer.id
+              post :create, params: { review: create_update_product_review, product_id: product.id }
+            end.to change(Review, :count).by(0)
+          end
+
+          it "renders a not found response", authorized: true do
+            product = create(:product)
+            review = Review.create! valid_product_review
+            review.reviewer.discard
+            create_update_product_review["from_id"] = review.reviewer.id
             post :create, params: { review: create_update_product_review, product_id: product.id }
             expect(response).to have_http_status(404)
             expect(response.content_type).to eq('application/json')
@@ -470,6 +528,46 @@ RSpec.describe ReviewsController, type: :controller do
         it "renders a not found response", authorized: true do
           review = Review.create! valid_product_review
           review.reviewable.company.discard
+          put :update, params: { id: review.to_param, review: new_attributes }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted grant" do
+        it "does not updates the requested review", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.grant.discard
+          put :update, params: { id: review.to_param, review: new_attributes }
+          review.reload
+          expect(review.score).to eq(original_review[:score])
+          expect(review.content).to eq(original_review[:content])
+        end
+
+        it "renders a not found response", authorized: true do
+          review = Review.create! valid_product_review
+          review.grant.discard
+          put :update, params: { id: review.to_param, review: new_attributes }
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+      end
+
+      context "with deleted reviewer" do
+        it "does not updates the requested review", authorized: true do
+          review = Review.create! valid_product_review
+          original_review = review
+          review.reviewer.discard
+          put :update, params: { id: review.to_param, review: new_attributes }
+          review.reload
+          expect(review.score).to eq(original_review[:score])
+          expect(review.content).to eq(original_review[:content])
+        end
+
+        it "renders a not found response", authorized: true do
+          review = Review.create! valid_product_review
+          review.reviewer.discard
           put :update, params: { id: review.to_param, review: new_attributes }
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')

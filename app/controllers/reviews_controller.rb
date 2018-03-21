@@ -15,6 +15,10 @@ class ReviewsController < ApplicationController
   before_action :validate_set_update_from, only: [:update]
   before_action :validate_set_update_grant_presence, only: [:update]
 
+  BOTH_PARAMS_EXIST = 0
+  BOTH_PARAMS_MISSING = 2
+  PARTIAL_PARAMS_MISSING = 1
+
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
@@ -181,19 +185,19 @@ class ReviewsController < ApplicationController
 
     def check_from_presence
       if params[:review].present? && params[:review][:from_type].present? && params[:review][:from_id].present?
-        1
+        BOTH_PARAMS_EXIST
       elsif params[:review][:from_type].blank? && params[:review][:from_id].blank?
         @whitelisted = update_params
-        2
+        BOTH_PARAMS_MISSING
       else
-        0
+        PARTIAL_PARAMS_MISSING
       end
     end
 
     def validate_set_update_from
-      if check_from_presence.zero?
+      if check_from_presence == PARTIAL_PARAMS_MISSING
         render_error(422, "Either From type or From ID": ["is missing"])
-      elsif check_from_presence == 1
+      elsif check_from_presence == BOTH_PARAMS_EXIST
         type = params[:review][:from_type].classify.safe_constantize
         if !type.nil? && type.superclass.name == "Reviewer"
           @whitelisted = update_params
