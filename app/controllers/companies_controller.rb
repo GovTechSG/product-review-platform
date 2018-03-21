@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
   # GET /companies
   def index
     @companies = Company.kept
-    render json: @companies, methods: [:strengths]
+    render json: @companies, methods: [:strengths], has_type: false
   end
 
   # GET /companies/:company_id/clients
@@ -20,7 +20,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/1
   def show
-    render json: @company, methods: [:strengths]
+    render json: @company, methods: [:strengths], has_type: false
   end
 
   # POST /companies
@@ -28,7 +28,7 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
 
     if @company.save
-      render json: @company, status: :created, location: @company
+      render json: @company, status: :created, location: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
   # PATCH/PUT /companies/1
   def update
     if @company.update(company_params)
-      render json: @company
+      render json: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
     end

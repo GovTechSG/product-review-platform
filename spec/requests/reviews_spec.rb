@@ -6,12 +6,30 @@ RSpec.describe "Reviews", type: :request do
     build(:product_review).attributes
   end
 
+  let(:create_update_product_review) do
+    value = build(:product_review).attributes
+    value["from_id"] = value["reviewer_id"]
+    value["from_type"] = value["reviewer_type"]
+    value.delete("reviewer_id")
+    value.delete("reviewer_type")
+    value
+  end
+
   let(:invalid_product_review) do
     attributes_for(:product_review, score: nil, content: nil)
   end
 
   let(:valid_service_review) do
     build(:service_review).attributes
+  end
+
+  let(:create_update_service_review) do
+    value = build(:service_review).attributes
+    value["from_id"] = value["reviewer_id"]
+    value["from_type"] = value["reviewer_type"]
+    value.delete("reviewer_id")
+    value.delete("reviewer_type")
+    value
   end
 
   let(:invalid_service_review) do
@@ -135,17 +153,41 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
 
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+            post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           end.to change(Review, :count).by(1)
         end
 
         it "renders a JSON response with the new review" do
           product = create(:product)
 
-          post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
+        end
+
+        it "return 404 when grant id is not found", authorized: true do
+          product = create(:product)
+          create_update_product_review["grant_id"] = 0
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 404 when from id is not found", authorized: true do
+          product = create(:product)
+          create_update_product_review["from_id"] = 0
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from type is not subclass of reviewer", authorized: true do
+          product = create(:product)
+          create_update_product_review["from_type"] = "agency"
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -154,14 +196,14 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
           product.discard
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+            post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           product = create(:product)
           product.discard
-          post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -172,14 +214,14 @@ RSpec.describe "Reviews", type: :request do
           product = create(:product)
           product.company.discard
           expect do
-            post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+            post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           product = create(:product)
           product.company.discard
-          post product_reviews_path(product.id), params: { review: valid_product_review }, headers: request_login
+          post product_reviews_path(product.id), params: { review: create_update_product_review }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -196,7 +238,7 @@ RSpec.describe "Reviews", type: :request do
 
       context "with non existent reviewable id" do
         it "renders a JSON response with errors for the new review" do
-          post product_reviews_path(0), params: { review: valid_product_review }, headers: request_login
+          post product_reviews_path(0), params: { review: create_update_product_review }, headers: request_login
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
@@ -209,17 +251,41 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
 
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+            post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           end.to change(Review, :count).by(1)
         end
 
         it "renders a JSON response with the new review" do
           service = create(:service)
 
-          post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(review_url(Review.last))
+        end
+
+        it "return 404 when grant id is not found", authorized: true do
+          product = create(:product)
+          create_update_service_review["grant_id"] = 0
+          post product_reviews_path(product.id), params: { review: create_update_service_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 404 when from id is not found", authorized: true do
+          product = create(:product)
+          create_update_service_review["from_id"] = 0
+          post product_reviews_path(product.id), params: { review: create_update_service_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from type is not subclass of reviewer", authorized: true do
+          product = create(:product)
+          create_update_service_review["from_type"] = "agency"
+          post product_reviews_path(product.id), params: { review: create_update_service_review }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -228,14 +294,14 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
           service.discard
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+            post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           service = create(:service)
           service.discard
-          post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -246,14 +312,14 @@ RSpec.describe "Reviews", type: :request do
           service = create(:service)
           service.company.discard
           expect do
-            post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+            post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           end.to change(Review, :count).by(0)
         end
 
         it "renders a not found response", authorized: true do
           service = create(:service)
           service.company.discard
-          post service_reviews_path(service.id), params: { review: valid_service_review }, headers: request_login
+          post service_reviews_path(service.id), params: { review: create_update_service_review }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -271,7 +337,7 @@ RSpec.describe "Reviews", type: :request do
 
       context "with non existent reviewable id" do
         it "renders a JSON response with errors for the new review" do
-          post service_reviews_path(0), params: { review: valid_service_review }, headers: request_login
+          post service_reviews_path(0), params: { review: create_update_service_review }, headers: request_login
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
@@ -296,6 +362,46 @@ RSpec.describe "Reviews", type: :request do
 
           put review_path(review.id), params: { review: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 404 when grant id is not found", authorized: true do
+          review = Review.create! valid_product_review
+          create_update_product_review["grant_id"] = 0
+          put review_path(review.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 404 when from id is not found", authorized: true do
+          review = Review.create! valid_product_review
+          create_update_product_review["from_id"] = 0
+          put review_path(review.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(404)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from type is not subclass of reviewer", authorized: true do
+          review = Review.create! valid_product_review
+          create_update_product_review["from_type"] = "agency"
+          put review_path(review.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from type is missing", authorized: true do
+          review = Review.create! valid_product_review
+          create_update_product_review.delete("from_type")
+          put review_path(review.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from id is missing", authorized: true do
+          review = Review.create! valid_product_review
+          create_update_product_review.delete("from_id")
+          put review_path(review.id), params: { review: create_update_product_review }, headers: request_login
+          expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
         end
       end
