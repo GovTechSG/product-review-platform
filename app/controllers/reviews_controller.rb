@@ -213,7 +213,11 @@ class ReviewsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def create_params
+<<<<<<< HEAD
       @whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
+=======
+      whitelisted = params.require(:review).permit(:score, :content, :reviewer_id, :grant_id, :strength_ids => [])
+>>>>>>> development
       if params[:product_id].present?
         @whitelisted = @whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
       elsif params[:service_id].present?
@@ -223,6 +227,6 @@ class ReviewsController < ApplicationController
     end
 
     def update_params
-      @whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strengths => [])
+      @whitelisted = params.require(:review).permit(:score, :content, :from_id, :from_type, :grant_id, :strength_ids => [])
     end
 end
