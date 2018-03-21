@@ -63,15 +63,17 @@ class CompaniesController < ApplicationController
     end
 
     def set_industry
-      if params[:company].present? && params[:company][:industry_ids].present?
-        @industry = Industry.find_by(id: params[:company][:industry_ids])
+      if params[:company].present?
+        @industry = Industry.find_by(id: params[:company][:industry_ids]) if params[:company][:industry_ids].present?
       else
-        render_error(400, "Industry id": ["not provided"])
+        render_error(400, "Company": ["not provided"])
       end
     end
 
     def validate_industry_presence
-      render_error(404, "Industry id": ["not found."]) if @industry.nil? || !@industry.presence?
+      if params[:company][:industry_ids].present?
+        render_error(404, "Industry id": ["not found."]) if @industry.nil? || !@industry.presence?
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
