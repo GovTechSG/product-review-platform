@@ -7,6 +7,8 @@ class Product < ApplicationRecord
 
   validates_presence_of :name, :description, :company, :reviews_count
 
+  scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
+
   def presence?
     !discarded? && company.presence?
   end
