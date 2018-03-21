@@ -6,6 +6,9 @@ class Like < ApplicationRecord
   validates_presence_of :agency, :review
   validates :review_id, uniqueness: { scope: :agency_id }
 
+  scope :kept, -> { undiscarded.joins(:agency).merge(Agency.kept) }
+  scope :kept, -> { undiscarded.joins(:review).merge(Review.kept) }
+
   def presence?
     !discarded? && agency.presence? && review.presence?
   end

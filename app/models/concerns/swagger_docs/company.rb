@@ -65,6 +65,11 @@ module SwaggerDocs::Company
       key :type, :object
       key :required, [:id, :name, :uen, :aggregate_score]
 
+      property :type do
+        key :type, :string
+        key :example, 'Company'
+      end
+
       property :id do
         key :type, :integer
         key :format, :int64

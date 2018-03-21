@@ -1,4 +1,4 @@
-class Company < ApplicationRecord
+class Company < Reviewer
   include SwaggerDocs::Company
   include Statistics::Companies
 
