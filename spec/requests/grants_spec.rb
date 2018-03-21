@@ -28,34 +28,6 @@ RSpec.describe "Grants", type: :request do
         expect(response).to be_success
       end
 
-      it "returns only the companies grants" do
-        review = create(:product_review)
-        create_list(:product_review, 5)
-        get company_grants_path(review.reviewable.company_id), headers: request_login
-        expect(parsed_response.length).to eq(1)
-      end
-
-      it "does not return deleted grants" do
-        review = create(:product_review)
-        review.grant.discard
-        get company_grants_path(review.reviewable.company_id), headers: request_login
-        expect(parsed_response.length).to eq(0)
-      end
-
-      it "does not return grants from deleted reviews" do
-        review = create(:product_review)
-        review.discard
-        get company_grants_path(review.reviewable.company_id), headers: request_login
-        expect(parsed_response.length).to eq(0)
-      end
-
-      it "does not return grants from deleted product" do
-        review = create(:product_review)
-        review.reviewable.discard
-        get company_grants_path(review.reviewable.company_id), headers: request_login
-        expect(parsed_response.length).to eq(0)
-      end
-
       it "does not return grants from deleted company" do
         review = create(:product_review)
         review.reviewable.company.discard

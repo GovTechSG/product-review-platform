@@ -14,4 +14,28 @@ class Company < ApplicationRecord
   validates_presence_of :name, :uen, :aggregate_score, :description, :reviews_count
   validates_uniqueness_of :uen, :name
   validates :url, allow_blank: true, url: true
+
+  def grants
+    product_reviews = products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
+    service_reviews = services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
+    all_reviews = (product_reviews + service_reviews).uniq
+    grants = all_reviews.reduce([]) { |accum, review| accum.push(review.grant) if review.grant.presence? }
+    if !grants.nil?
+      grants.uniq
+    else
+      []
+    end
+  end
+
+  def clients
+    product_reviews = products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
+    service_reviews = services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
+    all_reviews = (product_reviews + service_reviews).uniq
+    clients = all_reviews.reduce([]) { |accum, review| accum.push(review.reviewer) if review.reviewer.presence? }
+    if !clients.nil?
+      clients.uniq
+    else
+      []
+    end
+  end
 end
