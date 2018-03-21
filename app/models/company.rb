@@ -2,7 +2,6 @@ class Company < ApplicationRecord
   include SwaggerDocs::Company
   include Statistics::Companies
 
-
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
   has_many :reviews, dependent: :destroy, as: :reviewer
@@ -17,7 +16,6 @@ class Company < ApplicationRecord
   validates :url, allow_blank: true, url: true
 
   def grants
-
     product_reviews = products.kept.reduce([]) { |accum, product| accum + product.reviews.kept }
     service_reviews = services.kept.reduce([]) { |accum, service| accum + service.reviews.kept }
     all_reviews = (product_reviews + service_reviews).uniq

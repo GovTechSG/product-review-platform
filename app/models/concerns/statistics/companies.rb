@@ -5,10 +5,10 @@ module Statistics::Companies
 
   included do
     def strengths
-      product_strength_set = get_reviews(self.products.kept)
-      service_strength_set = get_reviews(self.services.kept)
-      whole_set = product_strength_set.merge(service_strength_set)
-      whole_set.empty? ? [] : whole_set.first(6).to_a
+      product_strength = Strength.match_product(self.products.kept.pluck(:id)).first(6)
+      service_strength = Strength.match_service(self.services.kept.pluck(:id)).first(6)
+      whole_set = product_strength + service_strength
+      whole_set.empty? ? [] : whole_set.uniq.first(6)
     end
 
     def add_score(score)
