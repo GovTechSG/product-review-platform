@@ -1,4 +1,4 @@
-class Product < ApplicationRecord
+class Product < Reviewable
   include SwaggerDocs::Product
   include Statistics::ProductsAndServices
 
