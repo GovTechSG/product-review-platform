@@ -124,10 +124,10 @@ class ReviewsController < ApplicationController
 
     def set_reviewer
       if params[:review].present?
-        if params[:review][:from_id].present?
+        if params[:review][:from_id].present? && params[:review][:from_type].present?
           @company = Company.find_by(id: params[:review][:from_id])
         else
-          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id"])
+          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
         end
       else
         render_error(400, "Parameter missing": ["param is missing or the value is empty: review"])
@@ -164,23 +164,21 @@ class ReviewsController < ApplicationController
       end
     end
 
+    def change_params_key
+      @whitelisted["reviewer_id"] = @whitelisted["from_id"]
+      @whitelisted.delete("from_id")
+      @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
+      @whitelisted.delete("from_type")
+    end
+
     def validate_set_create_from
-      type = params[:review][:from_type].classify.safe_constantize
+      type = params[:review][:from_type].classify.safe_constantize if !params[:review][:from_type].nil?
       if !type.nil?
         if type.superclass.name != "Reviewer"
           render_error(422, "From type": ["is invalid"])
         else
-          # Store create_params in a temp variable to avoid
-          # repeatedly calling the method
           @whitelisted = create_params
-          if @whitelisted.nil?
-            render_error(400, "Product/Service id": ["not specified"])
-            return
-          end
-          @whitelisted["reviewer_id"] = @whitelisted["from_id"]
-          @whitelisted.delete("from_id")
-          @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
-          @whitelisted.delete("from_type")
+          change_params_key
         end
       else
         render_error(422, "From type": ["is invalid"])
@@ -205,10 +203,7 @@ class ReviewsController < ApplicationController
         type = params[:review][:from_type].classify.safe_constantize
         if !type.nil? && type.superclass.name == "Reviewer"
           @whitelisted = update_params
-          @whitelisted["reviewer_id"] = @whitelisted["from_id"]
-          @whitelisted.delete("from_id")
-          @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
-          @whitelisted.delete("from_type")
+          change_params_key
         else
           render_error(422, "From type": ["is invalid"])
         end
