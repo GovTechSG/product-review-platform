@@ -123,10 +123,14 @@ class ReviewsController < ApplicationController
     end
 
     def set_reviewer
-      if params[:review].present? && params[:review][:from_id].present?
-        @company = Company.find_by(id: params[:review][:from_id])
+      if params[:review].present?
+        if params[:review][:from_id].present?
+          @company = Company.find_by(id: params[:review][:from_id])
+        else
+          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id"])
+        end
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: review"])
       end
     end
 
