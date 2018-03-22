@@ -123,10 +123,10 @@ class ReviewsController < ApplicationController
     end
 
     def set_reviewer
-      if params[:review].present? && params[:review][:from_id].present?
+      if params[:review].present? && (params[:review][:from_id].present? && params[:review][:from_type].present?)
         @company = Company.find_by(id: params[:review][:from_id])
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
       end
     end
 
@@ -161,7 +161,7 @@ class ReviewsController < ApplicationController
     end
 
     def validate_set_create_from
-      type = params[:review][:from_type].classify.safe_constantize
+      type = params[:review][:from_type].classify.safe_constantize if !params[:review][:from_type].nil?
       if !type.nil?
         if type.superclass.name != "Reviewer"
           render_error(422, "From type": ["is invalid"])
