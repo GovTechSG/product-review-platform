@@ -1,6 +1,10 @@
 class CommentsController < ApplicationController
   include SwaggerDocs::Comments
   before_action :doorkeeper_authorize!
+
+  before_action :set_commentable, only: [:index, :create]
+  before_action :validate_commentable_presence, only: [:index, :create]
+
   before_action :set_comment, only: [:show, :update, :destroy]
   before_action :validate_comment_pressence, only: [:show, :update, :destroy]
   before_action :set_review, only: [:index, :create]
@@ -10,7 +14,7 @@ class CommentsController < ApplicationController
 
   # GET /reviews/:review_id/comments
   def index
-    @comments = Comment.kept.where(review_id: params[:review_id])
+    @comments = @commentable.comments.kept
     render json: @comments, methods: [:agency]
   end
 
@@ -50,6 +54,19 @@ class CommentsController < ApplicationController
 
     def set_review
       @review = Review.find_by(id: params[:review_id])
+    end
+
+    def set_commentable
+      params.each do |name, value|
+        if name =~ /(.+)_id$/
+          @commentable_type = Regexp.last_match[1].classify.safe_constantize
+          @commentable = @commentable_type.find_by(id: value) if !@commentable_type.nil?
+        end
+      end
+    end
+
+    def validate_commentable_presence
+      render_error(404, "#{@commentable_type} id": ["not found"]) if @commentable.nil? || !@commentable.presence?
     end
 
     def set_new_comment
