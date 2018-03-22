@@ -15,7 +15,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:company_id/clients
   def clients
-    render json: @company.clients
+    render json: @company.clients, has_type: false
   end
 
   # GET /companies/1
