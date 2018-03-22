@@ -13,6 +13,10 @@ class Review < ApplicationRecord
 
   belongs_to :grant
   belongs_to :reviewable, polymorphic: true
+  belongs_to :product, -> { where(reviews: { reviewable_type: 'Product' }) },
+             inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
+  belongs_to :service, -> { where(reviews: { reviewable_type: 'Service' }) },
+             inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
 
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -27,6 +31,11 @@ class Review < ApplicationRecord
 
   scope :kept, -> { undiscarded.joins(:grant).merge(Grant.kept) }
   scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
+  scope :match_reviewable, lambda { |reviewable_id, reviewable_type|
+    where("(reviewable_type = :reviewable_type AND reviewable_id in (:reviewable_id))",
+          reviewable_id: reviewable_id,
+          reviewable_type: reviewable_type)
+  }
 
   def presence?
     !discarded? && reviewable.presence? && grant.presence? && reviewer.presence?

@@ -56,4 +56,120 @@ RSpec.describe Company, type: :model do
     company = build(:company)
     expect(company).to be_valid
   end
+
+  context "grants" do
+    it "returns only the companies grants" do
+      review = create(:product_review)
+      create_list(:product_review, 5)
+      expect(review.reviewable.company.grants.length).to eq(1)
+    end
+
+    it "returns empty array if there are no grants" do
+      company = create(:company)
+      expect(company.grants).to eq([])
+    end
+
+    it "does not return duplicate grants" do
+      review = create(:product_review)
+      create(:product_review, grant_id: review.grant_id, reviewable_id: review.reviewable_id, reviewable_type: review.reviewable_type)
+      expect(review.reviewable.company.grants.length).to eq(1)
+    end
+
+    it "does not return deleted grants" do
+      review = create(:product_review)
+      review.grant.discard
+      expect(review.reviewable.company.grants.length).to eq(0)
+    end
+
+    it "does not return grants from deleted reviews" do
+      review = create(:product_review)
+      review.discard
+      expect(review.reviewable.company.grants.length).to eq(0)
+    end
+
+    it "does not return grants from deleted product" do
+      review = create(:product_review)
+      review.reviewable.discard
+      expect(review.reviewable.company.grants.length).to eq(0)
+    end
+  end
+
+  context "clients" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no clients" do
+      company = create(:company)
+      expect(company.clients).to eq([])
+    end
+
+    it "does not return deleted clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.discard
+      expect(product.company.clients.length).to eq(0)
+    end
+
+    it "returns product clients if there are only product clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(product.company.clients.length).to eq(1)
+    end
+
+    it "does not display duplicate products reviews" do
+      product = company.products.create! build(:product).attributes
+      review = build(:product_review).attributes
+      product.reviews.create! review
+      product.reviews.create! review
+      expect(product.company.clients.length).to eq(1)
+    end
+
+    it "does not display duplicate service reviews" do
+      service = company.products.create! build(:product).attributes
+      review = build(:service_review).attributes
+      service.reviews.create! review
+      service.reviews.create! review
+      expect(service.company.clients.length).to eq(1)
+    end
+
+    it "returns service clients if there are only service clients" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(service.company.clients.length).to eq(1)
+    end
+
+    it "does not return deleted products" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.discard
+      expect(product.company.clients.length).to eq(0)
+    end
+
+    it "does not return deleted services" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.discard
+      expect(service.company.clients.length).to eq(0)
+    end
+
+    it "does not return deleted products review" do
+      product = company.products.create! build(:product).attributes
+      review = product.reviews.create! build(:product_review).attributes
+      review.discard
+      expect(product.company.clients.length).to eq(0)
+    end
+
+    it "does not return deleted services review" do
+      service = company.services.create! build(:service).attributes
+      review = service.reviews.create! build(:service_review).attributes
+      review.discard
+      expect(service.company.clients.length).to eq(0)
+    end
+
+    it "returns product and service clients" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(product.company.clients.length).to eq(2)
+    end
+  end
 end
