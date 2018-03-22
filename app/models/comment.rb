@@ -3,6 +3,9 @@ class Comment < ApplicationRecord
   belongs_to :agency
   belongs_to :review
 
+  belongs_to :commentable, polymorphic: true
+
+
   validates_presence_of :content, :agency, :review
 
   scope :kept, -> { undiscarded.joins(:agency).merge(Agency.kept) }
