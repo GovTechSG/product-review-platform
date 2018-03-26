@@ -24,12 +24,12 @@ class ReviewsController < ApplicationController
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @reviewable
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths]
   end
 
   # POST /products/:product_id/reviews
@@ -40,7 +40,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review, reviewable: @reviewable
+      render json: @review, status: :created, location: @review
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
@@ -56,7 +56,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(@whitelisted) && (company.nil? || company.save)
-      render json: @review, reviewable: @review.reviewable
+      render json: @review
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
