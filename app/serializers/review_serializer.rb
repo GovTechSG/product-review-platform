@@ -8,14 +8,14 @@ class ReviewSerializer < ActiveModel::Serializer
   has_many :strengths, serializer: StrengthSerializer
 
   def product?
-    instance_options[:reviewable].class == Product
+    object.reviewable.class == Product
   end
 
   def service?
-    instance_options[:reviewable].class == Service
+    object.reviewable.class == Service
   end
 
   def company?
-    instance_options[:reviewable].company.class == Company
+    object.reviewer.class == Company
   end
 end
