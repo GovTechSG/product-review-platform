@@ -4,11 +4,11 @@ class CommentSerializer < ActiveModel::Serializer
   belongs_to :commenter, key: "from", serializer: AgencySerializer, if: :agency?
 
   def review?
-    instance_options[:commentable].class == Review
+    object.commentable.class == Review
   end
 
   def agency?
-    instance_options[:commentable].comments.pluck("commenter_type").each do |commenter| commenter == "Agency" end
+    object.commenter.class == Agency
   end
 
 end

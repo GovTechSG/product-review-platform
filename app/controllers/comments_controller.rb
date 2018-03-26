@@ -9,6 +9,7 @@ class CommentsController < ApplicationController
   before_action :set_update_commentable, only: [:update]
   before_action :validate_commentable_presence, only: [:index, :create, :update]
   before_action :validate_from_presence, only: [:update]
+  before_action :validate_update_commenter_presence, only: [:update]
 
 
   before_action :check_commenter_params, only: [:create]
@@ -22,18 +23,18 @@ class CommentsController < ApplicationController
   # GET /reviews/:review_id/comments
   def index
     @comments = @commentable.comments.kept
-    render json: @comments, methods: [:agency], commentable: @commentable
+    render json: @comments
   end
 
   # GET /comments/1
   def show
-    render json: @comment, commentable: @comment.commentable
+    render json: @comment
   end
 
   # POST /reviews/:review_id/comments
   def create
     if @comments.save
-      render json: @comments, status: :created, location: @comments, commentable: @commentable
+      render json: @comments, status: :created, location: @comments
     else
       render json: @comments.errors.messages, status: :unprocessable_entity
     end
@@ -42,7 +43,7 @@ class CommentsController < ApplicationController
   # PATCH/PUT /comments/1
   def update
     if @comment.update(@whitelisted)
-      render json: @comment, commentable: @commentable
+      render json: @comment
     else
       render json: @comment.errors.messages, status: :unprocessable_entity
     end
@@ -123,6 +124,11 @@ class CommentsController < ApplicationController
 
     def validate_commenter_presence
       render_error(404, "From id": ["not found"]) if @commmenter.nil? || !@commmenter.presence?
+    end
+
+    def validate_update_commenter_presence
+      @commenter =  params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
+      render_error(404, "From id": ["not found"]) if @commenter.nil? || !@commenter.presence?
     end
 
     def set_commentable
