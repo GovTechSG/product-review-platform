@@ -11,7 +11,6 @@ class CommentsController < ApplicationController
   before_action :validate_from_presence, only: [:update]
   before_action :validate_update_commenter_presence, only: [:update]
 
-
   before_action :check_commenter_params, only: [:create]
   before_action :set_new_comment_commenter, only: [:create]
   before_action :validate_commenter_presence, only: [:create]
@@ -127,8 +126,10 @@ class CommentsController < ApplicationController
     end
 
     def validate_update_commenter_presence
-      @commenter =  params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
-      render_error(404, "From id": ["not found"]) if @commenter.nil? || !@commenter.presence?
+      if check_from_presence == BOTH_PARAMS_EXIST
+        @commenter = params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
+        render_error(404, "From id": ["not found"]) if @commenter.nil? || !@commenter.presence?
+      end
     end
 
     def set_commentable
@@ -152,7 +153,7 @@ class CommentsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def create_params
       @whitelisted = params.require(:comment).permit(:content, :from_type, :from_id)
-      @whitelisted = @whitelisted.merge(commentable_id: params[@class+"_id"], commentable_type: @commentable_type)
+      @whitelisted = @whitelisted.merge(commentable_id: params[@class + "_id"], commentable_type: @commentable_type)
     end
 
     def update_params

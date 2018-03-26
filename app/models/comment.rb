@@ -4,7 +4,6 @@ class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true
   belongs_to :commenter, polymorphic: true
 
-
   validates_presence_of :content, :commenter, :commentable
 
   # scope :kept, -> { undiscarded.joins(:agency).merge(Agency.kept) }

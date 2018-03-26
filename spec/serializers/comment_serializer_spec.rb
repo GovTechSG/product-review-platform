@@ -12,12 +12,12 @@ RSpec.describe CommentSerializer, type: :serializer do
       expect(subject['content']).to eql(@comment.content)
     end
 
-    it 'has a agency' do
-      expect(subject['agency_id']).to eql(@comment.agency_id)
+    it 'has a commenter' do
+      expect(subject['commenter_id']).to eql(@comment.commenter_id)
     end
 
-    it 'has a review' do
-      expect(subject['review_id']).to eql(@comment.review_id)
+    it 'has a commentable' do
+      expect(subject['commentable_id']).to eql(@comment.commentable_id)
     end
   end
 end

@@ -24,7 +24,6 @@ class Review < ApplicationRecord
   has_many :strengths, through: :strength_reviews
   has_many :comments, as: :commentable, dependent: :destroy
 
-
   validates_presence_of :score, :reviewer, :reviewable, :grant
 
   after_save :set_reviews_count, on: [:create, :update]
