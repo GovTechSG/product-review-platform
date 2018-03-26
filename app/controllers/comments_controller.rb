@@ -92,7 +92,7 @@ class CommentsController < ApplicationController
     end
 
     def set_new_comment_commenter
-      type = params[:comment][:from_type].classify.safe_constantize if !params[:comment][:from_type].nil?
+      type = params[:comment][:from_type].classify.safe_constantize
       if !type.nil?
         if type.superclass.name != "Commenter"
           render_error(422, "From type": ["is invalid"])
