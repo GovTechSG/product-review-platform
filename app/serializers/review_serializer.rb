@@ -1,21 +1,13 @@
 class ReviewSerializer < ActiveModel::Serializer
   attributes :id, :score, :content
-  belongs_to :reviewable, key: "object", serializer: ProductSerializer, if: :product?
-  belongs_to :reviewable, key: "object", serializer: ServiceSerializer, if: :service?
-  belongs_to :reviewer, key: "from", serializer: AssociateCompanySerializer, if: :company?
+  belongs_to :reviewable, key: "object", polymorphic: true
+  belongs_to :reviewer, key: "from", polymorphic: true
 
   belongs_to :grant, serializer: GrantSerializer
   has_many :strengths, serializer: StrengthSerializer
 
-  def product?
-    object.reviewable.class == Product
-  end
-
-  def service?
-    object.reviewable.class == Service
-  end
-
-  def company?
-    object.reviewer.class == Company
+  def self.serializer_for(model, options)
+    return AssociateCompanySerializer if model.class.name == 'Company'
+    super
   end
 end
