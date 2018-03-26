@@ -1,4 +1,4 @@
-class Agency < ApplicationRecord
+class Agency < Commenter
   include SwaggerDocs::Agency
 
   has_many :likes, dependent: :destroy

@@ -1,7 +1,5 @@
 class Comment < ApplicationRecord
   include SwaggerDocs::Comment
-  belongs_to :agency
-  belongs_to :review
 
   belongs_to :commentable, polymorphic: true
   belongs_to :commenter, polymorphic: true
@@ -13,6 +11,6 @@ class Comment < ApplicationRecord
   # scope :kept, -> { undiscarded.joins(:review).merge(Review.kept) }
 
   def presence?
-    !discarded? && agency.presence? && review.presence?
+    !discarded? && commenter.presence? && commentable.presence?
   end
 end

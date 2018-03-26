@@ -4,8 +4,8 @@ class ReviewsController < ApplicationController
   before_action :set_review, only: [:show, :update, :destroy]
   before_action :validate_review_presence, only: [:show, :update, :destroy]
   before_action :set_reviewer, only: [:create]
-  before_action :set_update_reviewer, only: [:update]
   before_action :validate_reviewer_presence, only: [:create]
+  before_action :set_update_reviewer, only: [:update]
   before_action :set_grant, only: [:create]
   before_action :validate_grant_presence, only: [:create]
   before_action :set_reviewable, only: [:index, :create]
@@ -23,12 +23,12 @@ class ReviewsController < ApplicationController
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @reviewable
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @reviewable, has_type: false
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable, has_type: false
   end
 
   # POST /products/:product_id/reviews
@@ -39,7 +39,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review, reviewable: @reviewable
+      render json: @review, status: :created, location: @review, reviewable: @reviewable, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
@@ -55,7 +55,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(@whitelisted) && (company.nil? || company.save)
-      render json: @review, reviewable: @review.reviewable
+      render json: @review, reviewable: @review.reviewable, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
