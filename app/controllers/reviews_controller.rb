@@ -1,34 +1,36 @@
 class ReviewsController < ApplicationController
   include SwaggerDocs::Reviews
   before_action :doorkeeper_authorize!
-  before_action :set_review, only: [:show, :update, :destroy]
-  before_action :validate_review_presence, only: [:show, :update, :destroy]
-  before_action :set_reviewer, only: [:create]
-  before_action :validate_reviewer_presence, only: [:create]
-  before_action :set_update_reviewer, only: [:update]
-  before_action :set_grant, only: [:create]
-  before_action :validate_grant_presence, only: [:create]
-  before_action :set_reviewable, only: [:index, :create]
-  before_action :validate_reviewable_presence, only: [:index, :create]
-  before_action :validate_score_type, only: [:create, :update]
-  before_action :validate_set_create_from, only: [:create]
-  before_action :validate_set_update_from, only: [:update]
-  before_action :validate_set_update_grant_presence, only: [:update]
 
-  BOTH_PARAMS_EXIST = 0
-  BOTH_PARAMS_MISSING = 2
-  PARTIAL_PARAMS_MISSING = 1
+  before_action only: [:index] { set_reviewable(true) }
+  before_action only: [:destroy, :show] { set_review }
+  before_action only: [:create] do
+    require_params(true)
+    set_reviewable(true) unless performed?
+    transform_params unless performed?
+    set_reviewer(true) unless performed?
+    set_grant(true) unless performed?
+    set_strength(false) unless performed?
+  end
+  before_action only: [:update] do
+    require_params(false)
+    transform_params unless performed?
+    set_review unless performed?
+    set_reviewer(false) unless performed?
+    set_grant(false) unless performed?
+    set_strength(false) unless performed?
+  end
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @reviewable, has_type: false
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], reviewable: @review.reviewable, has_type: false
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
   end
 
   # POST /products/:product_id/reviews
@@ -39,7 +41,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review, reviewable: @reviewable, has_type: false
+      render json: @review, status: :created, location: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
@@ -55,7 +57,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(@whitelisted) && (company.nil? || company.save)
-      render json: @review, reviewable: @review.reviewable, has_type: false
+      render json: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
@@ -69,6 +71,152 @@ class ReviewsController < ApplicationController
   end
 
   private
+    def require_params(required)
+      @whitelisted = params.fetch(:review, nil)
+      if @whitelisted.blank?
+        render_error(400, "Parameter missing": ["Param is missing or empty: review"])
+        return
+      else
+        @whitelisted = @whitelisted.permit(:score, :content, :from_id,
+                                           :from_type, :grant_id, :strength_ids => [])
+      end
+      if required
+        param_required_foreign_keys.each do |foreign_key|
+          if @whitelisted[foreign_key].blank?
+            render_error(400, "Parameter missing": ["Param is missing or empty: #{foreign_key}"])
+            break
+          end
+        end
+      end
+    end
+
+    def transform_params
+      convertable_inputs.each do |input|
+        if @whitelisted[input.keys.first].present?
+          @whitelisted[input[input.keys.first]] = @whitelisted.delete(input.keys.first)
+        end
+      end
+    end
+
+    def set_reviewable(required)
+      reviewable = find_class_in_hash(params, "Reviewable", false)
+      if required && reviewable.nil?
+        render_error(400, "Parameter missing": ["param is missing or empty: #{@input_type}_id"])
+        return
+      elsif !reviewable.nil?
+        @reviewable = find_record(reviewable[:type], reviewable[:id])
+        if invalid_record(@reviewable)
+          render_error(404, "#{reviewable[:type]}_id": ["Not found"])
+          return
+        end
+        unless @whitelisted.nil?
+          @whitelisted[:reviewable_type] = reviewable[:type].to_s
+          @whitelisted[:reviewable_id] = reviewable[:id]
+        end
+      end
+    end
+
+    def set_review
+      if params[:id].present?
+        @review = find_record(Review, params[:id])
+        render_error(404, "Review id": ["Not found"]) if invalid_record(@review)
+      else
+        render_error(400, "Parameter missing": ["param is missing or empty: id"])
+      end
+    end
+
+    def set_reviewer(required)
+      reviewer_class = find_class_in_hash(@whitelisted, "Reviewer", true)
+      if required && !provided
+        render_error(400, "Parameter missing": ["param is missing or empty: #{@input_type}_id"])
+        return
+      elsif !reviewer_class.nil?
+        get_reviewer(reviewer_class)
+      elsif provided && reviewer_class.nil?
+        render_error(422, "From type/id": ["is invalid or missing"])
+        return
+      end
+    end
+
+    def get_reviewer(reviewer_class)
+      reviewer = find_record(reviewer_class[:type], reviewer_class[:id])
+      if invalid_record(reviewer)
+        render_error(404, "#{reviewer_class[:type]}_id": ["Not found"])
+        return
+      end
+      @whitelisted[:reviewer_type] = reviewer_class[:type].to_s
+      @whitelisted[:reviewer_id] = reviewer_class[:id]
+    end
+
+    def set_grant(required)
+      if required && @whitelisted[:grant_id].blank?
+        render_error(400, "Parameter missing": ["param is missing or empty: grant_id"])
+      elsif @whitelisted[:grant_id].present?
+        grant = find_record(Grant, @whitelisted[:grant_id])
+        render_error(404, "Grant id": ["Not found"]) if invalid_record(grant)
+      end
+    end
+
+    def set_strength(required)
+      if required && @whitelisted[:strength_ids].blank?
+        render_error(400, "Parameter missing": ["param is missing or empty: strength_ids"])
+      elsif @whitelisted[:strength_ids].present?
+        @whitelisted[:strength_ids].each do |id|
+          strength = find_record(Strength, id)
+          if invalid_record(strength)
+            render_error(404, "Strength id": ["Not found"])
+            break
+          end
+        end
+      end
+    end
+
+    def find_class_in_hash(hash, superclass, type_in_params)
+      hash.each do |name, value|
+        if name =~ /(.+)_id$/
+          @input_type = Regexp.last_match[1]
+          actual_type = if type_in_params && hash["#{@input_type}_type"].present?
+                          get_class_from_type(hash, "#{@input_type}_type")
+                        else
+                          @input_type.classify.safe_constantize
+                        end
+          return {type: actual_type, id: value} if !actual_type.nil? && actual_type.superclass.name == superclass
+        end
+      end
+      nil
+    end
+
+    def get_class_from_type(param_hsh, type)
+      param_hsh[type].classify.safe_constantize
+    end
+
+    def provided
+      @whitelisted[:reviewer_type].present? || @whitelisted[:reviewer_id].present?
+    end
+
+    def invalid_record(record)
+      record.nil? || !record.presence?
+    end
+
+    def find_record(record_type, id)
+      record_type.find_by(id: id)
+    end
+
+    def param_required_foreign_keys
+      [
+        :from_id,
+        :from_type,
+        :grant_id
+      ]
+    end
+
+    def convertable_inputs
+      [
+        {from_id: :reviewer_id},
+        {from_type: :reviewer_type}
+      ]
+    end
+
     def add_company_score(company, score)
       company.aggregate_score = company.add_score(score)
       company
@@ -98,132 +246,5 @@ class ReviewsController < ApplicationController
     rescue ArgumentError
       render_error(400, "Score": ["is not a number"])
     end
-
-    def set_reviewable
-      params.each do |name, value|
-        if name =~ /(.+)_id$/
-          @reviewable_type = Regexp.last_match[1].classify.safe_constantize
-          @reviewable = @reviewable_type.find_by(id: value) if !@reviewable_type.nil?
-        end
-      end
-    end
-
-    def validate_reviewable_presence
-      render_error(404, "#{@reviewable_type} id": ["not found"]) if @reviewable.nil? || !@reviewable.presence?
-    end
-
-    def validate_review_presence
-      render_error(404, "Review id": ["not found"]) if @review.nil? || !@review.presence?
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    # Use callbacks to share common setup or constraints between actions.
-    def set_review
-      @review = Review.find_by(id: params[:id])
-    end
-
-    def set_reviewer
-      if params[:review].present?
-        if params[:review][:from_id].present? && params[:review][:from_type].present?
-          @company = Company.find_by(id: params[:review][:from_id])
-        else
-          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
-        end
-      else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: review"])
-      end
-    end
-
-    def set_update_reviewer
-      if params[:review].present? && params[:review][:from_id].present?
-        @company = Company.find_by(id: params[:review][:from_id])
-        render_error(404, "From id": ["not found"]) if @company.nil? || !@company.presence?
-      end
-    end
-
-    def validate_reviewer_presence
-      render_error(404, "From id": ["not found"]) if @company.nil? || !@company.presence?
-    end
-
-    def set_grant
-      if params[:review][:grant_id].present?
-        @grant = Grant.find_by(id: params[:review][:grant_id])
-      else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: grant_id"])
-      end
-    end
-
-    def validate_grant_presence
-      render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
-    end
-
-    def validate_set_update_grant_presence
-      if params[:review].present? && params[:review][:grant_id].present?
-        @grant = Grant.find_by(id: params[:review][:grant_id])
-        render_error(404, "Grant id": ["not found"]) if @grant.nil? || !@grant.presence?
-      end
-    end
-
-    def change_params_key
-      @whitelisted["reviewer_id"] = @whitelisted["from_id"]
-      @whitelisted.delete("from_id")
-      @whitelisted["reviewer_type"] = @whitelisted["from_type"].classify.safe_constantize
-      @whitelisted.delete("from_type")
-    end
-
-    def validate_set_create_from
-      type = params[:review][:from_type].classify.safe_constantize if !params[:review][:from_type].nil?
-      if !type.nil?
-        if type.superclass.name != "Reviewer"
-          render_error(422, "From type": ["is invalid"])
-        else
-          @whitelisted = create_params
-          change_params_key
-        end
-      else
-        render_error(422, "From type": ["is invalid"])
-      end
-    end
-
-    def check_from_presence
-      if params[:review].present? && params[:review][:from_type].present? && params[:review][:from_id].present?
-        BOTH_PARAMS_EXIST
-      elsif params[:review][:from_type].blank? && params[:review][:from_id].blank?
-        @whitelisted = update_params
-        BOTH_PARAMS_MISSING
-      else
-        PARTIAL_PARAMS_MISSING
-      end
-    end
-
-    def validate_set_update_from
-      if check_from_presence == PARTIAL_PARAMS_MISSING
-        render_error(422, "Either From type or From ID": ["is missing"])
-      elsif check_from_presence == BOTH_PARAMS_EXIST
-        type = params[:review][:from_type].classify.safe_constantize
-        if !type.nil? && type.superclass.name == "Reviewer"
-          @whitelisted = update_params
-          change_params_key
-        else
-          render_error(422, "From type": ["is invalid"])
-        end
-      end
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def create_params
-      @whitelisted = params.require(:review).permit(:score, :content, :from_id,
-                                                    :from_type, :grant_id, :strength_ids => [])
-      if params[:product_id].present?
-        @whitelisted = @whitelisted.merge(reviewable_id: params[:product_id], reviewable_type: "Product")
-      elsif params[:service_id].present?
-        @whitelisted = @whitelisted.merge({reviewable_id: params[:service_id], reviewable_type: "Service"})
-      else return nil
-      end
-    end
-
-    def update_params
-      @whitelisted = params.require(:review).permit(:score, :content, :from_id,
-                                                    :from_type, :grant_id, :strength_ids => [])
-    end
 end
+

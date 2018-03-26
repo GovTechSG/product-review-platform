@@ -579,7 +579,7 @@ RSpec.describe ReviewsController, type: :controller do
           review = Review.create! valid_product_review
 
           put :update, params: { id: review.to_param, review: invalid_product_review }
-          expect(response).to have_http_status(400)
+          expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
         end
       end

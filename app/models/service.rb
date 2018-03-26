@@ -1,4 +1,4 @@
-class Service < ApplicationRecord
+class Service < Reviewable
   include SwaggerDocs::Service
   include Statistics::ProductsAndServices
 
