@@ -94,6 +94,9 @@ module SwaggerDocs::Companies
         response 401 do
           key :'$ref', :UnauthorisedError
         end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
       end
     end
 
