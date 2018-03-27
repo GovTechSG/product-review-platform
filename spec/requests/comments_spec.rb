@@ -6,20 +6,44 @@ RSpec.describe "Comments", type: :request do
     build(:product_review_comment).attributes
   end
 
+  let(:create_update_product_comment) do
+    value = build(:product_review_comment).attributes
+    value["from_id"] = value["commenter_id"]
+    value["from_type"] = value["commenter_type"]
+    value.delete("commenter_id")
+    value.delete("commenter_type")
+    value
+  end
+
   let(:service_comment_valid_attributes) do
     build(:service_review_comment).attributes
   end
 
   let(:product_comment_invalid_attributes) do
-    build(:product_review_comment, content: nil).attributes
+    value = build(:product_review_comment, content: nil).attributes
+    value["from_id"] = value["commenter_id"]
+    value["from_type"] = value["commenter_type"]
+    value.delete("commenter_id")
+    value.delete("commenter_type")
+    value
   end
 
   let(:service_comment_invalid_attributes) do
-    build(:service_review_comment, content: nil).attributes
+    value = build(:service_review_comment, content: nil).attributes
+    value["from_id"] = value["commenter_id"]
+    value["from_type"] = value["commenter_type"]
+    value.delete("commenter_id")
+    value.delete("commenter_type")
+    value
   end
 
   let(:product_comment_missing_agencyid_attributes) do
-    build(:product_review_comment, agency_id: 0).attributes
+    value = build(:product_review_comment, commenter_id: 0, commenter_type: "Agency").attributes
+    value["from_id"] = value["commenter_id"]
+    value["from_type"] = value["commenter_type"]
+    value.delete("commenter_id")
+    value.delete("commenter_type")
+    value
   end
 
   let(:service_comment_missing_agencyid_attributes) do
@@ -30,14 +54,14 @@ RSpec.describe "Comments", type: :request do
     describe "GET /api/v1/reviews/:review_id/comments" do
       it "returns a success response from a product comment" do
         comment = Comment.create! product_comment_valid_attributes
-        get review_comments_path(comment.review.id), headers: request_login
+        get review_comments_path(comment.commentable.id), headers: request_login
 
         expect(response).to be_success
       end
 
       it "returns a success response from a service comment" do
         comment = Comment.create! service_comment_valid_attributes
-        get review_comments_path(comment.review.id), headers: request_login
+        get review_comments_path(comment.commentable.id), headers: request_login
 
         expect(response).to be_success
       end
@@ -73,7 +97,7 @@ RSpec.describe "Comments", type: :request do
           review = create(:product_review)
 
           expect do
-            post review_comments_path(review.id), params: { comment: product_comment_valid_attributes }, headers: request_login
+            post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
           end.to change(Comment, :count).by(1)
         end
 
@@ -81,14 +105,14 @@ RSpec.describe "Comments", type: :request do
           review = create(:service_review)
 
           expect do
-            post review_comments_path(review.id), params: { comment: service_comment_valid_attributes }, headers: request_login
+            post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
           end.to change(Comment, :count).by(1)
         end
 
         it "renders a JSON response with the new comment to product" do
           review = create(:product_review)
 
-          post review_comments_path(review.id), params: { comment: product_comment_valid_attributes }, headers: request_login
+          post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(comment_url(Comment.last))
@@ -97,7 +121,7 @@ RSpec.describe "Comments", type: :request do
         it "renders a JSON response with the new comment to service" do
           review = create(:service_review)
 
-          post review_comments_path(review.id), params: { comment: service_comment_valid_attributes }, headers: request_login
+          post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(comment_url(Comment.last))
@@ -113,18 +137,29 @@ RSpec.describe "Comments", type: :request do
           expect(response).to be_not_found
         end
 
-        it "returns not found when product_agency_id not found" do
+        it "returns not found when commenter not found" do
           review = create(:product_review)
 
           post review_comments_path(review.id), params: { comment: product_comment_missing_agencyid_attributes }, headers: request_login
           expect(response).to be_not_found
         end
 
-        it "returns not found when service_agency_id not found" do
-          review = create(:service_review)
+        it "return 422 when from type is not subclass of commenter", authorized: true do
+          review = create(:product_review)
+          create_update_product_comment["from_type"] = "company"
+          post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
 
-          post review_comments_path(review.id), params: { comment: service_comment_missing_agencyid_attributes }, headers: request_login
-          expect(response).to be_not_found
+        it "does not creates a new Comment when commenter is deleted", authorized: true do
+          review = create(:product_review)
+          agency = Agency.create! build(:agency).attributes
+          create_update_product_comment["from_id"] = agency.id
+          agency.discard
+          expect do
+            post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
+          end.to change(Review, :count).by(0)
         end
       end
 
@@ -192,6 +227,46 @@ RSpec.describe "Comments", type: :request do
         it "returns not found when comment ID not found" do
           put comment_path(0), params: { comment: product_comment_new_attributes }, headers: request_login
           expect(response).to be_not_found
+        end
+
+        it "return 422 when from type is not subclass of commenter", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+
+          service_comment_new_attributes["from_type"] = "company"
+          service_comment_new_attributes["from_id"] = 1
+          put comment_path(comment), params: { comment: service_comment_new_attributes }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not update the Comment when commenter is deleted", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          original_comment = comment
+
+          agency = Agency.create! build(:agency).attributes
+          service_comment_new_attributes["from_id"] = agency.id
+          service_comment_new_attributes["from_type"] = agency.id
+          agency.discard
+
+          put comment_path(comment), params: { comment: service_comment_new_attributes }, headers: request_login
+          comment.reload
+          expect(comment.content).to eq(original_comment[:content])
+        end
+
+        it "return 422 when from type is missing", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          service_comment_new_attributes["from_id"] = 1
+          put comment_path(comment), params: { comment: service_comment_new_attributes }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from id is missing", authorized: true do
+          comment = Comment.create! service_comment_valid_attributes
+          service_comment_new_attributes["from_type"] = "agency"
+          put comment_path(comment), params: { comment: service_comment_new_attributes }, headers: request_login
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
         end
       end
 
@@ -268,14 +343,14 @@ RSpec.describe "Comments", type: :request do
     describe "GET /api/v1/reviews/:review_id/comments" do
       it "returns an unauthorized response from product_comment" do
         comment = Comment.create! product_comment_valid_attributes
-        get review_comments_path(comment.review.id), headers: nil
+        get review_comments_path(comment.commentable.id), headers: nil
 
         expect_unauthorized
       end
 
       it "returns an unauthorized response from service_comment" do
         comment = Comment.create! service_comment_valid_attributes
-        get review_comments_path(comment.review.id), headers: nil
+        get review_comments_path(comment.commentable.id), headers: nil
 
         expect_unauthorized
       end

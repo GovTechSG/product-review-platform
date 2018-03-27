@@ -19,9 +19,9 @@ class Review < ApplicationRecord
              inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
 
   has_many :likes, dependent: :destroy
-  has_many :comments, dependent: :destroy
   has_many :strength_reviews, dependent: :destroy
   has_many :strengths, through: :strength_reviews
+  has_many :comments, as: :commentable, dependent: :destroy
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 

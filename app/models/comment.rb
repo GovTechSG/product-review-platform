@@ -1,14 +1,15 @@
 class Comment < ApplicationRecord
   include SwaggerDocs::Comment
-  belongs_to :agency
-  belongs_to :review
 
-  validates_presence_of :content, :agency, :review
+  belongs_to :commentable, polymorphic: true
+  belongs_to :commenter, polymorphic: true
 
-  scope :kept, -> { undiscarded.joins(:agency).merge(Agency.kept) }
-  scope :kept, -> { undiscarded.joins(:review).merge(Review.kept) }
+  validates_presence_of :content, :commenter, :commentable
+
+  # scope :kept, -> { undiscarded.joins(:agency).merge(Agency.kept) }
+  # scope :kept, -> { undiscarded.joins(:review).merge(Review.kept) }
 
   def presence?
-    !discarded? && agency.presence? && review.presence?
+    !discarded? && commenter.presence? && commentable.presence?
   end
 end

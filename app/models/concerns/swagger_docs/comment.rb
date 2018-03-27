@@ -18,14 +18,12 @@ module SwaggerDocs::Comment
         key :example, "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis."
       end
 
-      property :agency_id do
-        key :type, :integer
-        key :format, :int64
+      property :object do
+        key :'$ref', :Review_Comment
       end
 
-      property :review_id do
-        key :type, :integer
-        key :format, :int64
+      property :from do
+        key :'$ref', :Agency_Comment
       end
     end
 
@@ -38,9 +36,13 @@ module SwaggerDocs::Comment
               key :type, :string
             end
 
-            property :agency_id do
+            property :from_id do
               key :type, :integer
               key :format, :int64
+            end
+
+            property :from_type do
+              key :type, :string
             end
           end
         end
@@ -53,6 +55,15 @@ module SwaggerDocs::Comment
           property :comment do
             key :type, :object
             property :content do
+              key :type, :string
+            end
+
+            property :from_id do
+              key :type, :integer
+              key :format, :int64
+            end
+
+            property :from_type do
               key :type, :string
             end
           end

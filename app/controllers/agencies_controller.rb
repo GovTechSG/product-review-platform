@@ -8,12 +8,12 @@ class AgenciesController < ApplicationController
   def index
     @agencies = Agency.kept
 
-    render json: @agencies
+    render json: @agencies, has_type: false
   end
 
   # GET /agencies/1
   def show
-    render json: @agency
+    render json: @agency, has_type: false
   end
 
   # POST /agencies
@@ -21,7 +21,7 @@ class AgenciesController < ApplicationController
     @agency = Agency.new(agency_params)
 
     if @agency.save
-      render json: @agency, status: :created, location: @agency
+      render json: @agency, status: :created, location: @agency, has_type: false
     else
       render json: @agency.errors.messages, status: :unprocessable_entity
     end
@@ -30,7 +30,7 @@ class AgenciesController < ApplicationController
   # PATCH/PUT /agencies/1
   def update
     if @agency.update(agency_params)
-      render json: @agency
+      render json: @agency, has_type: false
     else
       render json: @agency.errors.messages, status: :unprocessable_entity
     end

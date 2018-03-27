@@ -1,9 +1,9 @@
-class Agency < ApplicationRecord
+class Agency < Commenter
   include SwaggerDocs::Agency
   mount_uploader :image, ImageUploader
 
   has_many :likes, dependent: :destroy
-  has_many :comments, dependent: :destroy
+  has_many :comments, dependent: :destroy, as: :commenter
   has_many :grants, dependent: :destroy
 
   validates :name, :acronym, :kind, :description, presence: true

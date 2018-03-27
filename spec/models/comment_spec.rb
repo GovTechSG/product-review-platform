@@ -10,12 +10,12 @@ RSpec.describe Comment, type: :model do
       expect(build(:product_review_comment, content: nil)).not_to be_valid
     end
 
-    it 'is invalid without a agency for product_review_comment' do
-      expect(build(:product_review_comment, agency: nil)).not_to be_valid
+    it 'is invalid without a commenter for product_review_comment' do
+      expect(build(:product_review_comment, commenter: nil)).not_to be_valid
     end
 
-    it 'is invalid without a review for product_review_comment' do
-      expect(build(:product_review_comment, review: nil)).not_to be_valid
+    it 'is invalid without a commentable for product_review_comment' do
+      expect(build(:product_review_comment, commentable: nil)).not_to be_valid
     end
 
     it 'has a valid service review comment Factory' do
@@ -26,12 +26,12 @@ RSpec.describe Comment, type: :model do
       expect(build(:service_review_comment, content: nil)).not_to be_valid
     end
 
-    it 'is invalid without a agency for service_review_comment' do
-      expect(build(:service_review_comment, agency: nil)).not_to be_valid
+    it 'is invalid without a commenter for service_review_comment' do
+      expect(build(:service_review_comment, commenter: nil)).not_to be_valid
     end
 
-    it 'is invalid without a review for service_review_comment' do
-      expect(build(:service_review_comment, review: nil)).not_to be_valid
+    it 'is invalid without a commentable for service_review_comment' do
+      expect(build(:service_review_comment, commentable: nil)).not_to be_valid
     end
   end
 end
