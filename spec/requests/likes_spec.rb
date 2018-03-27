@@ -6,8 +6,22 @@ RSpec.describe "Likes", type: :request do
     build(:product_review_like).attributes
   end
 
+  let(:create_update_product_like) do
+    value = build(:product_review_like).attributes
+    value["from_id"] = value["liker_id"]
+    value["from_type"] = value["liker_type"]
+    value.delete("liker_id")
+    value.delete("liker_type")
+    value
+  end
+
   let(:invalid_attributes) do
-    build(:product_review_like, review_id: nil, agency_id: nil).attributes
+    value = build(:product_review_like, likeable_id: 0, liker_id: 0, liker_type: "agency").attributes
+    value["from_id"] = value["liker_id"]
+    value["from_type"] = value["liker_type"]
+    value.delete("liker_id")
+    value.delete("liker_type")
+    value
   end
 
   let(:valid_session) {}
@@ -16,31 +30,31 @@ RSpec.describe "Likes", type: :request do
     describe "GET api/v1/reviews/:review_id/likes" do
       it "returns a success response" do
         like = Like.create! valid_attributes
-        get review_likes_path(like.review.id), headers: request_login
+        get review_likes_path(like.likeable.id), headers: request_login
 
         expect(response).to be_success
       end
 
       it "returns not found if review is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
-        get review_likes_path(like.review.id), headers: request_login
+        like.likeable.discard
+        get review_likes_path(like.likeable.id), headers: request_login
 
         expect(response).to be_not_found
       end
 
       it "returns not found if reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
-        get review_likes_path(like.review.id), headers: request_login
+        like.likeable.reviewable.discard
+        get review_likes_path(like.likeable.id), headers: request_login
 
         expect(response).to be_not_found
       end
 
       it "returns not found if company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
-        get review_likes_path(like.review.id), headers: request_login
+        like.likeable.reviewable.company.discard
+        get review_likes_path(like.likeable.id), headers: request_login
 
         expect(response).to be_not_found
       end
@@ -48,7 +62,7 @@ RSpec.describe "Likes", type: :request do
       it "does not return deleted likes", authorized: true do
         like = Like.create! valid_attributes
         like.discard
-        get review_likes_path(like.review.id), headers: request_login
+        get review_likes_path(like.likeable.id), headers: request_login
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -76,21 +90,21 @@ RSpec.describe "Likes", type: :request do
 
       it "returns not found when review is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
+        like.likeable.discard
         get like_path(like.id), headers: request_login
         expect(response).to be_not_found
       end
 
       it "returns not found when reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
+        like.likeable.reviewable.discard
         get like_path(like.id), headers: request_login
         expect(response).to be_not_found
       end
 
       it "returns not found when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
+        like.likeable.reviewable.company.discard
         get like_path(like.id), headers: request_login
         expect(response).to be_not_found
       end
@@ -102,14 +116,14 @@ RSpec.describe "Likes", type: :request do
           review = create(:product_review)
 
           expect do
-            post review_likes_path(review.id), params: { like: valid_attributes }, headers: request_login
+            post review_likes_path(review.id), params: { like: create_update_product_like }, headers: request_login
           end.to change(Like, :count).by(1)
         end
 
         it "renders a JSON response with the new like" do
           review = create(:product_review)
 
-          post review_likes_path(review.id), params: { like: valid_attributes }, headers: request_login
+          post review_likes_path(review.id), params: { like: create_update_product_like }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(like_url(Like.last))
@@ -122,7 +136,7 @@ RSpec.describe "Likes", type: :request do
           review.discard
 
           expect do
-            post review_likes_path(review.id), params: { like: valid_attributes }, headers: request_login
+            post review_likes_path(review.id), params: { like: create_update_product_like }, headers: request_login
           end.to change(Like, :count).by(0)
         end
 
@@ -179,8 +193,10 @@ RSpec.describe "Likes", type: :request do
       context "with invalid params" do
         it "renders 422 if agency likes twice" do
           like = create(:product_review_like)
-          duplicate_like = attributes_for(:product_review_like, agency_id: like.agency_id)
-          post review_likes_path(like.review_id), params: { like: duplicate_like }, headers: request_login
+          duplicate_like = create_update_product_like
+          duplicate_like["from_id"] = like.liker_id
+
+          post review_likes_path(like.likeable_id), params: { like: duplicate_like }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -230,21 +246,21 @@ RSpec.describe "Likes", type: :request do
 
       it "returns a not found response when review is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
+        like.likeable.discard
         delete like_path(like.id), headers: request_login
         expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
+        like.likeable.reviewable.discard
         delete like_path(like.id), headers: request_login
         expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
+        like.likeable.reviewable.company.discard
         delete like_path(like.id), headers: request_login
         expect(response).to have_http_status(404)
       end
@@ -255,7 +271,7 @@ RSpec.describe "Likes", type: :request do
     describe "GET api/v1/reviews/:review_id/likes" do
       it "returns an unauthorized response" do
         like = Like.create! valid_attributes
-        get review_likes_path(like.review.id), headers: nil
+        get review_likes_path(like.likeable.id), headers: nil
 
         expect_unauthorized
       end
