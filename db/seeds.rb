@@ -293,11 +293,11 @@ Review.all.each_with_index do |r, i|
   StrengthReview.create!(strength: Strength.first, review: r)
   StrengthReview.create!(strength: Strength.last, review: r)
 
-  r.likes.create!(commenter_id: 1, commenter_type: "Agency", commentable_id: 1, commentable_type: "Review")
-  r.likes.create!(commenter_id: 2, commenter_type: "Agency", commentable_id: 2, commentable_type: "Review")
-  r.likes.create!(commenter_id: 3, commenter_type: "Agency", commentable_id: 3, commentable_type: "Review")
-  r.likes.create!(commenter_id: 4, commenter_type: "Agency", commentable_id: 4, commentable_type: "Review")
-  r.likes.create!(commenter_id: 5, commenter_type: "Agency", commentable_id: 5, commentable_type: "Review")
+  r.likes.create!(liker_id: 1, liker_type: "Agency", likeable_id: 1, likeable_type: "Review")
+  r.likes.create!(liker_id: 2, liker_type: "Agency", likeable_id: 2, likeable_type: "Review")
+  r.likes.create!(liker_id: 3, liker_type: "Agency", likeable_id: 3, likeable_type: "Review")
+  r.likes.create!(liker_id: 4, liker_type: "Agency", likeable_id: 4, likeable_type: "Review")
+  r.likes.create!(liker_id: 5, liker_type: "Agency", likeable_id: 5, likeable_type: "Review")
 end
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)
