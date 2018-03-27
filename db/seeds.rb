@@ -283,12 +283,12 @@ Service.all.each do |s|
 end
 
 Review.all.each_with_index do |r, i|
-  r.comments.create!(content: lorem_ipsum, agency_id: 1)
-  r.comments.create!(content: lorem_ipsum, agency_id: 2)
-  r.comments.create!(content: lorem_ipsum, agency_id: 3)
-  r.comments.create!(content: lorem_ipsum, agency_id: 2)
-  r.comments.create!(content: lorem_ipsum, agency_id: 4)
-  r.comments.create!(content: lorem_ipsum, agency_id: 5)
+  r.comments.create!(content: lorem_ipsum, commenter_id: 1, commenter_type: "Agency", commentable_id: 1, commentable_type: "Review")
+  r.comments.create!(content: lorem_ipsum, commenter_id: 2, commenter_type: "Agency", commentable_id: 2, commentable_type: "Review")
+  r.comments.create!(content: lorem_ipsum, commenter_id: 3, commenter_type: "Agency", commentable_id: 3, commentable_type: "Review")
+  r.comments.create!(content: lorem_ipsum, commenter_id: 4, commenter_type: "Agency", commentable_id: 4, commentable_type: "Review")
+  r.comments.create!(content: lorem_ipsum, commenter_id: 5, commenter_type: "Agency", commentable_id: 5, commentable_type: "Review")
+  r.comments.create!(content: lorem_ipsum, commenter_id: 6, commenter_type: "Agency", commentable_id: 6, commentable_type: "Review")
   
   StrengthReview.create!(strength: Strength.first, review: r)
   StrengthReview.create!(strength: Strength.last, review: r)
