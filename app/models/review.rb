@@ -2,6 +2,9 @@ class Review < ApplicationRecord
   include SwaggerDocs::Review
   include Statistics::Reviews
 
+  include Commentable
+  include Likeable
+
   belongs_to :reviewer, polymorphic: true
   belongs_to :company, -> { where(reviews: { reviewer_type: 'Company' }) },
              inverse_of: :reviews, foreign_key: 'reviewer_id', optional: true
@@ -18,10 +21,10 @@ class Review < ApplicationRecord
   belongs_to :service, -> { where(reviews: { reviewable_type: 'Service' }) },
              inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
 
-  has_many :likes, dependent: :destroy
   has_many :strength_reviews, dependent: :destroy
   has_many :strengths, through: :strength_reviews
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :likes, as: :likeable, dependent: :destroy
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180322025511) do
+ActiveRecord::Schema.define(version: 20180327055439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,15 +148,16 @@ ActiveRecord::Schema.define(version: 20180322025511) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.bigint "review_id"
-    t.bigint "agency_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.index ["agency_id", "review_id"], name: "index_likes_on_agency_id_and_review_id", unique: true
-    t.index ["agency_id"], name: "index_likes_on_agency_id"
+    t.string "likeable_type"
+    t.bigint "likeable_id"
+    t.string "liker_type"
+    t.bigint "liker_id"
     t.index ["discarded_at"], name: "index_likes_on_discarded_at"
-    t.index ["review_id"], name: "index_likes_on_review_id"
+    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable_type_and_likeable_id"
+    t.index ["liker_type", "liker_id"], name: "index_likes_on_liker_type_and_liker_id"
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -240,8 +241,6 @@ ActiveRecord::Schema.define(version: 20180322025511) do
   add_foreign_key "grants", "agencies"
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
-  add_foreign_key "likes", "agencies"
-  add_foreign_key "likes", "reviews"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "grants"

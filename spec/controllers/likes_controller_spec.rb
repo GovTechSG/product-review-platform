@@ -27,26 +27,26 @@ RSpec.describe LikesController, type: :controller do
         expect(response).to be_success
       end
 
-      it "returns not found if review is deleted", authorized: true do
+      it "returns not found if likeable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end
 
       it "returns not found if reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.reviewable.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end
 
       it "returns not found if company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.reviewable.company.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end

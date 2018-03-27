@@ -1,7 +1,8 @@
 class Agency < Commenter
   include SwaggerDocs::Agency
+  include Liker
 
-  has_many :likes, dependent: :destroy
+  has_many :likes, dependent: :destroy, as: :liker
   has_many :comments, dependent: :destroy, as: :commenter
   has_many :grants, dependent: :destroy
 
