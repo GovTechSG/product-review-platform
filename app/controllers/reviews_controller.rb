@@ -1,6 +1,7 @@
 class ReviewsController < ApplicationController
   include SwaggerDocs::Reviews
   before_action :doorkeeper_authorize!
+
   before_action only: [:index] { set_reviewable(true) }
   before_action only: [:destroy, :show] { set_review }
   before_action only: [:create] do
@@ -24,12 +25,12 @@ class ReviewsController < ApplicationController
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths]
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths]
+    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
   end
 
   # POST /products/:product_id/reviews
@@ -40,7 +41,7 @@ class ReviewsController < ApplicationController
     company = add_company_score(@reviewable.company, @score) if @score
 
     if @review.save && (company.nil? || company.save)
-      render json: @review, status: :created, location: @review
+      render json: @review, status: :created, location: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end
@@ -56,7 +57,7 @@ class ReviewsController < ApplicationController
       company = update_company_score(@review.reviewable.company, @review.score, @score)
     end
     if @review.update(@whitelisted) && (company.nil? || company.save)
-      render json: @review
+      render json: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
     end

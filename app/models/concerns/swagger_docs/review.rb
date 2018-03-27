@@ -42,6 +42,25 @@ module SwaggerDocs::Review
       end
     end
 
+    swagger_schema :Review_Comment do
+      key :type, :object
+      key :required, [:id, :score, :content, :company_id, :reviewable_id]
+
+      property :id do
+        key :type, :integer
+        key :format, :int64
+      end
+
+      property :score do
+        key :type, :number
+      end
+
+      property :content do
+        key :type, :string
+        key :example, "Spring frameworks was not developed in spring"
+      end
+    end
+
     swagger_schema :Review_Service do
       key :type, :object
       key :required, [:id, :score, :content, :company_id, :reviewable_id]
