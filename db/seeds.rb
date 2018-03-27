@@ -293,11 +293,11 @@ Review.all.each_with_index do |r, i|
   StrengthReview.create!(strength: Strength.first, review: r)
   StrengthReview.create!(strength: Strength.last, review: r)
 
-  r.likes.create!(agency_id: 1)
-  r.likes.create!(agency_id: 2)
-  r.likes.create!(agency_id: 3)
-  r.likes.create!(agency_id: 4)
-  r.likes.create!(agency_id: 5)
+  r.likes.create!(commenter_id: 1, commenter_type: "Agency", commentable_id: 1, commentable_type: "Review")
+  r.likes.create!(commenter_id: 2, commenter_type: "Agency", commentable_id: 2, commentable_type: "Review")
+  r.likes.create!(commenter_id: 3, commenter_type: "Agency", commentable_id: 3, commentable_type: "Review")
+  r.likes.create!(commenter_id: 4, commenter_type: "Agency", commentable_id: 4, commentable_type: "Review")
+  r.likes.create!(commenter_id: 5, commenter_type: "Agency", commentable_id: 5, commentable_type: "Review")
 end
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)
