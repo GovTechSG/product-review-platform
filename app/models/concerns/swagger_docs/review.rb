@@ -46,6 +46,11 @@ module SwaggerDocs::Review
       key :type, :object
       key :required, [:id, :score, :content, :company_id, :reviewable_id]
 
+      property :type do
+        key :type, :string
+        key :example, 'Review'
+      end
+
       property :id do
         key :type, :integer
         key :format, :int64

@@ -90,7 +90,7 @@ class LikesController < ApplicationController
           render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
         end
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: comment"])
+        render_error(400, "Parameter missing": ["param is missing or the value is empty: like"])
       end
     end
 
