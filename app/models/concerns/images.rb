@@ -4,7 +4,6 @@ module Images
   def decode_image(img, file_name)
     Base64.decode64(img)
     file_decode(img.split(',')[1], file_name) if img
-
   rescue ArgumentError
     nil
   end
@@ -15,7 +14,6 @@ module Images
     file = Tempfile.new([file_base_name(filename), file_extn_name(filename)])
     file.binmode
     file.write(Base64.decode64(base))
-    file.close
     file
   end
 
@@ -26,5 +24,4 @@ module Images
   def file_extn_name(file_name)
     File.extname(file_name)
   end
-
 end

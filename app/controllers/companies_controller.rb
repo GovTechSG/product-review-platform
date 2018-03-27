@@ -25,16 +25,18 @@ class CompaniesController < ApplicationController
 
   # POST /companies
   def create
-    if company_params[:image].present?
-      Company.decode_image()
-    end
     @company = Company.new(company_params)
+    if company_params[:name].present?
+      tempfile = Company.decode_image(company_params[:image], "#{company_params[:name]}_img.jpeg") if company_params[:image].present?
+      @company.image = tempfile
+    end
 
     if @company.save
       render json: @company, status: :created, location: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
     end
+    tempfile.close
   end
 
   # PATCH/PUT /companies/1
