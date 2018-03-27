@@ -7,12 +7,15 @@ end
 
 gem 'activeadmin'
 gem 'active_model_serializers'
+gem 'carrierwave'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'doorkeeper'
 gem 'doorkeeper-jwt'
 gem 'discard'
 gem 'devise'
 gem 'email_validator'
+gem 'file_validators'
+gem 'mini_magick'
 gem 'rails', '~> 5.1.4'
 gem 'rubocop'
 # Use postgresql as the database for Active Record

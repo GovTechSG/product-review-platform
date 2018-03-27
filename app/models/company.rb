@@ -1,6 +1,8 @@
 class Company < Reviewer
   include SwaggerDocs::Company
   include Statistics::Companies
+  extend Images
+  mount_uploader :image, ImageUploader
 
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
@@ -14,6 +16,7 @@ class Company < Reviewer
   validates_presence_of :name, :uen, :aggregate_score, :description, :reviews_count
   validates_uniqueness_of :uen, :name
   validates :url, allow_blank: true, url: true
+  validates :image, file_size: { less_than: 1.megabytes }
 
   def grants
     product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)

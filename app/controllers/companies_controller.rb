@@ -25,6 +25,9 @@ class CompaniesController < ApplicationController
 
   # POST /companies
   def create
+    if company_params[:image].present?
+      Company.decode_image()
+    end
     @company = Company.new(company_params)
 
     if @company.save
@@ -78,6 +81,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :uen, :description, :phone_number, :url, industry_ids: [])
+      params.require(:company).permit(:name, :uen, :description, :phone_number, :url, :image, industry_ids: [])
     end
 end
