@@ -6,21 +6,19 @@ module SwaggerDocs::Like
 
     swagger_schema :Like do
       key :type, :object
-      key :required, [:id, :agency_id, :review_id]
+      key :required, [:id]
 
       property :id do
         key :type, :integer
         key :format, :int64
       end
 
-      property :review_id do
-        key :type, :integer
-        key :format, :int64
+      property :object do
+        key :'$ref', :Review_Comment
       end
 
-      property :agency_id do
-        key :type, :integer
-        key :format, :int64
+      property :from do
+        key :'$ref', :Agency_Type
       end
     end
 
@@ -29,9 +27,13 @@ module SwaggerDocs::Like
         schema do
           property :like do
             key :type, :object
-            property :agency_id do
+            property :from_id do
               key :type, :integer
               key :format, :int64
+            end
+
+            property :from_type do
+              key :type, :string
             end
           end
         end

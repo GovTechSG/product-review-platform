@@ -23,7 +23,7 @@ module SwaggerDocs::Comment
       end
 
       property :from do
-        key :'$ref', :Agency_Comment
+        key :'$ref', :Agency_Type
       end
     end
 

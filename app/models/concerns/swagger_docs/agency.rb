@@ -44,7 +44,7 @@ module SwaggerDocs::Agency
       end
     end
 
-    swagger_schema :Agency_Comment do
+    swagger_schema :Agency_Type do
       key :type, :object
       key :required, [:id, :name, :email, :phone_number]
 

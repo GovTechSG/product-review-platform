@@ -1,3 +1,5 @@
 class LikeSerializer < ActiveModel::Serializer
-  attributes :id, :review_id, :agency_id
+  attributes :id
+  belongs_to :likeable, key: "object", polymorphic: true
+  belongs_to :liker, key: "from", polymorphic: true
 end

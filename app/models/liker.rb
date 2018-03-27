@@ -1,0 +1,2 @@
+module Liker
+end

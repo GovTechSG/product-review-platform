@@ -159,6 +159,9 @@ Rails/FilePath:
 Style/MixinGrouping:
   Enabled: false
 
+Style/InverseMethods:
+  Enabled: false
+
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - "spec/**/*"
