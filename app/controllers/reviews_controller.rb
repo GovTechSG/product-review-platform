@@ -164,7 +164,7 @@ class ReviewsController < ApplicationController
         @whitelisted[:strength_ids].each do |id|
           strength = find_record(Strength, id)
           if invalid_record(strength)
-            render_error(404, "Strength id": ["Not found"])
+            render_error(404, "Strength ids": ["Not found"])
             break
           end
         end
