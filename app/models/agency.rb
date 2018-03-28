@@ -1,5 +1,8 @@
+require "letter_avatar/has_avatar"
+
 class Agency < Commenter
   include SwaggerDocs::Agency
+  include LetterAvatar::HasAvatar
   mount_uploader :image, ImageUploader
 
   has_many :likes, dependent: :destroy

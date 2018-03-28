@@ -1,5 +1,8 @@
+require "letter_avatar/has_avatar"
+
 class Company < Reviewer
   include SwaggerDocs::Company
+  include LetterAvatar::HasAvatar
   include Statistics::Companies
   extend Images
   mount_uploader :image, ImageUploader

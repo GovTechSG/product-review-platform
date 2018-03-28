@@ -3,7 +3,13 @@ module Images
 
   def decode_image(img, file_name)
     Base64.decode64(img)
-    file_decode(img.split(',')[1], file_name) if img
+    data_format = img.split(',')
+    data = data_format[1]
+    if data_format[0] =~ %r{(?<=/)(.*)(?=;)}
+      format = Regexp.last_match[0]
+      return file_decode(data, "#{file_name}.#{format}") if img && data
+    end
+    nil
   rescue ArgumentError
     nil
   end

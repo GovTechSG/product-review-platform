@@ -27,8 +27,17 @@ class CompaniesController < ApplicationController
   def create
     @company = Company.new(company_params)
     if company_params[:name].present?
-      tempfile = Company.decode_image(company_params[:image], "#{company_params[:name]}_img.jpeg") if company_params[:image].present?
+      if company_params[:image].present?
+        tempfile = Company.decode_image(company_params[:image], "#{company_params[:name]}_img")
+        if tempfile.nil?
+          render_error(422, "Invalid image format": ["Please use format: data:image/{image_format};base64,{base64_encoded_string}"])
+          return
+        end
+      else
+        tempfile = File.new(@company.avatar_path(200))
+      end
       @company.image = tempfile
+      tempfile.close
     end
 
     if @company.save
@@ -36,7 +45,6 @@ class CompaniesController < ApplicationController
     else
       render json: @company.errors.messages, status: :unprocessable_entity
     end
-    tempfile.close
   end
 
   # PATCH/PUT /companies/1
