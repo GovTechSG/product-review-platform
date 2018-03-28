@@ -1,6 +1,7 @@
-class Agency < Commenter
+class Agency < ApplicationRecord
   include SwaggerDocs::Agency
   include Liker
+  include Commenter
 
   has_many :likes, dependent: :destroy, as: :liker
   has_many :comments, dependent: :destroy, as: :commenter

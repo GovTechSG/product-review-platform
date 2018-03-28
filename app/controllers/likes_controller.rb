@@ -95,7 +95,7 @@ class LikesController < ApplicationController
     end
 
     def validate_liker_presence
-      render_error(404, "From id": ["not found"]) if @liker.nil? || !@liker.presence?
+      render_error(404, "From id": ["is not found"]) if @liker.nil? || !@liker.presence?
     end
 
     # Only allow a trusted parameter "white list" through.
