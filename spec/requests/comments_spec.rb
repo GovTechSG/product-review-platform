@@ -146,7 +146,7 @@ RSpec.describe "Comments", type: :request do
 
         it "return 422 when from type is not subclass of commenter", authorized: true do
           review = create(:product_review)
-          create_update_product_comment["from_type"] = "company"
+          create_update_product_comment["from_type"] = "string"
           post review_comments_path(review.id), params: { comment: create_update_product_comment }, headers: request_login
           expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
@@ -232,7 +232,7 @@ RSpec.describe "Comments", type: :request do
         it "return 422 when from type is not subclass of commenter", authorized: true do
           comment = Comment.create! service_comment_valid_attributes
 
-          service_comment_new_attributes["from_type"] = "company"
+          service_comment_new_attributes["from_type"] = "string"
           service_comment_new_attributes["from_id"] = 1
           put comment_path(comment), params: { comment: service_comment_new_attributes }, headers: request_login
           expect(response).to have_http_status(422)

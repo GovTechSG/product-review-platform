@@ -1,3 +1,2 @@
-class Commenter < ApplicationRecord
-  self.abstract_class = true
+module Commenter
 end

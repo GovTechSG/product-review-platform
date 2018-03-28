@@ -217,7 +217,7 @@ RSpec.describe LikesController, type: :controller do
 
         it "return 422 when from type is not subclass of liker", authorized: true do
           review = create(:product_review)
-          create_update_product_like["from_type"] = "company"
+          create_update_product_like["from_type"] = "string"
 
           post :create, params: { like: create_update_product_like, review_id: review.id }
           expect(response).to have_http_status(422)
