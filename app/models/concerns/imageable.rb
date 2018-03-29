@@ -1,0 +1,50 @@
+module Imageable
+  extend ActiveSupport::Concern
+
+  def set_image!(img)
+    if img.nil?
+      tempfile = File.new(avatar_path(200))
+    else
+      tempfile = decode_image(img, name)
+      if tempfile.nil?
+        render_error(422, "Invalid image format":
+        [
+          "Please use format: data:image/{image_format};base64,{base64_encoded_string}"
+        ])
+        return
+      end
+    end
+    self.image = tempfile
+    tempfile.close
+  end
+
+  private
+
+  def file_decode(base, filename)
+    file = Tempfile.new([file_base_name(filename), file_extn_name(filename)])
+    file.binmode
+    file.write(Base64.decode64(base))
+    file
+  end
+
+  def decode_image(img, file_name)
+    Base64.decode64(img)
+    data_format = img.split(',')
+    data = data_format[1]
+    if data_format[0] =~ %r{(?<=/)(.*)(?=;)}
+      format = Regexp.last_match[0]
+      return file_decode(data, "#{file_name}.#{format}") if img && data
+    end
+    nil
+  rescue ArgumentError
+    nil
+  end
+
+  def file_base_name(file_name)
+    File.basename(file_name, file_extn_name(file_name))
+  end
+
+  def file_extn_name(file_name)
+    File.extname(file_name)
+  end
+end

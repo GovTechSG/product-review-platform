@@ -4,7 +4,7 @@ class Company < Reviewer
   include SwaggerDocs::Company
   include LetterAvatar::HasAvatar
   include Statistics::Companies
-  extend Images
+  include Imageable
   mount_uploader :image, ImageUploader
 
   # These refer to the reviews written by a claimant company
