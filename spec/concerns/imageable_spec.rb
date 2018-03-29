@@ -2,8 +2,6 @@ require 'rails_helper'
 
 shared_examples_for 'imageable' do
   let(:model) { build described_class.to_s.underscore }
-  let(:valid_base64_image) { "data:image/png;base64," + Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read) }
-  let(:partial_base64_image) { Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read) }
 
   describe "imageable" do
     it "generates a letterhead avatar when no image is given" do

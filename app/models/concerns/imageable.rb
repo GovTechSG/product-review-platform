@@ -2,7 +2,7 @@ module Imageable
   extend ActiveSupport::Concern
 
   def set_image!(img)
-    if img.nil?
+    if img.blank?
       tempfile = File.new(avatar_path(200))
     else
       tempfile = decode_image(img, name)

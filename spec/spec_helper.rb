@@ -27,6 +27,14 @@ end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
+def valid_base64_image
+  "data:image/png;base64," + Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read)
+end
+
+def partial_base64_image
+  Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read)
+end
+
 def parsed_response
   parsed_data = JSON.parse(response.body)
   parsed_data.is_a?(Array) ? parsed_data : parsed_data.with_indifferent_access

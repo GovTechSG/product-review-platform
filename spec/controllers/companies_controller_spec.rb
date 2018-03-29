@@ -110,7 +110,7 @@ RSpec.describe CompaniesController, type: :controller do
       expect(response.status).to eq(422)
     end
 
-    it "renders a 422 error for duplicate uen", authorized: true do
+    it "renders a 422 error for duplicate uen" do
       @dupcompany = build(:company)
       @dupcompany.uen = company.uen
       @dupcompany.save
@@ -129,6 +129,28 @@ RSpec.describe CompaniesController, type: :controller do
       @industry.discard
       post :create, params: { company: company.as_json.merge(industry_ids: [@industry.id]) }
       expect_not_found
+    end
+
+    it "creates a letterhead avatar when no image is specified" do
+      post :create, params: { company: company.attributes.as_json.merge(industry_ids: [industry.id]) }
+      expect(parsed_response[:image][:url]).to_not eq(nil)
+      expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
+    end
+
+    it "creates a image" do
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = valid_base64_image
+      post :create, params: { company: company_param }
+      expect(parsed_response[:image][:url]).to_not eq(nil)
+      expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
+    end
+
+    it "returns 422 when the image is invalid" do
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = partial_base64_image
+      post :create, params: { company: company_param }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 
@@ -206,6 +228,24 @@ RSpec.describe CompaniesController, type: :controller do
       @industry.discard
       patch :update, params: { company: company.as_json.merge(industry_ids: [0]), id: company.id }
       expect_not_found
+    end
+
+    it "updates a image" do
+      original_company = create(:company)
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = valid_base64_image
+      patch :update, params: { company: company_param, id: original_company.id }
+      original_company.reload
+      expect(parsed_response[:image]).to_not eq(original_company.image.serializable_hash)
+    end
+
+    it "returns 422 when the image is invalid" do
+      original_company = create(:company)
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = partial_base64_image
+      patch :update, params: { company: company_param, id: original_company.id }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 

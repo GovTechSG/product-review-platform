@@ -27,8 +27,7 @@ class CompaniesController < ApplicationController
   def create
     @company = Company.new(company_params)
     @company.set_image!(company_params[:image]) if @company.valid?
-
-    if @company.save
+    if @company.errors.blank? && @company.save
       render json: @company, status: :created, location: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
@@ -44,7 +43,7 @@ class CompaniesController < ApplicationController
         params[:company].delete :image
       end
     end
-    if @company.update(company_params)
+    if @company.errors.blank? && @company.update(company_params)
       render json: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
