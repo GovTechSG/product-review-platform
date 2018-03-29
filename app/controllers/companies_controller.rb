@@ -30,7 +30,7 @@ class CompaniesController < ApplicationController
 
     if @company.save
       render json: @company, status: :created, location: @company, has_type: false
-    elsif !performed?
+    else
       render json: @company.errors.messages, status: :unprocessable_entity
     end
   end
@@ -46,7 +46,7 @@ class CompaniesController < ApplicationController
     end
     if @company.update(company_params)
       render json: @company, has_type: false
-    elsif !performed?
+    else
       render json: @company.errors.messages, status: :unprocessable_entity
     end
   end

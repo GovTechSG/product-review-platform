@@ -7,10 +7,7 @@ module Imageable
     else
       tempfile = decode_image(img, name)
       if tempfile.nil?
-        render_error(422, "Invalid image format":
-        [
-          "Please use format: data:image/{image_format};base64,{base64_encoded_string}"
-        ])
+        errors.add(:image, "Invalid image format, Please use format: data:image/{image_format};base64,{base64_encoded_string}")
         return
       end
     end
