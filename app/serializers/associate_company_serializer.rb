@@ -13,4 +13,8 @@ class AssociateCompanySerializer < ActiveModel::Serializer
       true
     end
   end
+
+  def image
+    object.image.serializable_hash
+  end
 end

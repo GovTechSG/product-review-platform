@@ -19,7 +19,7 @@ class Company < Reviewer
   validates_presence_of :name, :uen, :aggregate_score, :description, :reviews_count
   validates_uniqueness_of :uen, :name
   validates :url, allow_blank: true, url: true
-  validates :image, file_size: { less_than: 1.megabytes }, presence: true
+  validates :image, file_size: { less_than: 1.megabytes }
 
   def grants
     product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
