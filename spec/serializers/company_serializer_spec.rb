@@ -42,5 +42,9 @@ RSpec.describe CompanySerializer, type: :serializer do
     it 'has a industries' do
       expect(subject['industries']).to eql(@company.industries)
     end
+
+    it 'has a image url' do
+      expect(subject['image'].url).to eql(@company.image.url)
+    end
   end
 end
