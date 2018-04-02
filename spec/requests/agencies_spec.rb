@@ -3,24 +3,31 @@ require 'support/api_login_helper'
 
 RSpec.describe "Agencies", type: :request do
   let(:valid_attributes) do
-    build(:agency).attributes
+    build(:agency_as_params)
+  end
+
+  let(:valid_attributes_with_no_image) do
+    build(:agency_as_params, image: "")
   end
 
   let(:invalid_attributes) do
-    build(:agency, name: nil, email: nil, phone_number: nil).attributes
+    build(:agency_as_params, name: nil, email: nil, phone_number: nil)
+  end
+
+  let(:agency) do
+    create(:agency)
   end
 
   describe "Authorised user" do
     describe "GET /api/v1/agencies" do
       it "returns a success response" do
-        Agency.create! valid_attributes
+        agency
         get agencies_path, headers: request_login
 
         expect(response).to be_success
       end
 
       it "does not return a deleted agency", authorized: true do
-        agency = Agency.create! valid_attributes
         agency.discard
         get agencies_path, headers: request_login
         expect(parsed_response).to match([])
@@ -30,7 +37,6 @@ RSpec.describe "Agencies", type: :request do
 
     describe "GET /api/v1/agencies/:id" do
       it "returns a success response" do
-        agency = Agency.create! valid_attributes
         get agency_path(agency.to_param), headers: request_login
         expect(response).to be_success
       end
@@ -41,7 +47,6 @@ RSpec.describe "Agencies", type: :request do
       end
 
       it "returns not found when agency is deleted", authorized: true do
-        agency = Agency.create! valid_attributes
         agency.discard
         get agency_path(agency.id), headers: request_login
         expect(response).to be_not_found
@@ -75,36 +80,27 @@ RSpec.describe "Agencies", type: :request do
 
     describe "PUT api/v1/agencies/id" do
       context "with valid params" do
-        let(:new_attributes) do
-          attributes_for(:agency)
-        end
-
         it "updates the requested agency" do
-          agency = Agency.create! valid_attributes
-
-          put agency_path(agency.id), params: { agency: new_attributes }, headers: request_login
+          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
           agency.reload
-          expect(agency.name).to eq(new_attributes[:name])
-          expect(agency.email).to eq(new_attributes[:email])
-          expect(agency.phone_number).to eq(new_attributes[:phone_number])
-          expect(agency.acronym).to eq(new_attributes[:acronym])
-          expect(agency.kind).to eq(new_attributes[:kind])
-          expect(agency.description).to eq(new_attributes[:description])
+          expect(agency.name).to eq(valid_attributes[:name])
+          expect(agency.email).to eq(valid_attributes[:email])
+          expect(agency.phone_number).to eq(valid_attributes[:phone_number])
+          expect(agency.acronym).to eq(valid_attributes[:acronym])
+          expect(agency.kind).to eq(valid_attributes[:kind])
+          expect(agency.description).to eq(valid_attributes[:description])
         end
 
         it "renders a JSON response with the agency" do
-          agency = Agency.create! valid_attributes
-
-          put agency_path(agency.id), params: { agency: new_attributes }, headers: request_login
+          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
 
         it "does not update a deleted agency", authorized: true do
-          agency = Agency.create! valid_attributes
-          original_agency = agency
+          original_agency = agency.attributes.with_indifferent_access
           agency.discard
-          put agency_path(agency.id), params: { agency: new_attributes }, headers: request_login
+          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
           agency.reload
           expect(agency.name).to eq(original_agency[:name])
           expect(agency.email).to eq(original_agency[:email])
@@ -115,9 +111,8 @@ RSpec.describe "Agencies", type: :request do
         end
 
         it "returns not found on a deleted agency", authorized: true do
-          agency = Agency.create! valid_attributes
           agency.discard
-          put agency_path(agency.id), params: { agency: new_attributes }, headers: request_login
+          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
           agency.reload
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
@@ -126,15 +121,13 @@ RSpec.describe "Agencies", type: :request do
 
       context "with invalid id" do
         it "renders a JSON response with errors for the agency" do
-          put agency_path(0), params: { agency: attributes_for(:agency) }, headers: request_login
+          put agency_path(0), params: { agency: valid_attributes }, headers: request_login
           expect(response).to be_not_found
         end
       end
 
       context "with invalid params" do
         it "renders a JSON response with errors for the agency" do
-          agency = Agency.create! valid_attributes
-
           put agency_path(agency.id), params: { agency: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
@@ -144,22 +137,19 @@ RSpec.describe "Agencies", type: :request do
 
     describe "DELETE #destroy" do
       it "soft deletes" do
-        agency = Agency.create! valid_attributes
+        agency
         expect do
           delete agency_path(agency.id), headers: request_login
         end.to change(Agency, :count).by(0)
       end
 
       it "sets discarded_at datetime" do
-        agency = Agency.create! valid_attributes
         delete agency_path(agency.id), headers: request_login
         agency.reload
         expect(agency.discarded?).to be true
       end
 
       it "renders a JSON response with the agency" do
-        agency = Agency.create! valid_attributes
-
         delete agency_path(agency.id), headers: request_login
         expect(response).to have_http_status(204)
       end
@@ -170,7 +160,6 @@ RSpec.describe "Agencies", type: :request do
       end
 
       it "renders not found when the agency is already deleted", authorized: true do
-        agency = Agency.create! valid_attributes
         agency.discard
         delete agency_path(agency.id), headers: request_login
         expect(response).to have_http_status(404)
@@ -181,7 +170,6 @@ RSpec.describe "Agencies", type: :request do
   describe "Unauthorised user" do
     describe "GET #index" do
       it "returns an unauthorized response" do
-        Agency.create! valid_attributes
         get agencies_path, headers: nil
 
         expect_unauthorized
@@ -190,7 +178,6 @@ RSpec.describe "Agencies", type: :request do
 
     describe "GET #show" do
       it "returns an unauthorized response" do
-        agency = Agency.create! valid_attributes
         get agency_path(agency.id), headers: nil
 
         expect_unauthorized
@@ -211,15 +198,14 @@ RSpec.describe "Agencies", type: :request do
     end
 
     describe "PUT #update" do
-      let(:new_attributes) do
+      let(:valid_attributes) do
         attributes_for(:agency)
       end
 
       it "does not update the requested agency" do
-        agency = Agency.create! valid_attributes
-        current_attributes = agency.attributes
+        current_attributes = agency.attributes.with_indifferent_access
 
-        put agency_path(agency.id), params: { agency: new_attributes }, headers: nil
+        put agency_path(agency.id), params: { agency: valid_attributes }, headers: nil
         agency.reload
         expect(agency.name).to eq(current_attributes["name"])
         expect(agency.phone_number).to eq(current_attributes["phone_number"])
@@ -227,8 +213,6 @@ RSpec.describe "Agencies", type: :request do
       end
 
       it "returns an unauthorized response" do
-        agency = Agency.create! valid_attributes
-
         put agency_path(agency.id), params: { agency: valid_attributes }, headers: nil
         expect_unauthorized
       end
@@ -236,22 +220,19 @@ RSpec.describe "Agencies", type: :request do
 
     describe "DELETE #destroy" do
       it "does not destroy the requested agency" do
-        agency = Agency.create! valid_attributes
+        agency
         expect do
           delete agency_path(agency.id), headers: nil
         end.to change(Agency, :count).by(0)
       end
 
       it "does not set discarded_at datetime" do
-        agency = Agency.create! valid_attributes
         delete agency_path(agency.id), headers: nil
         agency.reload
         expect(agency.discarded?).to be false
       end
 
       it "returns an unauthorized response" do
-        agency = Agency.create! valid_attributes
-
         delete agency_path(agency.id), headers: nil
         expect_unauthorized
       end

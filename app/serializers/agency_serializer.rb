@@ -1,6 +1,6 @@
 class AgencySerializer < ActiveModel::Serializer
   attribute :type, if: :type?
-  attributes :id, :name, :email, :phone_number, :acronym, :kind, :description
+  attributes :id, :name, :email, :phone_number, :acronym, :kind, :description, :image
 
   def type
     "Agency"

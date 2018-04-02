@@ -292,7 +292,7 @@ RSpec.describe CommentsController, type: :controller do
 
         it "does not creates a new Comment when commenter is deleted", authorized: true do
           review = create(:product_review)
-          agency = Agency.create! build(:agency).attributes
+          agency = create(:agency)
           create_update_product_comment["from_id"] = agency.id
           agency.discard
           expect do
@@ -446,7 +446,7 @@ RSpec.describe CommentsController, type: :controller do
           comment = Comment.create! service_comment_valid_attributes
           original_comment = comment
 
-          agency = Agency.create! build(:agency).attributes
+          agency = create(:agency)
           service_comment_new_attributes["from_id"] = agency.id
           service_comment_new_attributes["from_type"] = agency.id
           agency.discard
