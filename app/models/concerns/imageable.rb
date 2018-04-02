@@ -5,7 +5,7 @@ module Imageable
     if img.blank?
       tempfile = File.new(avatar_path(200))
     else
-      tempfile = decode_image(img, name)
+      tempfile = decode_image(img, name.presence || "invalid")
       if tempfile.nil?
         errors.add(:image, "Invalid image format, Please use format: data:image/{image_format};base64,{base64_encoded_string}")
         return
