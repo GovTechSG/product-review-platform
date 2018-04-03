@@ -1,6 +1,6 @@
 require "letter_avatar/has_avatar"
 
-class Agency < Commenter
+class Agency < ApplicationRecord
   include SwaggerDocs::Agency
   include LetterAvatar::HasAvatar
   include Imageable
