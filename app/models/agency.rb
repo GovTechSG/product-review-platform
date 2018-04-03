@@ -4,9 +4,11 @@ class Agency < Commenter
   include SwaggerDocs::Agency
   include LetterAvatar::HasAvatar
   include Imageable
+  include Liker
+  include Commenter
   mount_uploader :image, ImageUploader
 
-  has_many :likes, dependent: :destroy
+  has_many :likes, dependent: :destroy, as: :liker
   has_many :comments, dependent: :destroy, as: :commenter
   has_many :grants, dependent: :destroy
 

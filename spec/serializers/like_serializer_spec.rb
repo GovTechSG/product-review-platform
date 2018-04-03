@@ -12,12 +12,16 @@ RSpec.describe LikeSerializer, type: :serializer do
       expect(subject['id']).to eql(@like.id)
     end
 
-    it 'has a agency id' do
-      expect(subject['agency_id']).to eql(@like.agency_id)
+    it 'has a liker id' do
+      expect(subject['liker_id']).to eql(@like.liker_id)
     end
 
-    it 'has a review id' do
-      expect(subject['review_id']).to eql(@like.review_id)
+    it 'has a liker type' do
+      expect(subject['liker_type']).to eql(@like.liker_type)
+    end
+
+    it 'has a likeable type' do
+      expect(subject['likeable_type']).to eql(@like.likeable_type)
     end
   end
 end

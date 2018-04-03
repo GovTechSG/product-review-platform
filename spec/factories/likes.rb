@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :like do
-    agency
+    association :liker, factory: :agency
   end
 end

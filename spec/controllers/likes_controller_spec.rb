@@ -6,8 +6,22 @@ RSpec.describe LikesController, type: :controller do
     build(:product_review_like).attributes
   end
 
+  let(:create_update_product_like) do
+    value = build(:product_review_like).attributes
+    value["from_id"] = value["liker_id"]
+    value["from_type"] = value["liker_type"]
+    value.delete("liker_id")
+    value.delete("liker_type")
+    value
+  end
+
   let(:invalid_attributes) do
-    build(:product_review_like, review_id: nil, agency_id: nil).attributes
+    value = build(:product_review_like, likeable_id: 0, liker_id: 0, liker_type: "agency").attributes
+    value["from_id"] = value["liker_id"]
+    value["from_type"] = value["liker_type"]
+    value.delete("liker_id")
+    value.delete("liker_type")
+    value
   end
 
   let(:valid_session) {}
@@ -22,31 +36,31 @@ RSpec.describe LikesController, type: :controller do
     describe "GET #index" do
       it "returns a success response", authorized: true do
         like = Like.create! valid_attributes
-        get :index, params: { review_id: like.review.id }
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_success
       end
 
-      it "returns not found if review is deleted", authorized: true do
+      it "returns not found if likeable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end
 
       it "returns not found if reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.reviewable.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end
 
       it "returns not found if company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
-        get :index, params: { review_id: like.review.id }
+        like.likeable.reviewable.company.discard
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
       end
@@ -54,7 +68,7 @@ RSpec.describe LikesController, type: :controller do
       it "does not return deleted likes", authorized: true do
         like = Like.create! valid_attributes
         like.discard
-        get :index, params: { review_id: like.review.id }
+        get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -82,21 +96,21 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns not found when review is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
+        like.likeable.discard
         get :show, params: { id: like.to_param }
         expect(response).to be_not_found
       end
 
       it "returns not found when reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
+        like.likeable.reviewable.discard
         get :show, params: { id: like.to_param }
         expect(response).to be_not_found
       end
 
       it "returns not found when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
+        like.likeable.reviewable.company.discard
         get :show, params: { id: like.to_param }
         expect(response).to be_not_found
       end
@@ -106,15 +120,16 @@ RSpec.describe LikesController, type: :controller do
       context "with valid params" do
         it "creates a new Like", authorized: true do
           review = create(:product_review)
+
           expect do
-            post :create, params: { like: valid_attributes, review_id: review.id }
+            post :create, params: { like: create_update_product_like, review_id: review.id }
           end.to change(Like, :count).by(1)
         end
 
         it "renders a JSON response with the new like", authorized: true do
           review = create(:product_review)
 
-          post :create, params: { like: valid_attributes, review_id: review.id }
+          post :create, params: { like: create_update_product_like, review_id: review.id }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(like_url(Like.last))
@@ -184,17 +199,39 @@ RSpec.describe LikesController, type: :controller do
       context "with invalid params", authorized: true do
         it "renders 422 if agency likes twice" do
           like = create(:product_review_like)
-          duplicate_like = attributes_for(:product_review_like, agency_id: like.agency_id)
-          post :create, params: { like: duplicate_like, review_id: like.review_id }
+          duplicate_like = create_update_product_like
+          duplicate_like["from_id"] = like.liker_id
+
+          post :create, params: { like: duplicate_like, review_id: like.likeable_id }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
 
-        it "renders 404 if agency doesnt exist" do
+        it "renders 404 if liker doesnt exist" do
           review = create(:product_review)
+
           post :create, params: { like: invalid_attributes, review_id: review.id }
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
+        end
+
+        it "return 422 when from type is not subclass of liker", authorized: true do
+          review = create(:product_review)
+          create_update_product_like["from_type"] = "string"
+
+          post :create, params: { like: create_update_product_like, review_id: review.id }
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json')
+        end
+
+        it "does not creates a new Like when liker is deleted", authorized: true do
+          review = create(:product_review)
+          agency = Agency.create! build(:agency).attributes
+          create_update_product_like["from_id"] = agency.id
+          agency.discard
+          expect do
+            post :create, params: { like: create_update_product_like, review_id: review.id }
+          end.to change(Review, :count).by(0)
         end
       end
     end
@@ -235,21 +272,21 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns a not found response when review is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.discard
+        like.likeable.discard
         delete :destroy, params: { id: like.to_param }
         expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when reviewable is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.discard
+        like.likeable.reviewable.discard
         delete :destroy, params: { id: like.to_param }
         expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.review.reviewable.company.discard
+        like.likeable.reviewable.company.discard
         delete :destroy, params: { id: like.to_param }
         expect(response).to have_http_status(404)
       end
@@ -260,7 +297,7 @@ RSpec.describe LikesController, type: :controller do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
         like = Like.create! valid_attributes
-        get :index, params: { review_id: like.review.id }
+        get :index, params: { review_id: like.likeable.id }
 
         expect_unauthorized
       end

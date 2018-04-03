@@ -273,18 +273,9 @@ RSpec.describe CommentsController, type: :controller do
           expect(response.content_type).to eq('application/json')
         end
 
-        it "returns a not found response when the company is deleted", authorized: true do
-          review = create(:product_review)
-          review.reviewable.company.discard
-          post :create, params: { comment: product_comment_missing_agencyid_attributes, review_id: review.id }
-
-          expect(response).to be_not_found
-          expect(response.content_type).to eq('application/json')
-        end
-
         it "return 422 when from type is not subclass of commenter", authorized: true do
           review = create(:product_review)
-          create_update_product_comment["from_type"] = "company"
+          create_update_product_comment["from_type"] = "string"
           post :create, params: { comment: create_update_product_comment, review_id: review.id }
           expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
@@ -435,7 +426,7 @@ RSpec.describe CommentsController, type: :controller do
         it "return 422 when from type is not subclass of commenter", authorized: true do
           comment = Comment.create! service_comment_valid_attributes
 
-          service_comment_new_attributes["from_type"] = "company"
+          service_comment_new_attributes["from_type"] = "string"
           service_comment_new_attributes["from_id"] = 1
           put :update, params: { id: comment.to_param, comment: service_comment_new_attributes }, session: valid_session
           expect(response).to have_http_status(422)

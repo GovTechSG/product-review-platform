@@ -78,7 +78,7 @@ class CommentsController < ApplicationController
         render_error(422, "Either From type or From ID": ["is missing"])
       elsif check_from_presence == BOTH_PARAMS_EXIST
         type = params[:comment][:from_type].classify.safe_constantize
-        if !type.nil? && type.superclass.name == "Commenter"
+        if !type.nil? && type < Commenter
           @whitelisted = update_params
           change_params_key
         else
@@ -94,7 +94,7 @@ class CommentsController < ApplicationController
     def set_new_comment_commenter
       type = params[:comment][:from_type].classify.safe_constantize
       if !type.nil?
-        if type.superclass.name != "Commenter"
+        if !(type < Commenter)
           render_error(422, "From type": ["is invalid"])
         else
           @commmenter = type.find_by(id: params[:comment][:from_id])
@@ -122,13 +122,13 @@ class CommentsController < ApplicationController
     end
 
     def validate_commenter_presence
-      render_error(404, "From id": ["not found"]) if @commmenter.nil? || !@commmenter.presence?
+      render_error(404, "From id": ["is not found"]) if @commmenter.nil? || !@commmenter.presence?
     end
 
     def validate_update_commenter_presence
       if check_from_presence == BOTH_PARAMS_EXIST
         @commenter = params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
-        render_error(404, "From id": ["not found"]) if @commenter.nil? || !@commenter.presence?
+        render_error(404, "From id": ["is not found"]) if @commenter.nil? || !@commenter.presence?
       end
     end
 

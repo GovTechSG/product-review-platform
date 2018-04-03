@@ -7,9 +7,14 @@ class Company < Reviewer
   include Imageable
   mount_uploader :image, ImageUploader
 
+  include Liker
+  include Commenter
+
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
   has_many :reviews, dependent: :destroy, as: :reviewer
+  has_many :likes, dependent: :destroy, as: :liker
+  has_many :comments, dependent: :destroy, as: :commenter
 
   has_many :products, dependent: :destroy
   has_many :services, dependent: :destroy
