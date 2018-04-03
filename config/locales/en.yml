@@ -32,6 +32,10 @@
 en:
   hello: "Hello world"
 
+  imageable:
+    key: "Image"
+    invalid: "Invalid image format, Please use format: data:image/{image_format};base64,{base64_encoded_string}"
+
   errors:
     messages:
       carrierwave_processing_error: failed to be processed
