@@ -13,7 +13,7 @@ class Agency < Commenter
   validates :name, :acronym, :kind, :description, presence: true
   validates :name, uniqueness: true
   validates :email, allow_blank: true, email: true
-  validates :image, file_size: { less_than: 1.megabytes }, presence: true
+  validates :image, file_size: { less_than: 1.megabytes }
   validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"],
                                 message: "Kind must be any of these: Ministry, Statutory Board, Agency" }
 end
