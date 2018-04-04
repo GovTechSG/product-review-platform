@@ -4,7 +4,7 @@ class LikeSerializer < ActiveModel::Serializer
   belongs_to :liker, key: "from", polymorphic: true
 
   def self.serializer_for(model, options)
-    return AssociateCompanySerializer if model.class.name == 'Company'
+    return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
   end
 end

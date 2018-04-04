@@ -3,7 +3,7 @@ class AgencySerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :phone_number, :acronym, :kind, :description
 
   def type
-    "Agency"
+    I18n.t('agency.key').to_s
   end
 
   def type?

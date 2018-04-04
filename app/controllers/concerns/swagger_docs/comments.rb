@@ -8,7 +8,7 @@ module SwaggerDocs::Comments
       parameter do
         key :name, :review_id
         key :in, :path
-        key :description, 'ID of review'
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Review').to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -17,14 +17,14 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['Comment']
-        key :description, 'Returns list of all comments from specified review'
+        key :tags, [I18n.t('comment.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: 'Comments', id: 'Review').to_s
         key :operationId, 'findCommentsByReview'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, comments of the given ID fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'Comments').to_s
           schema type: :array do
             items do
               key :'$ref', :Comment
@@ -42,8 +42,8 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['Comment']
-        key :description, 'Creates a new comment that belong to a specified review'
+        key :tags, [I18n.t('comment.key').to_s]
+        key :description, I18n.t('swagger_ui.create_with_FK_description', model: 'Comment', id: 'Review').to_s
         key :operationId, 'addCommentByReview'
         key :produces, [
           'application/json'
@@ -51,14 +51,14 @@ module SwaggerDocs::Comments
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of Comment to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: 'Comment').to_s
           key :required, true
           schema do
             key :'$ref', :CommentCreateInput
           end
         end
         response 201 do
-          key :description, 'OK, Comment is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: 'Comment').to_s
           schema do
             key :'$ref', :Comment
           end
@@ -82,7 +82,7 @@ module SwaggerDocs::Comments
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of comment'
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Comment').to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -91,8 +91,8 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['Comment']
-        key :description, 'Update a comment'
+        key :tags, [I18n.t('comment.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: 'Comment').to_s
         key :operationId, 'updateComment'
         key :produces, [
           'application/json'
@@ -100,14 +100,14 @@ module SwaggerDocs::Comments
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of the Comment to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: 'Comment').to_s
           key :required, true
           schema do
             key :'$ref', :CommentUpdateInput
           end
         end
         response 200 do
-          key :description, 'OK, comment is successfully updated'
+          key :description, I18n.t('swagger_ui.update_success_description', model: 'Comment').to_s
           schema do
             key :'$ref', :Comment
           end
@@ -129,14 +129,14 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['Comment']
-        key :description, 'Returns a comment'
+        key :tags, [I18n.t('comment.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: 'Comment').to_s
         key :operationId, 'findCommentById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, comment of the given ID fetched'
+          key :description, I18n.t('swagger_ui.get_success_description', model: 'Comment').to_s
           schema do
             key :'$ref', :Comment
           end
@@ -152,11 +152,11 @@ module SwaggerDocs::Comments
         security do
           key :Authorization, []
         end
-        key :tags, ['Comment']
-        key :description, 'Deletes a single comment'
+        key :tags, [I18n.t('comment.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: 'Comment').to_s
         key :operationId, 'deleteComment'
         response 204 do
-          key :description, 'No content success. Comment of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: 'Comment').to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError

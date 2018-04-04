@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::ParameterMissing do |error|
-    render_error(400, "Parameter missing": [error.message])
+    render_error(400, "#{I18n.t('general_error.params_missing_key')}": [error.message])
   end
 
   rescue_from ActionController::RoutingError do |error|

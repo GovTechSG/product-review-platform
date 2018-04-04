@@ -1,7 +1,7 @@
 module CustomTokenErrorResponse
   def body
     {
-      token: ["Missing or invalid credentials."]
+      "#{I18n.t('token.key')}": [I18n.t('token.login_failed')]
     }
     # or merge with existing values by
     # super.merge({key: value})

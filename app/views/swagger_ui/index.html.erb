@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Company Review Platform - Start Reviewing</title>
+    <title><%= t('view.index.title') %></title>
 
     <!-- Nav Bar CSS -->
     <%= stylesheet_link_tag "bootstrap.min", :media => "all" %>
@@ -29,9 +29,9 @@
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container">
-          <h1 class="masthead-heading mb-0">Find the Best Business</h1>
-          <h2 class="masthead-heading mb-0">Partners and Vendors</h2>
-          <a href="#main" class="btn btn-primary btn-xl rounded-pill mt-5">Learn More</a>
+          <h1 class="masthead-heading mb-0"><%= t('view.index.heading') %></h1>
+          <h2 class="masthead-heading mb-0"><%= t('view.index.sub_heading') %></h2>
+          <a href="#main" class="btn btn-primary btn-xl rounded-pill mt-5"><%= t('view.index.learn_more') %></a>
         </div>
       </div>
       <div class="bg-circle-1 bg-circle"></div>
@@ -50,11 +50,8 @@
           </div>
           <div class="col-lg-6 order-lg-1">
             <div class="p-5">
-              <h2 class="display-4">Crowdsourcing of Reviews</h2>
-              <p>Businesses can leave reviews and ratings for consultants that
-              they have previously engaged for their projects, to develop a
-             source of authentic, honest and helpful feedback that is direct
-           from the market.</p>
+              <h2 class="display-4"><%= t('view.index.content_heading_1') %></h2>
+              <p><%= t('view.index.content_1') %></p>
             </div>
           </div>
         </div>
@@ -71,11 +68,8 @@
           </div>
           <div class="col-lg-6">
             <div class="p-5">
-              <h2 class="display-4">Leave Feedback to Help Others</h2>
-              <p>Businesses do not know which consultant to engage for their
-              grant projects. Evaluating officers spend a sizable amount of
-            time and effort to assess the background of consultants. These
-          feedbacks will reduce the time and effort for businesses and evaluating officers, thus improve their productivity.</p>
+              <h2 class="display-4"><%= t('view.index.content_heading_2') %></h2>
+              <p><%= t('view.index.content_2') %></p>
             </div>
           </div>
         </div>
@@ -92,11 +86,8 @@
           </div>
           <div class="col-lg-6 order-lg-1">
             <div class="p-5">
-              <h2 class="display-4">Ease of Integration</h2>
-              <p>The platform is built with API-centricity in mind using modern
-              RESTful API. Developers can use the API docs and playground
-            to test and develop their applications or visualisation
-          dashboards with their own customizations.</p>
+              <h2 class="display-4"><%= t('view.index.content_heading_3') %></h2>
+              <p><%= t('view.index.content_3') %></p>
             </div>
           </div>
         </div>

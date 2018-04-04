@@ -55,9 +55,9 @@ class GrantsController < ApplicationController
     if params[:grant].present?
       if agency_id_present?
         agency = set_agency
-        render_error(404, "Agency id": ["not found."]) if agency_not_found(agency)
+        render_error(404, "#{I18n.t('agency.key_id')}": [I18n.t('general_error.not_found')]) if agency_not_found(agency)
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: agency_id"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "agency_id")])
       end
     end
   end
@@ -66,7 +66,7 @@ class GrantsController < ApplicationController
     if params[:grant].present?
       if agency_id_present?
         agency = set_agency
-        render_error(404, "Agency id": ["not found."]) if agency_not_found(agency)
+        render_error(404, "#{I18n.t('agency.key_id')}": [I18n.t('general_error.not_found')]) if agency_not_found(agency)
       end
     end
   end
@@ -88,13 +88,13 @@ class GrantsController < ApplicationController
   end
 
   def validate_grant_presence
-    render_error(404, "Grant id": ["not found."]) if @grant.nil? || !@grant.presence?
+    render_error(404, "#{I18n.t('grant.key_id')}": [I18n.t('general_error.not_found')]) if @grant.nil? || !@grant.presence?
   end
 
   def set_company_if_present
     if params[:company_id].present?
       @company = Company.find_by(id: params[:company_id])
-      render_error(404, "Company id": ["not found."]) if @company.nil? || !@company.presence?
+      render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
     end
   end
 

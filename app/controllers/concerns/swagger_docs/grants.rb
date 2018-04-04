@@ -9,14 +9,14 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Returns list of all grants'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: "Grants").to_s
         key :operationId, 'findGrants'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, list of grants fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Grants").to_s
           schema type: :array do
             items do
               key :'$ref', :Grant
@@ -31,8 +31,8 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Creates a new grant'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: "Grant").to_s
         key :operationId, 'addGrant'
         key :produces, [
           'application/json'
@@ -40,14 +40,14 @@ module SwaggerDocs::Grants
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of the grant to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Grant").to_s
           key :required, true
           schema do
             key :'$ref', :GrantInput
           end
         end
         response 201 do
-          key :description, 'OK, grant is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Grant").to_s
           schema do
             key :'$ref', :Grant
           end
@@ -68,7 +68,7 @@ module SwaggerDocs::Grants
       parameter do
         key :name, :company_id
         key :in, :path
-        key :description, 'ID of company'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Company").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -77,14 +77,14 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Returns list of all grants from specified company'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Grants", id: "Company").to_s
         key :operationId, 'findGrantsByCompany'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, grants of the given ID fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Grants").to_s
           schema type: :array do
             items do
               key :'$ref', :Grant
@@ -104,7 +104,7 @@ module SwaggerDocs::Grants
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of grant'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Grant").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -113,8 +113,8 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Update a grant'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: "Grant").to_s
         key :operationId, 'updateGrant'
         key :produces, [
           'application/json'
@@ -122,14 +122,14 @@ module SwaggerDocs::Grants
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of the grant to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Grant").to_s
           key :required, true
           schema do
             key :'$ref', :GrantInput
           end
         end
         response 200 do
-          key :description, 'OK, grant is successfully updated'
+          key :description, I18n.t('swagger_ui.update_success_description', model: "Grant").to_s
           schema do
             key :'$ref', :Grant
           end
@@ -151,14 +151,14 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Returns a grant'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: "Grant").to_s
         key :operationId, 'findGrantById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, grant of the given ID fetched'
+          key :description, I18n.t('swagger_ui.get_success_description', model: "Grant").to_s
           schema do
             key :'$ref', :Grant
           end
@@ -174,11 +174,11 @@ module SwaggerDocs::Grants
         security do
           key :Authorization, []
         end
-        key :tags, ['Grant']
-        key :description, 'Deletes a single grant'
+        key :tags, [I18n.t('grant.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: "Grant").to_s
         key :operationId, 'deleteGrant'
         response 204 do
-          key :description, 'No content success. Grant of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: "Grant").to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError
