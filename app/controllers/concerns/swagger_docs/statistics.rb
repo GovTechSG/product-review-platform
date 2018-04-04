@@ -10,13 +10,13 @@ module SwaggerDocs::Statistics
           key :Authorization, []
         end
         key :tags, [I18n.t('statistic.key').to_s]
-        key :description, [I18n.t('swagger_ui.index_description', model: "Statistic").to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: "Statistic").to_s
         key :operationId, 'findStatistics'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, [I18n.t('swagger_ui.index_success_description', model: "Statistic").to_s]
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Statistic").to_s
           schema do
             property :reviews do
               key :type, :integer

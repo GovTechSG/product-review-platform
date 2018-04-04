@@ -10,13 +10,13 @@ module SwaggerDocs::Industries
           key :Authorization, []
         end
         key :tags, [I18n.t('industry.key').to_s]
-        key :description, [I18n.t('swagger_ui.index_description', model: "Industries").to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: "Industries").to_s
         key :operationId, 'findIndustries'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, [I18n.t('swagger_ui.index_success_description', model: "Industries").to_s]
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Industries").to_s
           schema type: :array do
             items do
               key :'$ref', :Industry
@@ -32,7 +32,7 @@ module SwaggerDocs::Industries
           key :Authorization, []
         end
         key :tags, [I18n.t('industry.key').to_s]
-        key :description, [I18n.t('swagger_ui.create_description', model: "Industry").to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: "Industry").to_s
         key :operationId, 'addIndustry'
         key :produces, [
           'application/json'
@@ -40,14 +40,14 @@ module SwaggerDocs::Industries
         parameter do
           key :name, :body
           key :in, :body
-          key :description, [I18n.t('swagger_ui.create_param_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Industry").to_s
           key :required, true
           schema do
             key :'$ref', :IndustryInput
           end
         end
         response 201 do
-          key :description, [I18n.t('swagger_ui.create_success_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Industry").to_s
           schema do
             key :'$ref', :Industry
           end
@@ -68,7 +68,7 @@ module SwaggerDocs::Industries
       parameter do
         key :name, :id
         key :in, :path
-        key :description, [I18n.t('swagger_ui.path_id_description', model: "Industry").to_s]
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Industry").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -78,7 +78,7 @@ module SwaggerDocs::Industries
           key :Authorization, []
         end
         key :tags, [I18n.t('industry.key').to_s]
-        key :description, [I18n.t('swagger_ui.update_description', model: "Industry").to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: "Industry").to_s
         key :operationId, 'updateIndustry'
         key :produces, [
           'application/json'
@@ -86,14 +86,14 @@ module SwaggerDocs::Industries
         parameter do
           key :name, :body
           key :in, :body
-          key :description, [I18n.t('swagger_ui.update_param_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Industry").to_s
           key :required, true
           schema do
             key :'$ref', :IndustryInput
           end
         end
         response 200 do
-          key :description, [I18n.t('swagger_ui.update_success_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.update_success_description', model: "Industry").to_s
           schema do
             key :'$ref', :Industry
           end
@@ -116,13 +116,13 @@ module SwaggerDocs::Industries
           key :Authorization, []
         end
         key :tags, [I18n.t('industry.key').to_s]
-        key :description, [I18n.t('swagger_ui.get_description', model: "Industry").to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: "Industry").to_s
         key :operationId, 'findIndustryById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, [I18n.t('swagger_ui.get_success_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.get_success_description', model: "Industry").to_s
           schema do
             key :'$ref', :Industry
           end
@@ -139,10 +139,10 @@ module SwaggerDocs::Industries
           key :Authorization, []
         end
         key :tags, [I18n.t('industry.key').to_s]
-        key :description, [I18n.t('swagger_ui.delete_description', model: "Industry").to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: "Industry").to_s
         key :operationId, 'deleteIndustry'
         response 204 do
-          key :description, [I18n.t('swagger_ui.delete_success_description', model: "Industry").to_s]
+          key :description, I18n.t('swagger_ui.delete_success_description', model: "Industry").to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError
