@@ -23,6 +23,7 @@ class Like < ApplicationRecord
 
   def unique_liker
     likers = Like.match_liker_and_likeable(liker_id, liker_type, likeable_id, likeable_type)
-    errors.add(:liker, "can't like the same thing twice") unless likers.kept.blank? || likers.include?(self)
+    errors.add(I18n.t('like.liker').to_s, I18n.t('like.like_restriction').to_s) unless
+        likers.kept.blank? || likers.include?(self)
   end
 end

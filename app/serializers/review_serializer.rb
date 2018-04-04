@@ -8,7 +8,7 @@ class ReviewSerializer < ActiveModel::Serializer
   has_many :strengths, serializer: StrengthSerializer
 
   def type
-    'Review'
+    "Review"
   end
 
   def type?
@@ -20,7 +20,7 @@ class ReviewSerializer < ActiveModel::Serializer
   end
 
   def self.serializer_for(model, options)
-    return AssociateCompanySerializer if model.class.name == 'Company'
+    return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
   end
 end

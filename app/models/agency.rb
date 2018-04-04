@@ -17,5 +17,5 @@ class Agency < ApplicationRecord
   validates :email, allow_blank: true, email: true
   validates :image, file_size: { less_than: 1.megabytes }
   validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"],
-                                message: "Kind must be any of these: Ministry, Statutory Board, Agency" }
+                                message: I18n.t('agency.kind_restriction').to_s }
 end

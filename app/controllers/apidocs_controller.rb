@@ -2,16 +2,16 @@ class ApidocsController < ApplicationController
   include Swagger::Blocks
 
   swagger_root do
-    key :swagger, '2.0'
+    key :swagger, "#{I18n.t('swagger_ui.swagger_version')}"
     info do
-      key :version, '1.0.0'
-      key :title, 'Company Review Platform'
-      key :description, 'API for GDS Company Review Platform'
+      key :version, "#{I18n.t('swagger_ui.endpoint_version')}"
+      key :title, "#{I18n.t('swagger_ui.title')}"
+      key :description, "#{I18n.t('swagger_ui.description')}"
       contact do
-        key :name, 'Government Digital Services'
+        key :name, "#{I18n.t('swagger_ui.contact_name')}"
       end
       license do
-        key :name, 'MIT'
+        key :name, "#{I18n.t('swagger_ui.license_name')}"
       end
     end
     key :host, "#{ENV['SWAGGER_API_BASE_PATH']}"
@@ -22,7 +22,7 @@ class ApidocsController < ApplicationController
       key :type, :apiKey
       key :name, "Authorization"
       key :in, :header
-      key :description, 'Enter "Bearer " before ur access key'
+      key :description, "#{I18n.t('swagger_ui.authorization_description')}"
     end
   end
 

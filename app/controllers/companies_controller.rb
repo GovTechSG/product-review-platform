@@ -64,20 +64,20 @@ class CompaniesController < ApplicationController
     end
 
     def validate_company_presence
-      render_error(404, "Company id": ["not found."]) if @company.nil? || !@company.presence?
+      render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
     end
 
     def set_industry
       if params[:company].present?
         @industry = Industry.find_by(id: params[:company][:industry_ids]) if params[:company][:industry_ids].present?
       else
-        render_error(400, "Company": ["not provided"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "company")])
       end
     end
 
     def validate_industry_presence
       if params[:company][:industry_ids].present?
-        render_error(404, "Industry id": ["not found."]) if @industry.nil? || !@industry.presence?
+        render_error(404, "#{I18n.t('industry.key_id')}": [I18n.t('general_error.not_found')]) if @industry.nil? || !@industry.presence?
       end
     end
 

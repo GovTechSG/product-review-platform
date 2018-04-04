@@ -54,7 +54,7 @@ class AgenciesController < ApplicationController
   end
 
   def validate_agency_pressence
-    render_error(404, "Agency id": ["not found"]) if @agency.nil? || !@agency.presence?
+    render_error(404, "#{I18n.t('agency.key_id')}": [I18n.t('general_error.not_found')]) if @agency.nil? || !@agency.presence?
   end
 
   # Only allow a trusted parameter "white list" through.

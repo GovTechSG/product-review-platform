@@ -25,7 +25,7 @@ class TokensController < Doorkeeper::TokensController
       revoke_token
     else
       render json: {
-        token: ["Invalid token."]
+          "#{I18n.t('token.key')}": [I18n.t('token.invalid')]
       }, status: 404
     end
   end
@@ -36,7 +36,7 @@ class TokensController < Doorkeeper::TokensController
       create
     else
       render json: {
-        token: ["Invalid or missing token/credentials. Please include token in request header and credentials in request body"]
+          "#{I18n.t('token.key')}": [I18n.t('token.not_found')]
       }, status: 401
     end
   end
@@ -49,7 +49,7 @@ class TokensController < Doorkeeper::TokensController
       render json: {}, status: 200
     else
       render json: {
-        token: ["Inaccessible token. May have already been revoked."]
+          "#{I18n.t('token.key')}": [I18n.t('token.inaccessible')]
       }, status: 404
     end
   end

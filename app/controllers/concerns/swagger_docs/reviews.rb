@@ -8,7 +8,7 @@ module SwaggerDocs::Reviews
       parameter do
         key :name, :product_id
         key :in, :path
-        key :description, 'ID of product'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Product").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -17,14 +17,14 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Returns list of all reviews from specified product'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Reviews", id: "Product").to_s
         key :operationId, 'findProductsByReview'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, Reviews of the given product ID fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Reviews").to_s
           schema type: :array do
             items do
               key :'$ref', :Review
@@ -42,8 +42,8 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Creates a new review that belong to a specified product'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.create_with_FK_description', model: "Review", id: "Product").to_s
         key :operationId, 'addReviewByProduct'
         key :produces, [
           'application/json'
@@ -51,14 +51,14 @@ module SwaggerDocs::Reviews
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of the review to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Review").to_s
           key :required, true
           schema do
             key :'$ref', :ProductReviewInput
           end
         end
         response 201 do
-          key :description, 'OK, review is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Review").to_s
           schema do
             key :'$ref', :Review
           end
@@ -82,7 +82,7 @@ module SwaggerDocs::Reviews
       parameter do
         key :name, :service_id
         key :in, :path
-        key :description, 'ID of service'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Service").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -91,14 +91,14 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Returns list of all reviews from specified service'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Review", id: "Service").to_s
         key :operationId, 'findReviewsByService'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, Reviews of the given service ID fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Review").to_s
           schema type: :array do
             items do
               key :'$ref', :Review_Service
@@ -116,8 +116,8 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Creates a new review that belong to a specified service'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.create_with_FK_description', model: "Review", id: "Service").to_s
         key :operationId, 'addReviewByService'
         key :produces, [
           'application/json'
@@ -125,14 +125,14 @@ module SwaggerDocs::Reviews
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of the review to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Review").to_s
           key :required, true
           schema do
             key :'$ref', :ServiceReviewInput
           end
         end
         response 201 do
-          key :description, 'OK, review is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Review").to_s
           schema do
             key :'$ref', :Review_Service
           end
@@ -159,7 +159,7 @@ module SwaggerDocs::Reviews
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of review'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Review").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -168,8 +168,8 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Update a review'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: "Review").to_s
         key :operationId, 'updateReview'
         key :produces, [
           'application/json'
@@ -177,14 +177,14 @@ module SwaggerDocs::Reviews
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of Review to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Review").to_s
           key :required, true
           schema do
             key :'$ref', :ReviewInput
           end
         end
         response 200 do
-          key :description, 'OK, review is successfully updated'
+          key :description, I18n.t('swagger_ui.update_success_description', model: "Review").to_s
           schema do
             key :'$ref', :Review
           end
@@ -206,14 +206,14 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Returns a review'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: "Review").to_s
         key :operationId, 'findReviewById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, Review of the given ID fetched'
+          key :description, I18n.t('swagger_ui.get_success_description', model: "Review").to_s
           schema do
             key :'$ref', :Review
           end
@@ -229,11 +229,11 @@ module SwaggerDocs::Reviews
         security do
           key :Authorization, []
         end
-        key :tags, ['Review']
-        key :description, 'Deletes a single review'
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: "Review").to_s
         key :operationId, 'deleteReview'
         response 204 do
-          key :description, 'No content success. Review of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: "Review").to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError

@@ -57,7 +57,7 @@ class LikesController < ApplicationController
     end
 
     def validate_likeable_presence
-      render_error(404, "#{@likeable_type} id": ["not found"]) if @likeable.nil? || !@likeable.presence?
+      render_error(404, "#{I18n.t('like.likeable', model: @likeable_type)}": [I18n.t('general_error.not_found')]) if @likeable.nil? || !@likeable.presence?
     end
 
     def set_like
@@ -65,14 +65,14 @@ class LikesController < ApplicationController
     end
 
     def validate_like_pressence
-      render_error(404, "Like id": ["not found"]) if @like.nil? || !@like.presence?
+      render_error(404, "#{I18n.t('like.key_id')}": [I18n.t('general_error.not_found')]) if @like.nil? || !@like.presence?
     end
 
     def set_new_like_liker
       type = params[:like][:from_type].classify.safe_constantize
       if !type.nil?
         if !(type < Liker)
-          render_error(422, "From type": ["is invalid"])
+          render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         else
           @liker = type.find_by(id: params[:like][:from_id])
           @whitelisted = create_params
@@ -80,22 +80,22 @@ class LikesController < ApplicationController
           @likes = Like.new(@whitelisted)
         end
       else
-        render_error(422, "From type": ["is invalid"])
+        render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
       end
     end
 
     def check_liker_params
       if params[:like].present?
         if !(params[:like][:from_id].present? && params[:like][:from_type].present?)
-          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
+          render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
         end
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: like"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "like")])
       end
     end
 
     def validate_liker_presence
-      render_error(404, "From id": ["is not found"]) if @liker.nil? || !@liker.presence?
+      render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')]) if @liker.nil? || !@liker.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -74,7 +74,7 @@ class ReviewsController < ApplicationController
     def require_params(required)
       @whitelisted = params.fetch(:review, nil)
       if @whitelisted.blank?
-        render_error(400, "Parameter missing": ["Param is missing or empty: review"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
         return
       else
         @whitelisted = @whitelisted.permit(:score, :content, :from_id,
@@ -83,7 +83,7 @@ class ReviewsController < ApplicationController
       if required
         param_required_foreign_keys.each do |foreign_key|
           if @whitelisted[foreign_key].blank?
-            render_error(400, "Parameter missing": ["Param is missing or empty: #{foreign_key}"])
+            render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: foreign_key)])
             break
           end
         end
@@ -92,21 +92,19 @@ class ReviewsController < ApplicationController
 
     def transform_params
       convertable_inputs.each do |input|
-        if @whitelisted[input.keys.first].present?
-          @whitelisted[input[input.keys.first]] = @whitelisted.delete(input.keys.first)
-        end
+        @whitelisted[input[input.keys.first]] = @whitelisted.delete(input.keys.first) if @whitelisted[input.keys.first].present?
       end
     end
 
     def set_reviewable(required)
       reviewable = find_class_in_hash(params, "Reviewable", false)
       if required && reviewable.nil?
-        render_error(400, "Parameter missing": ["param is missing or empty: #{@input_type}_id"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
         return
       elsif !reviewable.nil?
         @reviewable = find_record(reviewable[:type], reviewable[:id])
         if invalid_record(@reviewable)
-          render_error(404, "#{reviewable[:type]}_id": ["Not found"])
+          render_error(404, "#{I18n.t('review.reviewable', model: reviewable[:type].to_s + '_id')}": [I18n.t('general_error.not_found')])
           return
         end
         unless @whitelisted.nil?
@@ -119,21 +117,22 @@ class ReviewsController < ApplicationController
     def set_review
       if params[:id].present?
         @review = find_record(Review, params[:id])
-        render_error(404, "Review id": ["Not found"]) if invalid_record(@review)
+        render_error(404, "#{I18n.t('review.key_id')}": [I18n.t('general_error.not_found')]) if invalid_record(@review)
       else
-        render_error(400, "Parameter missing": ["param is missing or empty: id"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "id")])
       end
     end
 
     def set_reviewer(required)
       reviewer_class = find_class_in_hash(@whitelisted, "Reviewer", true)
       if required && !provided
-        render_error(400, "Parameter missing": ["param is missing or empty: #{@input_type}_id"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
         return
       elsif !reviewer_class.nil?
         get_reviewer(reviewer_class)
       elsif provided && reviewer_class.nil?
-        render_error(422, "From type/id": ["is invalid or missing"])
+        render_error(422, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
+
         return
       end
     end
@@ -141,7 +140,7 @@ class ReviewsController < ApplicationController
     def get_reviewer(reviewer_class)
       reviewer = find_record(reviewer_class[:type], reviewer_class[:id])
       if invalid_record(reviewer)
-        render_error(404, "#{reviewer_class[:type]}_id": ["Not found"])
+        render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')])
         return
       end
       @whitelisted[:reviewer_type] = reviewer_class[:type].to_s
@@ -150,21 +149,21 @@ class ReviewsController < ApplicationController
 
     def set_grant(required)
       if required && @whitelisted[:grant_id].blank?
-        render_error(400, "Parameter missing": ["param is missing or empty: grant_id"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "grant_id")])
       elsif @whitelisted[:grant_id].present?
         grant = find_record(Grant, @whitelisted[:grant_id])
-        render_error(404, "Grant id": ["Not found"]) if invalid_record(grant)
+        render_error(404, "#{I18n.t('grant.key_id')}": [I18n.t('general_error.not_found')]) if invalid_record(grant)
       end
     end
 
     def set_strength(required)
       if required && @whitelisted[:strength_ids].blank?
-        render_error(400, "Parameter missing": ["param is missing or empty: strength_ids"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "strength_ids")])
       elsif @whitelisted[:strength_ids].present?
         @whitelisted[:strength_ids].each do |id|
           strength = find_record(Strength, id)
           if invalid_record(strength)
-            render_error(404, "Strength ids": ["Not found"])
+            render_error(404, "#{I18n.t('strength.key_id')}": [I18n.t('general_error.not_found')])
             break
           end
         end
@@ -240,11 +239,11 @@ class ReviewsController < ApplicationController
         elsif score_param.is_a? Numeric
           @score = score_param
         else
-          render_error(422, "Score": ["is not a number"])
+          render_error(422, "#{I18n.t('score.key')}": [I18n.t('score.invalid')])
         end
       end
     rescue ArgumentError
-      render_error(400, "Score": ["is not a number"])
+      render_error(422, "#{I18n.t('score.key')}": [I18n.t('score.invalid')])
     end
 end
 

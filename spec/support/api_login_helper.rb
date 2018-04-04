@@ -22,36 +22,36 @@ end
 
 def unauthorized_response
   {
-    token: ["Invalid or missing access token. Please sign in/sign up first."]
+    "#{I18n.t('token.key')}": [I18n.t('token.not_authorized')]
   }.with_indifferent_access
 end
 
 def wrong_credentials_response
   {
-    token: ["Missing or invalid credentials."]
+    "#{I18n.t('token.key')}": [I18n.t('token.login_failed')]
   }.with_indifferent_access
 end
 
 def incorrect_token_response
   {
-    token: ["Invalid token."]
+    "#{I18n.t('token.key')}": [I18n.t('token.invalid')]
   }.with_indifferent_access
 end
 
 def revoked_token_response
   {
-    token: ["Inaccessible token. May have already been revoked."]
+    "#{I18n.t('token.key')}": [I18n.t('token.inaccessible')]
   }.with_indifferent_access
 end
 
 def refresh_wrong_parameter_response
   {
-    token: ["Invalid or missing token/credentials. Please include token in request header and credentials in request body"]
+    "#{I18n.t('token.key')}": [I18n.t('token.not_found')]
   }.with_indifferent_access
 end
 
 def refresh_no_header_response
   {
-    token: ["Invalid or missing token/credentials. Please include token in request header and credentials in request body"]
+    "#{I18n.t('token.key')}": [I18n.t('token.not_found')]
   }.with_indifferent_access
 end

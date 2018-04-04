@@ -4,7 +4,7 @@ class CompanySerializer < ActiveModel::Serializer
   has_many :industries, serializer: IndustrySerializer
 
   def type
-    'Company'
+    "Company"
   end
 
   def type?

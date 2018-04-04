@@ -3,7 +3,7 @@ class AssociateCompanySerializer < ActiveModel::Serializer
   attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count, :image
 
   def type
-    'Company'
+    "Company"
   end
 
   def type?

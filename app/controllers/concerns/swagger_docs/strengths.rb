@@ -9,14 +9,14 @@ module SwaggerDocs::Strengths
         security do
           key :Authorization, []
         end
-        key :tags, ['Strength']
-        key :description, 'Returns list of all strengths'
+        key :tags, [I18n.t('strength.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: "Strengths").to_s
         key :operationId, 'findStrengths'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, list of strengths fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Strengths").to_s
           schema type: :array do
             items do
               key :'$ref', :Strength
@@ -31,8 +31,8 @@ module SwaggerDocs::Strengths
         security do
           key :Authorization, []
         end
-        key :tags, ['Strength']
-        key :description, 'Creates a new strength'
+        key :tags, [I18n.t('strength.key').to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: "Strength").to_s
         key :operationId, 'addStrength'
         key :produces, [
           'application/json'
@@ -40,14 +40,14 @@ module SwaggerDocs::Strengths
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of the strength to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Strength").to_s
           key :required, true
           schema do
             key :'$ref', :StrengthInput
           end
         end
         response 201 do
-          key :description, 'OK, strength is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Strength").to_s
           schema do
             key :'$ref', :Strength
           end
@@ -68,7 +68,7 @@ module SwaggerDocs::Strengths
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of strength'
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Strength").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -77,8 +77,8 @@ module SwaggerDocs::Strengths
         security do
           key :Authorization, []
         end
-        key :tags, ['Strength']
-        key :description, 'Update a strength'
+        key :tags, [I18n.t('strength.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: "Strength").to_s
         key :operationId, 'updateStrength'
         key :produces, [
           'application/json'
@@ -86,14 +86,14 @@ module SwaggerDocs::Strengths
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of the strength to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Strength").to_s
           key :required, true
           schema do
             key :'$ref', :StrengthInput
           end
         end
         response 200 do
-          key :description, 'OK, strength is successfully updated'
+          key :description, I18n.t('swagger_ui.update_success_description', model: "Strength").to_s
           schema do
             key :'$ref', :Strength
           end
@@ -115,14 +115,14 @@ module SwaggerDocs::Strengths
         security do
           key :Authorization, []
         end
-        key :tags, ['Strength']
-        key :description, 'Returns a strength'
+        key :tags, [I18n.t('strength.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: "Strength").to_s
         key :operationId, 'findStrengthById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, strength of the given ID fetched'
+          key :description, I18n.t('swagger_ui.get_success_description', model: "Strength").to_s
           schema do
             key :'$ref', :Strength
           end
@@ -138,11 +138,11 @@ module SwaggerDocs::Strengths
         security do
           key :Authorization, []
         end
-        key :tags, ['Strength']
-        key :description, 'Deletes a single strength'
+        key :tags, [I18n.t('strength.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: "Strength").to_s
         key :operationId, 'deleteStrength'
         response 204 do
-          key :description, 'No content success. Strength of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: "Strength").to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError
