@@ -8,7 +8,7 @@ module SwaggerDocs::Products
       parameter do
         key :name, :company_id
         key :in, :path
-        key :description, [I18n.t('swagger_ui.path_id_description', model: "Company").to_s]
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Company").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -18,13 +18,13 @@ module SwaggerDocs::Products
           key :Authorization, []
         end
         key :tags, [I18n.t('product.key').to_s]
-        key :description, [I18n.t('swagger_ui.index_with_FK_description', model: "Products", id: "Company").to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Products", id: "Company").to_s
         key :operationId, 'findProductsByCompany'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, [I18n.t('swagger_ui.index_success_description', model: "Products").to_s]
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Products").to_s
           schema type: :array do
             items do
               key :'$ref', :Product
@@ -43,7 +43,7 @@ module SwaggerDocs::Products
           key :Authorization, []
         end
         key :tags, [I18n.t('product.key').to_s]
-        key :description, [I18n.t('swagger_ui.create_description', model: "Product").to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: "Product").to_s
         key :operationId, 'addProductByCompany'
         key :produces, [
           'application/json'
@@ -51,14 +51,14 @@ module SwaggerDocs::Products
         parameter do
           key :name, :body
           key :in, :body
-          key :description, [I18n.t('swagger_ui.create_param_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Product").to_s
           key :required, true
           schema do
             key :'$ref', :ProductInput
           end
         end
         response 201 do
-          key :description, [I18n.t('swagger_ui.create_success_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Product").to_s
           schema do
             key :'$ref', :Product
           end
@@ -82,7 +82,7 @@ module SwaggerDocs::Products
       parameter do
         key :name, :id
         key :in, :path
-        key :description, [I18n.t('swagger_ui.path_id_description', model: "Product").to_s]
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Product").to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -92,7 +92,7 @@ module SwaggerDocs::Products
           key :Authorization, []
         end
         key :tags, [I18n.t('product.key').to_s]
-        key :description, [I18n.t('swagger_ui.update_description', model: "Product").to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: "Product").to_s
         key :operationId, 'updateProduct'
         key :produces, [
           'application/json'
@@ -100,14 +100,14 @@ module SwaggerDocs::Products
         parameter do
           key :name, :body
           key :in, :body
-          key :description, [I18n.t('swagger_ui.update_param_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Product").to_s
           key :required, true
           schema do
             key :'$ref', :ProductInput
           end
         end
         response 200 do
-          key :description, [I18n.t('swagger_ui.update_success_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.update_success_description', model: "Product").to_s
           schema do
             key :'$ref', :Product
           end
@@ -130,13 +130,13 @@ module SwaggerDocs::Products
           key :Authorization, []
         end
         key :tags, [I18n.t('product.key').to_s]
-        key :description, [I18n.t('swagger_ui.get_description', model: "Product").to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: "Product").to_s
         key :operationId, 'findProductById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, [I18n.t('swagger_ui.get_success_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.get_success_description', model: "Product").to_s
           schema do
             key :'$ref', :Product
           end
@@ -153,10 +153,10 @@ module SwaggerDocs::Products
           key :Authorization, []
         end
         key :tags, [I18n.t('product.key').to_s]
-        key :description, [I18n.t('swagger_ui.delete_description', model: "Product").to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: "Product").to_s
         key :operationId, 'deleteProduct'
         response 204 do
-          key :description, [I18n.t('swagger_ui.delete_success_description', model: "Product").to_s]
+          key :description, I18n.t('swagger_ui.delete_success_description', model: "Product").to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError
