@@ -6,7 +6,7 @@ class IndustriesController < ApplicationController
 
   # GET /industries
   def index
-    @industries = Industry.all
+    @industries = Industry.all.page params[:page]
 
     render json: @industries
   end

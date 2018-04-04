@@ -15,6 +15,13 @@ module SwaggerDocs::Companies
         key :produces, [
           'application/json'
         ]
+        parameter do
+          key :name, :page
+          key :in, :query
+          key :description, 'Page Number to display'
+          key :type, :integer
+          key :format, :int64
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
           schema type: :array do
@@ -83,6 +90,13 @@ module SwaggerDocs::Companies
         key :produces, [
           'application/json'
         ]
+        parameter do
+          key :name, :page
+          key :in, :query
+          key :description, 'Page Number to display'
+          key :type, :integer
+          key :format, :int64
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Clients').to_s
           schema type: :array do

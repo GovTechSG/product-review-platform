@@ -16,7 +16,7 @@ class GrantsController < ApplicationController
       else
         Grant.kept
       end
-    render json: @grants
+    render json: (@grants.page params[:page])
   end
 
   # GET /grants/1

@@ -25,6 +25,15 @@ RSpec.describe CompaniesController, type: :controller do
       get :index
       expect(parsed_response.length).to eq(4)
     end
+
+    it "returns 25 result (1 page)", authorized: true do
+      default_result_per_page = 25
+      num_of_object_to_create = 30
+      create_list(:company, num_of_object_to_create)
+
+      get :index
+      expect(JSON.parse(response.body).count).to match default_result_per_page
+    end
   end
 
   describe "GET #index", authorized: false do

@@ -14,7 +14,7 @@ class LikesController < ApplicationController
 
   # GET /reviews/:review_id/likes
   def index
-    @likes = @likeable.likes.kept
+    @likes = @likeable.likes.kept.page params[:page]
     render json: @likes
   end
 
