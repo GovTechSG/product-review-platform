@@ -9,13 +9,14 @@ class CompaniesController < ApplicationController
 
   # GET /companies
   def index
-    @companies = Company.kept
+    @companies = Company.kept.page params[:page]
+
     render json: @companies, methods: [:strengths], has_type: false
   end
 
   # GET /companies/:company_id/clients
   def clients
-    render json: @company.clients, has_type: false
+    render json: (@company.clients.page params[:page]), has_type: false
   end
 
   # GET /companies/1

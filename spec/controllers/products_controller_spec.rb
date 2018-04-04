@@ -27,6 +27,20 @@ RSpec.describe ProductsController, type: :controller do
         expect(response).to be_success
       end
 
+      it "returns 25 result (1 page)", authorized: true do
+        default_result_per_page = 25
+        num_of_object_to_create = 30
+        company = Company.create! build(:company).attributes
+
+        while num_of_object_to_create > 0
+          Product.create! build(:product, company: company).attributes
+          num_of_object_to_create -= 1
+        end
+
+        get :index, params: { company_id: company.id }
+        expect(JSON.parse(response.body).count).to match default_result_per_page
+      end
+
       it "does not return deleted products", authorized: true do
         product = Product.create! valid_attributes
         product.discard

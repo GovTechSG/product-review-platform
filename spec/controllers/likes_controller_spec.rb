@@ -41,6 +41,20 @@ RSpec.describe LikesController, type: :controller do
         expect(response).to be_success
       end
 
+      it "returns 25 result (1 page)", authorized: true do
+        default_result_per_page = 25
+        num_of_object_to_create = 30
+        review = Review.create! build(:service_review).attributes
+
+        while num_of_object_to_create > 0
+          Like.create! build(:product_review_like, likeable: review).attributes
+          num_of_object_to_create -= 1
+        end
+
+        get :index, params: { review_id: review.id }
+        expect(JSON.parse(response.body).count).to match default_result_per_page
+      end
+
       it "returns not found if likeable is deleted", authorized: true do
         like = Like.create! valid_attributes
         like.likeable.discard

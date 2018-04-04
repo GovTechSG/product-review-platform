@@ -52,6 +52,20 @@ RSpec.describe ReviewsController, type: :controller do
           expect(response).to be_success
         end
 
+        it "returns 25 result (1 page)", authorized: true do
+          default_result_per_page = 25
+          num_of_object_to_create = 30
+          product = Product.create! build(:product).attributes
+
+          while num_of_object_to_create > 0
+            Review.create! build(:product_review, reviewable: product).attributes
+            num_of_object_to_create -= 1
+          end
+
+          get :index, params: { product_id: product.id }
+          expect(JSON.parse(response.body).count).to match default_result_per_page
+        end
+
         it "returns a not found response when product not found", authorized: true do
           get :index, params: { product_id: 0 }
           expect(response).to be_not_found
@@ -88,6 +102,20 @@ RSpec.describe ReviewsController, type: :controller do
           get :index, params: { service_id: review.reviewable_id }
 
           expect(response).to be_success
+        end
+
+        it "returns 25 result (1 page)", authorized: true do
+          default_result_per_page = 25
+          num_of_object_to_create = 30
+          service = Service.create! build(:service).attributes
+
+          while num_of_object_to_create > 0
+            Review.create! build(:service_review, reviewable: service).attributes
+            num_of_object_to_create -= 1
+          end
+
+          get :index, params: { service_id: service.id }
+          expect(JSON.parse(response.body).count).to match default_result_per_page
         end
 
         it "returns a not found response when service not found", authorized: true do

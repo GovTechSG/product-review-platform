@@ -82,6 +82,20 @@ RSpec.describe CommentsController, type: :controller do
         expect(response).to be_success
       end
 
+      it "returns 25 result (1 page)", authorized: true do
+        default_result_per_page = 25
+        num_of_object_to_create = 30
+        review = Review.create! build(:service_review).attributes
+
+        while num_of_object_to_create > 0
+          Comment.create! build(:service_review_comment, commentable: review).attributes
+          num_of_object_to_create -= 1
+        end
+
+        get :index, params: { review_id: review.id }
+        expect(JSON.parse(response.body).count).to match default_result_per_page
+      end
+
       it "does not return deleted comments", authorized: true do
         comment = Comment.create! product_comment_valid_attributes
         comment.discard

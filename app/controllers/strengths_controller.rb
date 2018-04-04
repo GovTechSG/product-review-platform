@@ -6,7 +6,7 @@ class StrengthsController < ApplicationController
 
   # GET /strengths
   def index
-    @strengths = Strength.kept
+    @strengths = Strength.kept.page params[:page]
 
     render json: @strengths
   end
