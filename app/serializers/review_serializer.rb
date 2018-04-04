@@ -8,7 +8,7 @@ class ReviewSerializer < ActiveModel::Serializer
   has_many :strengths, serializer: StrengthSerializer
 
   def type
-    I18n.t('review.key').to_s
+    "Review"
   end
 
   def type?

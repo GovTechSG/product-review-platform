@@ -4,7 +4,7 @@ class CompanySerializer < ActiveModel::Serializer
   has_many :industries, serializer: IndustrySerializer
 
   def type
-    I18n.t('company.key').to_s
+    "Company"
   end
 
   def type?

@@ -4,7 +4,7 @@ class ServiceSerializer < ActiveModel::Serializer
   belongs_to :company, serializer: AssociateCompanySerializer
 
   def type
-    I18n.t('service.key').to_s
+    "Service"
   end
 
   def type?

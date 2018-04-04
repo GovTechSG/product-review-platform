@@ -4,7 +4,7 @@ class ProductSerializer < ActiveModel::Serializer
   belongs_to :company, serializer: AssociateCompanySerializer
 
   def type
-    I18n.t('product.key').to_s
+    "Product"
   end
 
   def type?
