@@ -75,14 +75,15 @@ class CommentsController < ApplicationController
 
     def validate_from_presence
       if check_from_presence == PARTIAL_PARAMS_MISSING
-        render_error(422, "Either From type or From ID": ["is missing"])
+        render_error(422, "#{I18n.t('general_error.params_missing_key')}":
+            [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
       elsif check_from_presence == BOTH_PARAMS_EXIST
         type = params[:comment][:from_type].classify.safe_constantize
         if !type.nil? && type < Commenter
           @whitelisted = update_params
           change_params_key
         else
-          render_error(422, "From type": ["is invalid"])
+          render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         end
       end
     end
@@ -95,7 +96,7 @@ class CommentsController < ApplicationController
       type = params[:comment][:from_type].classify.safe_constantize
       if !type.nil?
         if !(type < Commenter)
-          render_error(422, "From type": ["is invalid"])
+          render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         else
           @commmenter = type.find_by(id: params[:comment][:from_id])
           @whitelisted = create_params
@@ -103,32 +104,32 @@ class CommentsController < ApplicationController
           @comments = Comment.new(@whitelisted)
         end
       else
-        render_error(422, "From type": ["is invalid"])
+        render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
       end
     end
 
     def validate_comment_pressence
-      render_error(404, "Comment id": ["not found"]) if @comment.nil? || !@comment.presence?
+      render_error(404, "#{I18n.t('comment.key_id')}": [I18n.t('general_error.not_found')]) if @comment.nil? || !@comment.presence?
     end
 
     def check_commenter_params
       if params[:comment].present?
         if !(params[:comment][:from_id].present? && params[:comment][:from_type].present?)
-          render_error(400, "Parameter missing": ["param is missing or the value is empty: from_id/from_type"])
+          render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
         end
       else
-        render_error(400, "Parameter missing": ["param is missing or the value is empty: comment"])
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "comment")])
       end
     end
 
     def validate_commenter_presence
-      render_error(404, "From id": ["is not found"]) if @commmenter.nil? || !@commmenter.presence?
+      render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')]) if @commmenter.nil? || !@commmenter.presence?
     end
 
     def validate_update_commenter_presence
       if check_from_presence == BOTH_PARAMS_EXIST
         @commenter = params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
-        render_error(404, "From id": ["is not found"]) if @commenter.nil? || !@commenter.presence?
+        render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')]) if @commenter.nil? || !@commenter.presence?
       end
     end
 
@@ -147,7 +148,7 @@ class CommentsController < ApplicationController
     end
 
     def validate_commentable_presence
-      render_error(404, "#{@commentable_type} id": ["not found"]) if @commentable.nil? || !@commentable.presence?
+      render_error(404, "#{I18n.t('comment.commentable', model: @commentable_type)}": [I18n.t('general_error.not_found')]) if @commentable.nil? || !@commentable.presence?
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -11,5 +11,5 @@ class Agency < ApplicationRecord
   validates :name, uniqueness: true
   validates :email, allow_blank: true, email: true
   validates :kind, inclusion: { in: ["Ministry", "Statutory Board", "Agency"],
-                                message: "Kind must be any of these: Ministry, Statutory Board, Agency" }
+                                message: I18n.t('agency.kind_restriction').to_s }
 end

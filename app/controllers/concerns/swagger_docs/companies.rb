@@ -9,14 +9,14 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Returns list of all companies'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: 'Companies').to_s
         key :operationId, 'findCompanies'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, list of companies fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
           schema type: :array do
             items do
               key :'$ref', :Company
@@ -31,8 +31,8 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Creates a new company'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: 'Company').to_s
         key :operationId, 'addCompany'
         key :produces, [
           'application/json'
@@ -40,14 +40,14 @@ module SwaggerDocs::Companies
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of the company to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: 'Company').to_s
           key :required, true
           schema do
             key :'$ref', :CompanyInput
           end
         end
         response 201 do
-          key :description, 'OK, company is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: 'Company').to_s
           schema do
             key :'$ref', :Company
           end
@@ -68,7 +68,7 @@ module SwaggerDocs::Companies
       parameter do
         key :name, :company_id
         key :in, :path
-        key :description, 'ID of company'
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Company').to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -77,14 +77,14 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Returns list of all company clients'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: 'Clients').to_s
         key :operationId, 'findCompaniesClients'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, list of companies fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'Clients').to_s
           schema type: :array do
             items do
               key :'$ref', :Company
@@ -104,7 +104,7 @@ module SwaggerDocs::Companies
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of company'
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Company').to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -113,8 +113,8 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Update a company'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: 'Company').to_s
         key :operationId, 'updateCompany'
         key :produces, [
           'application/json'
@@ -122,14 +122,14 @@ module SwaggerDocs::Companies
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of the company to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: 'Company').to_s
           key :required, true
           schema do
             key :'$ref', :CompanyInput
           end
         end
         response 200 do
-          key :description, 'OK, company is successfully updated'
+          key :description, I18n.t('swagger_ui.create_success_description', model: 'Company').to_s
           schema do
             key :'$ref', :Company
           end
@@ -151,14 +151,14 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Returns a company'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: 'Company').to_s
         key :operationId, 'findCompanyById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, company of the given ID fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'Company').to_s
           schema do
             key :'$ref', :Company
           end
@@ -174,11 +174,11 @@ module SwaggerDocs::Companies
         security do
           key :Authorization, []
         end
-        key :tags, ['Company']
-        key :description, 'Deletes a single company'
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: 'Company').to_s
         key :operationId, 'deleteCompany'
         response 204 do
-          key :description, 'No content success. Company of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: 'Company').to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError

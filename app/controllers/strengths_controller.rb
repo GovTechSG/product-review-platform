@@ -49,7 +49,7 @@ class StrengthsController < ApplicationController
   end
 
   def validate_strength_presence
-    render_error(404, "Strength id": ["not found."]) if @strength.nil? || !@strength.presence?
+    render_error(404, "#{I18n.t('strength.key_id')}": [I18n.t('general_error.not_found')]) if @strength.nil? || !@strength.presence?
   end
 
   # Only allow a trusted parameter "white list" through.

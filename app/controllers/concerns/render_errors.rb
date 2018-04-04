@@ -4,15 +4,15 @@ module RenderErrors
     if errors.empty?
       payload = case status
                 when 400
-                  { "Bad request": ["Missing parameters."] }
+                  { "#{I18n.t('general_error.key')}": [I18n.t('general_error.bad_request')] }
                 when 404
-                  { "id": ["Not found."] }
+                  { "#{I18n.t('general_error.key')}": [I18n.t('general_error.not_found')] }
                 when 422
-                  { "Unprocessable entity": ["Invalid parameters."] }
+                  { "#{I18n.t('general_error.key')}": [I18n.t('general_error.unprocessable_entity')] }
                 when 401
-                  { "Unauthorized": ["Please provide valid credentials"] }
+                  { "#{I18n.t('general_error.key')}": [I18n.t('general_error.unauthorized')] }
                 else
-                  { "Unexpected": ["Please contact admin"] }
+                  { "#{I18n.t('general_error.key')}": [I18n.t('general_error.unexpected')] }
                 end
     else
       errors.each do |error|
@@ -25,7 +25,7 @@ module RenderErrors
   def doorkeeper_unauthorized_render_options(*)
     {
       json: {
-        token: ["Invalid or missing access token. Please sign in/sign up first."]
+        "#{I18n.t('token.key')}": [I18n.t('token.not_authorized')]
       }
     }
   end

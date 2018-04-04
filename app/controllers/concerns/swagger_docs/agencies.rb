@@ -9,14 +9,14 @@ module SwaggerDocs::Agencies
         security do
           key :Authorization, []
         end
-        key :tags, ['Agency']
-        key :description, 'Returns list of all agencies'
+        key :tags, [I18n.t('agency.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: 'Agencies').to_s
         key :operationId, 'findAgencies'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, list of agencies fetched'
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'Agencies').to_s
           schema type: :array do
             items do
               key :'$ref', :Agency
@@ -31,8 +31,8 @@ module SwaggerDocs::Agencies
         security do
           key :Authorization, []
         end
-        key :tags, ['Agency']
-        key :description, 'Creates a new agency'
+        key :tags, [I18n.t('agency.key').to_s]
+        key :description, I18n.t('swagger_ui.create_description', model: 'Agency').to_s
         key :operationId, 'addAgency'
         key :produces, [
           'application/json'
@@ -40,14 +40,14 @@ module SwaggerDocs::Agencies
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'Details of Agency to be created'
+          key :description, I18n.t('swagger_ui.create_param_description', model: 'Agency').to_s
           key :required, true
           schema do
             key :'$ref', :AgencyInput
           end
         end
         response 201 do
-          key :description, 'OK, Agency is successfully created'
+          key :description, I18n.t('swagger_ui.create_success_description', model: 'Agency').to_s
           schema do
             key :'$ref', :Agency
           end
@@ -68,7 +68,7 @@ module SwaggerDocs::Agencies
       parameter do
         key :name, :id
         key :in, :path
-        key :description, 'ID of agency'
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Agency').to_s
         key :required, true
         key :type, :integer
         key :format, :int64
@@ -77,8 +77,8 @@ module SwaggerDocs::Agencies
         security do
           key :Authorization, []
         end
-        key :tags, ['Agency']
-        key :description, 'Update an agency'
+        key :tags, [I18n.t('agency.key').to_s]
+        key :description, I18n.t('swagger_ui.update_description', model: 'Agency').to_s
         key :operationId, 'updateAgency'
         key :produces, [
           'application/json'
@@ -86,14 +86,14 @@ module SwaggerDocs::Agencies
         parameter do
           key :name, :body
           key :in, :body
-          key :description, 'New details of Agency to be updated'
+          key :description, I18n.t('swagger_ui.update_param_description', model: 'Agency').to_s
           key :required, true
           schema do
             key :'$ref', :AgencyInput
           end
         end
         response 200 do
-          key :description, 'OK, Agency is successfully updated'
+          key :description, I18n.t('swagger_ui.update_success_description', model: 'Agency').to_s
           schema do
             key :'$ref', :Agency
           end
@@ -115,14 +115,14 @@ module SwaggerDocs::Agencies
         security do
           key :Authorization, []
         end
-        key :tags, ['Agency']
-        key :description, 'Returns an agency'
+        key :tags, [I18n.t('agency.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: 'Agency').to_s
         key :operationId, 'findAgencyById'
         key :produces, [
           'application/json'
         ]
         response 200 do
-          key :description, 'OK, agency of the given ID fetched'
+          key :description, I18n.t('swagger_ui.get_success_description', model: 'Agency').to_s
           schema do
             key :'$ref', :Agency
           end
@@ -138,11 +138,11 @@ module SwaggerDocs::Agencies
         security do
           key :Authorization, []
         end
-        key :tags, ['Agency']
-        key :description, 'Deletes a single agency'
+        key :tags, [I18n.t('agency.key').to_s]
+        key :description, I18n.t('swagger_ui.delete_description', model: 'Agency').to_s
         key :operationId, 'deleteAgency'
         response 204 do
-          key :description, 'No content success. Agency of the given ID is deleted'
+          key :description, I18n.t('swagger_ui.delete_success_description', model: 'Agency').to_s
         end
         response 401 do
           key :'$ref', :UnauthorisedError

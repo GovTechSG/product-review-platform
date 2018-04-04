@@ -4,7 +4,7 @@ class ProductSerializer < ActiveModel::Serializer
   belongs_to :company, serializer: AssociateCompanySerializer
 
   def type
-    'Product'
+    "Product"
   end
 
   def type?
