@@ -285,7 +285,6 @@ DEPENDENCIES
   factory_bot_rails
   ffaker
   figaro
-  kaminari
   listen (>= 3.0.5, < 3.2)
   pg (~> 0.18)
   puma (~> 3.7)
