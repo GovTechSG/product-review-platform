@@ -27,6 +27,14 @@ end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 Dir["./spec/support/matchers/**/*.rb"].each { |f| require f }
+def valid_base64_image
+  "data:image/png;base64," + Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read)
+end
+
+def partial_base64_image
+  Base64.encode64(Rack::Test::UploadedFile.new(Rails.root.join('spec/support/test_image.png')).read)
+end
+
 def parsed_response
   parsed_data = JSON.parse(response.body)
   parsed_data.is_a?(Array) ? parsed_data : parsed_data.with_indifferent_access
@@ -52,6 +60,14 @@ RSpec.configure do |config|
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
   # configuration to test Apartment multi-tenant
+  config.before(:all) do
+    if Rails.env.test?
+      CarrierWave.configure do |carrier_config|
+        carrier_config.storage = :file
+        carrier_config.enable_processing = false
+      end
+    end
+  end
   config.before(:suite) do
     # Clean all tables to start
     DatabaseCleaner.clean_with :truncation
@@ -68,6 +84,17 @@ RSpec.configure do |config|
     # Rollback transaction
     DatabaseCleaner.clean
   end
+
+  config.after(:all) do
+    # Get rid of the linked images
+    if Rails.env.test?
+      FileUtils.rm_rf(Dir["#{Rails.root}/public/uploads/[^.]*"])
+      # if you want to delete everything under the CarrierWave root that you set in an initializer,
+      # you can do this:
+      # FileUtils.rm_rf(CarrierWave::Uploader::Base.root)
+    end
+  end
+
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
     # and `failure_message` of custom matchers include text for helper methods

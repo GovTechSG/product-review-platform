@@ -27,8 +27,8 @@ class CompaniesController < ApplicationController
   # POST /companies
   def create
     @company = Company.new(company_params)
-
-    if @company.save
+    @company.set_image!(company_params[:image]) if company_params[:name].present?
+    if @company.errors.blank? && @company.save
       render json: @company, status: :created, location: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
@@ -37,7 +37,12 @@ class CompaniesController < ApplicationController
 
   # PATCH/PUT /companies/1
   def update
-    if @company.update(company_params)
+    if company_params[:image].present?
+      image = params[:company].delete :image
+      @company.assign_attributes(company_params)
+      @company.set_image!(image) if @company.valid?
+    end
+    if @company.errors.blank? && @company.update(company_params)
       render json: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
@@ -79,6 +84,6 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :uen, :description, :phone_number, :url, industry_ids: [])
+      params.require(:company).permit(:name, :uen, :description, :phone_number, :url, :image, industry_ids: [])
     end
 end

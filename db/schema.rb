@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20180327055439) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.string "image", default: "", null: false
     t.index ["discarded_at"], name: "index_agencies_on_discarded_at"
     t.index ["name"], name: "index_agencies_on_name", unique: true
   end
@@ -107,6 +108,7 @@ ActiveRecord::Schema.define(version: 20180327055439) do
     t.datetime "updated_at", null: false
     t.string "description", default: "", null: false
     t.datetime "discarded_at"
+    t.string "image", default: "", null: false
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
     t.index ["name"], name: "index_companies_on_name", unique: true
     t.index ["reviews_count"], name: "index_companies_on_reviews_count"

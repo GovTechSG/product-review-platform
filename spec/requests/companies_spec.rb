@@ -171,29 +171,31 @@ RSpec.describe "Companies", type: :request do
 
   describe "POST /companies" do
     let(:company) { build(:company) }
+    let(:company_params) { build(:company_as_params) }
+    let(:company_params_without_image) { build(:company_as_params, image: "") }
     let(:industry) { create(:industry) }
     let(:header) { request_login }
     it "returns a success response" do
-      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(201)
     end
 
     it "returns data of the single created company" do
-      post companies_path, params: { company: company.as_json }, headers: header
+      post companies_path, params: { company: company_params.as_json }, headers: header
       expect_show_response
     end
 
     it "returns Unprocessable Entity if company is not valid" do
-      company.name = ""
-      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      company_params[:name] = ""
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(422)
     end
 
     it "renders a 422 error for duplicate uen" do
       dupcompany = build(:company)
-      dupcompany.uen = company.uen
+      dupcompany.uen = company_params[:uen]
       dupcompany.save
-      post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -208,6 +210,28 @@ RSpec.describe "Companies", type: :request do
       post companies_path, params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
       expect_not_found
     end
+
+    it "creates a letterhead avatar when no image is specified" do
+      post companies_path, params: { company: company_params_without_image.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      expect(parsed_response[:image][:url]).to_not eq(nil)
+      expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
+    end
+
+    it "creates a image" do
+      company_params = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_params[:image] = valid_base64_image
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      expect(parsed_response[:image][:url]).to_not eq(nil)
+      expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
+    end
+
+    it "returns 422 when the image is invalid" do
+      company_params = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_params[:image] = partial_base64_image
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
+    end
   end
 
   describe "POST /companies unauthorized" do
@@ -220,17 +244,17 @@ RSpec.describe "Companies", type: :request do
   describe "PATCH /company/:id" do
     let(:company) { create(:company) }
     let(:industry) { create(:industry) }
+    let(:company_params) { build(:company_as_params) }
     let(:header) { request_login }
     it "returns a success response" do
-      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      patch company_path(company.id), params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
       expect(response.status).to eq(200)
     end
 
     it "returns data of the single updated company" do
-      updated_company = build(:company)
-      patch company_path(company.id), params: { company: updated_company.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      patch company_path(company.id), params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
       company.reload
-      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score')).to match(updated_company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score'))
+      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image', 'discarded_at', 'reviews_count')).to match(company_params.with_indifferent_access.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image'))
     end
 
     it "returns Unprocessable Entity if company is not valid" do
@@ -274,6 +298,24 @@ RSpec.describe "Companies", type: :request do
       patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: header
 
       expect_not_found
+    end
+
+    it "updates a image" do
+      original_company = create(:company)
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = valid_base64_image
+      patch company_path(original_company.id), params: { company: company_param.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      original_company.reload
+      expect(parsed_response[:image]).to_not eq(original_company.image.serializable_hash)
+    end
+
+    it "returns 422 when the image is invalid" do
+      original_company = create(:company)
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param[:image] = partial_base64_image
+      patch company_path(original_company.id), params: { company: company_param.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 
