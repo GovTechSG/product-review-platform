@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   nodejs \
   libpq-dev \
   postgresql-client
-
+  
 # Set an environment variable to store where the app is installed to inside
 # of the Docker image.
 ENV INSTALL_PATH /app

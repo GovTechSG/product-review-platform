@@ -14,7 +14,7 @@ shared_examples_for 'products_and_services' do
     build(:service_review).attributes
   end
   let(:valid_company) do
-    build(:company).attributes
+    create(:company)
   end
 
   describe "reviews_count" do
@@ -110,19 +110,17 @@ shared_examples_for 'products_and_services' do
   describe "companies_name" do
     context "products" do
       it "returns company name" do
-        company = Company.create! valid_company
-        company.products.create! valid_product
-        product = company.products.first
-        expect(product.company_name).to eq(company.name)
+        valid_company.products.create! valid_product
+        product = valid_company.products.first
+        expect(product.company_name).to eq(valid_company.name)
       end
     end
 
     context "services" do
       it "returns company name" do
-        company = Company.create! valid_company
-        company.services.create! valid_service
-        service = company.services.first
-        expect(service.company_name).to eq(company.name)
+        valid_company.services.create! valid_service
+        service = valid_company.services.first
+        expect(service.company_name).to eq(valid_company.name)
       end
     end
   end

@@ -1,8 +1,10 @@
 require 'rails_helper'
 require 'concerns/statistics/companies_spec.rb'
+require 'concerns/imageable_spec.rb'
 
 RSpec.describe Company, type: :model do
   it_behaves_like "companies"
+  it_behaves_like "imageable"
   it "is valid with valid attributes" do
     expect(build(:company)).to be_valid
   end
@@ -53,6 +55,11 @@ RSpec.describe Company, type: :model do
   end
 
   it "is valid with a valid url" do
+    company = build(:company)
+    expect(company).to be_valid
+  end
+
+  it "is valid with an image" do
     company = build(:company)
     expect(company).to be_valid
   end

@@ -28,5 +28,8 @@ RSpec.describe AgencySerializer, type: :serializer do
     it 'has a description' do
       expect(subject['description']).to eql(@agency.description)
     end
+    it 'has a image url' do
+      expect(subject['image'].url).to eql(@agency.image.url)
+    end
   end
 end

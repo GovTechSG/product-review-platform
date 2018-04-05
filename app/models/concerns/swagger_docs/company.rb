@@ -46,6 +46,21 @@ module SwaggerDocs::Company
         key :type, :number
       end
 
+      property :image do
+        key :type, :object
+        property :url do
+          key :type, :string
+          key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/pivotal20180402-93182-7x7gd.gif"
+        end
+        property :thumb do
+          key :type, :object
+          property :url do
+            key :type, :string
+            key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/thumb_pivotal20180402-93182-7x7gd.gif"
+          end
+        end
+      end
+
       property :aspects do
         key :type, :array
         items do
@@ -97,6 +112,21 @@ module SwaggerDocs::Company
       property :reviews_count do
         key :type, :number
       end
+
+      property :image do
+        key :type, :object
+        property :url do
+          key :type, :string
+          key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/pivotal20180402-93182-7x7gd.gif"
+        end
+        property :thumb do
+          key :type, :object
+          property :url do
+            key :type, :string
+            key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/thumb_pivotal20180402-93182-7x7gd.gif"
+          end
+        end
+      end
     end
 
     swagger_schema :CompanyInput do
@@ -122,6 +152,11 @@ module SwaggerDocs::Company
 
             property :url do
               key :type, :string
+            end
+
+            property :image do
+              key :type, :string
+              key :format, :byte
             end
 
             property :industry_ids do
