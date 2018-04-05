@@ -57,7 +57,7 @@ class CompaniesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_company
-      @company = Company.find_by(id: params[:id])
+      @company = Company.find_by_hashid(params[:id])
     end
 
     def set_company_by_company_id
