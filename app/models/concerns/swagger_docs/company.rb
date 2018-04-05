@@ -46,10 +46,10 @@ module SwaggerDocs::Company
         key :type, :number
       end
 
-      property :strengths do
+      property :aspects do
         key :type, :array
         items do
-          key :'$ref', :Strength
+          key :'$ref', :Aspect
         end
       end
 

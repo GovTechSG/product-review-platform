@@ -21,8 +21,8 @@ class Review < ApplicationRecord
   belongs_to :service, -> { where(reviews: { reviewable_type: 'Service' }) },
              inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
 
-  has_many :strength_reviews, dependent: :destroy
-  has_many :strengths, through: :strength_reviews
+  has_many :aspect_reviews, dependent: :destroy
+  has_many :aspects, through: :aspect_reviews
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
 

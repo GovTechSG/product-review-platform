@@ -5,7 +5,7 @@ class ReviewSerializer < ActiveModel::Serializer
   belongs_to :reviewer, key: "from", polymorphic: true
 
   belongs_to :grant, serializer: GrantSerializer
-  has_many :strengths, serializer: StrengthSerializer
+  has_many :aspects, serializer: AspectSerializer
 
   def type
     "Review"

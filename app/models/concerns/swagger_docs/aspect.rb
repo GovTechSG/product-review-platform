@@ -1,14 +1,14 @@
-module SwaggerDocs::Strength
+module SwaggerDocs::Aspect
   extend ActiveSupport::Concern
 
   included do
     include Swagger::Blocks
 
-    # example :Strength do
-    #   key :strength, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
+    # example :Aspect do
+    #   key :aspect, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
     # end
 
-    swagger_schema :Strength do
+    swagger_schema :Aspect do
       key :type, :object
       key :required, [:id, :name, :description]
 
@@ -28,10 +28,10 @@ module SwaggerDocs::Strength
       end
     end
 
-    swagger_schema :StrengthInput do
+    swagger_schema :AspectInput do
       allOf do
         schema do
-          property :strength do
+          property :aspect do
             key :type, :object
             property :name do
               key :type, :string

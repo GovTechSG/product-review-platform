@@ -10,7 +10,7 @@ class ReviewsController < ApplicationController
     transform_params unless performed?
     set_reviewer(true) unless performed?
     set_grant(true) unless performed?
-    set_strength(false) unless performed?
+    set_aspect(false) unless performed?
   end
   before_action only: [:update] do
     require_params(false)
@@ -18,19 +18,19 @@ class ReviewsController < ApplicationController
     set_review unless performed?
     set_reviewer(false) unless performed?
     set_grant(false) unless performed?
-    set_strength(false) unless performed?
+    set_aspect(false) unless performed?
   end
 
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
     @reviews = @reviewable.reviews.kept.page params[:page]
-    render json: @reviews, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
+    render json: @reviews, methods: [:company, :likes_count, :comments_count, :aspects], has_type: false
   end
 
   # GET /reviews/1
   def show
-    render json: @review, methods: [:company, :likes_count, :comments_count, :strengths], has_type: false
+    render json: @review, methods: [:company, :likes_count, :comments_count, :aspects], has_type: false
   end
 
   # POST /products/:product_id/reviews
@@ -78,7 +78,7 @@ class ReviewsController < ApplicationController
         return
       else
         @whitelisted = @whitelisted.permit(:score, :content, :from_id,
-                                           :from_type, :grant_id, :strength_ids => [])
+                                           :from_type, :grant_id, :aspect_ids => [])
       end
       if required
         param_required_foreign_keys.each do |foreign_key|
@@ -156,14 +156,14 @@ class ReviewsController < ApplicationController
       end
     end
 
-    def set_strength(required)
-      if required && @whitelisted[:strength_ids].blank?
-        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "strength_ids")])
-      elsif @whitelisted[:strength_ids].present?
-        @whitelisted[:strength_ids].each do |id|
-          strength = find_record(Strength, id)
-          if invalid_record(strength)
-            render_error(404, "#{I18n.t('strength.key_id')}": [I18n.t('general_error.not_found')])
+    def set_aspect(required)
+      if required && @whitelisted[:aspect_ids].blank?
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "aspect_ids")])
+      elsif @whitelisted[:aspect_ids].present?
+        @whitelisted[:aspect_ids].each do |id|
+          aspect = find_record(Aspect, id)
+          if invalid_record(aspect)
+            render_error(404, "#{I18n.t('aspect.key_id')}": [I18n.t('general_error.not_found')])
             break
           end
         end

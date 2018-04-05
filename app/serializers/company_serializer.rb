@@ -1,6 +1,6 @@
 class CompanySerializer < ActiveModel::Serializer
   attribute :type, if: :type?
-  attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count, :strengths, :url, :phone_number
+  attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count, :aspects, :url, :phone_number
   has_many :industries, serializer: IndustrySerializer
 
   def type

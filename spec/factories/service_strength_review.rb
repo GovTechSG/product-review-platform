@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :service_strength_review, parent: :strength_review do
+  factory :service_aspect_review, parent: :aspect_review do
     association :review, factory: :service_review
   end
 end

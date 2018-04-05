@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :strength_review do
-    strength
+  factory :aspect_review do
+    aspect
   end
 end

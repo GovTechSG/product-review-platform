@@ -34,10 +34,10 @@ module SwaggerDocs::Review
         key :'$ref', :ReviewGrant
       end
 
-      property :strengths do
+      property :aspects do
         key :type, :array
         items do
-          key :'$ref', :Strength
+          key :'$ref', :Aspect
         end
       end
     end
@@ -96,10 +96,10 @@ module SwaggerDocs::Review
         key :'$ref', :ReviewGrant
       end
 
-      property :strengths do
+      property :aspects do
         key :type, :array
         items do
-          key :'$ref', :Strength
+          key :'$ref', :Aspect
         end
       end
     end
@@ -130,7 +130,7 @@ module SwaggerDocs::Review
               key :type, :integer
               key :format, :int64
             end
-            property :strength_ids do
+            property :aspect_ids do
               key :type, :array
               items do
                 key :type, :integer
@@ -168,7 +168,7 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strength_ids do
+            property :aspect_ids do
               key :type, :array
               items do
                 key :type, :integer
@@ -206,7 +206,7 @@ module SwaggerDocs::Review
               key :format, :int64
             end
 
-            property :strength_ids do
+            property :aspect_ids do
               key :type, :array
               items do
                 key :type, :integer

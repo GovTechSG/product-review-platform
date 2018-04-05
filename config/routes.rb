@@ -36,7 +36,7 @@ Rails.application.routes.draw do
       resources :grants
       resources :industries
       resources :agencies
-      resources :strengths
+      resources :aspects
     end
   end
 

@@ -5,7 +5,7 @@ module SwaggerDocs::Grant
     include Swagger::Blocks
 
     # example :Grant do
-    #   key :strength, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
+    #   key :aspect, ["Quality Tools & Materials", "Skillful & Knowledgeable"]
     # end
 
     swagger_schema :Grant do

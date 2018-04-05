@@ -4,10 +4,10 @@ module Statistics::Companies
   extend ActiveSupport::Concern
 
   included do
-    def strengths
-      product_strength = Strength.match_product(self.products.kept.pluck(:id)).first(6)
-      service_strength = Strength.match_service(self.services.kept.pluck(:id)).first(6)
-      whole_set = product_strength + service_strength
+    def aspects
+      product_aspect = Aspect.match_product(self.products.kept.pluck(:id)).first(6)
+      service_aspect = Aspect.match_service(self.services.kept.pluck(:id)).first(6)
+      whole_set = product_aspect + service_aspect
       whole_set.empty? ? [] : serialize(whole_set.uniq.first(6))
     end
 
@@ -38,19 +38,19 @@ module Statistics::Companies
     private
 
     def get_reviews(product_service)
-      strengths_set = Set.new
+      aspects_set = Set.new
       product_service.first(3).each do |reviewable|
         reviewable.reviews.kept.first(3).each do |review|
-          strengths_set.merge(serialize(review.strengths))
+          aspects_set.merge(serialize(review.aspects))
         end
       end
-      strengths_set
+      aspects_set
     end
 
-    def serialize(strengths)
-      strengths.map do |strength|
-        strength = ActiveModel::SerializableResource.new(strength)
-        strength.as_json
+    def serialize(aspects)
+      aspects.map do |aspect|
+        aspect = ActiveModel::SerializableResource.new(aspect)
+        aspect.as_json
       end
     end
   end
