@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :strength do
+  factory :aspect do
     name { FFaker::Lorem.sentence }
     description { FFaker::Lorem.paragraph }
   end

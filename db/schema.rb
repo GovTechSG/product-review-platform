@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180327055439) do
+ActiveRecord::Schema.define(version: 20180405054123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,27 @@ ActiveRecord::Schema.define(version: 20180327055439) do
     t.index ["discarded_at"], name: "index_apps_on_discarded_at"
     t.index ["name"], name: "index_apps_on_name", unique: true
     t.index ["reset_password_token"], name: "index_apps_on_reset_password_token", unique: true
+  end
+
+  create_table "aspect_reviews", force: :cascade do |t|
+    t.bigint "aspect_id"
+    t.bigint "review_id"
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["aspect_id"], name: "index_aspect_reviews_on_aspect_id"
+    t.index ["discarded_at"], name: "index_aspect_reviews_on_discarded_at"
+    t.index ["review_id"], name: "index_aspect_reviews_on_review_id"
+  end
+
+  create_table "aspects", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_aspects_on_discarded_at"
+    t.index ["name"], name: "index_aspects_on_name", unique: true
   end
 
   create_table "comments", force: :cascade do |t|
@@ -219,27 +240,8 @@ ActiveRecord::Schema.define(version: 20180327055439) do
     t.index ["reviews_count"], name: "index_services_on_reviews_count"
   end
 
-  create_table "strength_reviews", force: :cascade do |t|
-    t.bigint "strength_id"
-    t.bigint "review_id"
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_strength_reviews_on_discarded_at"
-    t.index ["review_id"], name: "index_strength_reviews_on_review_id"
-    t.index ["strength_id"], name: "index_strength_reviews_on_strength_id"
-  end
-
-  create_table "strengths", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_strengths_on_discarded_at"
-    t.index ["name"], name: "index_strengths_on_name", unique: true
-  end
-
+  add_foreign_key "aspect_reviews", "aspects"
+  add_foreign_key "aspect_reviews", "reviews"
   add_foreign_key "grants", "agencies"
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
@@ -247,6 +249,4 @@ ActiveRecord::Schema.define(version: 20180327055439) do
   add_foreign_key "products", "companies"
   add_foreign_key "reviews", "grants"
   add_foreign_key "services", "companies"
-  add_foreign_key "strength_reviews", "reviews"
-  add_foreign_key "strength_reviews", "strengths"
 end

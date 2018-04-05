@@ -87,27 +87,27 @@ shared_examples_for 'companies' do
     end
   end
 
-  describe "strengths" do
+  describe "aspects" do
     context "no product and service" do
       it "returns empty array" do
-        expect(valid_company.strengths).to eq([])
+        expect(valid_company.aspects).to eq([])
       end
     end
 
     context "no product" do
-      it "returns service strengths" do
+      it "returns service aspect" do
         service = valid_company.services.create! valid_service
         review = service.reviews.create! valid_service_review
 
-        expect(valid_company.strengths).to eq(review.strengths)
+        expect(valid_company.aspects).to eq(review.aspects)
       end
     end
 
     context "no service" do
-      it "returns product strengths" do
+      it "returns product aspect" do
         product = valid_company.products.create! valid_product
         review = product.reviews.create! valid_product_review
-        expect(valid_company.strengths).to eq(review.strengths)
+        expect(valid_company.aspects).to eq(review.aspects)
       end
     end
 
@@ -119,7 +119,7 @@ shared_examples_for 'companies' do
         product.reviews.create! valid_product_review
         service.discard
         product.discard
-        expect(valid_company.strengths).to eq([])
+        expect(valid_company.aspects).to eq([])
       end
     end
 
@@ -131,17 +131,18 @@ shared_examples_for 'companies' do
         product.reviews.create! valid_product_review
         service.reviews.first.discard
         product.reviews.first.discard
-        expect(valid_company.strengths).to eq([])
+
+        expect(valid_company.aspects).to eq([])
       end
     end
 
     context "product and service" do
-      it "returns review strengths" do
+      it "returns review aspects" do
         service = valid_company.services.create! valid_service
         service_review = service.reviews.create! valid_service_review
         product = valid_company.products.create! valid_product
         product_review = product.reviews.create! valid_product_review
-        expect(valid_company.strengths).to eq((product_review.strengths + service_review.strengths)[0..5])
+        expect(valid_company.aspects).to eq((product_review.aspects + service_review.aspects)[0..5])
       end
     end
   end

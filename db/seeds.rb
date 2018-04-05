@@ -267,7 +267,7 @@ SME_uens = [
 end
 
 Strengths.each do |strength|
-  Strength.create!(strength)
+  Aspect.create!(strength)
 end
 
 
@@ -294,8 +294,8 @@ Review.all.each_with_index do |r, i|
   r.comments.create!(content: lorem_ipsum, commenter_id: 5, commenter_type: "Agency", commentable_id: 5, commentable_type: "Review")
   r.comments.create!(content: lorem_ipsum, commenter_id: 6, commenter_type: "Agency", commentable_id: 6, commentable_type: "Review")
   
-  StrengthReview.create!(strength: Strength.first, review: r)
-  StrengthReview.create!(strength: Strength.last, review: r)
+  AspectReview.create!(aspect: Aspect.first, review: r)
+  AspectReview.create!(aspect: Aspect.last, review: r)
 
   r.likes.create!(liker_id: 1, liker_type: "Agency", likeable_id: 1, likeable_type: "Review")
   r.likes.create!(liker_id: 2, liker_type: "Agency", likeable_id: 2, likeable_type: "Review")

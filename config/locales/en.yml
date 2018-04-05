@@ -141,9 +141,9 @@ en:
   statistic:
     key: "Statistic"
 
-  strength:
-    key: "Strength"
-    key_id: "Strength id"
+  aspect:
+    key: "Aspect"
+    key_id: "Aspect id"
 
   token:
     authorisation_key: "Authorisation"

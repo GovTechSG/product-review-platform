@@ -48,8 +48,8 @@ class ApidocsController < ApplicationController
     IndustriesController,
     Grant,
     GrantsController,
-    Strength,
-    StrengthsController,
+    Aspect,
+    AspectsController,
     StatisticsController,
     self
   ].freeze
