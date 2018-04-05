@@ -150,6 +150,7 @@ module SwaggerDocs::Agency
 
             property :image do
               key :type, :string
+              key :format, :byte
             end
           end
         end
