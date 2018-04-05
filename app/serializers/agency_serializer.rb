@@ -17,4 +17,8 @@ class AgencySerializer < ActiveModel::Serializer
   def image
     object.image.serializable_hash
   end
+
+  def id
+    object.hashid
+  end
 end
