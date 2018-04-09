@@ -179,7 +179,7 @@ RSpec.describe AgenciesController, type: :controller do
         it "returns 422 when the image is invalid", authorized: true do
           original_agency = create(:agency)
           valid_attributes[:image] = partial_base64_image
-          patch :update, params: { agency: valid_attributes, id: original_agency.id }
+          patch :update, params: { agency: valid_attributes, id: original_agency.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end

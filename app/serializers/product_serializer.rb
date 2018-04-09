@@ -14,4 +14,8 @@ class ProductSerializer < ActiveModel::Serializer
       true
     end
   end
+
+  def id
+    object.hashid
+  end
 end

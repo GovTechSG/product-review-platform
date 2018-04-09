@@ -8,7 +8,7 @@ class ServicesController < ApplicationController
 
   # GET /companies/:company_id/services
   def index
-    @services = Service.kept.where(company_id: params[:company_id]).page params[:page]
+    @services = Service.kept.where(company_id: @company.id).page params[:page]
 
     render json: @services, methods: [:reviews_count, :aggregate_score], has_type: false
   end
@@ -20,7 +20,7 @@ class ServicesController < ApplicationController
 
   # POST /companies/:company_id/services
   def create
-    @service = Service.new(service_params.merge(company_id: params[:company_id]))
+    @service = Service.new(service_params.merge(company_id: @company.id))
 
     if @service.save
       render json: @service, status: :created, location: @service, has_type: false
@@ -46,7 +46,7 @@ class ServicesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_service
-      @service = Service.find_by(id: params[:id])
+      @service = Service.find_by_hashid(params[:id])
     end
 
     def validate_service_presence
@@ -54,7 +54,7 @@ class ServicesController < ApplicationController
     end
 
     def set_company
-      @company = Company.find_by(id: params[:company_id])
+      @company = Company.find_by_hashid(params[:company_id])
     end
 
     def validate_company_presence

@@ -14,4 +14,8 @@ class ServiceSerializer < ActiveModel::Serializer
       true
     end
   end
+
+  def id
+    object.hashid
+  end
 end
