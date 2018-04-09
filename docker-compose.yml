@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
   backend:
-    build: .
+    image: wynn987/product-review-platform
     depends_on:
       - postgres
     ports:
@@ -20,6 +20,5 @@ services:
       DATABASE_PASSWORD: 
       SECRET_KEY_BASE: ${SECRET_KEY}
       RAILS_ENV: ${RAILS_ENV}
-
 volumes:
   log: {}
