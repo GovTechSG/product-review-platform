@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
   backend:
-    build: .
+    image: wynn987/product-review-platform
     depends_on:
       - postgres
     ports:
