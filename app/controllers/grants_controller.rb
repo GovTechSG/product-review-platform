@@ -84,7 +84,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.find_by(id: params[:id])
+    @grant = Grant.find_by_hashid(params[:id])
   end
 
   def validate_grant_presence

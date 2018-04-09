@@ -45,7 +45,7 @@ class AspectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_aspect
-    @aspect = Aspect.find_by(id: params[:id])
+    @aspect = Aspect.find_by_hashid(params[:id])
   end
 
   def validate_aspect_presence

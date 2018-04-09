@@ -37,9 +37,9 @@ class ReviewsController < ApplicationController
   # POST /services/:service_id/reviews
   def create
     @review = Review.new(@whitelisted)
+
     # Update aggregate score of associated vendor company
     company = add_company_score(@reviewable.company, @score) if @score
-
     if @review.save && (company.nil? || company.save)
       render json: @review, status: :created, location: @review, has_type: false
     else
@@ -198,7 +198,7 @@ class ReviewsController < ApplicationController
     end
 
     def find_record(record_type, id)
-      record_type.find_by(id: id)
+      record_type.find_by_hashid(id)
     end
 
     def param_required_foreign_keys

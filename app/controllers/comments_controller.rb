@@ -89,7 +89,7 @@ class CommentsController < ApplicationController
     end
 
     def set_comment
-      @comment = Comment.find_by(id: params[:id])
+      @comment = Comment.find_by_hashid(params[:id])
     end
 
     def set_new_comment_commenter
@@ -138,7 +138,7 @@ class CommentsController < ApplicationController
         if name =~ /(.+)_id$/
           @class = Regexp.last_match[1]
           @commentable_type = Regexp.last_match[1].classify.safe_constantize
-          @commentable = @commentable_type.find_by(id: value) if !@commentable_type.nil?
+          @commentable = @commentable_type.find_by_hashid(value) if !@commentable_type.nil?
         end
       end
     end

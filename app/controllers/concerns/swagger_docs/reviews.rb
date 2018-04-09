@@ -10,8 +10,7 @@ module SwaggerDocs::Reviews
         key :in, :path
         key :description, I18n.t('swagger_ui.path_id_description', model: "Product").to_s
         key :required, true
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
       end
       operation :get do
         security do
@@ -91,8 +90,7 @@ module SwaggerDocs::Reviews
         key :in, :path
         key :description, I18n.t('swagger_ui.path_id_description', model: "Service").to_s
         key :required, true
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
       end
       operation :get do
         security do
@@ -175,8 +173,7 @@ module SwaggerDocs::Reviews
         key :in, :path
         key :description, I18n.t('swagger_ui.path_id_description', model: "Review").to_s
         key :required, true
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
       end
       operation :put do
         security do
