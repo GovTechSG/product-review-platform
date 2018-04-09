@@ -10,6 +10,11 @@ module Imageable
         errors.add(I18n.t('imageable.key'), I18n.t('imageable.invalid'))
         return
       end
+      if Clamby.virus?(tempfile.path)
+        errors.add(I18n.t('imageable.key'), I18n.t('imageable.malicious'))
+        tempfile.close
+        return
+      end
     end
     self.image = tempfile
     tempfile.close

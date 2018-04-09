@@ -77,6 +77,7 @@ en:
   imageable:
     key: "Image"
     invalid: "Invalid image format, Please use format: data:image/{image_format};base64,{base64_encoded_string}"
+    malicious: "Malicious file detected."
 
   errors:
     messages:

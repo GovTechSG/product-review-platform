@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential \
   nodejs \
   libpq-dev \
-  postgresql-client
+  postgresql-client \
+  clamav \
+  clamav-daemon
   
 # Set an environment variable to store where the app is installed to inside
 # of the Docker image.
