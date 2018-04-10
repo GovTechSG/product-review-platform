@@ -52,7 +52,7 @@ class AgenciesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_agency
-    @agency = Agency.find_by(id: params[:id])
+    @agency = Agency.find_by_hashid(params[:id])
   end
 
   def validate_agency_pressence

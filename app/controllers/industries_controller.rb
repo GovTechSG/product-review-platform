@@ -48,7 +48,7 @@ class IndustriesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_industry
-    @industry = Industry.find_by(id: params[:id])
+    @industry = Industry.find_by_hashid(params[:id])
   end
 
   def validate_industry_presence

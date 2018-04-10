@@ -77,8 +77,7 @@ module SwaggerDocs::Industries
         key :in, :path
         key :description, I18n.t('swagger_ui.path_id_description', model: "Industry").to_s
         key :required, true
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
       end
       operation :put do
         security do

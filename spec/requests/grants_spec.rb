@@ -6,8 +6,20 @@ RSpec.describe "Grants", type: :request do
     build(:grant).attributes
   end
 
+  let(:valid_params_attributes) do
+    value = build(:grant).attributes
+    value["agency_id"] = Agency.find(value["agency_id"]).hashid
+    value
+  end
+
   let(:invalid_attributes) do
     build(:grant, name: nil, acronym: nil).attributes
+  end
+
+  let(:invalid_params_attributes) do
+    value = build(:grant, name: nil, acronym: nil).attributes
+    value["agency_id"] = Agency.find(value["agency_id"]).hashid
+    value
   end
 
   describe "Authorised user" do
@@ -44,7 +56,7 @@ RSpec.describe "Grants", type: :request do
     describe "GET /api/v1/grants/:id" do
       it "returns a success response" do
         grant = Grant.create! valid_attributes
-        get grant_path(grant.id), headers: request_login
+        get grant_path(grant.hashid), headers: request_login
         expect(response).to be_success
       end
 
@@ -65,12 +77,12 @@ RSpec.describe "Grants", type: :request do
       context "with valid params" do
         it "creates a new Grant" do
           expect do
-            post grants_path, params: { grant: valid_attributes }, headers: request_login
+            post grants_path, params: { grant: valid_params_attributes }, headers: request_login
           end.to change(Grant, :count).by(1)
         end
 
         it "renders a JSON response with the new grant" do
-          post grants_path, params: { grant: valid_attributes }, headers: request_login
+          post grants_path, params: { grant: valid_params_attributes }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(grant_url(Grant.last))
@@ -95,7 +107,7 @@ RSpec.describe "Grants", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the new grant" do
-          post grants_path, params: { grant: invalid_attributes }, headers: request_login
+          post grants_path, params: { grant: invalid_params_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -104,7 +116,7 @@ RSpec.describe "Grants", type: :request do
           valid_grant = valid_attributes
           Grant.create! valid_grant
 
-          post grants_path, params: { grant: valid_grant }, headers: request_login
+          post grants_path, params: { grant: invalid_params_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -114,24 +126,26 @@ RSpec.describe "Grants", type: :request do
     describe "PUT /api/v1/grants/:id" do
       context "with valid params" do
         let(:new_attributes) do
-          build(:grant).attributes.with_indifferent_access
+          value = build(:grant).attributes.with_indifferent_access
+          value["agency_id"] = Agency.find(value["agency_id"]).hashid
+          value
         end
 
         it "updates the requested grant" do
           grant = Grant.create! valid_attributes
 
-          put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
+          put grant_path(grant.hashid), params: { grant: new_attributes }, headers: request_login
           grant.reload
           expect(grant.name).to eq(new_attributes[:name])
           expect(grant.description).to eq(new_attributes[:description])
           expect(grant.acronym).to eq(new_attributes[:acronym])
-          expect(grant.agency_id).to eq(new_attributes[:agency_id])
+          expect(grant.agency.hashid).to eq(new_attributes[:agency_id])
         end
 
         it "renders a JSON response with the grant" do
           grant = Grant.create! valid_attributes
 
-          put grant_path(grant.id), params: { grant: new_attributes }, headers: request_login
+          put grant_path(grant.hashid), params: { grant: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -140,13 +154,14 @@ RSpec.describe "Grants", type: :request do
           grant = Grant.create! valid_attributes
           old_grant = grant
           new_attributes_no_agency = new_attributes.except(:agency_id)
-          put grant_path(grant.id), params: { grant: new_attributes_no_agency }, headers: request_login
+          put grant_path(grant.hashid), params: { grant: new_attributes_no_agency }, headers: request_login
+
           grant.reload
 
           expect(grant.name).to eq(new_attributes[:name])
           expect(grant.description).to eq(new_attributes[:description])
           expect(grant.acronym).to eq(new_attributes[:acronym])
-          expect(grant.agency_id).to eq(old_grant[:agency_id])
+          expect(grant.agency.id).to eq(old_grant[:agency_id])
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -213,7 +228,7 @@ RSpec.describe "Grants", type: :request do
         it "renders a JSON response with errors for the grant" do
           grant = Grant.create! valid_attributes
 
-          put grant_path(grant.id), params: { grant: invalid_attributes }, headers: request_login
+          put grant_path(grant.hashid), params: { grant: invalid_params_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -221,7 +236,8 @@ RSpec.describe "Grants", type: :request do
         it "renders a 422 error for duplicate names" do
           grant = Grant.create! valid_attributes
           another_grant = create(:grant)
-          put grant_path(grant.id), params: { grant: another_grant.attributes }, headers: request_login
+
+          put grant_path(grant.hashid), params: { grant: attributes_for(:grant, name: another_grant.name) }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -249,7 +265,7 @@ RSpec.describe "Grants", type: :request do
 
       it "sets discarded_at datetime" do
         grant = Grant.create! valid_attributes
-        delete grant_path(grant.id), headers: request_login
+        delete grant_path(grant.hashid), headers: request_login
         grant.reload
         expect(grant.discarded?).to be true
       end
@@ -257,7 +273,7 @@ RSpec.describe "Grants", type: :request do
       it "renders a JSON response with the grant" do
         grant = Grant.create! valid_attributes
 
-        delete grant_path(grant.id), headers: request_login
+        delete grant_path(grant.hashid), headers: request_login
         expect(response).to have_http_status(204)
       end
 

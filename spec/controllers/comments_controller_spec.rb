@@ -8,10 +8,13 @@ RSpec.describe CommentsController, type: :controller do
 
   let(:create_update_product_comment) do
     value = build(:product_review_comment).attributes
-    value["from_id"] = value["commenter_id"]
+    value["from_id"] = Agency.find(value["commenter_id"]).hashid
     value["from_type"] = value["commenter_type"]
     value.delete("commenter_id")
     value.delete("commenter_type")
+
+    commentable = Review.find(value["commentable_id"])
+    value["commentable_id"] = commentable.hashid
     value
   end
 
@@ -21,28 +24,37 @@ RSpec.describe CommentsController, type: :controller do
 
   let(:create_update_service_comment) do
     value = build(:service_review_comment).attributes
-    value["from_id"] = value["commenter_id"]
+    value["from_id"] = Agency.find(value["commenter_id"]).hashid
     value["from_type"] = value["commenter_type"]
     value.delete("commenter_id")
     value.delete("commenter_type")
+
+    commentable = Review.find(value["commentable_id"])
+    value["commentable_id"] = commentable.hashid
     value
   end
 
   let(:product_comment_invalid_attributes) do
     value = build(:product_review_comment, content: nil).attributes
-    value["from_id"] = value["commenter_id"]
+    value["from_id"] = Agency.find(value["commenter_id"]).hashid
     value["from_type"] = value["commenter_type"]
     value.delete("commenter_id")
     value.delete("commenter_type")
+
+    commentable = Review.find(value["commentable_id"])
+    value["commentable_id"] = commentable.hashid
     value
   end
 
   let(:service_comment_invalid_attributes) do
     value = build(:service_review_comment, content: nil).attributes
-    value["from_id"] = value["commenter_id"]
+    value["from_id"] = Agency.find(value["commenter_id"]).hashid
     value["from_type"] = value["commenter_type"]
     value.delete("commenter_id")
     value.delete("commenter_type")
+
+    commentable = Review.find(value["commentable_id"])
+    value["commentable_id"] = commentable.hashid
     value
   end
 
@@ -71,13 +83,13 @@ RSpec.describe CommentsController, type: :controller do
     describe "GET #index" do
       it "returns a success response from a product comment", authorized: true do
         comment = Comment.create! product_comment_valid_attributes
-        get :index, params: { review_id: comment.commentable.id }
+        get :index, params: { review_id: comment.commentable.hashid }
         expect(response).to be_success
       end
 
       it "returns a success response from a service comment", authorized: true do
         comment = Comment.create! service_comment_valid_attributes
-        get :index, params: { review_id: comment.commentable.id }
+        get :index, params: { review_id: comment.commentable.hashid }
 
         expect(response).to be_success
       end
@@ -92,14 +104,14 @@ RSpec.describe CommentsController, type: :controller do
           num_of_object_to_create -= 1
         end
 
-        get :index, params: { review_id: review.id }
+        get :index, params: { review_id: review.hashid }
         expect(JSON.parse(response.body).count).to match default_result_per_page
       end
 
       it "does not return deleted comments", authorized: true do
         comment = Comment.create! product_comment_valid_attributes
         comment.discard
-        get :index, params: { review_id: comment.commentable.id }
+        get :index, params: { review_id: comment.commentable.hashid }
 
         expect(parsed_response).to match([])
         expect(response).to be_success
@@ -186,7 +198,7 @@ RSpec.describe CommentsController, type: :controller do
         it "creates a new Comment to product", authorized: true do
           review = create(:product_review)
           expect do
-            post :create, params: { comment: create_update_product_comment, review_id: review.id }
+            post :create, params: { comment: create_update_product_comment, review_id: review.hashid }
           end.to change(Comment, :count).by(1)
         end
 
@@ -194,14 +206,14 @@ RSpec.describe CommentsController, type: :controller do
           review = create(:service_review)
 
           expect do
-            post :create, params: { comment: create_update_service_comment, review_id: review.id }
+            post :create, params: { comment: create_update_service_comment, review_id: review.hashid }
           end.to change(Comment, :count).by(1)
         end
 
         it "renders a JSON response with the new comment to product", authorized: true do
           review = create(:product_review)
 
-          post :create, params: { comment: create_update_product_comment, review_id: review.id }
+          post :create, params: { comment: create_update_product_comment, review_id: review.hashid }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(comment_url(Comment.last))
@@ -210,7 +222,7 @@ RSpec.describe CommentsController, type: :controller do
         it "renders a JSON response with the new comment to service", authorized: true do
           review = create(:service_review)
 
-          post :create, params: { comment: create_update_service_comment, review_id: review.id }
+          post :create, params: { comment: create_update_service_comment, review_id: review.hashid }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(comment_url(Comment.last))
@@ -290,7 +302,7 @@ RSpec.describe CommentsController, type: :controller do
         it "return 422 when from type is not subclass of commenter", authorized: true do
           review = create(:product_review)
           create_update_product_comment["from_type"] = "string"
-          post :create, params: { comment: create_update_product_comment, review_id: review.id }
+          post :create, params: { comment: create_update_product_comment, review_id: review.hashid }
           expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
         end
@@ -310,7 +322,7 @@ RSpec.describe CommentsController, type: :controller do
         it "renders a JSON response with errors for the new comment on product" do
           review = create(:product_review)
 
-          post :create, params: { comment: product_comment_invalid_attributes, review_id: review.id }
+          post :create, params: { comment: product_comment_invalid_attributes, review_id: review.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -318,7 +330,7 @@ RSpec.describe CommentsController, type: :controller do
         it "renders a JSON response with errors for the new comment on service" do
           review = create(:service_review)
 
-          post :create, params: { comment: service_comment_invalid_attributes, review_id: review.id }
+          post :create, params: { comment: service_comment_invalid_attributes, review_id: review.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
