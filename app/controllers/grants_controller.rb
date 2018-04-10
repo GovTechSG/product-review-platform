@@ -7,6 +7,9 @@ class GrantsController < ApplicationController
   before_action :validate_create_params, only: [:create]
   before_action :validate_update_params, only: [:update]
 
+  after_action only: [:index] { set_pagination_header(@grants) }
+
+
   # GET /grants
   # GET /companies/:company_id/grants
   def index

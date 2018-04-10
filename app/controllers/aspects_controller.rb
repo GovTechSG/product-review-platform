@@ -4,6 +4,9 @@ class AspectsController < ApplicationController
   before_action :set_aspect, only: [:show, :update, :destroy]
   before_action :validate_aspect_presence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Aspect.kept) }
+
+
   # GET /aspects
   def index
     @aspects = Aspect.kept.page params[:page]

@@ -4,6 +4,9 @@ class IndustriesController < ApplicationController
   before_action :set_industry, only: [:show, :update, :destroy]
   before_action :validate_industry_presence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Industry.all) }
+
+
   # GET /industries
   def index
     @industries = Industry.all.page params[:page]

@@ -15,6 +15,9 @@ class CommentsController < ApplicationController
   before_action :set_new_comment_commenter, only: [:create]
   before_action :validate_commenter_presence, only: [:create]
 
+  after_action only: [:index] { set_pagination_header(@commentable.comments.kept) }
+
+
   BOTH_PARAMS_EXIST = 0
   BOTH_PARAMS_MISSING = 2
   PARTIAL_PARAMS_MISSING = 1

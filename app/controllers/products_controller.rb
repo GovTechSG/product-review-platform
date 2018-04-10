@@ -6,6 +6,9 @@ class ProductsController < ApplicationController
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
 
+  after_action only: [:index] { set_pagination_header(Product.kept.where(company_id: params[:company_id])) }
+
+
   # GET /companies/:company_id/products
   def index
     @products = Product.kept.where(company_id: params[:company_id]).page params[:page]
