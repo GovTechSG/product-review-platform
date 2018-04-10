@@ -12,6 +12,8 @@ class LikesController < ApplicationController
   before_action :set_new_like_liker, only: [:create]
   before_action :validate_liker_presence, only: [:create]
 
+  after_action only: [:index] { set_pagination_header(@likeable.likes.kept) }
+
   # GET /reviews/:review_id/likes
   def index
     @likes = @likeable.likes.kept.page params[:page]

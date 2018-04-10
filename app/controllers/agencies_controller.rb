@@ -4,6 +4,8 @@ class AgenciesController < ApplicationController
   before_action :set_agency, only: [:show, :update, :destroy]
   before_action :validate_agency_pressence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Agency.kept) }
+
   # GET /agencies
   def index
     @agencies = Agency.kept.page params[:page]

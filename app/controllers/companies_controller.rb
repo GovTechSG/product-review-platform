@@ -7,6 +7,9 @@ class CompaniesController < ApplicationController
   before_action :set_industry, only: [:create, :update]
   before_action :validate_industry_presence, only: [:create, :update]
 
+  after_action only: [:index] { set_pagination_header(Company.kept) }
+  after_action only: [:clients] { set_pagination_header(@company.clients.kept) }
+
   # GET /companies
   def index
     @companies = Company.kept.page params[:page]

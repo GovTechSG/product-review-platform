@@ -6,6 +6,8 @@ class ServicesController < ApplicationController
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
 
+  after_action only: [:index] { set_pagination_header(Service.kept.where(company_id: params[:company_id])) }
+
   # GET /companies/:company_id/services
   def index
     @services = Service.kept.where(company_id: @company.id).page params[:page]
