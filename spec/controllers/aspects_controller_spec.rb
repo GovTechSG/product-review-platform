@@ -38,7 +38,6 @@ RSpec.describe AspectsController, type: :controller do
     describe "GET #show" do
       it "returns a success response", authorized: true do
         aspect = Aspect.create! valid_attributes
-        byebug
         get :show, params: { id: aspect.to_param }
         expect(response).to be_success
       end

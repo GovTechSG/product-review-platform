@@ -303,7 +303,7 @@ DEPENDENCIES
   ffaker
   figaro
   file_validators
-  hashid-rails (~> 1.0)
+  hashid-rails
   letter_avatar
   listen (>= 3.0.5, < 3.2)
   mini_magick

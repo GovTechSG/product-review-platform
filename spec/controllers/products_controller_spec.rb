@@ -22,7 +22,7 @@ RSpec.describe ProductsController, type: :controller do
     describe "GET #index" do
       it "returns a success response", authorized: true do
         product = Product.create! valid_attributes
-        get :index, params: { company_id: product.company.id }
+        get :index, params: { company_id: product.company.hashid }
 
         expect(response).to be_success
       end
@@ -37,14 +37,14 @@ RSpec.describe ProductsController, type: :controller do
           num_of_object_to_create -= 1
         end
 
-        get :index, params: { company_id: company.id }
+        get :index, params: { company_id: company.hashid }
         expect(JSON.parse(response.body).count).to match default_result_per_page
       end
 
       it "does not return deleted products", authorized: true do
         product = Product.create! valid_attributes
         product.discard
-        get :index, params: { company_id: product.company.id }
+        get :index, params: { company_id: product.company.hashid }
         expect(parsed_response).to match([])
         expect(response).to be_success
       end
@@ -90,7 +90,7 @@ RSpec.describe ProductsController, type: :controller do
           company = create(:company)
 
           expect do
-            post :create, params: { product: valid_attributes, company_id: company.id }
+            post :create, params: { product: valid_attributes, company_id: company.hashid }
           end.to change(Product, :count).by(1)
         end
 
@@ -111,7 +111,7 @@ RSpec.describe ProductsController, type: :controller do
         it "renders a JSON response with the new product", authorized: true do
           company = create(:company)
 
-          post :create, params: { product: valid_attributes, company_id: company.id }
+          post :create, params: { product: valid_attributes, company_id: company.hashid }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(product_url(Product.last))
@@ -122,7 +122,7 @@ RSpec.describe ProductsController, type: :controller do
         it "renders a JSON response with errors for the new product" do
           company = create(:company)
 
-          post :create, params: { product: invalid_attributes, company_id: company.id }
+          post :create, params: { product: invalid_attributes, company_id: company.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end

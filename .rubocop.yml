@@ -1083,3 +1083,7 @@ Rails/Validation:
 Rails/InverseOf:
   Exclude:
     - 'app/models/*.rb'
+
+Rails/DynamicFindBy:
+  Whitelist:
+    - find_by_hashid

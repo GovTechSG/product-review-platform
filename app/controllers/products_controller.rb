@@ -20,7 +20,6 @@ class ProductsController < ApplicationController
 
   # POST /companies/:company_id/products
   def create
-
     @product = Product.new(product_params.merge(company_id: @company.id))
 
     if @product.save

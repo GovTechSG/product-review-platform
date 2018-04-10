@@ -21,6 +21,7 @@ shared_examples_for 'imageable' do
       expect(model.valid?).to eq(true)
       company_name = model.name.gsub(/\s/, '_')
       expect(model.image.url =~ /#{company_name}(.*).png$/).to_not eq(nil)
+      # byebug
     end
 
     it "generates a thumb url when image is given" do

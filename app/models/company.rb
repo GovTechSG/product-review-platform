@@ -10,8 +10,6 @@ class Company < Reviewer
   include Liker
   include Commenter
 
-  include Hashid::Rails
-
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
   has_many :reviews, dependent: :destroy, as: :reviewer

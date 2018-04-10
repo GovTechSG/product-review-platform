@@ -23,7 +23,7 @@ RSpec.describe "Aspects", type: :request do
     describe "GET /api/v1/aspects/:id" do
       it "returns a success response" do
         aspect = Aspect.create! valid_attributes
-        get aspect_path(aspect.id), headers: request_login
+        get aspect_path(aspect.hashid), headers: request_login
         expect(response).to be_success
       end
 
@@ -83,7 +83,7 @@ RSpec.describe "Aspects", type: :request do
         it "updates the requested aspect" do
           aspect = Aspect.create! valid_attributes
 
-          put aspect_path(aspect.id), params: { aspect: new_attributes }, headers: request_login
+          put aspect_path(aspect.hashid), params: { aspect: new_attributes }, headers: request_login
           aspect.reload
           expect(aspect.name).to eq(new_attributes[:name])
           expect(aspect.description).to eq(new_attributes[:description])
@@ -92,7 +92,7 @@ RSpec.describe "Aspects", type: :request do
         it "renders a JSON response with the aspect" do
           aspect = Aspect.create! valid_attributes
 
-          put aspect_path(aspect.id), params: { aspect: new_attributes }, headers: request_login
+          put aspect_path(aspect.hashid), params: { aspect: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -126,7 +126,7 @@ RSpec.describe "Aspects", type: :request do
         it "renders a JSON response with errors for the aspect" do
           aspect = Aspect.create! valid_attributes
 
-          put aspect_path(aspect.id), params: { aspect: invalid_attributes }, headers: request_login
+          put aspect_path(aspect.hashid), params: { aspect: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -134,7 +134,7 @@ RSpec.describe "Aspects", type: :request do
         it "renders a 422 error for duplicate names" do
           aspect = Aspect.create! valid_attributes
           another_aspect = create(:aspect)
-          put aspect_path(aspect.id), params: { aspect: another_aspect.attributes }, headers: request_login
+          put aspect_path(aspect.hashid), params: { aspect: another_aspect.attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -161,7 +161,7 @@ RSpec.describe "Aspects", type: :request do
 
       it "sets discarded_at datetime" do
         aspect = Aspect.create! valid_attributes
-        delete aspect_path(aspect.id), headers: request_login
+        delete aspect_path(aspect.hashid), headers: request_login
         aspect.reload
         expect(aspect.discarded?).to be true
       end
@@ -169,7 +169,7 @@ RSpec.describe "Aspects", type: :request do
       it "renders a JSON response with the aspect" do
         aspect = Aspect.create! valid_attributes
 
-        delete aspect_path(aspect.id), headers: request_login
+        delete aspect_path(aspect.hashid), headers: request_login
         expect(response).to have_http_status(204)
       end
 

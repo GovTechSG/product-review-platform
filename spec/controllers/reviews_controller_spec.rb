@@ -8,10 +8,16 @@ RSpec.describe ReviewsController, type: :controller do
 
   let(:create_update_product_review) do
     value = build(:product_review).attributes
-    value["from_id"] = value["reviewer_id"]
+    value["from_id"] = Company.find(value["reviewer_id"]).hashid
     value["from_type"] = value["reviewer_type"]
     value.delete("reviewer_id")
     value.delete("reviewer_type")
+
+    reviewable = Product.find(value["reviewable_id"])
+    value["reviewable_id"] = reviewable.hashid
+
+    grant = Grant.find(value["grant_id"])
+    value["grant_id"] = grant.hashid
     value
   end
 
@@ -25,10 +31,16 @@ RSpec.describe ReviewsController, type: :controller do
 
   let(:create_update_service_review) do
     value = build(:service_review).attributes
-    value["from_id"] = value["reviewer_id"]
+    value["from_id"] = Company.find(value["reviewer_id"]).hashid
     value["from_type"] = value["reviewer_type"]
     value.delete("reviewer_id")
     value.delete("reviewer_type")
+
+    reviewable = Service.find(value["reviewable_id"])
+    value["reviewable_id"] = reviewable.hashid
+
+    grant = Grant.find(value["grant_id"])
+    value["grant_id"] = grant.hashid
     value
   end
 
@@ -47,7 +59,7 @@ RSpec.describe ReviewsController, type: :controller do
       context "product review" do
         it "returns a success response", authorized: true do
           review = Review.create! valid_product_review
-          get :index, params: { product_id: review.reviewable_id }
+          get :index, params: { product_id: review.reviewable.hashid }
 
           expect(response).to be_success
         end
@@ -62,7 +74,7 @@ RSpec.describe ReviewsController, type: :controller do
             num_of_object_to_create -= 1
           end
 
-          get :index, params: { product_id: product.id }
+          get :index, params: { product_id: product.hashid }
           expect(JSON.parse(response.body).count).to match default_result_per_page
         end
 
@@ -89,7 +101,7 @@ RSpec.describe ReviewsController, type: :controller do
         it "does not return deleted reviews", authorized: true do
           review = Review.create! valid_product_review
           review.discard
-          get :index, params: { product_id: review.reviewable_id }
+          get :index, params: { product_id: review.reviewable.hashid }
 
           expect(parsed_response).to match([])
           expect(response).to be_success
@@ -99,7 +111,7 @@ RSpec.describe ReviewsController, type: :controller do
       context "service review" do
         it "returns a success response", authorized: true do
           review = Review.create! valid_service_review
-          get :index, params: { service_id: review.reviewable_id }
+          get :index, params: { service_id: review.reviewable.hashid }
 
           expect(response).to be_success
         end
@@ -114,7 +126,7 @@ RSpec.describe ReviewsController, type: :controller do
             num_of_object_to_create -= 1
           end
 
-          get :index, params: { service_id: service.id }
+          get :index, params: { service_id: service.hashid }
           expect(JSON.parse(response.body).count).to match default_result_per_page
         end
 
@@ -141,7 +153,7 @@ RSpec.describe ReviewsController, type: :controller do
         it "does not return deleted reviews", authorized: true do
           review = Review.create! valid_service_review
           review.discard
-          get :index, params: { service_id: review.reviewable_id }
+          get :index, params: { service_id: review.reviewable.hashid }
 
           expect(parsed_response).to match([])
           expect(response).to be_success
@@ -204,14 +216,14 @@ RSpec.describe ReviewsController, type: :controller do
             product = create(:product)
 
             expect do
-              post :create, params: { review: create_update_product_review, product_id: product.id }
+              post :create, params: { review: create_update_product_review, product_id: product.hashid }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             product = create(:product)
 
-            post :create, params: { review: create_update_product_review, product_id: product.id }
+            post :create, params: { review: create_update_product_review, product_id: product.hashid }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -236,7 +248,7 @@ RSpec.describe ReviewsController, type: :controller do
           it "return 422 when from type is not subclass of reviewer", authorized: true do
             product = create(:product)
             create_update_product_review["from_type"] = "agency"
-            post :create, params: { review: create_update_product_review, product_id: product.id }
+            post :create, params: { review: create_update_product_review, product_id: product.hashid }
             expect(response).to have_http_status(422)
             expect(response.content_type).to eq('application/json')
           end
@@ -346,14 +358,14 @@ RSpec.describe ReviewsController, type: :controller do
             service = create(:service)
 
             expect do
-              post :create, params: { review: create_update_service_review, service_id: service.id }
+              post :create, params: { review: create_update_service_review, service_id: service.hashid }
             end.to change(Review, :count).by(1)
           end
 
           it "renders a JSON response with the new review", authorized: true do
             service = create(:service)
 
-            post :create, params: { review: create_update_service_review, service_id: service.id }
+            post :create, params: { review: create_update_service_review, service_id: service.hashid }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
             expect(response.location).to eq(review_url(Review.last))
@@ -378,7 +390,7 @@ RSpec.describe ReviewsController, type: :controller do
           it "return 422 when from type is not subclass of reviewer", authorized: true do
             product = create(:product)
             create_update_service_review["from_type"] = "agency"
-            post :create, params: { review: create_update_service_review, product_id: product.id }
+            post :create, params: { review: create_update_service_review, product_id: product.hashid }
             expect(response).to have_http_status(422)
             expect(response.content_type).to eq('application/json')
           end
@@ -449,6 +461,7 @@ RSpec.describe ReviewsController, type: :controller do
           review = Review.create! valid_product_review
           put :update, params: { id: review.to_param, review: new_attributes }
           review.reload
+
           expect(review.score).to eq(new_attributes[:score])
           expect(review.content).to eq(new_attributes[:content])
         end
@@ -456,7 +469,8 @@ RSpec.describe ReviewsController, type: :controller do
         it "renders a JSON response with the review", authorized: true do
           review = Review.create! valid_product_review
 
-          put :update, params: { id: review.to_param, review: valid_product_review }
+          put :update, params: { id: review.to_param, review: create_update_product_review }
+
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end

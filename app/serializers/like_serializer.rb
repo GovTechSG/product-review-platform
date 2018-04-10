@@ -7,4 +7,8 @@ class LikeSerializer < ActiveModel::Serializer
     return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
   end
+
+  def id
+    object.hashid
+  end
 end

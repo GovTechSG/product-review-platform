@@ -81,7 +81,7 @@ RSpec.describe "Agencies", type: :request do
     describe "PUT api/v1/agencies/id" do
       context "with valid params" do
         it "updates the requested agency" do
-          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
+          put agency_path(agency.hashid), params: { agency: valid_attributes }, headers: request_login
           agency.reload
           expect(agency.name).to eq(valid_attributes[:name])
           expect(agency.email).to eq(valid_attributes[:email])
@@ -92,7 +92,7 @@ RSpec.describe "Agencies", type: :request do
         end
 
         it "renders a JSON response with the agency" do
-          put agency_path(agency.id), params: { agency: valid_attributes }, headers: request_login
+          put agency_path(agency.hashid), params: { agency: valid_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -128,7 +128,7 @@ RSpec.describe "Agencies", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the agency" do
-          put agency_path(agency.id), params: { agency: invalid_attributes }, headers: request_login
+          put agency_path(agency.hashid), params: { agency: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -144,13 +144,13 @@ RSpec.describe "Agencies", type: :request do
       end
 
       it "sets discarded_at datetime" do
-        delete agency_path(agency.id), headers: request_login
+        delete agency_path(agency.hashid), headers: request_login
         agency.reload
         expect(agency.discarded?).to be true
       end
 
       it "renders a JSON response with the agency" do
-        delete agency_path(agency.id), headers: request_login
+        delete agency_path(agency.hashid), headers: request_login
         expect(response).to have_http_status(204)
       end
 

@@ -98,9 +98,10 @@ class CommentsController < ApplicationController
         if !(type < Commenter)
           render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         else
-          @commmenter = type.find_by(id: params[:comment][:from_id])
+          @commmenter = type.find_by_hashid(params[:comment][:from_id])
           @whitelisted = create_params
           change_params_key
+          convert_hashids
           @comments = Comment.new(@whitelisted)
         end
       else
@@ -128,7 +129,7 @@ class CommentsController < ApplicationController
 
     def validate_update_commenter_presence
       if check_from_presence == BOTH_PARAMS_EXIST
-        @commenter = params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
+        @commenter = params[:comment][:from_type].classify.constantize.find_by_hashid(params[:comment][:from_id])
         render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')]) if @commenter.nil? || !@commenter.presence?
       end
     end
@@ -159,5 +160,12 @@ class CommentsController < ApplicationController
 
     def update_params
       @whitelisted = params.require(:comment).permit(:content, :from_type, :from_id)
+    end
+
+    def convert_hashids
+      commentable = @whitelisted["commentable_type"].find(@whitelisted["commentable_id"])
+      @whitelisted["commentable_id"] = commentable.id
+      commenter = @whitelisted["commenter_type"].find(@whitelisted["commenter_id"])
+      @whitelisted["commenter_id"] = commenter.id
     end
 end

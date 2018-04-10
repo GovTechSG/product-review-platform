@@ -44,7 +44,7 @@ gem 'simplecov', require: false, group: :test
 gem 'rack-cors'
 
 # Used to obfuscate IDs
-gem "hashid-rails", "~> 1.0"
+gem "hashid-rails"
 
 
 group :development, :test do

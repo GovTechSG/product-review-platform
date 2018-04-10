@@ -6,8 +6,20 @@ RSpec.describe GrantsController, type: :controller do
     build(:grant).attributes
   end
 
+  let(:valid_params_attributes) do
+    value = build(:grant).attributes
+    value["agency_id"] = Agency.find(value["agency_id"]).hashid
+    value
+  end
+
   let(:invalid_attributes) do
     build(:grant, name: nil, acronym: nil).attributes
+  end
+
+  let(:invalid_params_attributes) do
+    value = build(:grant, name: nil, acronym: nil).attributes
+    value["agency_id"] = Agency.find(value["agency_id"]).hashid
+    value
   end
 
   let(:token) { double acceptable?: true }
@@ -80,12 +92,12 @@ RSpec.describe GrantsController, type: :controller do
       context "with valid params" do
         it "creates a new Grant", authorized: true do
           expect do
-            post :create, params: { grant: valid_attributes }
+            post :create, params: { grant: valid_params_attributes }
           end.to change(Grant, :count).by(1)
         end
 
         it "renders a JSON response with the new grant", authorized: true do
-          post :create, params: { grant: valid_attributes }
+          post :create, params: { grant: valid_params_attributes }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(grant_url(Grant.last))
@@ -94,7 +106,7 @@ RSpec.describe GrantsController, type: :controller do
 
       context "with invalid params", authorized: true do
         it "renders a JSON response with errors for the new grant" do
-          post :create, params: { grant: invalid_attributes }
+          post :create, params: { grant: invalid_params_attributes }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -103,7 +115,7 @@ RSpec.describe GrantsController, type: :controller do
           valid_grant = valid_attributes
           Grant.create! valid_grant
 
-          post :create, params: { grant: valid_grant }
+          post :create, params: { grant: invalid_params_attributes }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -129,17 +141,21 @@ RSpec.describe GrantsController, type: :controller do
     describe "PUT #update" do
       context "with valid params" do
         let(:new_attributes) do
-          build(:grant).attributes.with_indifferent_access
+          value = build(:grant).attributes.with_indifferent_access
+          value["agency_id"] = Agency.find(value["agency_id"]).hashid
+          value
         end
 
         it "updates the requested grant", authorized: true do
           grant = Grant.create! valid_attributes
+
           put :update, params: { id: grant.to_param, grant: new_attributes }
+
           grant.reload
           expect(grant.name).to eq(new_attributes[:name])
           expect(grant.description).to eq(new_attributes[:description])
           expect(grant.acronym).to eq(new_attributes[:acronym])
-          expect(grant.agency_id).to eq(new_attributes[:agency_id])
+          expect(grant.agency.hashid).to eq(new_attributes[:agency_id])
         end
 
         it "renders a JSON response with the grant", authorized: true do
@@ -227,7 +243,8 @@ RSpec.describe GrantsController, type: :controller do
         it "renders a JSON response with errors for the grant", authorized: true do
           grant = Grant.create! valid_attributes
 
-          put :update, params: { id: grant.to_param, grant: invalid_attributes }
+          put :update, params: { id: grant.to_param, grant: invalid_params_attributes }
+
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
