@@ -1,3 +1,3 @@
-class IndustrySerializer < ActiveModel::Serializer
+class IndustrySerializer < ApplicationSerializer
   attributes :id, :name, :description
 end

@@ -8,7 +8,7 @@ RSpec.describe LikesController, type: :controller do
 
   let(:create_update_product_like) do
     value = build(:product_review_like).attributes
-    value["from_id"] = value["liker_id"]
+    value["from_id"] = Agency.find(value["liker_id"]).hashid
     value["from_type"] = value["liker_type"]
     value.delete("liker_id")
     value.delete("liker_type")
@@ -36,7 +36,7 @@ RSpec.describe LikesController, type: :controller do
     describe "GET #index" do
       it "returns a success response", authorized: true do
         like = Like.create! valid_attributes
-        get :index, params: { review_id: like.likeable.id }
+        get :index, params: { review_id: like.likeable.hashid }
 
         expect(response).to be_success
       end
@@ -51,7 +51,7 @@ RSpec.describe LikesController, type: :controller do
           num_of_object_to_create -= 1
         end
 
-        get :index, params: { review_id: review.id }
+        get :index, params: { review_id: review.hashid }
         expect(JSON.parse(response.body).count).to match default_result_per_page
       end
 
@@ -82,7 +82,7 @@ RSpec.describe LikesController, type: :controller do
       it "does not return deleted likes", authorized: true do
         like = Like.create! valid_attributes
         like.discard
-        get :index, params: { review_id: like.likeable.id }
+        get :index, params: { review_id: like.likeable.hashid }
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -136,14 +136,14 @@ RSpec.describe LikesController, type: :controller do
           review = create(:product_review)
 
           expect do
-            post :create, params: { like: create_update_product_like, review_id: review.id }
+            post :create, params: { like: create_update_product_like, review_id: review.hashid }
           end.to change(Like, :count).by(1)
         end
 
         it "renders a JSON response with the new like", authorized: true do
           review = create(:product_review)
 
-          post :create, params: { like: create_update_product_like, review_id: review.id }
+          post :create, params: { like: create_update_product_like, review_id: review.hashid }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(like_url(Like.last))
@@ -213,10 +213,11 @@ RSpec.describe LikesController, type: :controller do
       context "with invalid params", authorized: true do
         it "renders 422 if agency likes twice" do
           like = create(:product_review_like)
-          duplicate_like = create_update_product_like
-          duplicate_like["from_id"] = like.liker_id
 
-          post :create, params: { like: duplicate_like, review_id: like.likeable_id }
+          duplicate_like = create_update_product_like
+          duplicate_like["from_id"] = like.liker.hashid
+
+          post :create, params: { like: duplicate_like, review_id: like.likeable.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -224,7 +225,7 @@ RSpec.describe LikesController, type: :controller do
         it "renders 404 if liker doesnt exist" do
           review = create(:product_review)
 
-          post :create, params: { like: invalid_attributes, review_id: review.id }
+          post :create, params: { like: invalid_attributes, review_id: review.hashid }
           expect(response).to be_not_found
           expect(response.content_type).to eq('application/json')
         end
@@ -233,7 +234,7 @@ RSpec.describe LikesController, type: :controller do
           review = create(:product_review)
           create_update_product_like["from_type"] = "string"
 
-          post :create, params: { like: create_update_product_like, review_id: review.id }
+          post :create, params: { like: create_update_product_like, review_id: review.hashid }
           expect(response).to have_http_status(422)
           expect(response.content_type).to eq('application/json')
         end

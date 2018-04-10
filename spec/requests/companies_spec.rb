@@ -35,12 +35,12 @@ RSpec.describe "Companies", type: :request do
     let(:header) { request_login }
     let(:company) { create(:company) }
     it "returns a success response" do
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(response).to be_success
     end
 
     it "returns empty array if there are no clients" do
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response).to eq([])
     end
 
@@ -80,7 +80,7 @@ RSpec.describe "Companies", type: :request do
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
       product.discard
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
     end
 
@@ -88,7 +88,7 @@ RSpec.describe "Companies", type: :request do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
       service.discard
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
     end
 
@@ -96,7 +96,7 @@ RSpec.describe "Companies", type: :request do
       product = company.products.create! build(:product).attributes
       review = product.reviews.create! build(:product_review).attributes
       review.discard
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
     end
 
@@ -104,7 +104,7 @@ RSpec.describe "Companies", type: :request do
       service = company.services.create! build(:service).attributes
       review = service.reviews.create! build(:service_review).attributes
       review.discard
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
     end
 
@@ -113,7 +113,7 @@ RSpec.describe "Companies", type: :request do
       product.reviews.create! build(:product_review).attributes
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
-      get companies_clients_path(company.id), headers: header
+      get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(2)
     end
 
@@ -141,7 +141,7 @@ RSpec.describe "Companies", type: :request do
     let(:company) { create(:company) }
     let(:header) { request_login }
     it "returns a success response" do
-      get company_path(company.id), params: {}, headers: header
+      get company_path(company.hashid), params: {}, headers: header
       expect(response).to be_success
     end
 
@@ -175,8 +175,9 @@ RSpec.describe "Companies", type: :request do
     let(:company_params_without_image) { build(:company_as_params, image: "") }
     let(:industry) { create(:industry) }
     let(:header) { request_login }
+
     it "returns a success response" do
-      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       expect(response.status).to eq(201)
     end
 
@@ -187,7 +188,7 @@ RSpec.describe "Companies", type: :request do
 
     it "returns Unprocessable Entity if company is not valid" do
       company_params[:name] = ""
-      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       expect(response.status).to eq(422)
     end
 
@@ -195,7 +196,7 @@ RSpec.describe "Companies", type: :request do
       dupcompany = build(:company)
       dupcompany.uen = company_params[:uen]
       dupcompany.save
-      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -212,23 +213,23 @@ RSpec.describe "Companies", type: :request do
     end
 
     it "creates a letterhead avatar when no image is specified" do
-      post companies_path, params: { company: company_params_without_image.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      post companies_path, params: { company: company_params_without_image.as_json.merge(industry_ids: [industry.hashid]) }, headers: request_login
       expect(parsed_response[:image][:url]).to_not eq(nil)
       expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
     end
 
     it "creates a image" do
-      company_params = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_params = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_params[:image] = valid_base64_image
-      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: request_login
       expect(parsed_response[:image][:url]).to_not eq(nil)
       expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
     end
 
     it "returns 422 when the image is invalid" do
-      company_params = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_params = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_params[:image] = partial_base64_image
-      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      post companies_path, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -246,13 +247,14 @@ RSpec.describe "Companies", type: :request do
     let(:industry) { create(:industry) }
     let(:company_params) { build(:company_as_params) }
     let(:header) { request_login }
+
     it "returns a success response" do
-      patch company_path(company.id), params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      patch company_path(company.hashid), params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       expect(response.status).to eq(200)
     end
 
     it "returns data of the single updated company" do
-      patch company_path(company.id), params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      patch company_path(company.hashid), params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       company.reload
       expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image', 'discarded_at', 'reviews_count')).to match(company_params.with_indifferent_access.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image'))
     end
@@ -260,7 +262,7 @@ RSpec.describe "Companies", type: :request do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch company_path(company.id), params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.id]), id: company.id }, headers: header
+      patch company_path(company.hashid), params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.hashid]), id: company.hashid }, headers: header
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -283,7 +285,7 @@ RSpec.describe "Companies", type: :request do
       dupcompany = build(:company)
       dupcompany.save
       company.uen = dupcompany.uen
-      patch company_path(company.id), params: { company: company.as_json.merge(industry_ids: [industry.id]) }, headers: request_login
+      patch company_path(company.hashid), params: { company: company.as_json.merge(industry_ids: [industry.hashid]) }, headers: request_login
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -311,9 +313,9 @@ RSpec.describe "Companies", type: :request do
 
     it "returns 422 when the image is invalid" do
       original_company = create(:company)
-      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_param[:image] = partial_base64_image
-      patch company_path(original_company.id), params: { company: company_param.as_json.merge(industry_ids: [industry.id]) }, headers: header
+      patch company_path(original_company.hashid), params: { company: company_param.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -330,7 +332,7 @@ RSpec.describe "Companies", type: :request do
     let(:company) { create(:company) }
     let(:header) { request_login }
     it "returns a success response" do
-      delete company_path(company.id), params: {}, headers: header
+      delete company_path(company.hashid), params: {}, headers: header
       expect(response.status).to eq(204)
     end
 

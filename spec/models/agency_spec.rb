@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Agency, type: :model do
+  it_behaves_like "imageable"
   it "is valid with valid attributes" do
     expect(build(:agency)).to be_valid
   end

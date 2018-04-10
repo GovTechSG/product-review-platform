@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
 
   # GET /companies/:company_id/products
   def index
-    @products = Product.kept.where(company_id: params[:company_id]).page params[:page]
+    @products = Product.kept.where(company_id: @company.id).page params[:page]
 
     render json: @products, methods: [:reviews_count, :aggregate_score], has_type: false
   end
@@ -20,7 +20,7 @@ class ProductsController < ApplicationController
 
   # POST /companies/:company_id/products
   def create
-    @product = Product.new(product_params.merge(company_id: params[:company_id]))
+    @product = Product.new(product_params.merge(company_id: @company.id))
 
     if @product.save
       render json: @product, status: :created, location: @product, has_type: false
@@ -46,7 +46,7 @@ class ProductsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-      @product = Product.find_by(id: params[:id])
+      @product = Product.find_by_hashid(params[:id])
     end
 
     def validate_product_presence
@@ -54,7 +54,7 @@ class ProductsController < ApplicationController
     end
 
     def set_company
-      @company = Company.find_by(id: params[:company_id])
+      @company = Company.find_by_hashid(params[:company_id])
     end
 
     def validate_company_presence

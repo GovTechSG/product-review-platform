@@ -22,7 +22,7 @@ RSpec.describe ServicesController, type: :controller do
     describe "GET #index" do
       it "returns a success response", authorized: true do
         service = Service.create! valid_attributes
-        get :index, params: { company_id: service.company.id }
+        get :index, params: { company_id: service.company.hashid }
 
         expect(response).to be_success
       end
@@ -37,14 +37,14 @@ RSpec.describe ServicesController, type: :controller do
           num_of_object_to_create -= 1
         end
 
-        get :index, params: { company_id: company.id }
+        get :index, params: { company_id: company.hashid }
         expect(JSON.parse(response.body).count).to match default_result_per_page
       end
 
       it "does not return deleted services", authorized: true do
         service = Service.create! valid_attributes
         service.discard
-        get :index, params: { company_id: service.company.id }
+        get :index, params: { company_id: service.company.hashid }
         expect(parsed_response).to match([])
         expect(response).to be_success
       end
@@ -96,14 +96,14 @@ RSpec.describe ServicesController, type: :controller do
           company = create(:company)
 
           expect do
-            post :create, params: { service: valid_attributes, company_id: company.id }
+            post :create, params: { service: valid_attributes, company_id: company.hashid }
           end.to change(Service, :count).by(1)
         end
 
         it "renders a JSON response with the new service", authorized: true do
           company = create(:company)
 
-          post :create, params: { service: valid_attributes, company_id: company.id }
+          post :create, params: { service: valid_attributes, company_id: company.hashid }
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(service_url(Service.last))
@@ -134,7 +134,7 @@ RSpec.describe ServicesController, type: :controller do
         it "renders a JSON response with errors for the new service" do
           company = create(:company)
 
-          post :create, params: { service: invalid_attributes, company_id: company.id }
+          post :create, params: { service: invalid_attributes, company_id: company.hashid }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end

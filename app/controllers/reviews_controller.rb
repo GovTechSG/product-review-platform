@@ -36,10 +36,10 @@ class ReviewsController < ApplicationController
   # POST /products/:product_id/reviews
   # POST /services/:service_id/reviews
   def create
+    convert_hashids
     @review = Review.new(@whitelisted)
     # Update aggregate score of associated vendor company
     company = add_company_score(@reviewable.company, @score) if @score
-
     if @review.save && (company.nil? || company.save)
       render json: @review, status: :created, location: @review, has_type: false
     else
@@ -49,6 +49,7 @@ class ReviewsController < ApplicationController
 
   # PATCH/PUT /reviews/1
   def update
+    convert_hashids
     company = nil
     # Store update_params in a temp variable to avoid
     # repeatedly calling the method
@@ -73,6 +74,7 @@ class ReviewsController < ApplicationController
   private
     def require_params(required)
       @whitelisted = params.fetch(:review, nil)
+
       if @whitelisted.blank?
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
         return
@@ -160,8 +162,8 @@ class ReviewsController < ApplicationController
       if required && @whitelisted[:aspect_ids].blank?
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "aspect_ids")])
       elsif @whitelisted[:aspect_ids].present?
-        @whitelisted[:aspect_ids].each do |id|
-          aspect = find_record(Aspect, id)
+        @whitelisted[:aspect_ids].each do |_id|
+          aspect = find_record(Aspect, @whitelisted[:aspect_ids])
           if invalid_record(aspect)
             render_error(404, "#{I18n.t('aspect.key_id')}": [I18n.t('general_error.not_found')])
             break
@@ -198,7 +200,7 @@ class ReviewsController < ApplicationController
     end
 
     def find_record(record_type, id)
-      record_type.find_by(id: id)
+      record_type.find_by_hashid(id)
     end
 
     def param_required_foreign_keys
@@ -244,6 +246,28 @@ class ReviewsController < ApplicationController
       end
     rescue ArgumentError
       render_error(422, "#{I18n.t('score.key')}": [I18n.t('score.invalid')])
+    end
+
+    def convert_hashids
+      if @whitelisted["grant_id"]
+        grant = Grant.find(@whitelisted["grant_id"])
+        @whitelisted["grant_id"] = grant.id
+      end
+
+      if @whitelisted["reviewable_type"]
+        reviewable = @whitelisted["reviewable_type"].classify.safe_constantize.find(@whitelisted["reviewable_id"])
+        @whitelisted["reviewable_id"] = reviewable.id
+      end
+
+      if @whitelisted["reviewer_type"]
+        reviewer = @whitelisted["reviewer_type"].classify.safe_constantize.find(@whitelisted["reviewer_id"])
+        @whitelisted["reviewer_id"] = reviewer.id
+      end
+
+      if @whitelisted["aspect_ids"]
+        aspects = Aspect.find(@whitelisted["aspect_ids"])
+        @whitelisted["aspect_ids"] = aspects.map(&:id)
+      end
     end
 end
 
