@@ -1,4 +1,4 @@
-class LikeSerializer < ActiveModel::Serializer
+class LikeSerializer < ApplicationSerializer
   attributes :id
   belongs_to :likeable, key: "object", polymorphic: true
   belongs_to :liker, key: "from", polymorphic: true
@@ -6,9 +6,5 @@ class LikeSerializer < ActiveModel::Serializer
   def self.serializer_for(model, options)
     return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
-  end
-
-  def id
-    object.hashid
   end
 end

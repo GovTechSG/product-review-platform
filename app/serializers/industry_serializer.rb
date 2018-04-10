@@ -1,7 +1,3 @@
-class IndustrySerializer < ActiveModel::Serializer
+class IndustrySerializer < ApplicationSerializer
   attributes :id, :name, :description
-
-  def id
-    object.hashid
-  end
 end

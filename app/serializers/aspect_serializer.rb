@@ -1,7 +1,3 @@
-class AspectSerializer < ActiveModel::Serializer
+class AspectSerializer < ApplicationSerializer
   attributes :id, :name, :description
-
-  def id
-    object.hashid
-  end
 end

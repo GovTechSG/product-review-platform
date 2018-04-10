@@ -1,4 +1,4 @@
-class ServiceSerializer < ActiveModel::Serializer
+class ServiceSerializer < ApplicationSerializer
   attribute :type, if: :type?
   attributes :id, :name, :description, :reviews_count
   belongs_to :company, serializer: AssociateCompanySerializer
@@ -13,9 +13,5 @@ class ServiceSerializer < ActiveModel::Serializer
     elsif instance_options[:has_type].nil?
       true
     end
-  end
-
-  def id
-    object.hashid
   end
 end

@@ -1,4 +1,4 @@
-class CommentSerializer < ActiveModel::Serializer
+class CommentSerializer < ApplicationSerializer
   attributes :id, :content
 
   belongs_to :commentable, key: "object", polymorphic: true
@@ -7,9 +7,5 @@ class CommentSerializer < ActiveModel::Serializer
   def self.serializer_for(model, options)
     return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
-  end
-
-  def id
-    object.hashid
   end
 end

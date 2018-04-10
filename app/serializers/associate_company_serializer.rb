@@ -1,4 +1,4 @@
-class AssociateCompanySerializer < ActiveModel::Serializer
+class AssociateCompanySerializer < ApplicationSerializer
   attribute :type, if: :type?
   attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count, :image
 
@@ -16,9 +16,5 @@ class AssociateCompanySerializer < ActiveModel::Serializer
 
   def image
     object.image.serializable_hash
-  end
-
-  def id
-    object.hashid
   end
 end

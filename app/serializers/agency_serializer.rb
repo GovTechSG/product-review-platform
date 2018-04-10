@@ -1,4 +1,4 @@
-class AgencySerializer < ActiveModel::Serializer
+class AgencySerializer < ApplicationSerializer
   attribute :type, if: :type?
   attributes :id, :name, :email, :phone_number, :acronym, :kind, :description, :image
 
@@ -16,9 +16,5 @@ class AgencySerializer < ActiveModel::Serializer
 
   def image
     object.image.serializable_hash
-  end
-
-  def id
-    object.hashid
   end
 end

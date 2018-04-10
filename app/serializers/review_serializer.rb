@@ -1,4 +1,4 @@
-class ReviewSerializer < ActiveModel::Serializer
+class ReviewSerializer < ApplicationSerializer
   attribute :type, if: :type?
   attributes :id, :score, :content
   belongs_to :reviewable, key: "object", polymorphic: true
@@ -21,9 +21,5 @@ class ReviewSerializer < ActiveModel::Serializer
   def self.serializer_for(model, options)
     return AssociateCompanySerializer if model.class.name == I18n.t('company.key').to_s
     super
-  end
-
-  def id
-    object.hashid
   end
 end
