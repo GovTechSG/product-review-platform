@@ -23,7 +23,6 @@ class ReviewsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(@reviewable.reviews.kept) }
 
-
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index

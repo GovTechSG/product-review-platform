@@ -17,7 +17,6 @@ class CommentsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(@commentable.comments.kept) }
 
-
   BOTH_PARAMS_EXIST = 0
   BOTH_PARAMS_MISSING = 2
   PARTIAL_PARAMS_MISSING = 1

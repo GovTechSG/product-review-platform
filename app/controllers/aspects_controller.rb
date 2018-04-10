@@ -6,7 +6,6 @@ class AspectsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(Aspect.kept) }
 
-
   # GET /aspects
   def index
     @aspects = Aspect.kept.page params[:page]

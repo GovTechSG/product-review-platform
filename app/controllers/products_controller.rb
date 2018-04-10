@@ -8,7 +8,6 @@ class ProductsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(Product.kept.where(company_id: params[:company_id])) }
 
-
   # GET /companies/:company_id/products
   def index
     @products = Product.kept.where(company_id: @company.id).page params[:page]

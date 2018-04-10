@@ -6,7 +6,6 @@ class IndustriesController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(Industry.all) }
 
-
   # GET /industries
   def index
     @industries = Industry.all.page params[:page]

@@ -8,7 +8,6 @@ class ServicesController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(Service.kept.where(company_id: params[:company_id])) }
 
-
   # GET /companies/:company_id/services
   def index
     @services = Service.kept.where(company_id: @company.id).page params[:page]

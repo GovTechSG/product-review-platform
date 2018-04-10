@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     render_error(400, "Bad request": [error.message])
   end
 
-  def set_pagination_header(data, options = {})
+  def set_pagination_header(data)
     headers["Total"] = data.count
     headers["Per-Page"] = data.page.limit_value
   end

@@ -14,7 +14,6 @@ class LikesController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(@likeable.likes.kept) }
 
-
   # GET /reviews/:review_id/likes
   def index
     @likes = @likeable.likes.kept.page params[:page]

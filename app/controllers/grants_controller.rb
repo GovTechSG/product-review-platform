@@ -9,7 +9,6 @@ class GrantsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(@grants) }
 
-
   # GET /grants
   # GET /companies/:company_id/grants
   def index
