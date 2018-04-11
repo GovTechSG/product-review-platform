@@ -5,7 +5,7 @@ services:
   clamd:
     image: dinkel/clamavd
   backend:
-    build: .
+    image: wynn987/product-review-platform
     depends_on:
       - postgres
       - clamd

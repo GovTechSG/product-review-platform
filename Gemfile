@@ -8,6 +8,7 @@ end
 gem 'activeadmin'
 gem 'active_model_serializers'
 gem 'carrierwave'
+gem 'clamby'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'doorkeeper'
 gem 'doorkeeper-jwt'

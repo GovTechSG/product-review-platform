@@ -11,6 +11,22 @@ For docker using docker-compose
 
 Make sure you have `docker` and `docker-compose` installed.
 
+Create a file called qa.env in the root directory of the project containing these fields
+```
+DATABASE_TIMEOUT=
+DATABASE_HOST=
+DATABASE_PORT=
+DATABASE_NAME=
+DATABASE_SERVICE_NAME=
+DATABASE_USERNAME=
+DATABASE_PASSWORD=
+SECRET_KEY_BASE=
+RAILS_ENV=
+SWAGGER_API_BASE_PATH=
+ADMIN_EMAIL=
+```
+
+
 To spin the container up
 ```
 docker-compose up --build -d
