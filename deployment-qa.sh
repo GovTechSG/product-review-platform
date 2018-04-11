@@ -1,5 +1,3 @@
-cd product-review-platform
-
 docker-compose -f docker-compose-qa.yml down
 docker-compose -f docker-compose-qa.yml up --build -d
 docker-compose -f docker-compose-qa.yml run backend rake db:create
