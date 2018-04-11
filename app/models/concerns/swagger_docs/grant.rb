@@ -13,8 +13,8 @@ module SwaggerDocs::Grant
       key :required, [:id, :name, :acronym, :description, :agency]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
@@ -42,8 +42,8 @@ module SwaggerDocs::Grant
       key :required, [:id, :name, :acronym, :description, :agency]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
@@ -77,8 +77,7 @@ module SwaggerDocs::Grant
               key :type, :string
             end
             property :agency_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
           end
         end

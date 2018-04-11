@@ -9,8 +9,8 @@ module SwaggerDocs::Industry
       key :required, [:id, :name]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do

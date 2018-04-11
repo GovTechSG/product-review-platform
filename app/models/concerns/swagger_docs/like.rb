@@ -9,8 +9,8 @@ module SwaggerDocs::Like
       key :required, [:id]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :object do
@@ -28,8 +28,7 @@ module SwaggerDocs::Like
           property :like do
             key :type, :object
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do

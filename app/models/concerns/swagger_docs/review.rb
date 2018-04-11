@@ -9,8 +9,8 @@ module SwaggerDocs::Review
       key :required, [:id, :score, :content, :company_id, :reviewable_id]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :score do
@@ -52,8 +52,8 @@ module SwaggerDocs::Review
       end
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :score do
@@ -71,8 +71,8 @@ module SwaggerDocs::Review
       key :required, [:id, :score, :content, :company_id, :reviewable_id]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :score do
@@ -118,8 +118,7 @@ module SwaggerDocs::Review
             end
 
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do
@@ -127,13 +126,12 @@ module SwaggerDocs::Review
             end
 
             property :grant_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
             property :aspect_ids do
               key :type, :array
               items do
-                key :type, :integer
+                key :type, :string
               end
             end
           end
@@ -155,8 +153,7 @@ module SwaggerDocs::Review
             end
 
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do
@@ -164,14 +161,13 @@ module SwaggerDocs::Review
             end
 
             property :grant_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :aspect_ids do
               key :type, :array
               items do
-                key :type, :integer
+                key :type, :string
               end
             end
           end
@@ -193,8 +189,7 @@ module SwaggerDocs::Review
             end
 
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do
@@ -202,14 +197,13 @@ module SwaggerDocs::Review
             end
 
             property :grant_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :aspect_ids do
               key :type, :array
               items do
-                key :type, :integer
+                key :type, :string
               end
             end
           end

@@ -9,8 +9,8 @@ module SwaggerDocs::Company
       key :required, [:id, :name, :uen, :aggregate_score]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
@@ -86,8 +86,8 @@ module SwaggerDocs::Company
       end
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
@@ -162,7 +162,7 @@ module SwaggerDocs::Company
             property :industry_ids do
               key :type, :array
               items do
-                key :type, :integer
+                key :type, :string
               end
             end
           end
