@@ -13,8 +13,8 @@ module SwaggerDocs::Aspect
       key :required, [:id, :name, :description]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do

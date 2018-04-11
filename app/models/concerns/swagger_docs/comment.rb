@@ -9,8 +9,8 @@ module SwaggerDocs::Comment
       key :required, [:id, :content, :agency_id, :review_id]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :content do
@@ -37,8 +37,7 @@ module SwaggerDocs::Comment
             end
 
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do
@@ -59,8 +58,7 @@ module SwaggerDocs::Comment
             end
 
             property :from_id do
-              key :type, :integer
-              key :format, :int64
+              key :type, :string
             end
 
             property :from_type do
