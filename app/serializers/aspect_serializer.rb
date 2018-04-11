@@ -1,3 +1,3 @@
-class AspectSerializer < ActiveModel::Serializer
+class AspectSerializer < ApplicationSerializer
   attributes :id, :name, :description
 end

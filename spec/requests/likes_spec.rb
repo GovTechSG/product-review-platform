@@ -8,7 +8,7 @@ RSpec.describe "Likes", type: :request do
 
   let(:create_update_product_like) do
     value = build(:product_review_like).attributes
-    value["from_id"] = value["liker_id"]
+    value["from_id"] = Agency.find(value["liker_id"]).hashid
     value["from_type"] = value["liker_type"]
     value.delete("liker_id")
     value.delete("liker_type")
@@ -30,7 +30,7 @@ RSpec.describe "Likes", type: :request do
     describe "GET api/v1/reviews/:review_id/likes" do
       it "returns a success response" do
         like = Like.create! valid_attributes
-        get review_likes_path(like.likeable.id), headers: request_login
+        get review_likes_path(like.likeable.hashid), headers: request_login
 
         expect(response).to be_success
       end
@@ -62,7 +62,7 @@ RSpec.describe "Likes", type: :request do
       it "does not return deleted likes", authorized: true do
         like = Like.create! valid_attributes
         like.discard
-        get review_likes_path(like.likeable.id), headers: request_login
+        get review_likes_path(like.likeable.hashid), headers: request_login
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -72,7 +72,7 @@ RSpec.describe "Likes", type: :request do
     describe "GET api/v1/likes/:id" do
       it "returns a success response" do
         like = Like.create! valid_attributes
-        get like_path(like.id), headers: request_login
+        get like_path(like.hashid), headers: request_login
         expect(response).to be_success
       end
 
@@ -116,14 +116,14 @@ RSpec.describe "Likes", type: :request do
           review = create(:product_review)
 
           expect do
-            post review_likes_path(review.id), params: { like: create_update_product_like }, headers: request_login
+            post review_likes_path(review.hashid), params: { like: create_update_product_like }, headers: request_login
           end.to change(Like, :count).by(1)
         end
 
         it "renders a JSON response with the new like" do
           review = create(:product_review)
 
-          post review_likes_path(review.id), params: { like: create_update_product_like }, headers: request_login
+          post review_likes_path(review.hashid), params: { like: create_update_product_like }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(like_url(Like.last))
@@ -194,9 +194,9 @@ RSpec.describe "Likes", type: :request do
         it "renders 422 if agency likes twice" do
           like = create(:product_review_like)
           duplicate_like = create_update_product_like
-          duplicate_like["from_id"] = like.liker_id
+          duplicate_like["from_id"] = like.liker.hashid
 
-          post review_likes_path(like.likeable_id), params: { like: duplicate_like }, headers: request_login
+          post review_likes_path(like.likeable.hashid), params: { like: duplicate_like }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -220,7 +220,7 @@ RSpec.describe "Likes", type: :request do
 
       it "sets discarded_at datetime" do
         like = Like.create! valid_attributes
-        delete like_path(like.id), headers: request_login
+        delete like_path(like.hashid), headers: request_login
         like.reload
         expect(like.discarded?).to be true
       end
@@ -228,7 +228,7 @@ RSpec.describe "Likes", type: :request do
       it "renders a JSON response with the like" do
         like = Like.create! valid_attributes
 
-        delete like_path(like.id), headers: request_login
+        delete like_path(like.hashid), headers: request_login
         expect(response).to have_http_status(204)
       end
 

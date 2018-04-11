@@ -46,7 +46,7 @@ RSpec.describe CompaniesController, type: :controller do
   describe "GET #clients", authorized: true do
     let(:company) { create(:company) }
     it "returns a success response" do
-      get :clients, params: { company_id: company.id }
+      get :clients, params: { company_id: company.hashid }
       expect(response).to be_success
     end
 
@@ -73,7 +73,7 @@ RSpec.describe CompaniesController, type: :controller do
   describe "GET #show", authorized: true do
     let(:company) { create(:company) }
     it "returns a success response" do
-      get :show, params: { id: company.id }
+      get :show, params: { id: company.hashid }
       expect(response).to be_success
     end
 
@@ -105,8 +105,9 @@ RSpec.describe CompaniesController, type: :controller do
     let(:company_params) { build(:company_as_params) }
     let(:industry) { create(:industry) }
     let(:company_params_without_image) { build(:company_as_params, image: "") }
+
     it "returns a success response" do
-      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }
+      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }
       expect(response.status).to eq(201)
     end
 
@@ -117,7 +118,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns Unprocessable Entity if company is not valid" do
       company_params[:name] = ""
-      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }
+      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }
       expect(response.status).to eq(422)
     end
 
@@ -125,7 +126,7 @@ RSpec.describe CompaniesController, type: :controller do
       @dupcompany = build(:company)
       @dupcompany.uen = company_params[:uen]
       @dupcompany.save
-      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.id]) }
+      post :create, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -143,13 +144,13 @@ RSpec.describe CompaniesController, type: :controller do
     end
 
     it "creates a letterhead avatar when no image is specified" do
-      post :create, params: { company: company_params_without_image.as_json.merge(industry_ids: [industry.id]) }
+      post :create, params: { company: company_params_without_image.as_json.merge(industry_ids: [industry.hashid]) }
       expect(parsed_response[:image][:url]).to_not eq(nil)
       expect(parsed_response[:image][:thumb][:url]).to_not eq(nil)
     end
 
     it "creates a image" do
-      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_param[:image] = valid_base64_image
       post :create, params: { company: company_param }
       expect(parsed_response[:image][:url]).to_not eq(nil)
@@ -157,7 +158,7 @@ RSpec.describe CompaniesController, type: :controller do
     end
 
     it "returns 422 when the image is invalid" do
-      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_param[:image] = partial_base64_image
       post :create, params: { company: company_param }
       expect(response).to have_http_status(:unprocessable_entity)
@@ -176,13 +177,14 @@ RSpec.describe CompaniesController, type: :controller do
     let(:company) { create(:company) }
     let(:company_params) { build(:company_as_params) }
     let(:industry) { create(:industry) }
+
     it "returns a success response" do
-      patch :update, params: { company: company_params.as_json.merge(industry_ids: [industry.id]), id: company.id }
+      patch :update, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]), id: company.hashid }
       expect(response.status).to eq(200)
     end
 
     it "returns data of the single updated company" do
-      patch :update, params: { company: company_params.as_json.merge(industry_ids: [industry.id]), id: company.id }
+      patch :update, params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]), id: company.hashid }
       company.reload
       expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image', 'discarded_at', 'reviews_count')).to match(company_params.with_indifferent_access.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image'))
     end
@@ -190,7 +192,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns Unprocessable Entity if company is not valid" do
       original_company = company
       another_company = create(:company)
-      patch :update, params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.id]), id: company.id }
+      patch :update, params: { company: attributes_for(:company, uen: another_company.uen).as_json.merge(industry_ids: [industry.hashid]), id: company.hashid }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(422)
@@ -206,7 +208,7 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns 400 if company is not provided" do
       original_company = company
-      patch :update, params: { id: original_company.id }
+      patch :update, params: { id: original_company.hashid }
       company.reload
       expect(company).to match(original_company)
       expect(response.status).to eq(400)
@@ -224,7 +226,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "renders a 422 error for duplicate uen", authorized: true do
       @dupcompany = create(:company)
 
-      patch :update, params: { company: company.as_json.merge(industry_ids: [industry.id]), id: @dupcompany.id }
+      patch :update, params: { company: company.as_json.merge(industry_ids: [industry.hashid]), id: @dupcompany.hashid }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -252,9 +254,9 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "returns 422 when the image is invalid" do
       original_company = create(:company)
-      company_param = company.attributes.as_json.merge(industry_ids: [industry.id])
+      company_param = company.attributes.as_json.merge(industry_ids: [industry.hashid])
       company_param[:image] = partial_base64_image
-      patch :update, params: { company: company_param, id: original_company.id }
+      patch :update, params: { company: company_param, id: original_company.hashid }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.content_type).to eq('application/json')
     end
@@ -270,13 +272,13 @@ RSpec.describe CompaniesController, type: :controller do
   describe "DELETE #destroy", authorized: true do
     it "returns a success response" do
       company = create(:company)
-      delete :destroy, params: { id: company.id }
+      delete :destroy, params: { id: company.hashid }
       expect(response.status).to eq(204)
     end
 
     it "sets company's discarded_at column" do
       company = create(:company)
-      delete :destroy, params: { id: company.id }
+      delete :destroy, params: { id: company.hashid }
       company.reload
       expect(company.discarded?).to be true
     end

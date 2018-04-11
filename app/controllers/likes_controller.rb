@@ -12,6 +12,8 @@ class LikesController < ApplicationController
   before_action :set_new_like_liker, only: [:create]
   before_action :validate_liker_presence, only: [:create]
 
+  after_action only: [:index] { set_pagination_header(@likeable.likes.kept) }
+
   # GET /reviews/:review_id/likes
   def index
     @likes = @likeable.likes.kept.page params[:page]
@@ -51,7 +53,7 @@ class LikesController < ApplicationController
         if name =~ /(.+)_id$/
           @class = Regexp.last_match[1]
           @likeable_type = Regexp.last_match[1].classify.safe_constantize
-          @likeable = @likeable_type.find_by(id: value) if !@likeable_type.nil?
+          @likeable = @likeable_type.find_by_hashid(value) if !@likeable_type.nil?
         end
       end
     end
@@ -61,7 +63,7 @@ class LikesController < ApplicationController
     end
 
     def set_like
-      @like = Like.kept.find_by(id: params[:id])
+      @like = Like.kept.find_by_hashid(params[:id])
     end
 
     def validate_like_pressence
@@ -74,9 +76,10 @@ class LikesController < ApplicationController
         if !(type < Liker)
           render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         else
-          @liker = type.find_by(id: params[:like][:from_id])
+          @liker = type.find_by_hashid(params[:like][:from_id])
           @whitelisted = create_params
           change_params_key
+          convert_hashids
           @likes = Like.new(@whitelisted)
         end
       else
@@ -102,5 +105,12 @@ class LikesController < ApplicationController
     def create_params
       @whitelisted = params.require(:like).permit(:from_type, :from_id)
       @whitelisted = @whitelisted.merge(likeable_id: params[@class + "_id"], likeable_type: @likeable_type)
+    end
+
+    def convert_hashids
+      likeable = @whitelisted["likeable_type"].find(@whitelisted["likeable_id"])
+      @whitelisted["likeable_id"] = likeable.id
+      liker = @whitelisted["liker_type"].find(@whitelisted["liker_id"])
+      @whitelisted["liker_id"] = liker.id
     end
 end

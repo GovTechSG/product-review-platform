@@ -4,6 +4,8 @@ class AspectsController < ApplicationController
   before_action :set_aspect, only: [:show, :update, :destroy]
   before_action :validate_aspect_presence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Aspect.kept) }
+
   # GET /aspects
   def index
     @aspects = Aspect.kept.page params[:page]
@@ -45,7 +47,7 @@ class AspectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_aspect
-    @aspect = Aspect.find_by(id: params[:id])
+    @aspect = Aspect.find_by_hashid(params[:id])
   end
 
   def validate_aspect_presence

@@ -15,6 +15,8 @@ class CommentsController < ApplicationController
   before_action :set_new_comment_commenter, only: [:create]
   before_action :validate_commenter_presence, only: [:create]
 
+  after_action only: [:index] { set_pagination_header(@commentable.comments.kept) }
+
   BOTH_PARAMS_EXIST = 0
   BOTH_PARAMS_MISSING = 2
   PARTIAL_PARAMS_MISSING = 1
@@ -89,7 +91,7 @@ class CommentsController < ApplicationController
     end
 
     def set_comment
-      @comment = Comment.find_by(id: params[:id])
+      @comment = Comment.find_by_hashid(params[:id])
     end
 
     def set_new_comment_commenter
@@ -98,9 +100,10 @@ class CommentsController < ApplicationController
         if !(type < Commenter)
           render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
         else
-          @commmenter = type.find_by(id: params[:comment][:from_id])
+          @commmenter = type.find_by_hashid(params[:comment][:from_id])
           @whitelisted = create_params
           change_params_key
+          convert_hashids
           @comments = Comment.new(@whitelisted)
         end
       else
@@ -128,7 +131,7 @@ class CommentsController < ApplicationController
 
     def validate_update_commenter_presence
       if check_from_presence == BOTH_PARAMS_EXIST
-        @commenter = params[:comment][:from_type].classify.constantize.find_by(id: params[:comment][:from_id])
+        @commenter = params[:comment][:from_type].classify.constantize.find_by_hashid(params[:comment][:from_id])
         render_error(404, "#{I18n.t('general_error.from_id_key')}": [I18n.t('general_error.not_found')]) if @commenter.nil? || !@commenter.presence?
       end
     end
@@ -138,7 +141,7 @@ class CommentsController < ApplicationController
         if name =~ /(.+)_id$/
           @class = Regexp.last_match[1]
           @commentable_type = Regexp.last_match[1].classify.safe_constantize
-          @commentable = @commentable_type.find_by(id: value) if !@commentable_type.nil?
+          @commentable = @commentable_type.find_by_hashid(value) if !@commentable_type.nil?
         end
       end
     end
@@ -159,5 +162,12 @@ class CommentsController < ApplicationController
 
     def update_params
       @whitelisted = params.require(:comment).permit(:content, :from_type, :from_id)
+    end
+
+    def convert_hashids
+      commentable = @whitelisted["commentable_type"].find(@whitelisted["commentable_id"])
+      @whitelisted["commentable_id"] = commentable.id
+      commenter = @whitelisted["commenter_type"].find(@whitelisted["commenter_id"])
+      @whitelisted["commenter_id"] = commenter.id
     end
 end

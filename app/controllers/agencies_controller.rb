@@ -4,6 +4,8 @@ class AgenciesController < ApplicationController
   before_action :set_agency, only: [:show, :update, :destroy]
   before_action :validate_agency_pressence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Agency.kept) }
+
   # GET /agencies
   def index
     @agencies = Agency.kept.page params[:page]
@@ -50,7 +52,7 @@ class AgenciesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_agency
-    @agency = Agency.find_by(id: params[:id])
+    @agency = Agency.find_by_hashid(params[:id])
   end
 
   def validate_agency_pressence

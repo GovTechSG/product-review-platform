@@ -7,6 +7,8 @@ class GrantsController < ApplicationController
   before_action :validate_create_params, only: [:create]
   before_action :validate_update_params, only: [:update]
 
+  after_action only: [:index] { set_pagination_header(@grants) }
+
   # GET /grants
   # GET /companies/:company_id/grants
   def index
@@ -26,7 +28,8 @@ class GrantsController < ApplicationController
 
   # POST /grants
   def create
-    @grant = Grant.new(grant_params)
+    convert_hashids
+    @grant = Grant.new(@whitelisted)
 
     if @grant.save
       render json: @grant, status: :created, location: @grant
@@ -37,7 +40,8 @@ class GrantsController < ApplicationController
 
   # PATCH/PUT /grants/1
   def update
-    if @grant.update(grant_params)
+    convert_hashids
+    if @grant.update(@whitelisted)
       render json: @grant
     else
       render json: @grant.errors.messages, status: :unprocessable_entity
@@ -72,7 +76,7 @@ class GrantsController < ApplicationController
   end
 
   def set_agency
-    Agency.find_by(id: params[:grant][:agency_id])
+    Agency.find_by_hashid(params[:grant][:agency_id])
   end
 
   def agency_not_found(agency)
@@ -84,7 +88,7 @@ class GrantsController < ApplicationController
   end
 
   def set_grant
-    @grant = Grant.find_by(id: params[:id])
+    @grant = Grant.find_by_hashid(params[:id])
   end
 
   def validate_grant_presence
@@ -100,6 +104,14 @@ class GrantsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def grant_params
-    params.require(:grant).permit(:name, :description, :agency_id, :acronym)
+    @whitelisted = params.require(:grant).permit(:name, :description, :agency_id, :acronym)
+  end
+
+  def convert_hashids
+    grant_params
+    if !@whitelisted["agency_id"].nil?
+      agency = Agency.find(@whitelisted["agency_id"])
+      @whitelisted["agency_id"] = agency.id
+    end
   end
 end

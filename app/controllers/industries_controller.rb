@@ -4,6 +4,8 @@ class IndustriesController < ApplicationController
   before_action :set_industry, only: [:show, :update, :destroy]
   before_action :validate_industry_presence, only: [:show, :update, :destroy]
 
+  after_action only: [:index] { set_pagination_header(Industry.all) }
+
   # GET /industries
   def index
     @industries = Industry.all.page params[:page]
@@ -45,7 +47,7 @@ class IndustriesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_industry
-    @industry = Industry.find_by(id: params[:id])
+    @industry = Industry.find_by_hashid(params[:id])
   end
 
   def validate_industry_presence

@@ -23,7 +23,7 @@ RSpec.describe "Industries", type: :request do
     describe "GET /api/v1/industries/:id" do
       it "returns a success response" do
         industry = Industry.create! valid_attributes
-        get industry_path(industry.id), headers: request_login
+        get industry_path(industry.hashid), headers: request_login
         expect(response).to be_success
       end
 
@@ -83,7 +83,7 @@ RSpec.describe "Industries", type: :request do
         it "updates the requested industry" do
           industry = Industry.create! valid_attributes
 
-          put industry_path(industry.id), params: { industry: new_attributes }, headers: request_login
+          put industry_path(industry.hashid), params: { industry: new_attributes }, headers: request_login
           industry.reload
           expect(industry.name).to eq(new_attributes[:name])
         end
@@ -91,7 +91,7 @@ RSpec.describe "Industries", type: :request do
         it "renders a JSON response with the industry" do
           industry = Industry.create! valid_attributes
 
-          put industry_path(industry.id), params: { industry: new_attributes }, headers: request_login
+          put industry_path(industry.hashid), params: { industry: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -124,7 +124,7 @@ RSpec.describe "Industries", type: :request do
         it "renders a JSON response with errors for the industry" do
           industry = Industry.create! valid_attributes
 
-          put industry_path(industry.id), params: { industry: invalid_attributes }, headers: request_login
+          put industry_path(industry.hashid), params: { industry: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -132,7 +132,7 @@ RSpec.describe "Industries", type: :request do
         it "renders a 422 error for duplicate names" do
           industry = Industry.create! valid_attributes
           another_industry = create(:industry)
-          put industry_path(industry.id), params: { industry: attributes_for(:industry, name: another_industry.name) }, headers: request_login
+          put industry_path(industry.hashid), params: { industry: attributes_for(:industry, name: another_industry.name) }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -149,7 +149,7 @@ RSpec.describe "Industries", type: :request do
 
       it "sets discarded_at datetime" do
         industry = Industry.create! valid_attributes
-        delete industry_path(industry.id), headers: request_login
+        delete industry_path(industry.hashid), headers: request_login
         industry.reload
         expect(industry.discarded?).to be true
       end
@@ -157,14 +157,14 @@ RSpec.describe "Industries", type: :request do
       it "renders a not found JSON response when the industry is deleted", authorized: true do
         industry = Industry.create! valid_attributes
         industry.discard
-        delete industry_path(industry.id), headers: request_login
+        delete industry_path(industry.hashid), headers: request_login
         expect(response).to have_http_status(404)
       end
 
       it "renders a JSON response with the industry" do
         industry = Industry.create! valid_attributes
 
-        delete industry_path(industry.id), headers: request_login
+        delete industry_path(industry.hashid), headers: request_login
         expect(response).to have_http_status(204)
       end
 

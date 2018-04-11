@@ -7,6 +7,9 @@ class CompaniesController < ApplicationController
   before_action :set_industry, only: [:create, :update]
   before_action :validate_industry_presence, only: [:create, :update]
 
+  after_action only: [:index] { set_pagination_header(Company.kept) }
+  after_action only: [:clients] { set_pagination_header(@company.clients.kept) }
+
   # GET /companies
   def index
     @companies = Company.kept.page params[:page]
@@ -26,8 +29,9 @@ class CompaniesController < ApplicationController
 
   # POST /companies
   def create
-    @company = Company.new(company_params)
-    @company.set_image!(company_params[:image]) if company_params[:name].present?
+    convert_hashids
+    @company = Company.new(@whitelisted)
+    @company.set_image!(@whitelisted[:image]) if @whitelisted[:name].present?
     if @company.errors.blank? && @company.save
       render json: @company, status: :created, location: @company, has_type: false
     else
@@ -37,12 +41,13 @@ class CompaniesController < ApplicationController
 
   # PATCH/PUT /companies/1
   def update
-    if company_params[:image].present?
+    convert_hashids
+    if @whitelisted[:image].present?
       image = params[:company].delete :image
-      @company.assign_attributes(company_params)
+      @company.assign_attributes(@whitelisted)
       @company.set_image!(image) if @company.valid?
     end
-    if @company.errors.blank? && @company.update(company_params)
+    if @company.errors.blank? && @company.update(@whitelisted)
       render json: @company, has_type: false
     else
       render json: @company.errors.messages, status: :unprocessable_entity
@@ -57,11 +62,11 @@ class CompaniesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_company
-      @company = Company.find_by(id: params[:id])
+      @company = Company.find_by_hashid(params[:id])
     end
 
     def set_company_by_company_id
-      @company = Company.find_by(id: params[:company_id])
+      @company = Company.find_by_hashid(params[:company_id])
     end
 
     def validate_company_presence
@@ -70,7 +75,7 @@ class CompaniesController < ApplicationController
 
     def set_industry
       if params[:company].present?
-        @industry = Industry.find_by(id: params[:company][:industry_ids]) if params[:company][:industry_ids].present?
+        @industry = Industry.find_by_hashid(params[:company][:industry_ids]) if params[:company][:industry_ids].present?
       else
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "company")])
       end
@@ -84,6 +89,12 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit(:name, :uen, :description, :phone_number, :url, :image, industry_ids: [])
+      @whitelisted = params.require(:company).permit(:name, :uen, :description, :phone_number, :url, :image, industry_ids: [])
+    end
+
+    def convert_hashids
+      company_params
+      industries = Industry.find(@whitelisted["industry_ids"])
+      @whitelisted["industry_ids"] = industries.map(&:id)
     end
 end

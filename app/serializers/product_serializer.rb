@@ -1,4 +1,4 @@
-class ProductSerializer < ActiveModel::Serializer
+class ProductSerializer < ApplicationSerializer
   attribute :type, if: :type?
   attributes :id, :name, :description, :reviews_count
   belongs_to :company, serializer: AssociateCompanySerializer

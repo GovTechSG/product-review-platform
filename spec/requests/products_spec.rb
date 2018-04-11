@@ -14,7 +14,7 @@ RSpec.describe "Products", type: :request do
     describe "GET /api/v1/companies/:company_id/products" do
       it "returns a success response" do
         product = Product.create! valid_attributes
-        get company_products_path(product.company.id), headers: request_login
+        get company_products_path(product.company.hashid), headers: request_login
 
         expect(response).to be_success
       end
@@ -34,7 +34,7 @@ RSpec.describe "Products", type: :request do
       it "does not return deleted products" do
         product = Product.create! valid_attributes
         product.discard
-        get company_products_path(product.company.id), headers: request_login
+        get company_products_path(product.company.hashid), headers: request_login
         expect(parsed_response).to match([])
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe "Products", type: :request do
     describe "GET /api/v1/products/:id" do
       it "returns a success response" do
         product = Product.create! valid_attributes
-        get product_path(product.id), headers: request_login
+        get product_path(product.hashid), headers: request_login
         expect(response).to be_success
       end
 
@@ -72,14 +72,14 @@ RSpec.describe "Products", type: :request do
           company = create(:company)
 
           expect do
-            post company_products_path(company.id), params: { product: valid_attributes }, headers: request_login
+            post company_products_path(company.hashid), params: { product: valid_attributes }, headers: request_login
           end.to change(Product, :count).by(1)
         end
 
         it "renders a JSON response with the new product" do
           company = create(:company)
 
-          post company_products_path(company.id), params: { product: valid_attributes }, headers: request_login
+          post company_products_path(company.hashid), params: { product: valid_attributes }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(product_url(Product.last))
@@ -106,7 +106,7 @@ RSpec.describe "Products", type: :request do
         it "renders a JSON response with errors for the new product" do
           company = create(:company)
 
-          post company_products_path(company.id), params: { product: invalid_attributes }, headers: request_login
+          post company_products_path(company.hashid), params: { product: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -177,7 +177,7 @@ RSpec.describe "Products", type: :request do
 
       it "sets discarded_at datetime" do
         product = Product.create! valid_attributes
-        delete product_path(product.id), params: {}, headers: request_login
+        delete product_path(product.hashid), params: {}, headers: request_login
         product.reload
         expect(product.discarded?).to be true
       end
@@ -185,7 +185,7 @@ RSpec.describe "Products", type: :request do
       it "renders a JSON response with the product" do
         product = Product.create! valid_attributes
 
-        delete product_path(product.id), params: {}, headers: request_login
+        delete product_path(product.hashid), params: {}, headers: request_login
         expect(response).to have_http_status(204)
       end
 
