@@ -9,7 +9,6 @@ coverage
 
 # Ignore application configuration
 /config/application.yml
-Dockerfile
 
 # Image files
 public/uploads
