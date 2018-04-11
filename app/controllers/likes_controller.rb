@@ -108,9 +108,14 @@ class LikesController < ApplicationController
     end
 
     def convert_hashids
-      likeable = @whitelisted["likeable_type"].find(@whitelisted["likeable_id"])
-      @whitelisted["likeable_id"] = likeable.id
-      liker = @whitelisted["liker_type"].find(@whitelisted["liker_id"])
-      @whitelisted["liker_id"] = liker.id
+      if @whitelisted["likeable_type"] || @whitelisted["likeable_id"]
+        likeable = @whitelisted["likeable_type"].find(@whitelisted["likeable_id"])
+        @whitelisted["likeable_id"] = likeable.id
+      end
+
+      if @whitelisted["liker_type"] || @whitelisted["liker_id"]
+        liker = @whitelisted["liker_type"].find(@whitelisted["liker_id"])
+        @whitelisted["liker_id"] = liker.id
+      end
     end
 end
