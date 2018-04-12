@@ -220,6 +220,10 @@ GEM
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
     rspec-core (3.7.1)
       rspec-support (~> 3.7.0)
     rspec-expectations (3.7.0)
@@ -237,6 +241,8 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    rspec-teamcity (0.0.1)
+      rspec (>= 2.99, >= 2.14.2, < 4)
     rubocop (0.52.1)
       parallel (~> 1.10)
       parser (>= 2.4.0.2, < 3.0)
@@ -314,6 +320,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.1.4)
   rspec-rails
+  rspec-teamcity (~> 0.0.1)
   rubocop
   ruby-debug-ide (= 0.6.0)
   simplecov
