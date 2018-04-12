@@ -58,6 +58,7 @@ group :development, :test do
   gem 'ffaker'
   gem 'ruby-debug-ide', '0.6.0'
   gem 'rspec-rails'
+  gem 'rspec-teamcity', '~> 0.0.1', require: false
 end
 
 group :qa do
