@@ -9,8 +9,8 @@ module SwaggerDocs::Product
       key :required, [:id, :name, :description, :company]
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
@@ -42,8 +42,8 @@ module SwaggerDocs::Product
       end
 
       property :id do
-        key :type, :integer
-        key :format, :int64
+        key :type, :string
+        key :example, "AbC123"
       end
 
       property :name do
