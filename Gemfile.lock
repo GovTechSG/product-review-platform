@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/govtechsg/rubocop-teamcity-formatter.git
+  revision: d1745d654e5625f097853da7119eb5d761e05457
+  specs:
+    rubocop-teamcity-formatter (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -322,6 +328,7 @@ DEPENDENCIES
   rspec-rails
   rspec-teamcity (~> 0.0.1)
   rubocop
+  rubocop-teamcity-formatter!
   ruby-debug-ide (= 0.6.0)
   simplecov
   spring
