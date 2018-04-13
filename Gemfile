@@ -59,6 +59,7 @@ group :development, :test do
   gem 'ruby-debug-ide', '0.6.0'
   gem 'rspec-rails'
   gem 'rspec-teamcity', '~> 0.0.1', require: false
+  gem 'rubocop-teamcity-formatter', git: 'https://github.com/govtechsg/rubocop-teamcity-formatter.git', require: false
 end
 
 group :qa do

@@ -24,6 +24,9 @@ fi
 
 set -e
 
+echo 'TCPSocket 3310' > /etc/clamav/clamd.conf
+echo "TCPAddr $(getent hosts clamd | awk '{ print $1 }')" >> /etc/clamav/clamd.conf
+
 echo "##teamcity[progressStart 'Migrating and seeding database']"
 bundle exec rails db:environment:set RAILS_ENV=test
 bundle exec rake db:schema:load
