@@ -137,13 +137,21 @@ class ReviewsController < ApplicationController
     end
 
     def check_from_params(required, check_class)
-      if required && (provided == BOTH_PARAMS_MISSING || provided == PARTIAL_PARAMS_MISSING)
+      if required && missing_from_param
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
       elsif !required && provided == PARTIAL_PARAMS_MISSING
         render_error(422, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
-      elsif provided == BOTH_PARAMS_EXIST && check_class.nil?
+      elsif from_class_invalid(check_class)
         render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
       end
+    end
+
+    def missing_from_param
+      provided == BOTH_PARAMS_MISSING || provided == PARTIAL_PARAMS_MISSING
+    end
+
+    def from_class_invalid(check_class)
+      provided == BOTH_PARAMS_EXIST && check_class.nil?
     end
 
     def get_reviewer(reviewer_class)

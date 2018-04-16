@@ -956,7 +956,7 @@ Metrics/ModuleLength:
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
-  Max: 8
+  Max: 6
 
 Metrics/LineLength:
   Max: 170
@@ -983,7 +983,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: true
 
 Metrics/PerceivedComplexity:
-  Max: 9
+  Max: 7
 
 ##################### Lint ##################################
 
