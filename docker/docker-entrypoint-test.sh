@@ -32,5 +32,3 @@ echo "##teamcity[testSuiteStarted name='rspec']"
 bundle exec rspec --require "${RSPEC_TEAMCITY_FORMATTER}" \
   --format "${RSPEC_FORMATTER}" || echo "##teamcity[buildProblem description='Rspec tests has failed' identity='rspec']"
 echo "##teamcity[testSuiteFinished name='rspec']"
-
-echo "test"
