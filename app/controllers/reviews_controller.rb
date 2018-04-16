@@ -133,15 +133,15 @@ class ReviewsController < ApplicationController
     def set_reviewer(required)
       reviewer_class = find_class_in_hash(@whitelisted, "Reviewer", true)
       get_reviewer(reviewer_class) if !reviewer_class.nil?
-      check_from_params(required)
+      check_from_params(required, reviewer_class)
     end
 
-    def check_from_params(required)
+    def check_from_params(required, check_class)
       if required && (provided == BOTH_PARAMS_MISSING || provided == PARTIAL_PARAMS_MISSING)
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
       elsif !required && provided == PARTIAL_PARAMS_MISSING
         render_error(422, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
-      elsif provided == BOTH_PARAMS_EXIST && reviewer_class.nil?
+      elsif provided == BOTH_PARAMS_EXIST && check_class.nil?
         render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
       end
     end
