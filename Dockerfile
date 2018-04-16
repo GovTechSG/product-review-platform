@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libpq-dev \
   postgresql-client \
   clamdscan
-  
+
+RUN apt-get clean
+
 # Set an environment variable to store where the app is installed to inside
 # of the Docker image.
 ENV INSTALL_PATH /app
@@ -26,6 +28,6 @@ RUN bundle install
 
 # Copy in rest of app
 COPY . .
-
+RUN ["chmod", "+x", "docker/docker-entrypoint-test.sh"]
 # Run rails server on default port 3000
 # CMD rails s
