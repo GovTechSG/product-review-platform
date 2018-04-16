@@ -165,9 +165,13 @@ class CommentsController < ApplicationController
     end
 
     def convert_hashids
-      commentable = @whitelisted["commentable_type"].find(@whitelisted["commentable_id"])
-      @whitelisted["commentable_id"] = commentable.id
-      commenter = @whitelisted["commenter_type"].find(@whitelisted["commenter_id"])
-      @whitelisted["commenter_id"] = commenter.id
+      if @whitelisted["commentable_type"] || @whitelisted["commentable_id"]
+        commentable = @whitelisted["commentable_type"].find(@whitelisted["commentable_id"])
+        @whitelisted["commentable_id"] = commentable.id
+      end
+      if @whitelisted["commenter_type"] || @whitelisted["commenter_id"]
+        commenter = @whitelisted["commenter_type"].find(@whitelisted["commenter_id"])
+        @whitelisted["commenter_id"] = commenter.id
+      end
     end
 end
