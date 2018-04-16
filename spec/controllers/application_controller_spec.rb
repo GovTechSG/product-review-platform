@@ -21,7 +21,7 @@ RSpec.describe ApplicationController, type: :controller do
       get "test_parameter_missing" => "anonymous#test_parameter_missing"
       get "test_record_not_unique" => "anonymous#test_record_not_unique"
     end
-  end
+  endsdgfsdbs
 
   it "rescues record not found with 404" do
     get :test_record_not_found

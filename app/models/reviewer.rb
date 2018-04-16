@@ -1,3 +1,3 @@
 class Reviewer < ApplicationRecord
-  self.abstract_class = true
+self.abstract_class = true
 end
