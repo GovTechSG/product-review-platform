@@ -1021,6 +1021,13 @@ Lint/UnusedMethodArgument:
   IgnoreEmptyMethods: true
 
 ##################### Rails ##################################
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - qa
+
 Rails/ActionFilter:
   EnforcedStyle: action
   SupportedStyles:
