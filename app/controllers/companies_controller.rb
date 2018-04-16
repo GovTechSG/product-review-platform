@@ -94,7 +94,9 @@ class CompaniesController < ApplicationController
 
     def convert_hashids
       company_params
-      industries = Industry.find(@whitelisted["industry_ids"])
-      @whitelisted["industry_ids"] = industries.map(&:id)
+      if @whitelisted["industry_ids"]
+        industries = Industry.find(@whitelisted["industry_ids"])
+        @whitelisted["industry_ids"] = industries.map(&:id)
+      end
     end
 end
