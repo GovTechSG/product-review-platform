@@ -16,7 +16,7 @@ RSpec.describe Like, type: :model do
     end
     it "is not valid with a duplicate review_id with the same agency_id" do
       product_review_like = create(:product_review_like)
-      expect(build(:product_review_like, likeable: product_review_like.likeable, liker: product_review_like.liker)).to_not be_valid
+      expect(build(:product_review_like, likeable: product_review_like.likeable, liker: product_review_like.liker)).to be_valid
     end
   end
 end
