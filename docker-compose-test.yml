@@ -1,0 +1,21 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+  clamd:
+    image: dinkel/clamavd
+  backend:
+    build: .
+    entrypoint: "docker/docker-entrypoint-test.sh"
+    depends_on:
+      - postgres
+      - clamd
+    ports:
+      - "3000:3000"
+    volumes:
+      - log:/app/src/log
+    env_file:
+      - qa.env
+
+volumes:
+  log: {}
