@@ -80,6 +80,12 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
+qa:
+  <<: *default
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+
 production:
   <<: *default
   username: <%= ENV['DATABASE_USERNAME'] %>
