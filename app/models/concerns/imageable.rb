@@ -10,7 +10,7 @@ module Imageable
         errors.add(I18n.t('imageable.key'), I18n.t('imageable.invalid'))
         return
       end
-      if Clamby.virus?(tempfile.path)
+      if need_to_upload && Clamby.virus?(tempfile.path)
         errors.add(I18n.t('imageable.key'), I18n.t('imageable.malicious'))
         tempfile.close
         return
@@ -21,6 +21,10 @@ module Imageable
   end
 
   private
+
+  def need_to_upload
+    !(Rails.env.development? || Rails.env.test?)
+  end
 
   def file_decode(base, filename)
     file = Tempfile.new([file_base_name(filename), file_extn_name(filename)])
