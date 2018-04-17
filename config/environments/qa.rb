@@ -6,7 +6,7 @@ Rails.application.configure do
       aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
       region: ENV['AWS_REGION']
     }
-    config.fog_directory = ENV['STAGING'] ? ENV['STAGING_AWS_S3_BUCKET'] : ENV['AWS_S3_BUCKET']
+    config.fog_directory = ENV['QA_AWS_S3_BUCKET']
   end
 
   # Settings specified here will take precedence over those in config/application.rb.
