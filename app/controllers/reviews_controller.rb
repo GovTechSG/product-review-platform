@@ -23,6 +23,10 @@ class ReviewsController < ApplicationController
 
   after_action only: [:index] { set_pagination_header(@reviewable.reviews.kept) }
 
+  BOTH_PARAMS_EXIST = 0
+  BOTH_PARAMS_MISSING = 2
+  PARTIAL_PARAMS_MISSING = 1
+
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
@@ -76,7 +80,6 @@ class ReviewsController < ApplicationController
   private
     def require_params(required)
       @whitelisted = params.fetch(:review, nil)
-
       if @whitelisted.blank?
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
         return
@@ -129,16 +132,26 @@ class ReviewsController < ApplicationController
 
     def set_reviewer(required)
       reviewer_class = find_class_in_hash(@whitelisted, "Reviewer", true)
-      if required && !provided
-        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
-        return
-      elsif !reviewer_class.nil?
-        get_reviewer(reviewer_class)
-      elsif provided && reviewer_class.nil?
-        render_error(422, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
+      get_reviewer(reviewer_class) if !reviewer_class.nil?
+      check_from_params(required, reviewer_class)
+    end
 
-        return
+    def check_from_params(required, check_class)
+      if required && missing_from_param
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: @input_type + "_id")])
+      elsif !required && provided == PARTIAL_PARAMS_MISSING
+        render_error(422, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "from_id/from_type")])
+      elsif from_class_invalid(check_class)
+        render_error(422, "#{I18n.t('general_error.from_type_key')}": [I18n.t('general_error.invalid')])
       end
+    end
+
+    def missing_from_param
+      provided == BOTH_PARAMS_MISSING || provided == PARTIAL_PARAMS_MISSING
+    end
+
+    def from_class_invalid(check_class)
+      provided == BOTH_PARAMS_EXIST && check_class.nil?
     end
 
     def get_reviewer(reviewer_class)
@@ -194,7 +207,13 @@ class ReviewsController < ApplicationController
     end
 
     def provided
-      @whitelisted[:reviewer_type].present? || @whitelisted[:reviewer_id].present?
+      if @whitelisted[:reviewer_type].present? && @whitelisted[:reviewer_id].present?
+        BOTH_PARAMS_EXIST
+      elsif @whitelisted[:reviewer_type].blank? && @whitelisted[:reviewer_id].blank?
+        BOTH_PARAMS_MISSING
+      else
+        PARTIAL_PARAMS_MISSING
+      end
     end
 
     def invalid_record(record)
