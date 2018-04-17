@@ -1,4 +1,5 @@
 docker-compose -f docker-compose-qa.yml down
+docker-compose -f docker-compose-qa.yml pull
 docker-compose -f docker-compose-qa.yml up --build -d
 docker-compose -f docker-compose-qa.yml run backend rake db:create
 docker-compose -f docker-compose-qa.yml run backend rake db:schema:load
