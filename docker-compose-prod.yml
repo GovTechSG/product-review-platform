@@ -1,0 +1,17 @@
+version: '2'
+services:
+  clamd:
+    image: dinkel/clamavd
+  backend:
+    image: wynn987/product-review-platform
+    depends_on:
+      - clamd
+    ports:
+      - "3000:3000"
+    volumes:
+      - log:/app/src/log
+    env_file:
+      - prod.env
+
+volumes:
+  log: {}
