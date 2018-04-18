@@ -21,7 +21,7 @@ class AgenciesController < ApplicationController
   # POST /agencies
   def create
     @agency = Agency.new(agency_params)
-    @agency.set_image!(agency_params[:image]) if agency_params[:name].present?
+    @agency.set_image!(@image) if agency_params[:name].present?
     if @agency.errors.blank? && @agency.save
       render json: @agency, status: :created, location: @agency, has_type: false
     else
@@ -31,10 +31,10 @@ class AgenciesController < ApplicationController
 
   # PATCH/PUT /agencies/1
   def update
-    if agency_params[:image].present?
-      image = params[:agency].delete :image
+    agency_params
+    if !@image.nil?
       @agency.assign_attributes(agency_params)
-      @agency.set_image!(image) if @agency.valid?
+      @agency.set_image!(@image) if @agency.valid?
     end
     if @agency.errors.blank? && @agency.update(agency_params)
       render json: @agency, has_type: false
@@ -61,6 +61,7 @@ class AgenciesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def agency_params
-    params.require(:agency).permit(:name, :email, :phone_number, :acronym, :kind, :description, :image)
+    @image = params[:agency][:image] if params[:agency].present? && params[:agency][:image].present?
+    params.require(:agency).permit(:name, :email, :phone_number, :acronym, :kind, :description)
   end
 end

@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
   def create
     convert_hashids
     @company = Company.new(@whitelisted)
-    @company.set_image!(@whitelisted[:image]) if @whitelisted[:name].present?
+    @company.set_image!(@image) if @whitelisted[:name].present?
     if @company.errors.blank? && @company.save
       render json: @company, status: :created, location: @company, has_type: false
     else
@@ -42,10 +42,9 @@ class CompaniesController < ApplicationController
   # PATCH/PUT /companies/1
   def update
     convert_hashids
-    if @whitelisted[:image].present?
-      image = params[:company].delete :image
+    if !@image.nil?
       @company.assign_attributes(@whitelisted)
-      @company.set_image!(image) if @company.valid?
+      @company.set_image!(@image) if @company.valid?
     end
     if @company.errors.blank? && @company.update(@whitelisted)
       render json: @company, has_type: false
@@ -89,7 +88,8 @@ class CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      @whitelisted = params.require(:company).permit(:name, :uen, :description, :phone_number, :url, :image, industry_ids: [])
+      @image = params[:company][:image] if params[:company].present? && params[:company][:image].present?
+      @whitelisted = params.require(:company).permit(:name, :uen, :description, :phone_number, :url, industry_ids: [])
     end
 
     def convert_hashids
