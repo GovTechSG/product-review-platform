@@ -18,12 +18,12 @@ class GrantsController < ApplicationController
       else
         Grant.kept
       end
-    render json: (@grants.page params[:page])
+    render json: (@grants.page params[:page]), has_type: false
   end
 
   # GET /grants/1
   def show
-    render json: @grant
+    render json: @grant, has_type: false
   end
 
   # POST /grants
@@ -32,7 +32,7 @@ class GrantsController < ApplicationController
     @grant = Grant.new(@whitelisted)
 
     if @grant.save
-      render json: @grant, status: :created, location: @grant
+      render json: @grant, status: :created, location: @grant, has_type: false
     else
       render json: @grant.errors.messages, status: :unprocessable_entity
     end
@@ -42,7 +42,7 @@ class GrantsController < ApplicationController
   def update
     convert_hashids
     if @grant.update(@whitelisted)
-      render json: @grant
+      render json: @grant, has_type: false
     else
       render json: @grant.errors.messages, status: :unprocessable_entity
     end
