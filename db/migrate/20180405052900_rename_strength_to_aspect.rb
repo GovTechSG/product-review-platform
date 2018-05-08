@@ -9,7 +9,7 @@ class RenameStrengthToAspect < ActiveRecord::Migration[5.1]
     end
 
     rename_table :strength_reviews, :aspect_reviews do |t|
-      t.belongs_to :aspect, foreign_key: true
+      t.belongs_to :strength, foreign_key: true
       t.belongs_to :review, foreign_key: true
 
       t.datetime :discarded_at
