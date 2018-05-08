@@ -20,6 +20,32 @@ Welcome! This document details the setting up of a development environment. The 
 
 		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		brew update
+		
+    #### Troubleshooting Brew when installing or updating
+    
+    With mac no longer support running brew as root. You may find errors or warnings that you can't do X because of
+     permissions of folders not being writable. To solve this type:
+     
+        brew doctor      
+    
+    It should shoot out warnings and things to fix - the stuff you want to focus on is the Warning:
+        
+        Warning: The following directories are not writable:
+        /usr/local/{some directory}
+        
+        Warning: You have unlinked kegs in your Cellar
+        ...
+        {some lib}
+        etc.
+
+    You'll probably need to run for all of the directories:
+    
+        sudo chown -R $(whoami) /usr/local/{some directory}
+    
+    and missing links:
+    
+        brew link {some lib}
+
 
 1. Install rbenv and ruby-build
 
@@ -37,9 +63,15 @@ Welcome! This document details the setting up of a development environment. The 
 	[OS X](https://github.com/rbenv/rbenv#homebrew-on-mac-os-x)  
 	[Linux](https://github.com/rbenv/rbenv#installation)
 
-1. Install dependencies
+1. Install ImageMagick
+	
+	For Mac: Run the brew command:
+	
+	    brew install imagemagick --build-from-source
+	    
+1. Install Postgres
 
-	ImageMagick: https://www.imagemagick.org/script/download.php
+        brew install postgresql	
 
 1. Clone the project
 
@@ -49,14 +81,17 @@ Welcome! This document details the setting up of a development environment. The 
 
 		git clone https://github.com/GovTechSG/product-review-platform
 
-	ask any existing project team members for 'application.yml'
+	ask any existing project team members for 'application.yml' and put it in the config folder
 
 1. Configure the project
 
 	cd into the root directory of the project
+	
+	ENSURE YOU HAVE THE APPLICATION YML FILE IN THE CONFIG
 
 	run these command on terminal: 
 
+        gem install bundler
 		bundle install
 		rails db:drop
 		rails db:create
