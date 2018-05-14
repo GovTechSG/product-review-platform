@@ -31,6 +31,28 @@ RSpec.describe "Companies", type: :request do
     end
   end
 
+  describe "GET /companies/vendor_listings" do
+    let(:header) { request_login }
+    it "returns a success response" do
+      get companies_vendor_listings_path, headers: header
+      expect(response).to be_success
+    end
+
+    it "returns companies with projects" do
+      create_list(:company, 1)
+      get companies_vendor_listings_path, headers: header
+      expect(parsed_response.first.key?("projects")).to eq(true)
+    end
+  end
+
+  describe "GET /companies unauthorized" do
+    it "should return unauthorized response" do
+      get companies_vendor_listings_path, params: {}, headers: nil
+
+      expect_unauthorized
+    end
+  end
+
   describe "GET companies/:company_id/clients" do
     let(:header) { request_login }
     let(:company) { create(:company) }

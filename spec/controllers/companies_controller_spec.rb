@@ -43,6 +43,26 @@ RSpec.describe CompaniesController, type: :controller do
     end
   end
 
+  describe "GET #vendor_listings", authorized: true do
+    it "returns a success response" do
+      get :vendor_listings
+      expect(response).to be_success
+    end
+
+    it "returns companies with projects" do
+      create_list(:company, 1)
+      get :vendor_listings
+      expect(parsed_response.first.key?("projects")).to eq(true)
+    end
+  end
+
+  describe "GET #vendor_listings", authorized: false do
+    it "returns an unauthorized response" do
+      get :vendor_listings, params: {}
+      expect_unauthorized
+    end
+  end
+
   describe "GET #clients", authorized: true do
     let(:company) { create(:company) }
     it "returns a success response" do

@@ -179,4 +179,34 @@ RSpec.describe Company, type: :model do
       expect(product.company.clients.length).to eq(2)
     end
   end
+
+  context "projects" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no projects" do
+      company = create(:company)
+      expect(company.projects).to eq([])
+    end
+
+    it "does not return deleted projects" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      product.reviews.first.reviewer.industries.first.discard
+      expect(product.company.projects.length).to eq(0)
+    end
+
+    it "returns product projects if there are only product projects" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(product.company.projects.length).to eq(1)
+    end
+
+    it "returns service projects if there are only service projects" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(service.company.projects.length).to eq(1)
+    end
+  end
 end

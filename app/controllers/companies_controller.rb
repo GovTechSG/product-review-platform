@@ -17,6 +17,18 @@ class CompaniesController < ApplicationController
     render json: @companies, methods: [:aspects], has_type: false
   end
 
+  def vendor_listings
+    sort = if vendor_listing_valid_options.include? params[:sort_by]
+             params[:sort_by]
+           else
+             vendor_listing_valid_options.first
+           end
+
+    @companies = Company.send("sort", sort).page params[:page]
+
+    render json: @companies, each_serializer: VendorListingSerializer
+  end
+
   # GET /companies/:company_id/clients
   def clients
     render json: (@company.clients.page params[:page]), has_type: false
@@ -98,5 +110,9 @@ class CompaniesController < ApplicationController
         industries = Industry.find(@whitelisted["industry_ids"])
         @whitelisted["industry_ids"] = industries.map(&:id)
       end
+    end
+
+    def vendor_listing_valid_options
+      ["best_ratings"]
     end
 end
