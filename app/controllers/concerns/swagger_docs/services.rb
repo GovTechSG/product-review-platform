@@ -84,6 +84,41 @@ module SwaggerDocs::Services
       end
     end
 
+    swagger_path '/api/v1/service/service_name' do
+      parameter do
+        key :name, :service_name
+        key :in, :path
+        key :description, I18n.t('swagger_ui.path_name_description', model: 'Service').to_s
+        key :required, true
+        key :type, :string
+      end
+      operation :get do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('service.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: 'Service').to_s
+        key :operationId, 'findService'
+        key :produces, [
+            'application/json'
+        ]
+        response 200 do
+          key :description, I18n.t('swagger_ui.get_success_description', model: 'Service').to_s
+          schema type: :array do
+            items do
+              key :'$ref', :Company
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+      end
+    end
+
     swagger_path '/api/v1/services/{id}' do
       parameter do
         key :name, :id
