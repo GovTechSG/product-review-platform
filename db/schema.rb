@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180405054123) do
+ActiveRecord::Schema.define(version: 20180515030307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,6 +210,19 @@ ActiveRecord::Schema.define(version: 20180405054123) do
     t.index ["reviews_count"], name: "index_products_on_reviews_count"
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.bigint "company_id"
+    t.integer "reviews_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["company_id"], name: "index_projects_on_company_id"
+    t.index ["discarded_at"], name: "index_projects_on_discarded_at"
+    t.index ["reviews_count"], name: "index_projects_on_reviews_count"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.integer "score", default: 0, null: false
     t.text "content"
@@ -247,6 +260,7 @@ ActiveRecord::Schema.define(version: 20180405054123) do
   add_foreign_key "industry_companies", "industries"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
   add_foreign_key "products", "companies"
+  add_foreign_key "projects", "companies"
   add_foreign_key "reviews", "grants"
   add_foreign_key "services", "companies"
 end

@@ -33,6 +33,13 @@ Rails.application.routes.draw do
               resources :likes, only: [:index, :show, :create, :destroy]
             end
           end
+
+          resources :projects do
+            resources :reviews do
+              resources :comments
+              resources :likes, only: [:index, :show, :create, :destroy]
+            end
+          end
         end
       end
       resources :grants

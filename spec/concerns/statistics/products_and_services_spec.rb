@@ -7,10 +7,16 @@ shared_examples_for 'products_and_services' do
   let(:valid_service) do
     build(:service).attributes
   end
+  let(:valid_project) do
+    build(:project).attributes
+  end
   let(:valid_product_review) do
     build(:product_review).attributes
   end
   let(:valid_service_review) do
+    build(:service_review).attributes
+  end
+  let(:valid_project_review) do
     build(:service_review).attributes
   end
   let(:valid_company) do
@@ -54,6 +60,25 @@ shared_examples_for 'products_and_services' do
         service.reviews.create! valid_service_review
         service.reviews.first.discard
         expect(service.reviews_count).to eq(0)
+      end
+    end
+
+    context "projects" do
+      it "returns 0 with no reviews" do
+        project = Project.create! valid_project
+        expect(project.reviews_count).to eq(0)
+      end
+      it "returns number of reviews" do
+        project = Project.create! valid_project
+        project.reviews.create! valid_project_review
+        project.reload
+        expect(project.reviews_count).to eq(1)
+      end
+      it "does not count discarded reviews" do
+        project = Project.create! valid_project
+        project.reviews.create! valid_project_review
+        project.reviews.first.discard
+        expect(project.reviews_count).to eq(0)
       end
     end
   end
@@ -103,6 +128,30 @@ shared_examples_for 'products_and_services' do
         discarded_review = service.reviews.create! valid_service_review
         discarded_review.discard
         expect(service.aggregate_score).to eq(expected_score)
+      end
+    end
+
+    context "projects" do
+      it "returns 0 with no reviews" do
+        project = Project.create! valid_project
+        expect(project.aggregate_score).to eq(0)
+      end
+      it "returns aggregate score" do
+        project = Project.create! valid_project
+        project.reviews.create! valid_project_review
+        project.reviews.create! valid_project_review
+        project.reload
+        expected_score = project.reviews.sum(:score) / 2
+        expect(project.aggregate_score).to eq(expected_score)
+      end
+      it "does not compute discarded score" do
+        project = Project.create! valid_project
+        project.reviews.create! valid_project_review
+        project.reviews.create! valid_project_review
+        expected_score = project.reviews.sum(:score) / 2
+        discarded_review = project.reviews.create! valid_project_review
+        discarded_review.discard
+        expect(project.aggregate_score).to eq(expected_score)
       end
     end
   end
