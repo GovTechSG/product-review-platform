@@ -76,6 +76,58 @@ module SwaggerDocs::Company
       end
     end
 
+    swagger_schema :VendorListing do
+      key :type, :object
+      key :required, [:id, :name, :uen, :aggregate_score]
+
+      property :id do
+        key :type, :string
+        key :example, "AbC123"
+      end
+
+      property :name do
+        key :type, :string
+        key :example, 'Pivotal Software'
+      end
+
+      property :aggregate_score do
+        key :type, :number
+      end
+
+      property :reviews_count do
+        key :type, :number
+      end
+
+      property :image do
+        key :type, :object
+        property :url do
+          key :type, :string
+          key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/pivotal20180402-93182-7x7gd.gif"
+        end
+        property :thumb do
+          key :type, :object
+          property :url do
+            key :type, :string
+            key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/thumb_pivotal20180402-93182-7x7gd.gif"
+          end
+        end
+      end
+
+      property :industries do
+        key :type, :array
+        items do
+          key :'$ref', :Industry
+        end
+      end
+
+      property :projects do
+        key :type, :array
+        items do
+          key :'$ref', :Industry
+        end
+      end
+    end
+
     swagger_schema :CompanyAssociation do
       key :type, :object
       key :required, [:id, :name, :uen, :aggregate_score]

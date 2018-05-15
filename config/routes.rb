@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       end
       get '/statistics', to: 'statistics#index'
       get '/companies/:company_id/clients', to: 'companies#clients', as: 'companies_clients'
+      get '/companies/vendor_listings', to: 'companies#vendor_listings', as: 'companies_vendor_listings'
       post '/oauth/refresh', to: 'tokens#refresh'
       get '/service/service_name', to: 'services#find_service', as: 'find_service'
       # Mount custom routes, removing view-only routes e.g. /new, /cancel

@@ -262,10 +262,6 @@ SME_uens = [
   "447212643"
 ]
 
-7.times do |i|
-  Company.create!(name: SMEs[i], uen: SME_uens[i], aggregate_score: 4.2, description: lorem_ipsum)
-end
-
 Strengths.each do |strength|
   Aspect.create!(strength)
 end

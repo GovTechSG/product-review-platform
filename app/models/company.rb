@@ -38,13 +38,45 @@ class Company < Reviewer
   end
 
   def clients
-    product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
-    service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
-    all_reviewers = product_reviewers + service_reviewers
     if all_reviewers.nil?
       []
     else
       Company.kept.where(id: all_reviewers.uniq)
     end
+  end
+
+  def projects
+    if all_reviewers.nil?
+      []
+    else
+      company_ids = Company.kept.where(id: all_reviewers.uniq).pluck(:id)
+      if company_ids.nil?
+        []
+      else
+        industry_ids = IndustryCompany.kept.where(company_id: company_ids).pluck(:industry_id).uniq
+        if industry_ids.nil?
+          []
+        else
+          Industry.kept.where(id: industry_ids)
+        end
+      end
+    end
+  end
+
+  class << self
+    def sort(sort_by)
+      case sort_by
+      when 'best_ratings'
+        kept.order('aggregate_score asc')
+      end
+    end
+  end
+
+  private
+
+  def all_reviewers
+    product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
+    service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
+    product_reviewers + service_reviewers
   end
 end

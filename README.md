@@ -4,53 +4,117 @@
 <img src="https://teamcity.gahmen.tech/app/rest/builds/buildType(id:ProductReviewPlatform_UnitTest)/statusIcon"/>
 </a>
 
+<img src="public/favicon.png" width="96" />
+
+# GRP-RoR
+
+Welcome! This document details the setting up of a development environment. The project uses the following frameworks:
+
+* [Getting started with Rails](http://guides.rubyonrails.org/getting_started.html)
+* [RSpec](http://rspec.info/)
 
 # Setup
+1. Install a package manager (OS X)
 
-For docker using docker-compose
+	[Homebrew](http://brew.sh/)
 
-Make sure you have `docker` and `docker-compose` installed.
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		brew update
+		
+    #### Troubleshooting Brew when installing or updating
+    
+    With mac no longer support running brew as root. You may find errors or warnings that you can't do X because of
+     permissions of folders not being writable. To solve this type:
+     
+        brew doctor      
+    
+    It should shoot out warnings and things to fix - the stuff you want to focus on is the Warning:
+        
+        Warning: The following directories are not writable:
+        /usr/local/{some directory}
+        
+        Warning: You have unlinked kegs in your Cellar
+        ...
+        {some lib}
+        etc.
 
-Create a file called qa.env in the root directory of the project containing these fields
-```
-DATABASE_TIMEOUT=
-DATABASE_HOST=
-DATABASE_PORT=
-DATABASE_NAME=
-DATABASE_SERVICE_NAME=
-DATABASE_USERNAME=
-DATABASE_PASSWORD=
-SECRET_KEY_BASE=
-RAILS_ENV=
-SWAGGER_API_BASE_PATH=
-ADMIN_EMAIL=
-```
+    You'll probably need to run for all of the directories:
+    
+        sudo chown -R $(whoami) /usr/local/{some directory}
+    
+    and missing links:
+    
+        brew link {some lib}
 
 
-To spin the container up
-```
-docker-compose up --build -d
-```
+1. Install rbenv and ruby-build
 
-To start the services
-```
-docker-compose run -d --publish 3000:3000  backend bundle exec rails s
-docker-compose run backend rake db:create
-docker-compose run backend rake db:schema:load
-```
+	> rvm is incompatiable with rbenv. Keep using rvm if it works for you.
 
-To seed data from seed.rb 
-```
-docker-compose run backend rake db:seed
-```
+		brew install rbenv
+		brew install ruby-build
+		rbenv init
+		rbenv install -l
+		rbenv install 2.3.5
 
-To run rspec or rails console
-```
-docker-compose run backend rspec
-docker-compose run backend rails c
-```
+	if rbenv fails you may need to run the following command first before rbenv install: 
+		xcode-select --install # possibly need xcode first as well
 
+	[OS X](https://github.com/rbenv/rbenv#homebrew-on-mac-os-x)  
+	[Linux](https://github.com/rbenv/rbenv#installation)
+
+1. Install ImageMagick
+	
+	For Mac: Run the brew command:
+	
+	    brew install imagemagick --build-from-source
+	    
+1. Install Postgres
+
+        brew install postgresql	
+
+1. Clone the project
+
+	cd into the location you would like to clone the project to
+
+	run this command on terminal: 
+
+		git clone https://github.com/GovTechSG/product-review-platform
+
+	ask any existing project team members for 'application.yml' and put it in the config folder
+
+1. Configure the project
+
+	cd into the root directory of the project
+	
+	ENSURE YOU HAVE THE APPLICATION YML FILE IN THE CONFIG
+
+	run these command on terminal: 
+
+        gem install bundler
+		bundle install
+		rails db:drop
+		rails db:create
+		rails db:schema:load
+		rails db:seed
+
+1. Test run
+
+	In the project root directory..
+
+	Test if the project is setup properly:
+		
+		rails s
+
+    open http://localhost:3000/ on your browser. you should see a landing page.
+
+	Test if project is working:
+
+		rspec
+		rubocop
+
+    these should not give any errors (warnings are fine).
 # Stack
-Ruby: 2.3.5
-Rails: 5.1.4
-Database: Postgresql 10
+	Ruby: 2.3.5
+	Rails: 5.1.4
+	Database: Postgresql 10
