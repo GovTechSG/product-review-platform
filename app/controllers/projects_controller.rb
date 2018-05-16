@@ -45,12 +45,17 @@ class ProjectsController < ApplicationController
     @project.discard
   end
 
-  # GET /project/project_name
-  def find_project
+  # POST /project/project_name
+  def search
     if Project.find_by_name(params[:project_name]).nil?
-      # Project.create()
-      @project_id = {'project_id':'need to create'}
-      render json: {'project_id':Project.first.hashid}
+      # check if company exist by UEN
+      company = Company.find_by_uen(params[:company][:uen])
+      if company.nil?
+        # create company
+        company = Company.create!(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+      end
+      project = Project.create!(company_id: company.id, name: params[:project_name], description: params[:project][:description])
+      render json: {'project_id': project.hashid}
     else
       render json: {'project_id':Project.find_by_name(params[:project_name]).hashid }
     end

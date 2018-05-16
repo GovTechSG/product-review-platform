@@ -92,7 +92,7 @@ module SwaggerDocs::Projects
         key :required, true
         key :type, :string
       end
-      operation :get do
+      operation :post do
         security do
           key :Authorization, []
         end
@@ -102,6 +102,15 @@ module SwaggerDocs::Projects
         key :produces, [
             'application/json'
         ]
+        parameter do
+          key :name, :body
+          key :in, :body
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Project").to_s
+          key :required, true
+          schema do
+            key :'$ref', :CompanyInput
+          end
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.get_success_description', model: 'Project').to_s
           schema type: :array do
