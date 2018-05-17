@@ -43,7 +43,7 @@ gem 'simplecov', require: false, group: :test
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-gem 'rack-cors'
+gem 'rack-cors', require: 'rack/cors'
 
 # Used to obfuscate IDs
 gem "hashid-rails"
