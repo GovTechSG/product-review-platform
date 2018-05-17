@@ -207,7 +207,7 @@ Grants = [
 
 lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
 10.times do |i|
-  company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: 4.2, description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
+  company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: rand(-1..1) , description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
   company.image = File.new(company.avatar_path(200))
   company.save
 end
