@@ -58,10 +58,12 @@ uens = [
 Strengths = [
   { name: "Reliability", description: "The ability to deliver the promised product or service in a consistent and accurate manner." },
   { name: "Explanation of Project and Resources", description: "The project and resources is definite, distinct, and clearly explained" },
-  { name: "Responsive to Messages", description: "Respond quickly and consistently to private messages" },
+  { name: "Responsiveness", description: "Respond quickly and consistently to private messages" },
   { name: "Quality Tools & Materials", description: "Delivers quality product/service" },
   { name: "Skills & Knowledge", description: "Knowledge of business needs and skills to produce solution based on knowledge" },
-  { name: "Understanding Business Needs", description: "Understands business perspective and has good domain knowledge" }
+  { name: "Understanding Business Needs", description: "Understands business perspective and has good domain knowledge" },
+  { name: "Communication", description: "The ability to communicate well" },
+  { name: "Deliverables", description: "The ability to deliver what is promised" }
 ]
 
 Agencies = [
