@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       get '/companies/:company_id/clients', to: 'companies#clients', as: 'companies_clients'
       get '/companies/vendor_listings', to: 'companies#vendor_listings', as: 'companies_vendor_listings'
       post '/oauth/refresh', to: 'tokens#refresh'
+      post '/project/project_name', to: 'projects#search', as: 'search_project'
+      post '/company/company_uen', to: 'companies#search', as: 'search_company'
+      get '/grant/grant_name', to: 'grants#search', as: 'search_grant'
       # Mount custom routes, removing view-only routes e.g. /new, /cancel
 
       shallow do
@@ -27,6 +30,13 @@ Rails.application.routes.draw do
           end
 
           resources :services do
+            resources :reviews do
+              resources :comments
+              resources :likes, only: [:index, :show, :create, :destroy]
+            end
+          end
+
+          resources :projects do
             resources :reviews do
               resources :comments
               resources :likes, only: [:index, :show, :create, :destroy]

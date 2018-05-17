@@ -167,6 +167,89 @@ module SwaggerDocs::Reviews
       end
     end
 
+    swagger_path '/api/v1/projects/{project_id}/reviews' do
+      parameter do
+        key :name, :project_id
+        key :in, :path
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Project").to_s
+        key :required, true
+        key :type, :string
+      end
+      operation :get do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Review", id: "Project").to_s
+        key :operationId, 'findReviewsByProject'
+        key :produces, [
+            'application/json'
+        ]
+        parameter do
+          key :name, :page
+          key :in, :query
+          key :description, 'Page Number to display'
+          key :type, :integer
+          key :format, :int64
+        end
+        response 200 do
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Review").to_s
+          schema type: :array do
+            items do
+              key :'$ref', :Review_Project
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+      end
+      operation :post do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.create_with_FK_description', model: "Review", id: "Project").to_s
+        key :operationId, 'addReviewByProject'
+        key :produces, [
+            'application/json'
+        ]
+        parameter do
+          key :name, :body
+          key :in, :body
+          key :description, I18n.t('swagger_ui.create_param_description', model: "Review").to_s
+          key :required, true
+          schema do
+            key :'$ref', :ProjectReviewInput
+          end
+        end
+        response 201 do
+          key :description, I18n.t('swagger_ui.create_success_description', model: "Review").to_s
+          schema do
+            key :'$ref', :Review_Project
+          end
+        end
+        response 422 do
+          key :description, 'Unprocessable Entity'
+          schema do
+            key :'$ref', :SwaggerError
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
+        end
+      end
+    end
+
     swagger_path '/api/v1/reviews/{id}' do
       parameter do
         key :name, :id

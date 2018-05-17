@@ -139,6 +139,10 @@ en:
     key: "Service"
     key_id: "Service id"
 
+  project:
+    key: "Project"
+    key_id: "Project id"
+
   statistic:
     key: "Statistic"
 
@@ -174,6 +178,7 @@ en:
     create_success_description: "OK, %{model} is successfully created"
 
     path_id_description: "ID of %{model}"
+    path_name_description: "Name of %{model}"
 
     update_description: "Update an %{model}"
     update_param_description: "New details of %{model} to be updated"

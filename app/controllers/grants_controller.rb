@@ -53,6 +53,11 @@ class GrantsController < ApplicationController
     @grant.discard
   end
 
+  def search
+    grant = Grant.find_by_name(params[:grant_name])
+    render json: { grant_id: grant.hashid}
+  end
+
   private
 
   def validate_create_params

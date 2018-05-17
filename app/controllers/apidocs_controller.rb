@@ -38,6 +38,8 @@ class ApidocsController < ApplicationController
     Product,
     ServicesController,
     Service,
+    ProjectsController,
+    Project,
     ReviewsController,
     Review,
     CommentsController,

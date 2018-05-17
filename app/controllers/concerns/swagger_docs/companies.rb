@@ -71,6 +71,43 @@ module SwaggerDocs::Companies
       end
     end
 
+    swagger_path '/api/v1/company/company_uen' do
+      operation :post do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.get_description', model: 'Company').to_s
+        key :operationId, 'findCompany'
+        key :produces, [
+            'application/json'
+        ]
+        parameter do
+          key :name, :body
+          key :in, :body
+          key :description, I18n.t('swagger_ui.update_param_description', model: "Company").to_s
+          key :required, true
+          schema do
+            key :'$ref', :CompanySearchInput
+          end
+        end
+        response 200 do
+          key :description, I18n.t('swagger_ui.get_success_description', model: 'Company').to_s
+          schema type: :array do
+            items do
+              key :'$ref', :Company
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+      end
+    end
+
     swagger_path '/api/v1/companies/vendor_listings' do
       operation :get do
         security do

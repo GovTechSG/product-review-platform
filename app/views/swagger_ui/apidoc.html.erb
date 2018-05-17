@@ -77,7 +77,7 @@ window.onload = function() {
   var path = '<%= "#{ENV['SWAGGER_API_BASE_PATH']}" %>';
   var head;
 
-    <% if Rails.env == "development" %>
+    <% if Rails.env == "development" || Rails.env == "test" %>
     head = "http://"
     <% else %>
     head = "https://"
