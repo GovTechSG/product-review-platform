@@ -222,6 +222,47 @@ module SwaggerDocs::Company
       end
     end
 
+    swagger_schema :CompanySearchInput do
+      allOf do
+        schema do
+          property :user do
+            key :type, :object
+            property :name do
+              key :type, :string
+            end
+
+            property :uen do
+              key :type, :string
+            end
+
+            property :description do
+              key :type, :string
+            end
+
+            property :phone_number do
+              key :type, :string
+            end
+
+            property :url do
+              key :type, :string
+            end
+
+            property :image do
+              key :type, :string
+              key :format, :byte
+            end
+
+            property :industry_ids do
+              key :type, :array
+              items do
+                key :type, :string
+              end
+            end
+          end
+        end
+      end
+    end
+
     swagger_schema :SwaggerError do
       key :description, 'Unprocessable Entity'
     end

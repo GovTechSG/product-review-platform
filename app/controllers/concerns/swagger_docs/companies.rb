@@ -88,7 +88,7 @@ module SwaggerDocs::Companies
           key :description, I18n.t('swagger_ui.update_param_description', model: "Company").to_s
           key :required, true
           schema do
-            key :'$ref', :CompanyInput
+            key :'$ref', :CompanySearchInput
           end
         end
         response 200 do

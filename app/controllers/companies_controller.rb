@@ -6,6 +6,7 @@ class CompaniesController < ApplicationController
   before_action :validate_company_presence, only: [:show, :update, :destroy, :clients]
   before_action :set_industry, only: [:create, :update]
   before_action :validate_industry_presence, only: [:create, :update]
+  before_action :validate_search_inputs, only: [:search]
 
   after_action only: [:index] { set_pagination_header(Company.kept) }
   after_action only: [:clients] { set_pagination_header(@company.clients.kept) }
@@ -83,6 +84,12 @@ class CompaniesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def validate_search_inputs
+      if !params[:user].nil? && (params[:user][:uen].nil? || params[:user][:name].nil? || params[:user][:description].nil?)
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "user")])
+      end
+    end
+
     def set_company
       @company = Company.find_by_hashid(params[:id])
     end
