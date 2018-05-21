@@ -13,7 +13,10 @@ RSpec.describe CompanySerializer, type: :serializer do
       VendorListingSerializer.new(@company, root: false).as_json["object"].merge("reviews_count" => @company.reviews_count,
                                                                                  "aspects" => @company.aspects,
                                                                                  "industries" => @company.industries,
-                                                                                 "projects" => @company.projects)
+                                                                                 "project_industries" => @company.project_industries,
+                                                                                 "positive" => @company.review_scores.select { |score| score > 0 }.count,
+                                                                                 "neutral" => @company.review_scores.select { |score| score == 0 }.count,
+                                                                                 "negative" => @company.review_scores.select { |score| score < 0 }.count)
     end
     it 'has a name' do
       expect(subject['name']).to eql(@company.name)
@@ -51,8 +54,20 @@ RSpec.describe CompanySerializer, type: :serializer do
       expect(subject['industries']).to eql(@company.industries)
     end
 
-    it 'has projects' do
-      expect(subject['projects'].as_json).to eql(@company.projects.as_json)
+    it 'has project_industries' do
+      expect(subject['project_industries'].as_json).to eql(@company.project_industries.as_json)
+    end
+
+    it 'has positive' do
+      expect(subject['positive']).to eql(@company.review_scores.select { |score| score > 0 }.count)
+    end
+
+    it 'has neutral' do
+      expect(subject['neutral']).to eql(@company.review_scores.select(&:zero?).count)
+    end
+
+    it 'has negative' do
+      expect(subject['negative']).to eql(@company.review_scores.select { |score| score < 0 }.count)
     end
 
     it 'has a image url' do

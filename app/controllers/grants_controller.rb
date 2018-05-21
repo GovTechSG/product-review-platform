@@ -54,8 +54,8 @@ class GrantsController < ApplicationController
   end
 
   def search
-    grant = Grant.find_by_name(params[:grant_name])
-    render json: { grant_id: grant.hashid}
+    grant = Grant.find_by(name: params[:grant_name])
+    render json: { grant_id: grant.hashid }
   end
 
   private

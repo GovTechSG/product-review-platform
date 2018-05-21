@@ -52,7 +52,7 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns companies with projects" do
       create_list(:company, 1)
       get :vendor_listings
-      expect(parsed_response.first.key?("projects")).to eq(true)
+      expect(parsed_response.first.key?("project_industries")).to eq(true)
     end
   end
 

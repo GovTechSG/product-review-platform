@@ -74,12 +74,12 @@ class CompaniesController < ApplicationController
   # POST /company/company_uen
   def search
     # check if company exist by UEN
-    company = Company.find_by_uen(params[:user][:uen])
+    company = Company.find_by(uen: params[:user][:uen])
     if company.nil?
       # create company if not found
       company = Company.create!(name: params[:user][:name], uen: params[:user][:uen], description: params[:user][:description])
     end
-    render json: {'company_id': company.hashid}
+    render json: { 'company_id': company.hashid }
   end
 
   private

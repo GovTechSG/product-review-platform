@@ -270,18 +270,18 @@ end
 
 
 Product.all.each do |p|
-  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  p.reviews.create!(score: 1, content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
-  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
-  p.reviews.create!(score: 3, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
-  p.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
-  p.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
 end
 
 Service.all.each do |s|
-  s.reviews.create!(score: 4, content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  s.reviews.create!(score: 2, content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
-  s.reviews.create!(score: 5, content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
+  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
+  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
 end
 
 Review.all.each_with_index do |r, i|

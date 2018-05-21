@@ -120,11 +120,23 @@ module SwaggerDocs::Company
         end
       end
 
-      property :projects do
+      property :project_industries do
         key :type, :array
         items do
           key :'$ref', :Industry
         end
+      end
+
+      property :positive do
+        key :type, :number
+      end
+
+      property :neutral do
+        key :type, :number
+      end
+
+      property :negative do
+        key :type, :number
       end
     end
 

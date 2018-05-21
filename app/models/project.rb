@@ -5,7 +5,7 @@ class Project < Reviewable
   belongs_to :company
   has_many :reviews, as: :reviewable, dependent: :destroy
 
-  validates_presence_of :name, :description, :company, :reviews_count
+  validates :name, :description, :company, :reviews_count, presence: true
 
   scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
 
