@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   before_action :validate_project_presence, only: [:show, :update, :destroy]
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
+  before_action :set_company_by_name, only: [:search]
 
   after_action only: [:index] { set_pagination_header(Project.kept.where(company_id: params[:company_id])) }
 
@@ -47,40 +48,44 @@ class ProjectsController < ApplicationController
 
   # POST /project/project_name
   def search
-    if Project.find_by_name(params[:project_name]).nil?
-      # check if company exist by UEN
-      company = Company.find_by_uen(params[:company][:uen])
-      if company.nil?
-        # create company
-        company = Company.create!(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
-      end
-      project = Project.create!(company_id: company.id, name: params[:project_name], description: params[:project][:description])
-      render json: {'project_id': project.hashid}
+    if Project.find_by(name: params[:project_name]).nil?
+      @searched_company = create_company if @searched_company.nil?
+      project = Project.create!(company_id: @searchedCompany.id, name: params[:project_name], description: params[:project][:description])
+      render json: { 'project_id': project.hashid }
     else
-      render json: {'project_id':Project.find_by_name(params[:project_name]).hashid }
+      render json: { 'project_id': Project.find_by(name: params[:project_name]).hashid }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_project
-      @project = Project.find_by_hashid(params[:id])
-    end
 
-    def validate_project_presence
-      render_error(404, "#{I18n.t('project.key_id')}": [I18n.t('general_error.not_found')]) if @project.nil? || !@project.presence?
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_project
+    @project = Project.find_by_hashid(params[:id])
+  end
 
-    def set_company
-      @company = Company.find_by_hashid(params[:company_id])
-    end
+  def validate_project_presence
+    render_error(404, "#{I18n.t('project.key_id')}": [I18n.t('general_error.not_found')]) if @project.nil? || !@project.presence?
+  end
 
-    def validate_company_presence
-      render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
-    end
+  def set_company
+    @company = Company.find_by_hashid(params[:company_id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def project_params
-      params.require(:project).permit(:name, :description)
-    end
+  def set_company_by_name
+    @searched_company = Company.find_by(uen: params[:company][:uen])
+  end
+
+  def create_company
+    Company.create!(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+  end
+
+  def validate_company_presence
+    render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def project_params
+    params.require(:project).permit(:name, :description)
+  end
 end

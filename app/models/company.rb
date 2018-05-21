@@ -17,6 +17,7 @@ class Company < Reviewer
   has_many :comments, dependent: :destroy, as: :commenter
 
   has_many :products, dependent: :destroy
+  has_many :projects, dependent: :destroy
   has_many :services, dependent: :destroy
   has_many :industry_companies, dependent: :destroy
   has_many :industries, through: :industry_companies
@@ -27,9 +28,6 @@ class Company < Reviewer
   validates :image, file_size: { less_than: 1.megabytes }
 
   def grants
-    product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
-    service_grants = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
-    all_grants = product_grants + service_grants
     if all_grants.nil?
       []
     else
@@ -45,7 +43,7 @@ class Company < Reviewer
     end
   end
 
-  def projects
+  def project_industries
     if all_reviewers.nil?
       []
     else
@@ -63,6 +61,13 @@ class Company < Reviewer
     end
   end
 
+  def review_scores
+    product_reviews = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:score)
+    service_reviews = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:score)
+    project_reviews = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:score)
+    product_reviews + service_reviews + project_reviews
+  end
+
   class << self
     def sort(sort_by)
       case sort_by
@@ -77,6 +82,14 @@ class Company < Reviewer
   def all_reviewers
     product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
     service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
-    product_reviewers + service_reviewers
+    project_reviewers = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id)
+    product_reviewers + service_reviewers + project_reviewers
+  end
+
+  def all_grants
+    product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
+    service_grants = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
+    project_grants = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id)
+    product_grants + service_grants + project_grants
   end
 end

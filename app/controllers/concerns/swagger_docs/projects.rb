@@ -100,7 +100,7 @@ module SwaggerDocs::Projects
         key :description, I18n.t('swagger_ui.get_description', model: 'Project').to_s
         key :operationId, 'findProject'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :body

@@ -18,6 +18,8 @@ class Review < ApplicationRecord
   belongs_to :reviewable, polymorphic: true
   belongs_to :product, -> { where(reviews: { reviewable_type: 'Product' }) },
              inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
+  belongs_to :project, -> { where(reviews: { reviewable_type: 'Project' }) },
+             inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
   belongs_to :service, -> { where(reviews: { reviewable_type: 'Service' }) },
              inverse_of: :reviews, foreign_key: 'reviewable_id', optional: true
 
@@ -56,9 +58,14 @@ class Review < ApplicationRecord
 
   def set_company_reviews_count
     company = reviewable.company
-    product_count = company.products.kept.reduce(0) { |accum, product| accum + product.reviews.kept.count }
-    service_count = company.services.kept.reduce(0) { |accum, service| accum + service.reviews.kept.count }
-    company.reviews_count = product_count + service_count
+    company.reviews_count = get_reviews_count(company)
     company.save
+  end
+
+  def get_reviews_count(company)
+    product_count = company.products.kept.reduce(0) { |accum, product| accum + product.reviews.kept.count }
+    project_count = company.projects.kept.reduce(0) { |accum, project| accum + project.reviews.kept.count }
+    service_count = company.services.kept.reduce(0) { |accum, service| accum + service.reviews.kept.count }
+    product_count + service_count + project_count
   end
 end

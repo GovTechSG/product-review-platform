@@ -183,7 +183,7 @@ module SwaggerDocs::Reviews
         key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Review", id: "Project").to_s
         key :operationId, 'findReviewsByProject'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :page
@@ -215,7 +215,7 @@ module SwaggerDocs::Reviews
         key :description, I18n.t('swagger_ui.create_with_FK_description', model: "Review", id: "Project").to_s
         key :operationId, 'addReviewByProject'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :body

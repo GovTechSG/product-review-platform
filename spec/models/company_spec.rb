@@ -180,11 +180,11 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context "projects" do
+  context "project_industries" do
     let(:company) { create(:company) }
     it "returns empty array if there are no projects" do
       company = create(:company)
-      expect(company.projects).to eq([])
+      expect(company.project_industries).to eq([])
     end
 
     it "does not return deleted projects" do
@@ -192,21 +192,48 @@ RSpec.describe Company, type: :model do
       product.reviews.create! build(:product_review).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       product.reviews.first.reviewer.industries.first.discard
-      expect(product.company.projects.length).to eq(0)
+      expect(product.company.project_industries.length).to eq(0)
     end
 
     it "returns product projects if there are only product projects" do
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(product.company.projects.length).to eq(1)
+      expect(product.company.project_industries.length).to eq(1)
     end
 
     it "returns service projects if there are only service projects" do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(service.company.projects.length).to eq(1)
+      expect(service.company.project_industries.length).to eq(1)
+    end
+  end
+
+  context "review_scores" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no review_scores" do
+      company = create(:company)
+      expect(company.review_scores).to eq([])
+    end
+
+    it "does not return deleted scores" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.discard
+      expect(product.company.review_scores.length).to eq(0)
+    end
+
+    it "returns product scores if there are only products" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(product.company.review_scores.length).to eq(1)
+    end
+
+    it "returns service scores if there are only services" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(service.company.review_scores.length).to eq(1)
     end
   end
 end

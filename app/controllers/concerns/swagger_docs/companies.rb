@@ -80,7 +80,7 @@ module SwaggerDocs::Companies
         key :description, I18n.t('swagger_ui.get_description', model: 'Company').to_s
         key :operationId, 'findCompany'
         key :produces, [
-            'application/json'
+          'application/json'
         ]
         parameter do
           key :name, :body
