@@ -6,7 +6,6 @@ services:
     image: dinkel/clamavd
   backend:
     build: .
-    entrypoint: "docker/docker-entrypoint-test.sh"
     depends_on:
       - postgres
       - clamd
