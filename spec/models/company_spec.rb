@@ -206,7 +206,7 @@ RSpec.describe Company, type: :model do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(service.company.project_industries.length).to eq(1)
+      expect(service.company.project_industries.length).to eq(2)
     end
   end
 
