@@ -260,7 +260,7 @@ RSpec.describe Company, type: :model do
 
     it "sorts by best ratings" do
       create_list(:company, 5)
-      expect(Company.sort('best_ratings')).to eq(5)
+      expect(Company.sort('best_ratings').count).to eq(5)
 
       current_value = Company.sort('best_ratings').first.ratings
       Company.sort('best_ratings').each do |company|
