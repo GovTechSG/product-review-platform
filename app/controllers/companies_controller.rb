@@ -25,7 +25,7 @@ class CompaniesController < ApplicationController
              vendor_listing_valid_options.first
            end
 
-    @companies = Company.send("sort", sort).page params[:page]
+    @companies = Kaminari.paginate_array(Company.send("sort", sort)).page params[:page]
 
     render json: @companies, each_serializer: VendorListingSerializer
   end

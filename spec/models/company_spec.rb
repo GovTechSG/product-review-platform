@@ -206,7 +206,7 @@ RSpec.describe Company, type: :model do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(service.company.project_industries.length).to eq(2)
+      expect(service.company.project_industries.length).to eq(1)
     end
   end
 
@@ -260,7 +260,7 @@ RSpec.describe Company, type: :model do
 
     it "sorts by best ratings" do
       create_list(:company, 5)
-      expect(Company.sort('best_ratings')).to eq(5)
+      expect(Company.sort('best_ratings').count).to eq(5)
 
       current_value = Company.sort('best_ratings').first.ratings
       Company.sort('best_ratings').each do |company|
