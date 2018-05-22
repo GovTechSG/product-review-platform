@@ -11,6 +11,7 @@ RSpec.describe CompanySerializer, type: :serializer do
 
     subject do
       VendorListingSerializer.new(@company, root: false).as_json["object"].merge("reviews_count" => @company.reviews_count,
+                                                                                 "ratings" => @company.ratings,
                                                                                  "aspects" => @company.aspects,
                                                                                  "industries" => @company.industries,
                                                                                  "project_industries" => @company.project_industries,
@@ -24,10 +25,6 @@ RSpec.describe CompanySerializer, type: :serializer do
 
     it 'has a uen' do
       expect(subject['uen']).to eql(@company.uen)
-    end
-
-    it 'has a aggregate score' do
-      expect(subject['aggregate_score']).to eql(@company.aggregate_score)
     end
 
     it 'has a description' do
@@ -44,6 +41,10 @@ RSpec.describe CompanySerializer, type: :serializer do
 
     it 'has a reviews_count' do
       expect(subject['reviews_count']).to eql(@company.reviews_count)
+    end
+
+    it 'has a ratings' do
+      expect(subject['ratings']).to eql(@company.ratings)
     end
 
     it 'has a aspects' do

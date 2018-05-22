@@ -68,11 +68,20 @@ class Company < Reviewer
     product_reviews + service_reviews + project_reviews
   end
 
+  def ratings
+    if review_scores.count > 0
+      positive = review_scores.select { |score| score > 0 }.count.to_f
+      (positive / review_scores.count.to_f) * 100.0
+    else
+      0.0
+    end
+  end
+
   class << self
     def sort(sort_by)
       case sort_by
       when 'best_ratings'
-        kept.order('aggregate_score desc')
+        kept.sort_by(&:ratings).reverse!
       end
     end
   end
