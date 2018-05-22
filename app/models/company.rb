@@ -72,7 +72,7 @@ class Company < Reviewer
     def sort(sort_by)
       case sort_by
       when 'best_ratings'
-        kept.order('aggregate_score asc')
+        kept.order('aggregate_score desc')
       end
     end
   end
