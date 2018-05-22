@@ -1,5 +1,5 @@
 class VendorListingSerializer < ApplicationSerializer
-  attributes :id, :name, :aggregate_score, :reviews_count, :image, :positive, :neutral, :negative
+  attributes :id, :name, :ratings, :reviews_count, :image, :positive, :neutral, :negative
   has_many :industries, serializer: IndustrySerializer
   has_many :project_industries, serializer: IndustrySerializer
 

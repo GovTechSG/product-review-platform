@@ -236,4 +236,37 @@ RSpec.describe Company, type: :model do
       expect(service.company.review_scores.length).to eq(1)
     end
   end
+
+  context "ratings" do
+    let(:company) { create(:company) }
+    it "returns 0 when there are no review scores" do
+      company = create(:company)
+      expect(company.ratings).to eq(0.0)
+    end
+
+    it "returns ratings" do
+      company = create(:company)
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(company.ratings).not_to eq(0)
+    end
+  end
+
+  context "best_ratings" do
+    let(:company) { create(:company) }
+    it "returns empty when there are no company" do
+      expect(Company.sort('best_ratings')).to eq([])
+    end
+
+    it "sorts by best ratings" do
+      create_list(:company, 5)
+      expect(Company.sort('best_ratings')).to eq(5)
+
+      current_value = Company.sort('best_ratings').first.ratings
+      Company.sort('best_ratings').each do |company|
+        expect(company.ratings).to be <= current_value
+        current_value = company.ratings
+      end
+    end
+  end
 end
