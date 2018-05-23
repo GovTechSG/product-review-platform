@@ -269,4 +269,22 @@ RSpec.describe Company, type: :model do
       end
     end
   end
+
+  context "newly_added" do
+    let(:company) { create(:company) }
+    it "returns empty when there are no company" do
+      expect(Company.sort('newly_added')).to eq([])
+    end
+
+    it "sorts by newly added" do
+      create_list(:company, 5)
+      expect(Company.sort('newly_added').count).to eq(5)
+
+      current_date = Company.sort('newly_added').first.created_at
+      Company.sort('newly_added').each do |company|
+        expect(company.created_at).to be <= current_date
+        current_date = company.created_at
+      end
+    end
+  end
 end
