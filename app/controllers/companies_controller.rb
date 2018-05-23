@@ -131,6 +131,6 @@ class CompaniesController < ApplicationController
     end
 
     def vendor_listing_valid_options
-      ["best_ratings"]
+      ["best_ratings", "newly_added"]
     end
 end
