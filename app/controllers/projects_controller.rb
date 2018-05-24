@@ -48,12 +48,12 @@ class ProjectsController < ApplicationController
 
   # POST /project/project_name
   def search
-    if Project.find_by(name: params[:project_name]).nil?
+    if Project.kept.find_by(name: params[:project_name]).nil?
       @searched_company = create_company if @searched_company.nil?
-      project = Project.create!(company_id: @searchedCompany.id, name: params[:project_name], description: params[:project][:description])
+      project = Project.create!(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
       render json: { 'project_id': project.hashid }
     else
-      render json: { 'project_id': Project.find_by(name: params[:project_name]).hashid }
+      render json: { 'project_id': Project.kept.find_by(name: params[:project_name]).hashid }
     end
   end
 
@@ -73,7 +73,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_company_by_name
-    @searched_company = Company.find_by(uen: params[:company][:uen])
+    @searched_company = Company.kept.find_by(uen: params[:company][:uen])
   end
 
   def create_company
