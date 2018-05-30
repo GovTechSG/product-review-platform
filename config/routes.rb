@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get '/statistics', to: 'statistics#index'
       get '/companies/:company_id/clients', to: 'companies#clients', as: 'companies_clients'
       get '/companies/vendor_listings', to: 'companies#vendor_listings', as: 'companies_vendor_listings'
+      get '/companies/vendor_listings_count', to: 'companies#vendor_listings_count', as: 'companies_vendor_listings_count'
       post '/oauth/refresh', to: 'tokens#refresh'
       post '/project/project_name', to: 'projects#search', as: 'search_project'
       post '/company/company_uen', to: 'companies#search', as: 'search_company'
