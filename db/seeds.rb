@@ -172,7 +172,8 @@ Grants = [
     { name: "Global Company Partnership Grant", acronym: "GCP", description: "GCP Grant is International Enterprise (IE) Singapore’s programme designed to help take your business global by providing assistance in the areas of building internal capabilities, manpower development and gaining market access." },
     { name: "International Marketing Activities Programme", acronym: "iMAP", description: "iMAP supports companies who want to access overseas business opportunities through participating in tradeshows and missions organised by Trade Associations and Chambers of Commerce." },
     { name: "Market Access Incubation Programme", acronym: "MAIP", description: "The Market Access Incubation Programme (MAIP) supports startups who want to access overseas markets and networks." },
-    { name: "Market Readiness Assistance", acronym: "MRA", description: "Designed to accelerate the international expansion of Singapore SMEs, the Market Readiness Assistance Grant supports pre-determined activities focused on helping you in overseas set-ups, identification of business partners and overseas market promotion." }
+    { name: "Market Readiness Assistance", acronym: "MRA", description: "Designed to accelerate the international expansion of Singapore SMEs, the Market Readiness Assistance Grant supports pre-determined activities focused on helping you in overseas set-ups, identification of business partners and overseas market promotion." },
+    { name: "Pre-scoped Productivity Solutions", acronym: "PSG", description: "The Productivity Solutions Grant (PSG) supports companies keen on adopting IT solutions and equipment to enhance business processes." }
   ]},
   { "Maritime And Port Authority Of Singapore": [
     { name: "Training@Maritime Singapore", acronym: "TMS", description: "Upgrade knowledge and expertise of local maritime personnel through attending approved training programmes under the Maritime Cluster Fund (MCF)." }
