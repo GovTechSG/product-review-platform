@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
   end
 
   def vendor_listings_count
-    
+
     @companies = Company.kept
 
     render json: @companies.count
