@@ -41,7 +41,7 @@ RSpec.describe "Companies", type: :request do
     it "returns companies with projects" do
       create_list(:company, 1)
       get companies_vendor_listings_path, headers: header
-      expect(parsed_response.first.key?("project_industries")).to eq(true)
+      expect(parsed_response[:companies].first.key?("project_industries")).to eq(true)
     end
   end
 
