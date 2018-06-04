@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'concerns/imageable_spec.rb'
 
 RSpec.describe Agency, type: :model do
   it_behaves_like "imageable"
