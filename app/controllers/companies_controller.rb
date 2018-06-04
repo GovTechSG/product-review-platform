@@ -20,13 +20,13 @@ class CompaniesController < ApplicationController
 
   # GET /companies/vendor_listings
   def vendor_listings
-    @sort = set_sort
+    set_sort
 
     handle_vendor_get
 
     if !performed?
       companies = @companies.blank? ? {}.to_s : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
-      company_count = Company.kept.count
+      company_count = @results_array.length
 
       render json: {
         companies: JSON.parse(companies),
@@ -90,27 +90,27 @@ class CompaniesController < ApplicationController
   private
 
     def set_sort
-      if vendor_listing_valid_options.include? params[:sort_by]
-        params[:sort_by]
-      else
-        vendor_listing_valid_options.first
-      end
+      @sort =
+        if vendor_listing_valid_options.include? params[:sort_by]
+          params[:sort_by]
+        else
+          vendor_listing_valid_options.first
+        end
     end
 
     def handle_vendor_get
-      if params[:search].present?
-        handle_vendor_search
-      else
-        @companies = Kaminari.paginate_array(Company.send("sort", @sort)).page(params[:page]).per(params[:per_page])
-      end
+      @results_array = Company.send("sort", @sort)
+
+      handle_vendor_search if params[:search].present?
+
+      @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
     end
 
     def handle_vendor_search
       @results_array = Company
-                       .ransack("name_cont" => params[:search])
+                       .ransack(name_cont: params[:search])
                        .result(distinct: true).kept
       @results_array = handle_vendor_sort
-      @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
     end
 
     def handle_vendor_sort

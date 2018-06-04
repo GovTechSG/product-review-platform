@@ -72,6 +72,7 @@ RSpec.describe CompaniesController, type: :controller do
         create_list(:company, 5)
         get :vendor_listings, params: { search: '' }
         expect(parsed_response[:companies].count).to eq(5)
+        expect(parsed_response[:count]).to eq(5)
       end
 
       it "returns only matching companies" do
@@ -80,12 +81,14 @@ RSpec.describe CompaniesController, type: :controller do
         create(:company, name: "divotal")
         get :vendor_listings, params: { search: 'pivotal' }
         expect(parsed_response[:companies].count).to eq(2)
+        expect(parsed_response[:count]).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company, name: "divotal")
         get :vendor_listings, params: { search: 'pivotal' }
         expect(parsed_response[:companies].count).to eq(0)
+        expect(parsed_response[:count]).to eq(0)
       end
     end
   end
