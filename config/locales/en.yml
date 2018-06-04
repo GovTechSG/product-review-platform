@@ -73,6 +73,8 @@ en:
     unprocessable_entity: "unprocessable entity"
     unauthorized: "unauthorized"
     unexpected: "unexpected error"
+    not_a_column: "provided key is not a valid attribute in the object: %{key}"
+    not_a_class: "is not a class"
 
   imageable:
     key: "Image"
