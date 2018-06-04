@@ -126,11 +126,26 @@ module SwaggerDocs::Companies
           key :type, :integer
           key :format, :int64
         end
+        parameter do
+          key :name, :sort_by
+          key :in, :query
+          key :description, 'Sort by (best_ratings/newly_added)'
+          key :type, :string
+        end
+        parameter do
+          key :name, :search
+          key :in, :query
+          key :description, 'Search company name'
+          key :type, :string
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
           schema do
             key :'$ref', :VendorListing
           end
+        end
+        response 400 do
+          key :'$ref', :BadRequestError
         end
         response 401 do
           key :'$ref', :UnauthorisedError

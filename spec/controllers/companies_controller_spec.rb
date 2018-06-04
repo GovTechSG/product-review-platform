@@ -44,21 +44,52 @@ RSpec.describe CompaniesController, type: :controller do
   end
 
   describe "GET #vendor_listings", authorized: true do
-    it "returns a success response" do
-      get :vendor_listings
-      expect(response).to be_success
-    end
+    context "without search" do
+      it "returns a success response" do
+        get :vendor_listings
+        expect(response).to be_success
+      end
 
-    it "returns companies with projects" do
-      create_list(:company, 1)
-      get :vendor_listings
-      expect(parsed_response[:companies].first.key?("project_industries")).to eq(true)
-    end
+      it "returns companies with projects" do
+        create_list(:company, 1)
+        get :vendor_listings
+        expect(parsed_response[:companies].first.key?("project_industries")).to eq(true)
+      end
 
-    it "returns companies count" do
-      create_list(:company, 1)
-      get :vendor_listings
-      expect(parsed_response[:count]).to eq(1)
+      it "returns companies count" do
+        create_list(:company, 1)
+        get :vendor_listings
+        expect(parsed_response[:count]).to eq(1)
+      end
+    end
+    context "with search" do
+      it "returns a success response" do
+        get :vendor_listings, params: { search: '' }
+        expect(response).to be_success
+      end
+
+      it "returns everything if search text is empty" do
+        create_list(:company, 5)
+        get :vendor_listings, params: { search: '' }
+        expect(parsed_response[:companies].count).to eq(5)
+        expect(parsed_response[:count]).to eq(5)
+      end
+
+      it "returns only matching companies" do
+        create(:company, name: "Pivotal")
+        create(:company, name: "pivotal")
+        create(:company, name: "divotal")
+        get :vendor_listings, params: { search: 'pivotal' }
+        expect(parsed_response[:companies].count).to eq(2)
+        expect(parsed_response[:count]).to eq(2)
+      end
+
+      it "returns nothing if companies not found" do
+        create(:company, name: "divotal")
+        get :vendor_listings, params: { search: 'pivotal' }
+        expect(parsed_response[:companies].count).to eq(0)
+        expect(parsed_response[:count]).to eq(0)
+      end
     end
   end
 

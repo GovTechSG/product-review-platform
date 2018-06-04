@@ -18,21 +18,21 @@ class CompaniesController < ApplicationController
     render json: @companies, methods: [:aspects], has_type: false
   end
 
+  # GET /companies/vendor_listings
   def vendor_listings
-    sort = if vendor_listing_valid_options.include? params[:sort_by]
-             params[:sort_by]
-           else
-             vendor_listing_valid_options.first
-           end
+    set_sort
 
-    @companies = Kaminari.paginate_array(Company.send("sort", sort)).page(params[:page]).per(params[:per_page])
-    companies = ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
-    company_count = Company.kept.count
+    handle_vendor_get
 
-    render json: {
-      companies: JSON.parse(companies),
-      count: company_count
-    }
+    if !performed?
+      companies = @companies.blank? ? {}.to_s : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
+      company_count = @results_array.length
+
+      render json: {
+        companies: JSON.parse(companies),
+        count: company_count
+      }
+    end
   end
 
   # GET /companies/:company_id/clients
@@ -88,6 +88,40 @@ class CompaniesController < ApplicationController
   end
 
   private
+
+    def set_sort
+      @sort =
+        if vendor_listing_valid_options.include? params[:sort_by]
+          params[:sort_by]
+        else
+          vendor_listing_valid_options.first
+        end
+    end
+
+    def handle_vendor_get
+      @results_array = Company.send("sort", @sort)
+
+      handle_vendor_search if params[:search].present?
+
+      @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
+    end
+
+    def handle_vendor_search
+      @results_array = Company
+                       .ransack(name_cont: params[:search])
+                       .result(distinct: true).kept
+      @results_array = handle_vendor_sort
+    end
+
+    def handle_vendor_sort
+      case @sort
+      when 'best_ratings'
+        @results_array = @results_array.sort_by(&:ratings).reverse!
+      when 'newly_added'
+        @results_array = @results_array.order(created_at: :desc)
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def validate_search_inputs
       if !params[:user].nil? && (params[:user][:uen].nil? || params[:user][:name].nil? || params[:user][:description].nil?)
@@ -137,5 +171,9 @@ class CompaniesController < ApplicationController
 
     def vendor_listing_valid_options
       ["best_ratings", "newly_added"]
+    end
+
+    def fuzzy_search_params
+      params.require(:search).permit(:key, :value)
     end
 end

@@ -20,6 +20,7 @@ gem 'file_validators'
 gem 'letter_avatar'
 gem 'mini_magick'
 gem 'rails', '~> 5.1.4'
+gem 'ransack'
 gem 'rubocop', '0.52.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
