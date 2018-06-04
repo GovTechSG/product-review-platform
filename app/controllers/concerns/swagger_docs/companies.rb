@@ -128,10 +128,8 @@ module SwaggerDocs::Companies
         end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
-          schema type: :array do
-            items do
-              key :'$ref', :VendorListing
-            end
+          schema do
+            key :'$ref', :VendorListing
           end
         end
         response 401 do

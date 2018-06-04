@@ -77,65 +77,70 @@ module SwaggerDocs::Company
     end
 
     swagger_schema :VendorListing do
-      key :type, :object
-      key :required, [:id, :name, :uen, :aggregate_score]
-
-      property :id do
-        key :type, :string
-        key :example, "AbC123"
-      end
-
-      property :name do
-        key :type, :string
-        key :example, 'Pivotal Software'
-      end
-
-      property :aggregate_score do
-        key :type, :number
-      end
-
-      property :reviews_count do
-        key :type, :number
-      end
-
-      property :image do
+      property :companies do
         key :type, :object
-        property :url do
+        key :required, [:id, :name, :uen, :aggregate_score]
+
+        property :id do
           key :type, :string
-          key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/pivotal20180402-93182-7x7gd.gif"
+          key :example, "AbC123"
         end
-        property :thumb do
+
+        property :name do
+          key :type, :string
+          key :example, 'Pivotal Software'
+        end
+
+        property :aggregate_score do
+          key :type, :number
+        end
+
+        property :reviews_count do
+          key :type, :number
+        end
+
+        property :image do
           key :type, :object
           property :url do
             key :type, :string
-            key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/thumb_pivotal20180402-93182-7x7gd.gif"
+            key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/pivotal20180402-93182-7x7gd.gif"
+          end
+          property :thumb do
+            key :type, :object
+            property :url do
+              key :type, :string
+              key :example, "https://review-api.gds-gov.tech/uploads/company/image/24/thumb_pivotal20180402-93182-7x7gd.gif"
+            end
           end
         end
-      end
 
-      property :industries do
-        key :type, :array
-        items do
-          key :'$ref', :Industry
+        property :industries do
+          key :type, :array
+          items do
+            key :'$ref', :Industry
+          end
+        end
+
+        property :project_industries do
+          key :type, :array
+          items do
+            key :'$ref', :Industry
+          end
+        end
+
+        property :positive do
+          key :type, :number
+        end
+
+        property :neutral do
+          key :type, :number
+        end
+
+        property :negative do
+          key :type, :number
         end
       end
-
-      property :project_industries do
-        key :type, :array
-        items do
-          key :'$ref', :Industry
-        end
-      end
-
-      property :positive do
-        key :type, :number
-      end
-
-      property :neutral do
-        key :type, :number
-      end
-
-      property :negative do
+      property :count do
         key :type, :number
       end
     end
