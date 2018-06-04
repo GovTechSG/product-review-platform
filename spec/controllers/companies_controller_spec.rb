@@ -64,33 +64,13 @@ RSpec.describe CompaniesController, type: :controller do
     end
     context "with search" do
       it "returns a success response" do
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "name", "search_text": "" }' }
+        get :vendor_listings, params: { search: '' }
         expect(response).to be_success
-      end
-
-      it "returns a bad request response if object is missing" do
-        get :vendor_listings, params: { search: '{ "search_object": "", "search_attribute": "name", "search_text": "" }' }
-        expect(response.status).to eq(400)
-      end
-
-      it "returns a bad request response if attribute is missing" do
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "", "search_text": "" }' }
-        expect(response.status).to eq(400)
-      end
-
-      it "returns a bad request response if object is invalid" do
-        get :vendor_listings, params: { search: '{ "search_object": "dompany", "search_attribute": "name", "search_text": "" }' }
-        expect(response.status).to eq(400)
-      end
-
-      it "returns a bad request response if attribute is invalid" do
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "namee", "search_text": "" }' }
-        expect(response.status).to eq(400)
       end
 
       it "returns everything if search text is empty" do
         create_list(:company, 5)
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "name", "search_text": "" }' }
+        get :vendor_listings, params: { search: '' }
         expect(parsed_response[:companies].count).to eq(5)
       end
 
@@ -98,13 +78,13 @@ RSpec.describe CompaniesController, type: :controller do
         create(:company, name: "Pivotal")
         create(:company, name: "pivotal")
         create(:company, name: "divotal")
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "name", "search_text": "pivotal" }' }
+        get :vendor_listings, params: { search: 'pivotal' }
         expect(parsed_response[:companies].count).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company, name: "divotal")
-        get :vendor_listings, params: { search: '{ "search_object": "Company", "search_attribute": "name", "search_text": "pivotal" }' }
+        get :vendor_listings, params: { search: 'pivotal' }
         expect(parsed_response[:companies].count).to eq(0)
       end
     end

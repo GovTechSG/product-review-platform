@@ -106,14 +106,11 @@ class CompaniesController < ApplicationController
     end
 
     def handle_vendor_search
-      set_search
-        if !performed?
-          @results_array = Company
-                           .ransack("#{@search_attribute}_cont" => @search_params[:search_text].presence || "")
-                           .result(distinct: true).kept
-          @results_array = handle_vendor_sort
-          @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
-        end
+      @results_array = Company
+                       .ransack("name_cont" => params[:search])
+                       .result(distinct: true).kept
+      @results_array = handle_vendor_sort
+      @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
     end
 
     def handle_vendor_sort
