@@ -25,7 +25,7 @@ class CompaniesController < ApplicationController
     handle_vendor_get
 
     if !performed?
-      companies = @companies.blank? ? {}.to_s : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
+      companies = @companies.blank? ? [].to_json : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
       company_count = @results_array.length
 
       render json: {
@@ -100,8 +100,8 @@ class CompaniesController < ApplicationController
 
     def handle_vendor_get
       @results_array = Company.send("sort", @sort)
-
       handle_vendor_search if params[:search].present?
+      handle_vendor_filter if params[:filter].present?
 
       @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
     end
@@ -120,6 +120,53 @@ class CompaniesController < ApplicationController
       when 'newly_added'
         @results_array = @results_array.order(created_at: :desc)
       end
+    end
+
+    def handle_vendor_filter
+      initialize_filter_vars
+      get_filters
+      filter_vendors
+    end
+
+    def initialize_filter_vars
+      @filter_hash = {}
+      @filter_hash["grants"] = []
+      @filter_hash["industries"] = []
+      @filters = params[:filter].to_s.split(',')
+    end
+
+    def get_filters
+      @filters.each do |filter|
+        filter_set = filter.split(':', 2)
+        if filter_set.length != 2
+          render_error(400, "#{I18n.t('general_error.invalid_filter')}": [I18n.t('general_error.invalid_filter_value')])
+          break
+        end
+        validate_filter_method filter_set[0]
+        break if performed?
+        @filter_hash[filter_set[0]].push(filter_set[1])
+      end
+    end
+
+    def filter_vendors
+      @results_array.delete_if do |company|
+        vendor_match_filter company
+      end
+    end
+
+    def vendor_match_filter(company)
+      @filter_hash.each do |filter, values|
+        return false if company.send(filter).find_by_hashid(values).present?
+      end
+        true
+    end
+
+    def validate_filter_method(filter_method)
+      render_error(400, "#{filter_class}": [I18n.t('general_error.not_a_class')]) if !(valid_filter_methods.include? filter_method)
+    end
+
+    def valid_filter_methods
+      @filter_hash.keys
     end
 
     # Use callbacks to share common setup or constraints between actions.

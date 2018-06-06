@@ -303,4 +303,4 @@ Review.all.each_with_index do |r, i|
   r.likes.create!(liker_id: 5, liker_type: "Agency", likeable_id: 5, likeable_type: "Review")
 end
 
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if (Rails.env.development? || Rails.env.test?)
+AdminUser.create!(email: 'poh_kah_kong@tech.gov.sg', password: 'l0v3gdsi', password_confirmation: 'l0v3gdsi') if (Rails.env.development? || Rails.env.test?)
