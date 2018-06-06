@@ -25,7 +25,7 @@ class CompaniesController < ApplicationController
     handle_vendor_get
 
     if !performed?
-      companies = @companies.blank? ? {}.to_s : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
+      companies = @companies.blank? ? [].to_json : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
       company_count = @results_array.length
 
       render json: {
