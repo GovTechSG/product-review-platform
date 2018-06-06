@@ -75,6 +75,8 @@ en:
     unexpected: "unexpected error"
     not_a_column: "provided key is not a valid attribute in the object: %{key}"
     not_a_class: "is not a class"
+    invalid_filter: "Filter"
+    invalid_filter_value: "format is invalid. Use 'class:value' seperated by commas"
 
   imageable:
     key: "Image"
