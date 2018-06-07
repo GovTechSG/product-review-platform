@@ -77,7 +77,10 @@ class ProjectsController < ApplicationController
   end
 
   def create_company
-    Company.create!(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+    company = Company.new(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+    company.set_image!(@image) if params[:company][:name].present?
+    company.save if company.errors.blank?
+    company
   end
 
   def validate_company_presence
