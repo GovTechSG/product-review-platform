@@ -79,8 +79,11 @@ class ProjectsController < ApplicationController
   def create_company
     company = Company.new(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
     company.set_image!(@image) if params[:company][:name].present?
-    company.save if company.errors.blank?
-    company
+    if company.errors.blank? && company.save
+      company
+    else
+      render json: company.errors.messages, status: :unprocessable_entity
+    end
   end
 
   def validate_company_presence

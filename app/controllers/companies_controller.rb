@@ -92,8 +92,11 @@ class CompaniesController < ApplicationController
     def create_company
       company = Company.new(name: params[:user][:name], uen: params[:user][:uen], description: params[:user][:description])
       company.set_image!(@image) if params[:user][:name].present?
-      company.save if company.errors.blank?
-      company
+      if company.errors.blank? && company.save
+        company
+      else
+        render json: company.errors.messages, status: :unprocessable_entity
+      end
     end
 
     def set_sort
