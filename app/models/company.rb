@@ -27,27 +27,33 @@ class Company < Reviewer
   validates :url, allow_blank: true, url: true
   validates :image, file_size: { less_than: 1.megabytes }
 
-  def grants
-    if all_grants.nil?
+  def grants(filter_by = nil)
+    accepted_filter = valid_reviewable_filter(filter_by)
+    grants = get_grants(accepted_filter)
+    if grants.nil?
       []
     else
-      Grant.kept.where(id: all_grants.uniq)
+      Grant.kept.where(id: grants.uniq)
     end
   end
 
-  def clients
-    if all_reviewers.nil?
+  def clients(filter_by = nil)
+    accepted_filter = valid_reviewable_filter(filter_by)
+    reviewers = get_reviewers(accepted_filter)
+    if reviewers.nil?
       []
     else
-      Company.kept.where(id: all_reviewers.uniq)
+      Company.kept.where(id: reviewers.uniq)
     end
   end
 
-  def project_industries
-    if all_reviewers.nil?
+  def reviewable_industries(filter_by = nil)
+    accepted_filter = valid_reviewable_filter(filter_by)
+    reviewers = get_reviewers(accepted_filter)
+    if reviewers.nil?
       []
     else
-      company_ids = Company.kept.where(id: all_reviewers.uniq).pluck(:id)
+      company_ids = Company.kept.where(id: reviewers.uniq).pluck(:id)
       if company_ids.nil?
         []
       else
@@ -90,17 +96,40 @@ class Company < Reviewer
 
   private
 
-  def all_reviewers
-    product_reviewers = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
-    service_reviewers = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
-    project_reviewers = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id)
-    product_reviewers + service_reviewers + project_reviewers
+  def valid_reviewable_filter(filter_by)
+    valid_filters = ['Product', 'Service', 'Project']
+    valid_filters.include?(filter_by) ? filter_by : nil
   end
 
-  def all_grants
-    product_grants = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
-    service_grants = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
-    project_grants = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id)
-    product_grants + service_grants + project_grants
+  # rubocop:disable Metrics/AbcSize
+  def get_reviewers(filter_by = nil)
+    case filter_by
+    when 'Product'
+      Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
+    when 'Service'
+      Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
+    when 'Project'
+      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id)
+    else
+      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id) +
+       Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id) +
+       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id))
+    end
   end
+
+  def get_grants(filter_by = nil)
+    case filter_by
+    when 'Product'
+      Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
+    when 'Service'
+      Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
+    when 'Project'
+      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id)
+    else
+      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id) +
+       Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id) +
+       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id))
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
 end

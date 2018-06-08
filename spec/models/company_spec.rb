@@ -71,6 +71,46 @@ RSpec.describe Company, type: :model do
       expect(review.reviewable.company.grants.length).to eq(1)
     end
 
+    it "returns all reviewable by default" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.grants.length).to eq(3)
+    end
+
+    it "returns all product when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.grants("Product").length).to eq(1)
+    end
+
+    it "returns all service when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.grants("Service").length).to eq(1)
+    end
+
+    it "returns all project when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.grants("Project").length).to eq(1)
+    end
+
     it "returns empty array if there are no grants" do
       company = create(:company)
       expect(company.grants).to eq([])
@@ -106,6 +146,36 @@ RSpec.describe Company, type: :model do
     it "returns empty array if there are no clients" do
       company = create(:company)
       expect(company.clients).to eq([])
+    end
+
+    it "returns all product when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.clients("Product").length).to eq(1)
+    end
+
+    it "returns all service when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.clients("Service").length).to eq(1)
+    end
+
+    it "returns all project when specified" do
+      review = create(:product_review)
+      company = review.reviewable.company
+      service = company.services.create!(build(:service).attributes)
+      service.reviews.create!(build(:service_review).attributes)
+      project = company.projects.create!(build(:project).attributes)
+      project.reviews.create!(build(:project_review).attributes)
+      expect(review.reviewable.company.clients("Project").length).to eq(1)
     end
 
     it "does not return deleted clients" do
@@ -180,33 +250,71 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context "project_industries" do
+  context "reviewable_industries" do
     let(:company) { create(:company) }
-    it "returns empty array if there are no projects" do
+    it "returns empty array if there are no reviewables" do
       company = create(:company)
-      expect(company.project_industries).to eq([])
+      expect(company.reviewable_industries).to eq([])
     end
 
-    it "does not return deleted projects" do
+    it "does not return deleted reviewables" do
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       product.reviews.first.reviewer.industries.first.discard
-      expect(product.company.project_industries.length).to eq(0)
+      expect(product.company.reviewable_industries.length).to eq(0)
     end
 
-    it "returns product projects if there are only product projects" do
+    it "returns all reviewables by default" do
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(product.company.project_industries.length).to eq(1)
-    end
-
-    it "returns service projects if there are only service projects" do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
-      expect(service.company.project_industries.length).to eq(1)
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(company.reviewable_industries.length).to eq(3)
+    end
+
+    it "returns product when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.reviews.first.reviewer.industries.create! build(:industry).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(company.reviewable_industries("Product").length).to eq(1)
+    end
+
+    it "returns service when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.reviews.first.reviewer.industries.create! build(:industry).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(company.reviewable_industries("Service").length).to eq(1)
+    end
+
+    it "returns project when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.reviews.first.reviewer.industries.create! build(:industry).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.reviews.first.reviewer.industries.create! build(:industry).attributes
+      expect(company.reviewable_industries("Project").length).to eq(1)
     end
   end
 
