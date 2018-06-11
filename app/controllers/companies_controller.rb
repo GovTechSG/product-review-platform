@@ -83,8 +83,14 @@ class CompaniesController < ApplicationController
     if company.nil?
       # create company if not found
       company = create_company
+      if company.errors.blank?
+        render json: { 'company_id': company.hashid }
+      else
+        render json: company.errors.messages, status: :unprocessable_entity
+      end
+    else
+      render json: { 'company_id': company.hashid }
     end
-    render json: { 'company_id': company.hashid }
   end
 
   private
@@ -92,11 +98,8 @@ class CompaniesController < ApplicationController
     def create_company
       company = Company.new(name: params[:user][:name], uen: params[:user][:uen], description: params[:user][:description])
       company.set_image!(@image) if params[:user][:name].present?
-      if company.errors.blank? && company.save
-        company
-      else
-        render json: company.errors.messages, status: :unprocessable_entity
-      end
+      company.errors.blank? && company.save
+      company
     end
 
     def set_sort

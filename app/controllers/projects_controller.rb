@@ -49,9 +49,12 @@ class ProjectsController < ApplicationController
   # POST /project/project_name
   def search
     if Project.kept.find_by(name: params[:project_name]).nil?
-      @searched_company = create_company if @searched_company.nil?
-      project = Project.create!(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
-      render json: { 'project_id': project.hashid }
+      project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+      if project.errors.blank?
+        render json: { 'project_id': project.hashid }
+      else
+        render json: project.errors.messages, status: :unprocessable_entity
+      end
     else
       render json: { 'project_id': Project.kept.find_by(name: params[:project_name]).hashid }
     end
@@ -74,16 +77,18 @@ class ProjectsController < ApplicationController
 
   def set_company_by_name
     @searched_company = Company.kept.find_by(uen: params[:company][:uen])
+    @searched_company = create_company if @searched_company.nil?
+    if @searched_company.errors.blank?
+    else
+      render json: @searched_company.errors.messages, status: :unprocessable_entity
+    end
   end
 
   def create_company
     company = Company.new(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
     company.set_image!(@image) if params[:company][:name].present?
-    if company.errors.blank? && company.save
-      company
-    else
-      render json: company.errors.messages, status: :unprocessable_entity
-    end
+    company.errors.blank? && company.save
+    company
   end
 
   def validate_company_presence

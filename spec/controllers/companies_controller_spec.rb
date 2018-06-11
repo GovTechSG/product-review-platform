@@ -513,4 +513,22 @@ RSpec.describe CompaniesController, type: :controller do
       expect_unauthorized
     end
   end
+
+  describe "POST #search", authorized: true do
+    it "returns a success response when company is found" do
+      create(:company, uen: 999)
+      post :search, params: { user: { uen: 999, name: 'test', description: 'for test'}}
+      expect(response).to be_success
+    end
+
+    it "returns a success response" do
+      post :search, params: { user: { uen: 999, name: 'test', description: 'for test'}}
+      expect(response).to be_success
+    end
+
+    it "returns a unprocessable_entity response when company creation failed" do
+      post :search, params: { user: { uen: 999, name: '', description: ''}}
+      expect(response.status).to eq(422)
+    end
+  end
 end
