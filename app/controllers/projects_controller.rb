@@ -49,12 +49,7 @@ class ProjectsController < ApplicationController
   # POST /project/project_name
   def search
     if Project.kept.find_by(name: params[:project_name]).nil?
-      project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
-      if project.errors.blank?
-        render json: { 'project_id': project.hashid }
-      else
-        render json: project.errors.messages, status: :unprocessable_entity
-      end
+      create_project
     else
       render json: { 'project_id': Project.kept.find_by(name: params[:project_name]).hashid }
     end
@@ -65,6 +60,15 @@ class ProjectsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_project
     @project = Project.find_by_hashid(params[:id])
+  end
+
+  def create_project
+    project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+    if project.errors.blank?
+      render json: { 'project_id': project.hashid }
+    else
+      render json: project.errors.messages, status: :unprocessable_entity
+    end
   end
 
   def validate_project_presence
