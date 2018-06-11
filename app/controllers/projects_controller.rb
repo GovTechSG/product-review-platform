@@ -49,9 +49,7 @@ class ProjectsController < ApplicationController
   # POST /project/project_name
   def search
     if Project.kept.find_by(name: params[:project_name]).nil?
-      @searched_company = create_company if @searched_company.nil?
-      project = Project.create!(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
-      render json: { 'project_id': project.hashid }
+      create_project
     else
       render json: { 'project_id': Project.kept.find_by(name: params[:project_name]).hashid }
     end
@@ -64,6 +62,15 @@ class ProjectsController < ApplicationController
     @project = Project.find_by_hashid(params[:id])
   end
 
+  def create_project
+    project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+    if project.errors.blank?
+      render json: { 'project_id': project.hashid }
+    else
+      render json: project.errors.messages, status: :unprocessable_entity
+    end
+  end
+
   def validate_project_presence
     render_error(404, "#{I18n.t('project.key_id')}": [I18n.t('general_error.not_found')]) if @project.nil? || !@project.presence?
   end
@@ -74,10 +81,18 @@ class ProjectsController < ApplicationController
 
   def set_company_by_name
     @searched_company = Company.kept.find_by(uen: params[:company][:uen])
+    @searched_company = create_company if @searched_company.nil?
+    if @searched_company.errors.blank?
+    else
+      render json: @searched_company.errors.messages, status: :unprocessable_entity
+    end
   end
 
   def create_company
-    Company.create!(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+    company = Company.new(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+    company.set_image!(@image) if params[:company][:name].present?
+    company.errors.blank? && company.save
+    company
   end
 
   def validate_company_presence
