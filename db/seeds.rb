@@ -10,7 +10,10 @@ company_names = [
   "ADP",
   "Zendesk",
   "Hubspot",
-  "RingCentral"
+  "RingCentral",
+  "Redmart",
+  "ShopBack",
+  "Shopee",
 ]
 industry_names = [
   "Agriculture",
@@ -22,7 +25,7 @@ industry_names = [
   "Manufacturing & Engineering",
   "Maritime",
   "Media",
-  "Retail Distributors",
+  "Retail",
   "Services",
   "Tourism",
   "Other"
@@ -37,7 +40,7 @@ industry_description = [
   "The Manufacturing & Engineering industry include enterprises which handle the process of adding value to raw materials by turning them into products: electrical goods, vehicles, aircraft, food, beverages, medical supplies, pharmaceuticals, and so on.",
   "The Maritime industry includes all enterprises engaged in the business of designing, constructing, manufacturing, acquiring, operating, supplying, repairing and/or maintaining vessels, or component parts thereof: of managing and/or operating shipping lines, and customs brokerage services, shipyards, dry docks, marine railways, Marine fishing, repair shops, shipping and freight forwarding services and similar enterprises.",
   "The Media industry consists of film, print, radio, and television. These segments include movies, TV shows, radio shows, news, music, newspapers, magazines, and books.",
-  "The Retail Distributors industry involves the process of selling consumer goods or Services to customers through multiple channels of distribution to earn a profit.",
+  "The Retail industry involves the process of selling consumer goods or Services to customers through multiple channels of distribution to earn a profit.",
   "The Services industry involve the provision of services to businesses as well as final consumers. Such services include accounting, tradesmanship (like mechanic or plumber services), computer services, restaurants, tourism, etc.",
   "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment.",
   "Any other industry."
@@ -53,6 +56,9 @@ uens = [
   "484208873",
   "844208872",
   "574208374",
+  "632244643",
+  "442244643",
+  "447244643",
 ]
 
 Strengths = [
@@ -207,7 +213,7 @@ Grants = [
 ]
 
 lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
-10.times do |i|
+13.times do |i|
   company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: rand(-1..1) , description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
   company.image = File.new(company.avatar_path(200))
   company.save
@@ -235,35 +241,17 @@ Agencies.each do |agency_param|
 end
 
 
-(1..10).each do |i|
+(1..13).each do |i|
   c = Company.find(i)
   c.products.create!(name: "PivotalTracker", description: lorem_ipsum)
   c.products.create!(name: "Cloud Foundry", description: lorem_ipsum)
   c.products.create!(name: "Greenplum", description: lorem_ipsum)
   c.services.create!(name: "Spring Framework", description: lorem_ipsum)
   c.services.create!(name: "Agile Development", description: lorem_ipsum)
+  c.projects.create!(name: "Making Spring Framework", description: lorem_ipsum)
+  c.projects.create!(name: "Making Agile Development", description: lorem_ipsum)
   c.industries.create!(name: industry_names[i-1], description: industry_description[i-1])
 end
-
-SMEs = [
-  "Grab",
-  "Carousell",
-  "Ninja Van",
-  "Redmart",
-  "ShopBack",
-  "Shopee",
-  "SEA"
-]
-
-SME_uens = [
-  "332244643",
-  "332244633",
-  "332254643",
-  "632244643",
-  "442244643",
-  "447244643",
-  "447212643"
-]
 
 Strengths.each do |strength|
   Aspect.create!(strength)
