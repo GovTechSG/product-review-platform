@@ -14,7 +14,7 @@ RSpec.describe CompanySerializer, type: :serializer do
                                                                                  "ratings" => @company.ratings,
                                                                                  "aspects" => @company.aspects,
                                                                                  "industries" => @company.industries,
-                                                                                 "project_industries" => @company.project_industries,
+                                                                                 "project_industries" => @company.reviewable_industries("Project"),
                                                                                  "positive" => @company.review_scores.select { |score| score > 0 }.count,
                                                                                  "neutral" => @company.review_scores.select { |score| score == 0 }.count,
                                                                                  "negative" => @company.review_scores.select { |score| score < 0 }.count)
@@ -56,7 +56,7 @@ RSpec.describe CompanySerializer, type: :serializer do
     end
 
     it 'has project_industries' do
-      expect(subject['project_industries'].as_json).to eql(@company.project_industries.as_json)
+      expect(subject['project_industries'].as_json).to eql(@company.reviewable_industries("Project").as_json)
     end
 
     it 'has positive' do

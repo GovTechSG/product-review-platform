@@ -18,4 +18,8 @@ class VendorListingSerializer < ApplicationSerializer
   def negative
     object.review_scores.select { |score| score < 0 }.count
   end
+
+  def project_industries
+    object.reviewable_industries("Project")
+  end
 end

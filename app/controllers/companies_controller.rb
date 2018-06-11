@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:company_id/clients
   def clients
-    render json: (@company.clients.page params[:page]), has_type: false
+    render json: (@company.clients(params[:filter_by]).page params[:page]), has_type: false
   end
 
   # GET /companies/1
