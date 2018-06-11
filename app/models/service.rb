@@ -9,6 +9,13 @@ class Service < Reviewable
 
   scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
 
+  after_save :set_reviews_count, on: [:update]
+
+  def set_reviews_count
+    company.reviews_count -= reviews_count if discarded?
+    company.save
+  end
+
   def presence?
     !discarded? && company.presence?
   end
