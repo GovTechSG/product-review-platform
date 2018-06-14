@@ -8,7 +8,7 @@ class IndustriesController < ApplicationController
 
   # GET /industries
   def index
-    @industries = Industry.all.page params[:page]
+    @industries = Industry.kept.order(name: :asc).page params[:page]
 
     render json: @industries
   end
