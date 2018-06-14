@@ -21,7 +21,6 @@ class CompaniesController < ApplicationController
   # GET /companies/vendor_listings
   def vendor_listings
     set_sort
-
     handle_vendor_get
 
     if !performed?
@@ -131,7 +130,7 @@ class CompaniesController < ApplicationController
       when 'best_ratings'
         @results_array = @results_array.sort_by(&:ratings).reverse!
       when 'newly_added'
-        @results_array = @results_array.order(created_at: :desc)
+        @results_array = @results_array.order(created_at: :desc).to_ary
       end
     end
 
