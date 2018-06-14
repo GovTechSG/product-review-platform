@@ -13,7 +13,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies
   def index
-    @companies = Company.kept.page params[:page]
+    @companies = params[:page] == 'all' ? Company.kept : Company.kept.page(params[:page])
 
     render json: @companies, methods: [:aspects], has_type: false
   end

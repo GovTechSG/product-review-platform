@@ -16,7 +16,7 @@ class LikesController < ApplicationController
 
   # GET /reviews/:review_id/likes
   def index
-    @likes = @likeable.likes.kept.page params[:page]
+    @likes = params[:page] == 'all' ? @likeable.likes.kept : @likeable.likes.kept.page(params[:page])
     render json: @likes
   end
 

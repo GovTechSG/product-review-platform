@@ -10,7 +10,7 @@ class ProductsController < ApplicationController
 
   # GET /companies/:company_id/products
   def index
-    @products = Product.kept.where(company_id: @company.id).page params[:page]
+    @products = params[:page] == 'all' ? Product.kept.where(company_id: @company.id) : Product.kept.where(company_id: @company.id).page(params[:page])
 
     render json: @products, methods: [:reviews_count, :aggregate_score], has_type: false
   end
