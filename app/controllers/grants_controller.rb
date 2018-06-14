@@ -18,6 +18,7 @@ class GrantsController < ApplicationController
       else
         Grant.kept
       end
+    @grants = params[:page] == 'all' ? @grants : @grants.page(params[:page])
     render json: (@grants.order(name: :asc).page params[:page]), has_type: false
   end
 
