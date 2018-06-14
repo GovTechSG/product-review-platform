@@ -89,7 +89,7 @@ class Company < Reviewer
       when 'best_ratings'
         kept.sort_by(&:ratings).reverse!
       when 'newly_added'
-        kept.order(created_at: :desc)
+        kept.order(created_at: :desc).to_ary
       end
     end
   end

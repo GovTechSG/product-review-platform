@@ -273,6 +273,12 @@ Service.all.each do |s|
   s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
 end
 
+Project.all.each do |p|
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 4)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 5)
+  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
+end
+
 Review.all.each_with_index do |r, i|
   r.comments.create!(content: lorem_ipsum, commenter_id: 1, commenter_type: "Agency", commentable_id: 1, commentable_type: "Review")
   r.comments.create!(content: lorem_ipsum, commenter_id: 2, commenter_type: "Agency", commentable_id: 2, commentable_type: "Review")

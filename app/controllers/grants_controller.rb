@@ -18,7 +18,7 @@ class GrantsController < ApplicationController
       else
         Grant.kept
       end
-    render json: (@grants.page params[:page]), has_type: false
+    render json: (@grants.order(name: :asc).page params[:page]), has_type: false
   end
 
   # GET /grants/1
