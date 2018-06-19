@@ -6,7 +6,6 @@ class ProjectsController < ApplicationController
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
   before_action :set_company_by_name, only: [:search]
-
   after_action only: [:index] { set_pagination_header(Project.kept.where(company_id: params[:company_id])) }
 
   # GET /companies/:company_id/projects
@@ -69,6 +68,8 @@ class ProjectsController < ApplicationController
     else
       render json: project.errors.messages, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotUnique
+    search
   end
 
   def validate_project_presence
