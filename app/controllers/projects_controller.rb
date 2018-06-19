@@ -6,7 +6,6 @@ class ProjectsController < ApplicationController
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
   before_action :set_company_by_name, only: [:search]
-
   after_action only: [:index] { set_pagination_header(Project.kept.where(company_id: params[:company_id])) }
 
   # GET /companies/:company_id/projects
@@ -48,6 +47,7 @@ class ProjectsController < ApplicationController
 
   # POST /project/project_name
   def search
+    #puts 'HERE', Project.kept.find_by(name: params[:project_name]).nil?
     if Project.kept.find_by(name: params[:project_name]).nil?
       create_project
     else
@@ -63,11 +63,15 @@ class ProjectsController < ApplicationController
   end
 
   def create_project
-    project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
-    if project.errors.blank?
-      render json: { 'project_id': project.hashid }
-    else
-      render json: project.errors.messages, status: :unprocessable_entity
+    begin
+      project = Project.create!(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+      if project.errors.blank?
+        render json: { 'project_id': project.hashid }
+      else
+        render json: project.errors.messages, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotUnique => e
+      search
     end
   end
 
