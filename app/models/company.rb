@@ -37,13 +37,19 @@ class Company < Reviewer
     end
   end
 
-  def clients(filter_by = nil, sort_by = nil)
+  def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
+    accepted_sorter = valid_reviewable_sorter(sort_by)
     reviewers = get_reviews(accepted_filter).pluck(:reviewer_id)
     if reviewers.nil?
       []
     else
-      Company.kept.where(id: reviewers.uniq)
+      client_list = Company.kept.where(id: reviewers.uniq)
+      if accepted_sorter.present?
+        return client_list.order(accepted_sorter => :asc) if desc.nil? || desc == "false"
+        return client_list.order(accepted_sorter => :desc)
+      end
+      client_list
     end
   end
 
@@ -96,6 +102,11 @@ class Company < Reviewer
   def valid_reviewable_filter(filter_by)
     valid_filters = ['Product', 'Service', 'Project']
     valid_filters.include?(filter_by) ? filter_by : nil
+  end
+
+  def valid_reviewable_sorter(sort_by)
+    valid_sorters = ['reviews_count', 'created_at']
+    valid_sorters.include?(sort_by) ? sort_by : nil
   end
 
   # rubocop:disable Metrics/AbcSize

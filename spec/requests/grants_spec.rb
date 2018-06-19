@@ -35,7 +35,7 @@ RSpec.describe "Grants", type: :request do
     describe "GET /api/v1/companies/:company_id/grants" do
       it "returns a success response" do
         review = create(:product_review)
-        get company_grants_path(review.reviewable.company_id), headers: request_login
+        get company_grants_path(review.reviewable.company.hashid), headers: request_login
 
         expect(response).to be_success
       end
@@ -43,7 +43,7 @@ RSpec.describe "Grants", type: :request do
       it "does not return grants from deleted company" do
         review = create(:product_review)
         review.reviewable.company.discard
-        get company_grants_path(review.reviewable.company_id), headers: request_login
+        get company_grants_path(review.reviewable.company.hashid), headers: request_login
         expect(response.status).to eq(404)
       end
 
