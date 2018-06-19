@@ -45,7 +45,6 @@ RSpec.describe CompaniesController, type: :controller do
         create_list(:company, 5)
         get :index, params: { search: '' }
         expect(parsed_response.count).to eq(5)
-        expect(parsed_response).to eq(5)
       end
 
       it "returns only matching companies" do
@@ -54,14 +53,12 @@ RSpec.describe CompaniesController, type: :controller do
         create(:company, name: "divotal")
         get :index, params: { search: 'pivotal' }
         expect(parsed_response.count).to eq(2)
-        expect(parsed_response).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company, name: "divotal")
         get :index, params: { search: 'pivotal' }
         expect(parsed_response.count).to eq(0)
-        expect(parsed_response).to eq(0)
       end
     end
 
@@ -78,7 +75,6 @@ RSpec.describe CompaniesController, type: :controller do
         company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
 
       it "returns only matching companies" do
@@ -88,7 +84,6 @@ RSpec.describe CompaniesController, type: :controller do
         company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid}" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
 
       it "it filters inclusively" do
@@ -99,7 +94,6 @@ RSpec.describe CompaniesController, type: :controller do
         company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},industries:#{another_industry.hashid}" }
         expect(parsed_response.count).to eq(2)
-        expect(parsed_response).to eq(2)
       end
 
       it "returns nothing if companies not found" do
@@ -107,7 +101,6 @@ RSpec.describe CompaniesController, type: :controller do
         industry = create(:industry)
         get :index, params: { search: '', filter: "industries:#{industry.hashid}" }
         expect(parsed_response.count).to eq(0)
-        expect(parsed_response).to eq(0)
       end
     end
 
@@ -122,7 +115,6 @@ RSpec.describe CompaniesController, type: :controller do
         review = create(:product_review)
         get :index, params: { search: '', filter: "grants:#{review.grant.hashid}" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
 
       it "filters inclusively" do
@@ -130,7 +122,6 @@ RSpec.describe CompaniesController, type: :controller do
         another_review = create(:service_review)
         get :index, params: { search: '', filter: "grants:#{review.grant.hashid},grants:#{another_review.grant.hashid}" }
         expect(parsed_response.count).to eq(2)
-        expect(parsed_response).to eq(2)
       end
 
       it "returns nothing if companies not found" do
@@ -138,7 +129,6 @@ RSpec.describe CompaniesController, type: :controller do
         grant = create(:grant)
         get :index, params: { search: '', filter: "grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(0)
-        expect(parsed_response).to eq(0)
       end
     end
 
@@ -154,7 +144,7 @@ RSpec.describe CompaniesController, type: :controller do
         review = create(:product_review)
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
-        expect(parsed_response).to eq(1)
+        expect(parsed_response.count).to eq(1)
       end
 
       it "filters inclusively" do
@@ -163,7 +153,6 @@ RSpec.describe CompaniesController, type: :controller do
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{another_review.grant.hashid}" }
         expect(parsed_response.count).to eq(2)
-        expect(parsed_response).to eq(2)
       end
 
       it "returns nothing if there are no results" do
@@ -172,7 +161,6 @@ RSpec.describe CompaniesController, type: :controller do
         create(:company)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(0)
-        expect(parsed_response).to eq(0)
       end
 
       it "returns something if only industry filter has results" do
@@ -181,7 +169,6 @@ RSpec.describe CompaniesController, type: :controller do
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
 
       it "returns something if only grant filter has results" do
@@ -190,7 +177,6 @@ RSpec.describe CompaniesController, type: :controller do
         grant = review.grant
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
     end
 
@@ -204,7 +190,6 @@ RSpec.describe CompaniesController, type: :controller do
         create_list(:company, 5)
         get :index, params: { search: '', filter: '' }
         expect(parsed_response.count).to eq(5)
-        expect(parsed_response).to eq(5)
       end
 
       it "returns only matching companies" do
@@ -214,7 +199,6 @@ RSpec.describe CompaniesController, type: :controller do
         another_company.industries.create!(build(:industry).attributes)
         get :index, params: { search: 'pivotal', filter: "industries:#{industry.hashid}" }
         expect(parsed_response.count).to eq(1)
-        expect(parsed_response).to eq(1)
       end
     end
   end
