@@ -47,7 +47,6 @@ class ProjectsController < ApplicationController
 
   # POST /project/project_name
   def search
-    #puts 'HERE', Project.kept.find_by(name: params[:project_name]).nil?
     if Project.kept.find_by(name: params[:project_name]).nil?
       create_project
     else
