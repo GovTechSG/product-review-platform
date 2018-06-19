@@ -29,7 +29,7 @@ class Company < Reviewer
 
   def grants(filter_by = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
-    grants = get_grants(accepted_filter)
+    grants = get_reviews(accepted_filter).pluck(:grant_id)
     if grants.nil?
       []
     else
@@ -37,19 +37,25 @@ class Company < Reviewer
     end
   end
 
-  def clients(filter_by = nil)
+  def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
-    reviewers = get_reviewers(accepted_filter)
+    accepted_sorter = valid_reviewable_sorter(sort_by)
+    reviewers = get_reviews(accepted_filter).pluck(:reviewer_id)
     if reviewers.nil?
       []
     else
-      Company.kept.where(id: reviewers.uniq)
+      client_list = Company.kept.where(id: reviewers.uniq)
+      if accepted_sorter.present?
+        return client_list.order(accepted_sorter => :asc) if desc.nil? || desc == "false"
+        return client_list.order(accepted_sorter => :desc)
+      end
+      client_list
     end
   end
 
   def reviewable_industries(filter_by = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
-    reviewers = get_reviewers(accepted_filter)
+    reviewers = get_reviews(accepted_filter).pluck(:reviewer_id)
     if reviewers.nil?
       []
     else
@@ -68,10 +74,7 @@ class Company < Reviewer
   end
 
   def review_scores
-    product_reviews = Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:score)
-    service_reviews = Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:score)
-    project_reviews = Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:score)
-    product_reviews + service_reviews + project_reviews
+    get_reviews.pluck(:score)
   end
 
   def ratings
@@ -101,34 +104,24 @@ class Company < Reviewer
     valid_filters.include?(filter_by) ? filter_by : nil
   end
 
-  # rubocop:disable Metrics/AbcSize
-  def get_reviewers(filter_by = nil)
-    case filter_by
-    when 'Product'
-      Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id)
-    when 'Service'
-      Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id)
-    when 'Project'
-      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id)
-    else
-      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:reviewer_id) +
-       Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:reviewer_id) +
-       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:reviewer_id))
-    end
+  def valid_reviewable_sorter(sort_by)
+    valid_sorters = ['reviews_count', 'created_at']
+    valid_sorters.include?(sort_by) ? sort_by : nil
   end
 
-  def get_grants(filter_by = nil)
+  # rubocop:disable Metrics/AbcSize
+  def get_reviews(filter_by = nil)
     case filter_by
     when 'Product'
-      Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id)
+      Review.match_reviewable(products.kept.pluck(:id), "Product").kept
     when 'Service'
-      Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id)
+      Review.match_reviewable(services.kept.pluck(:id), "Service").kept
     when 'Project'
-      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id)
+      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept
     else
-      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept.pluck(:grant_id) +
-       Review.match_reviewable(services.kept.pluck(:id), "Service").kept.pluck(:grant_id) +
-       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept.pluck(:grant_id))
+      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept +
+       Review.match_reviewable(services.kept.pluck(:id), "Service").kept +
+       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept)
     end
   end
   # rubocop:enable Metrics/AbcSize
