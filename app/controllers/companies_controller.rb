@@ -9,7 +9,7 @@ class CompaniesController < ApplicationController
   before_action :validate_search_inputs, only: [:search]
 
   after_action only: [:index] { set_pagination_header(Company.kept) }
-  after_action only: [:clients] { set_pagination_header(@company.clients.kept) }
+  after_action only: [:clients] { set_pagination_header(@client_list) }
 
   # GET /companies
   def index
@@ -36,7 +36,9 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:company_id/clients
   def clients
-    render json: (@company.clients(params[:filter_by]).page params[:page]), has_type: false
+    @client_list = @company.clients(params[:filter_by], params[:sort_by], params[:desc])
+    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present?
+    render json: @client_list, has_type: false
   end
 
   # GET /companies/1

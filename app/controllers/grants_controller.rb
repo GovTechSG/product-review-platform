@@ -104,7 +104,7 @@ class GrantsController < ApplicationController
 
   def set_company_if_present
     if params[:company_id].present?
-      @company = Company.find_by(id: params[:company_id])
+      @company = Company.find_by_hashid(params[:company_id])
       render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
     end
   end

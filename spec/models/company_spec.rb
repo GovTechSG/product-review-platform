@@ -248,6 +248,26 @@ RSpec.describe Company, type: :model do
       service.reviews.create! build(:service_review).attributes
       expect(product.company.clients.length).to eq(2)
     end
+
+    it "returns clients sorted by created_at when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.clients(nil, "created_at")[0]).to eq(product.reviews.first.reviewer)
+    end
+
+    it "returns clients sorted by created_at by desc when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.clients(nil, "created_at", "true")[0]).to eq(project.reviews.first.reviewer)
+    end
   end
 
   context "reviewable_industries" do

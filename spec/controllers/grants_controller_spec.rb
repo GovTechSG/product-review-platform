@@ -50,7 +50,7 @@ RSpec.describe GrantsController, type: :controller do
     describe "GET #index company" do
       it "returns a success response", authorized: true do
         review = create(:product_review)
-        get :index, params: { company_id: review.reviewable.company_id }
+        get :index, params: { company_id: review.reviewable.company.hashid }
 
         expect(response).to be_success
       end
@@ -58,7 +58,7 @@ RSpec.describe GrantsController, type: :controller do
       it "does not return grants from deleted company", authorized: true do
         review = create(:product_review)
         review.reviewable.company.discard
-        get :index, params: { company_id: review.reviewable.company_id }
+        get :index, params: { company_id: review.reviewable.company.hashid }
         expect(response.status).to eq(404)
       end
 

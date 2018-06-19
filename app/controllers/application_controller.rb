@@ -19,8 +19,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_pagination_header(data)
-    headers["Total"] = data.count
-    headers["Per-Page"] = data.page.limit_value
+    headers["Total"] = data.nil? ? 0 : data.count
+    headers["Per-Page"] = data.nil? ? 0 : data.page.limit_value
   end
 
   protected
