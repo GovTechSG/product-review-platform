@@ -62,16 +62,14 @@ class ProjectsController < ApplicationController
   end
 
   def create_project
-    begin
-      project = Project.create!(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
-      if project.errors.blank?
-        render json: { 'project_id': project.hashid }
-      else
-        render json: project.errors.messages, status: :unprocessable_entity
-      end
-    rescue ActiveRecord::RecordNotUnique => e
-      search
+    project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+    if project.errors.blank?
+      render json: { 'project_id': project.hashid }
+    else
+      render json: project.errors.messages, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotUnique
+    search
   end
 
   def validate_project_presence
