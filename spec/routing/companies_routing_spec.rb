@@ -6,10 +6,6 @@ RSpec.describe CompaniesController, type: :routing do
       expect(get: "/api/v1/companies").to route_to("companies#index")
     end
 
-    it "routes to #vendor_listings" do
-      expect(get: "/api/v1/companies/vendor_listings").to route_to("companies#vendor_listings")
-    end
-
     it "routes to #clients" do
       expect(get: "/api/v1/companies/1/clients").to route_to("companies#clients", company_id: "1")
     end

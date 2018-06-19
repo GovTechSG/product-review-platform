@@ -6,7 +6,22 @@ RSpec.describe CompanySerializer, type: :serializer do
       @company = create(:company)
     end
 
-    subject { CompanySerializer.new(@company, root: false).as_json["object"].merge("reviews_count" => @company.reviews_count, "aspects" => @company.aspects, "industries" => @company.industries) }
+    subject do
+      CompanySerializer
+        .new(@company, root: false)
+        .as_json["object"]
+        .merge(
+          "reviews_count" => @company.reviews_count,
+          "ratings" => @company.ratings,
+          "aspects" => @company.aspects,
+          "industries" => @company.industries,
+          "project_industries" => @company.reviewable_industries("Project"),
+          "positive" => @company.review_scores.select { |score| score > 0 }.count,
+          "neutral" => @company.review_scores.select { |score| score == 0 }.count,
+          "negative" => @company.review_scores.select { |score| score < 0 }.count
+        )
+    end
+
     it 'has a name' do
       expect(subject['name']).to eql(@company.name)
     end
@@ -45,6 +60,26 @@ RSpec.describe CompanySerializer, type: :serializer do
 
     it 'has a image url' do
       expect(subject['image'].url).to eql(@company.image.url)
+    end
+
+    it 'has a ratings' do
+      expect(subject['ratings']).to eql(@company.ratings)
+    end
+
+    it 'has project_industries' do
+      expect(subject['project_industries'].as_json).to eql(@company.reviewable_industries("Project").as_json)
+    end
+
+    it 'has positive' do
+      expect(subject['positive']).to eql(@company.review_scores.select { |score| score > 0 }.count)
+    end
+
+    it 'has neutral' do
+      expect(subject['neutral']).to eql(@company.review_scores.select(&:zero?).count)
+    end
+
+    it 'has negative' do
+      expect(subject['negative']).to eql(@company.review_scores.select { |score| score < 0 }.count)
     end
   end
 end

@@ -32,64 +32,33 @@ RSpec.describe CompaniesController, type: :controller do
       create_list(:company, num_of_object_to_create)
 
       get :index
-      expect(JSON.parse(response.body).count).to match default_result_per_page
-    end
-  end
-
-  describe "GET #index", authorized: false do
-    it "returns an unauthorized response" do
-      get :index, params: {}
-      expect_unauthorized
-    end
-  end
-
-  describe "GET #vendor_listings", authorized: true do
-    context "without search or filter" do
-      it "returns a success response" do
-        get :vendor_listings
-        expect(response).to be_success
-      end
-
-      it "returns companies with projects" do
-        create_list(:company, 1)
-        get :vendor_listings
-        expect(parsed_response[:companies].first.key?("project_industries")).to eq(true)
-      end
-
-      it "returns companies count" do
-        create_list(:company, 1)
-        get :vendor_listings
-        expect(parsed_response[:count]).to eq(1)
-      end
+      expect(parsed_response.count).to match default_result_per_page
     end
 
     context "with search, without filter" do
       it "returns a success response" do
-        get :vendor_listings, params: { search: '' }
+        get :index, params: { search: '' }
         expect(response).to be_success
       end
 
       it "returns everything if search text is empty" do
         create_list(:company, 5)
-        get :vendor_listings, params: { search: '' }
-        expect(parsed_response[:companies].count).to eq(5)
-        expect(parsed_response[:count]).to eq(5)
+        get :index, params: { search: '' }
+        expect(parsed_response.count).to eq(5)
       end
 
       it "returns only matching companies" do
         create(:company, name: "Pivotal")
         create(:company, name: "pivotal")
         create(:company, name: "divotal")
-        get :vendor_listings, params: { search: 'pivotal' }
-        expect(parsed_response[:companies].count).to eq(2)
-        expect(parsed_response[:count]).to eq(2)
+        get :index, params: { search: 'pivotal' }
+        expect(parsed_response.count).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company, name: "divotal")
-        get :vendor_listings, params: { search: 'pivotal' }
-        expect(parsed_response[:companies].count).to eq(0)
-        expect(parsed_response[:count]).to eq(0)
+        get :index, params: { search: 'pivotal' }
+        expect(parsed_response.count).to eq(0)
       end
     end
 
@@ -97,16 +66,15 @@ RSpec.describe CompaniesController, type: :controller do
       it "returns a success response" do
         company = create(:company)
         industry = company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid}" }
+        get :index, params: { search: '', filter: "industries:#{industry.hashid}" }
         expect(response).to be_success
       end
 
       it "returns everything if filter is empty" do
         company = create(:company)
         company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "" }
+        expect(parsed_response.count).to eq(1)
       end
 
       it "returns only matching companies" do
@@ -114,9 +82,8 @@ RSpec.describe CompaniesController, type: :controller do
         industry = company.industries.create!(build(:industry).attributes)
         company.industries.create!(build(:industry).attributes)
         company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid}" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
 
       it "it filters inclusively" do
@@ -125,48 +92,43 @@ RSpec.describe CompaniesController, type: :controller do
         industry = company.industries.create!(build(:industry).attributes)
         another_industry = another_company.industries.create!(build(:industry).attributes)
         company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},industries:#{another_industry.hashid}" }
-        expect(parsed_response[:companies].count).to eq(2)
-        expect(parsed_response[:count]).to eq(2)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},industries:#{another_industry.hashid}" }
+        expect(parsed_response.count).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company)
         industry = create(:industry)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid}" }
-        expect(parsed_response[:companies].count).to eq(0)
-        expect(parsed_response[:count]).to eq(0)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid}" }
+        expect(parsed_response.count).to eq(0)
       end
     end
 
     context "with grant filter, without search" do
       it "returns a success response" do
         review = create(:product_review)
-        get :vendor_listings, params: { search: '', filter: "grants:#{review.grant.hashid}" }
+        get :index, params: { search: '', filter: "grants:#{review.grant.hashid}" }
         expect(response).to be_success
       end
 
       it "returns only matching companies" do
         review = create(:product_review)
-        get :vendor_listings, params: { search: '', filter: "grants:#{review.grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "grants:#{review.grant.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
 
       it "filters inclusively" do
         review = create(:product_review)
         another_review = create(:service_review)
-        get :vendor_listings, params: { search: '', filter: "grants:#{review.grant.hashid},grants:#{another_review.grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(2)
-        expect(parsed_response[:count]).to eq(2)
+        get :index, params: { search: '', filter: "grants:#{review.grant.hashid},grants:#{another_review.grant.hashid}" }
+        expect(parsed_response.count).to eq(2)
       end
 
       it "returns nothing if companies not found" do
         create(:company)
         grant = create(:grant)
-        get :vendor_listings, params: { search: '', filter: "grants:#{grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(0)
-        expect(parsed_response[:count]).to eq(0)
+        get :index, params: { search: '', filter: "grants:#{grant.hashid}" }
+        expect(parsed_response.count).to eq(0)
       end
     end
 
@@ -174,65 +136,60 @@ RSpec.describe CompaniesController, type: :controller do
       it "returns a success response" do
         review = create(:product_review)
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
         expect(response).to be_success
       end
 
       it "returns only matching companies" do
         review = create(:product_review)
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
 
       it "filters inclusively" do
         review = create(:product_review)
         another_review = create(:service_review)
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{another_review.grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(2)
-        expect(parsed_response[:count]).to eq(2)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{another_review.grant.hashid}" }
+        expect(parsed_response.count).to eq(2)
       end
 
       it "returns nothing if there are no results" do
         industry = create(:industry)
         grant = create(:grant)
         create(:company)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(0)
-        expect(parsed_response[:count]).to eq(0)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
+        expect(parsed_response.count).to eq(0)
       end
 
       it "returns something if only industry filter has results" do
         review = create(:product_review)
         grant = create(:grant)
         industry = review.reviewable.company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
 
       it "returns something if only grant filter has results" do
         review = create(:product_review)
         industry = create(:industry)
         grant = review.grant
-        get :vendor_listings, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
     end
 
     context "with search and filter" do
       it "returns a success response" do
-        get :vendor_listings, params: { search: '', filter: '' }
+        get :index, params: { search: '', filter: '' }
         expect(response).to be_success
       end
 
       it "returns everything if search text and filter is empty" do
         create_list(:company, 5)
-        get :vendor_listings, params: { search: '', filter: '' }
-        expect(parsed_response[:companies].count).to eq(5)
-        expect(parsed_response[:count]).to eq(5)
+        get :index, params: { search: '', filter: '' }
+        expect(parsed_response.count).to eq(5)
       end
 
       it "returns only matching companies" do
@@ -240,16 +197,15 @@ RSpec.describe CompaniesController, type: :controller do
         industry = company.industries.create!(build(:industry).attributes)
         another_company = create(:company, name: "divotal")
         another_company.industries.create!(build(:industry).attributes)
-        get :vendor_listings, params: { search: 'pivotal', filter: "industries:#{industry.hashid}" }
-        expect(parsed_response[:companies].count).to eq(1)
-        expect(parsed_response[:count]).to eq(1)
+        get :index, params: { search: 'pivotal', filter: "industries:#{industry.hashid}" }
+        expect(parsed_response.count).to eq(1)
       end
     end
   end
 
-  describe "GET #vendor_listings", authorized: false do
+  describe "GET #index", authorized: false do
     it "returns an unauthorized response" do
-      get :vendor_listings, params: {}
+      get :index, params: {}
       expect_unauthorized
     end
   end
