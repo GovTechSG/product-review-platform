@@ -22,6 +22,31 @@ module SwaggerDocs::Companies
           key :type, :integer
           key :format, :int64
         end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items per page'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :sort_by
+          key :in, :query
+          key :description, 'Sort by (best_ratings/newly_added)'
+          key :type, :string
+        end
+        parameter do
+          key :name, :search
+          key :in, :query
+          key :description, 'Search company name'
+          key :type, :string
+        end
+        parameter do
+          key :name, :filter
+          key :in, :query
+          key :description, 'Filter by industries or grants. i.e industries:${hashid},grants:${hashid}'
+          key :type, :string
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
           schema type: :array do
@@ -108,51 +133,6 @@ module SwaggerDocs::Companies
       end
     end
 
-    swagger_path '/api/v1/companies/vendor_listings' do
-      operation :get do
-        security do
-          key :Authorization, []
-        end
-        key :tags, [I18n.t('company.key').to_s]
-        key :description, I18n.t('swagger_ui.index_description', model: 'Companies').to_s
-        key :operationId, 'findCompanies'
-        key :produces, [
-          'application/json'
-        ]
-        parameter do
-          key :name, :page
-          key :in, :query
-          key :description, 'Page Number to display'
-          key :type, :integer
-          key :format, :int64
-        end
-        parameter do
-          key :name, :sort_by
-          key :in, :query
-          key :description, 'Sort by (best_ratings/newly_added)'
-          key :type, :string
-        end
-        parameter do
-          key :name, :search
-          key :in, :query
-          key :description, 'Search company name'
-          key :type, :string
-        end
-        response 200 do
-          key :description, I18n.t('swagger_ui.index_success_description', model: 'Companies').to_s
-          schema do
-            key :'$ref', :VendorListing
-          end
-        end
-        response 400 do
-          key :'$ref', :BadRequestError
-        end
-        response 401 do
-          key :'$ref', :UnauthorisedError
-        end
-      end
-    end
-
     swagger_path '/api/v1/companies/{company_id}/clients' do
       parameter do
         key :name, :company_id
@@ -177,6 +157,31 @@ module SwaggerDocs::Companies
           key :description, 'Page Number to display'
           key :type, :integer
           key :format, :int64
+        end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items to display per page'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :filter_by
+          key :in, :query
+          key :description, 'Project/Product/Service'
+          key :type, :string
+        end
+        parameter do
+          key :name, :sort_by
+          key :in, :query
+          key :description, 'created_at/reviews_count'
+          key :type, :string
+        end
+        parameter do
+          key :name, :desc
+          key :in, :query
+          key :description, 'true/false'
+          key :type, :string
         end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: 'Clients').to_s

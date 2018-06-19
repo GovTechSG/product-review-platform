@@ -19,9 +19,7 @@ shared_examples_for 'imageable' do
     it "generates a image url when image is given" do
       model.set_image!(valid_base64_image)
       expect(model.valid?).to eq(true)
-      company_name = model.name.gsub(/\s/, '_')
-      expect(model.image.url =~ /#{company_name}(.*).png$/).to_not eq(nil)
-      # byebug
+      expect(model.image.url).to_not eq(nil)
     end
 
     it "generates a thumb url when image is given" do
