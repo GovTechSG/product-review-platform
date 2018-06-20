@@ -8,36 +8,23 @@ class CompaniesController < ApplicationController
   before_action :validate_industry_presence, only: [:create, :update]
   before_action :validate_search_inputs, only: [:search]
 
-  after_action only: [:index] { set_pagination_header(Company.kept) }
   after_action only: [:clients] { set_pagination_header(@client_list) }
 
   # GET /companies
   def index
-    @companies = params[:page] == 'all' ? Company.kept : Company.kept.page(params[:page])
-
-    render json: @companies, methods: [:aspects], has_type: false
-  end
-
-  # GET /companies/vendor_listings
-  def vendor_listings
     set_sort
     handle_vendor_get
 
-    if !performed?
-      companies = @companies.blank? ? [].to_json : ActiveModel::SerializableResource.new(@companies, each_serializer: VendorListingSerializer).to_json
-      company_count = @results_array.length
+    headers["Total"] = @results_array.length
+    headers["Per-Page"] = params[:per_page]
 
-      render json: {
-        companies: JSON.parse(companies),
-        count: company_count
-      }
-    end
+    render json: @companies, methods: [:aspects], has_type: false if !performed?
   end
 
   # GET /companies/:company_id/clients
   def clients
     @client_list = @company.clients(params[:filter_by], params[:sort_by], params[:desc])
-    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present?
+    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present? && params[:page] != 'all'
     render json: @client_list, has_type: false
   end
 
@@ -117,7 +104,7 @@ class CompaniesController < ApplicationController
       handle_vendor_search if params[:search].present?
       handle_vendor_filter if params[:filter].present?
 
-      @companies = Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
+      @companies = params[:page] == 'all' ? results_array : Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
     end
 
     def handle_vendor_search

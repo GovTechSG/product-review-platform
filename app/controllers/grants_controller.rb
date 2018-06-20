@@ -14,13 +14,12 @@ class GrantsController < ApplicationController
   def index
     @grants =
       if @company
-        @company.grants
+        @company.grants(params[:filter_by], params[:sort_by], params[:desc])
       else
-        Grant.kept
+        Grant.kept.order(name: :asc)
       end
-    @grants = @grants.order(name: :asc)
 
-    render json: (params[:page] == 'all' ? @grants : @grants.page(params[:page])), has_type: false
+    render json: (params[:page] == 'all' ? @grants : @grants.page(params[:page]).per(params[:per_page])), has_type: false
   end
 
   # GET /grants/1

@@ -22,6 +22,13 @@ module SwaggerDocs::Grants
           key :type, :integer
           key :format, :int64
         end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items to display per page'
+          key :type, :integer
+          key :format, :int64
+        end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: "Grants").to_s
           schema type: :array do
@@ -95,6 +102,31 @@ module SwaggerDocs::Grants
           key :description, 'Page Number to display'
           key :type, :integer
           key :format, :int64
+        end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items to display per page'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :filter_by
+          key :in, :query
+          key :description, 'Project/Product/Service'
+          key :type, :string
+        end
+        parameter do
+          key :name, :sort_by
+          key :in, :query
+          key :description, 'created_at/reviews_count'
+          key :type, :string
+        end
+        parameter do
+          key :name, :desc
+          key :in, :query
+          key :description, 'true/false'
+          key :type, :string
         end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: "Grants").to_s

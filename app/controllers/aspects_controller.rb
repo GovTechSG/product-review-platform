@@ -8,7 +8,7 @@ class AspectsController < ApplicationController
 
   # GET /aspects
   def index
-    @aspects = params[:page] == 'all' ? Aspect.kept : Aspect.kept.page(params[:page])
+    @aspects = params[:page] == 'all' ? Aspect.kept : Aspect.kept.page(params[:page]).per(params[:per_page])
 
     render json: @aspects
   end
