@@ -8,13 +8,15 @@ class CompaniesController < ApplicationController
   before_action :validate_industry_presence, only: [:create, :update]
   before_action :validate_search_inputs, only: [:search]
 
-  after_action only: [:index] { set_pagination_header(Company.kept) }
-  after_action only: [:clients] { set_pagination_header(@results_array) }
+  after_action only: [:clients] { set_pagination_header(@client_list) }
 
   # GET /companies
   def index
     set_sort
     handle_vendor_get
+
+    headers["Total"] = @results_array.length
+    headers["Per-Page"] = params[:per_page]
 
     render json: @companies, methods: [:aspects], has_type: false if !performed?
   end
@@ -22,7 +24,7 @@ class CompaniesController < ApplicationController
   # GET /companies/:company_id/clients
   def clients
     @client_list = @company.clients(params[:filter_by], params[:sort_by], params[:desc])
-    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present?
+    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present? && params[:page] != 'all'
     render json: @client_list, has_type: false
   end
 

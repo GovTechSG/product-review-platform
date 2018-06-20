@@ -20,7 +20,7 @@ class GrantsController < ApplicationController
       end
     @grants = @grants.order(name: :asc)
 
-    render json: (params[:page] == 'all' ? @grants : @grants.page(params[:page])), has_type: false
+    render json: (params[:page] == 'all' ? @grants : @grants.page(params[:page]).per(params[:per_page])), has_type: false
   end
 
   # GET /grants/1
