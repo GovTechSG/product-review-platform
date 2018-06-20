@@ -8,7 +8,7 @@ class AgenciesController < ApplicationController
 
   # GET /agencies
   def index
-    @agencies = params[:page] == 'all' ? Agency.kept : Agency.kept.page(params[:page])
+    @agencies = params[:page] == 'all' ? Agency.kept : Agency.kept.page(params[:page]).per(params[:per_page])
 
     render json: @agencies, has_type: false
   end

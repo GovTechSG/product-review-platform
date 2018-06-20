@@ -8,7 +8,7 @@ class IndustriesController < ApplicationController
 
   # GET /industries
   def index
-    @industries = params[:page] == 'all' ? Industry.kept : Industry.kept.page(params[:page])
+    @industries = params[:page] == 'all' ? Industry.kept : Industry.kept.page(params[:page]).per(params[:per_page])
 
     render json: @industries
   end

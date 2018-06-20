@@ -10,7 +10,12 @@ class ProjectsController < ApplicationController
 
   # GET /companies/:company_id/projects
   def index
-    @projects = params[:page] == 'all' ? Project.kept.where(company_id: @company.id) : Project.kept.where(company_id: @company.id).page(params[:page])
+    @projects =
+      if params[:page] == 'all'
+        Project.kept.where(company_id: @company.id)
+      else
+        Project.kept.where(company_id: @company.id).page(params[:page]).per(params[:per_page])
+      end
 
     render json: @projects, methods: [:reviews_count, :aggregate_score], has_type: false
   end

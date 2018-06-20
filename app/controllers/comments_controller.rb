@@ -23,7 +23,7 @@ class CommentsController < ApplicationController
 
   # GET /reviews/:review_id/comments
   def index
-    @comments = params[:page] == 'all' ? @commentable.comments.kept : @commentable.comments.kept.page(params[:page])
+    @comments = params[:page] == 'all' ? @commentable.comments.kept : @commentable.comments.kept.page(params[:page]).per(params[:per_page])
     render json: @comments
   end
 

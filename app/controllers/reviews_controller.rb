@@ -30,7 +30,7 @@ class ReviewsController < ApplicationController
   # GET /products/:product_id/reviews
   # GET /services/:service_id/reviews
   def index
-    @reviews = params[:page] == 'all' ? @reviewable.reviews.kept : @reviewable.reviews.kept.page(params[:page])
+    @reviews = params[:page] == 'all' ? @reviewable.reviews.kept : @reviewable.reviews.kept.page(params[:page]).per(params[:per_page])
     render json: @reviews, methods: [:company, :likes_count, :comments_count, :aspects], has_type: false
   end
 
