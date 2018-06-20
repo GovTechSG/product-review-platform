@@ -27,13 +27,19 @@ class Company < Reviewer
   validates :url, allow_blank: true, url: true
   validates :image, file_size: { less_than: 1.megabytes }
 
-  def grants(filter_by = nil)
+  def grants(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
+    accepted_sorter = valid_reviewable_sorter(sort_by)
     grants = get_reviews(accepted_filter).pluck(:grant_id)
     if grants.nil?
       []
     else
-      Grant.kept.where(id: grants.uniq)
+      grant_list = Grant.kept.where(id: grants.uniq)
+      if accepted_sorter.present?
+        return grant_list.order(accepted_sorter => :asc) if desc.nil? || desc == "false"
+        return grant_list.order(accepted_sorter => :desc)
+      end
+      grant_list
     end
   end
 

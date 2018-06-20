@@ -66,6 +66,48 @@ RSpec.describe GrantsController, type: :controller do
         get :index, params: { company_id: 0 }
         expect(response.status).to eq(404)
       end
+
+      it "accepts valid filter by, sort by and desc", authorized: true do
+        company = create(:company)
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review).attributes
+
+        get :index, params: { company_id: company.hashid, filter_by: "Product", sort_by: "created_at", desc: "true" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(1)
+      end
+
+      it "disregards invalid filter by, sort by and desc", authorized: true do
+        company = create(:company)
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review).attributes
+
+        get :index, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+      end
+
+      it "respects per_page", authorized: true do
+        company = create(:company)
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review).attributes
+
+        get :index, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(2)
+      end
     end
 
     describe "GET #show" do
