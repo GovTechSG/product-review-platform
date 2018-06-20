@@ -225,6 +225,29 @@ RSpec.describe ProductsController, type: :controller do
         expect(response).to be_not_found
       end
     end
+
+    describe "POST #search", authorized: true do
+      it "returns a success response when product is found" do
+        create(:product, name: "valid product")
+        post :search, params: { product_name: 'valid product', company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response).to be_success
+      end
+
+      it "returns a success response" do
+        post :search, params: { product_name: 'test', product: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response).to be_success
+      end
+
+      it "returns a unprocessable_entity response when product creation failed" do
+        post :search, params: { product_name: 'test', product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns a unprocessable_entity response when company creation failed" do
+        post :search, params: { product_name: 'test', company: { uen: 999, name: '', description: '' } }
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe "Unauthorised user" do

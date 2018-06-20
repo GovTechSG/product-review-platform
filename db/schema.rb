@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_19_070321) do
+ActiveRecord::Schema.define(version: 2018_06_19_094704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 2018_06_19_070321) do
     t.datetime "discarded_at"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["discarded_at"], name: "index_products_on_discarded_at"
+    t.index ["name"], name: "index_products_on_name", unique: true
     t.index ["reviews_count"], name: "index_products_on_reviews_count"
   end
 
@@ -251,6 +252,7 @@ ActiveRecord::Schema.define(version: 2018_06_19_070321) do
     t.datetime "discarded_at"
     t.index ["company_id"], name: "index_services_on_company_id"
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
+    t.index ["name"], name: "index_services_on_name", unique: true
     t.index ["reviews_count"], name: "index_services_on_reviews_count"
   end
 
