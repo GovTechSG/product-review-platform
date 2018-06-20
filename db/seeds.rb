@@ -243,13 +243,13 @@ end
 
 (1..13).each do |i|
   c = Company.find(i)
-  c.products.create!(name: "PivotalTracker", description: lorem_ipsum)
-  c.products.create!(name: "Cloud Foundry", description: lorem_ipsum)
-  c.products.create!(name: "Greenplum", description: lorem_ipsum)
-  c.services.create!(name: "Spring Framework", description: lorem_ipsum)
-  c.services.create!(name: "Agile Development", description: lorem_ipsum)
-  c.projects.create!(name: "Making Spring Framework", description: lorem_ipsum)
-  c.projects.create!(name: "Making Agile Development", description: lorem_ipsum)
+  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.services.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.services.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.projects.create!(name: FFaker::Name.name, description: lorem_ipsum)
+  c.projects.create!(name: FFaker::Name.name, description: lorem_ipsum)
   c.industries.create!(name: industry_names[i-1], description: industry_description[i-1])
 end
 
