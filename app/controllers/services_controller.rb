@@ -5,6 +5,7 @@ class ServicesController < ApplicationController
   before_action :validate_service_presence, only: [:show, :update, :destroy]
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
+  before_action :set_company_by_name, only: [:search]
 
   after_action only: [:index] { set_pagination_header(Service.kept.where(company_id: params[:company_id])) }
 
@@ -31,6 +32,15 @@ class ServicesController < ApplicationController
     end
   end
 
+  # POST /service/service_name
+  def search
+    if Service.kept.find_by(name: params[:service_name]).nil?
+      create_service
+    else
+      render json: { 'service_id': Service.kept.find_by(name: params[:service_name]).hashid }
+    end
+  end
+
   # PATCH/PUT /services/1
   def update
     if @service.update(service_params)
@@ -49,6 +59,33 @@ class ServicesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_service
       @service = Service.find_by_hashid(params[:id])
+    end
+
+    def create_service
+      service = Service.create(company_id: @searched_company.id, name: params[:service_name], description: params[:service][:description])
+      if service.errors.blank?
+        render json: { 'service_id': service.hashid }
+      else
+        render json: service.errors.messages, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotUnique
+      search
+    end
+
+    def set_company_by_name
+      @searched_company = Company.kept.find_by(uen: params[:company][:uen])
+      @searched_company = create_company if @searched_company.nil?
+      if @searched_company.errors.blank?
+      else
+        render json: @searched_company.errors.messages, status: :unprocessable_entity
+      end
+    end
+
+    def create_company
+      company = Company.new(name: params[:company][:name], uen: params[:company][:uen], description: params[:company][:description])
+      company.set_image!(@image) if params[:company][:name].present?
+      company.errors.blank? && company.save
+      company
     end
 
     def validate_service_presence

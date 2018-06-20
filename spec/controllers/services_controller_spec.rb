@@ -258,6 +258,29 @@ RSpec.describe ServicesController, type: :controller do
         expect(response).to be_not_found
       end
     end
+
+    describe "POST #search", authorized: true do
+      it "returns a success response when service is found" do
+        create(:service, name: "valid service")
+        post :search, params: { service_name: 'valid service', company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response).to be_success
+      end
+
+      it "returns a success response" do
+        post :search, params: { service_name: 'test', service: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response).to be_success
+      end
+
+      it "returns a unprocessable_entity response when service creation failed" do
+        post :search, params: { service_name: 'test', service: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns a unprocessable_entity response when company creation failed" do
+        post :search, params: { service_name: 'test', company: { uen: 999, name: '', description: '' } }
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe "Unauthorised user" do

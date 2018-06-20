@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       get '/companies/vendor_listings', to: 'companies#vendor_listings', as: 'companies_vendor_listings'
       post '/oauth/refresh', to: 'tokens#refresh'
       post '/project/project_name', to: 'projects#search', as: 'search_project'
+      post '/service/service_name', to: 'services#search', as: 'search_service'
+      post '/product/product_name', to: 'products#search', as: 'search_product'
       post '/company/company_uen', to: 'companies#search', as: 'search_company'
       get '/grant/grant_name', to: 'grants#search', as: 'search_grant'
       # Mount custom routes, removing view-only routes e.g. /new, /cancel
