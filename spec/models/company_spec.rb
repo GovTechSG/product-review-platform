@@ -18,11 +18,6 @@ RSpec.describe Company, type: :model do
     company.description = ''
     expect(company).to_not be_valid
   end
-  it "is not valid without a uen" do
-    company = build(:company)
-    company.uen = ''
-    expect(company).to_not be_valid
-  end
   it "is not valid without a aggregate_score" do
     company = build(:company)
     company.aggregate_score = ''
