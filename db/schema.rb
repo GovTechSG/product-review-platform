@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_19_094704) do
+ActiveRecord::Schema.define(version: 2018_06_21_030254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2018_06_19_094704) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name", default: "", null: false
-    t.string "uen", default: "", null: false
+    t.string "uen", default: ""
     t.string "phone_number"
     t.string "url"
     t.decimal "aggregate_score", default: "0.0", null: false
