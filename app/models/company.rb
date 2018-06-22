@@ -34,12 +34,10 @@ class Company < Reviewer
     if grants.nil?
       []
     else
-      grant_list = Grant.kept.where(id: grants.uniq)
-      if accepted_sorter.present?
-        return grant_list.order(accepted_sorter => :asc) if desc.nil? || desc == "false"
-        return grant_list.order(accepted_sorter => :desc)
-      end
-      grant_list
+      @grant_list = Grant.kept.where(id: grants)
+      handle_grant_sort(accepted_sorter, desc) if accepted_sorter.present?
+
+      @grant_list.respond_to?(:distinct) ? @grant_list.distinct : @grant_list.uniq
     end
   end
 
@@ -105,6 +103,14 @@ class Company < Reviewer
 
   private
 
+  def handle_grant_sort(accepted_sorter, desc)
+    case accepted_sorter
+    when 'reviews_count'
+      @grant_list = @grant_list.group_by { |grant| grant }.map { |k, v| [k, v.length] }.to_h.sort_by { |_k, v| -v }.map(&:first)
+      @grant_list.reverse! if desc != "true"
+    end
+  end
+
   def valid_reviewable_filter(filter_by)
     valid_filters = ['Product', 'Service', 'Project']
     valid_filters.include?(filter_by) ? filter_by : nil
@@ -112,6 +118,11 @@ class Company < Reviewer
 
   def valid_reviewable_sorter(sort_by)
     valid_sorters = ['reviews_count', 'created_at']
+    valid_sorters.include?(sort_by) ? sort_by : nil
+  end
+
+  def valid_grant_sorter(sort_by)
+    valid_sorters = ['reviews_count']
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
 

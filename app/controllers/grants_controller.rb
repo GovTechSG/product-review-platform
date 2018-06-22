@@ -7,8 +7,6 @@ class GrantsController < ApplicationController
   before_action :validate_create_params, only: [:create]
   before_action :validate_update_params, only: [:update]
 
-  after_action only: [:index] { set_pagination_header(@grants) }
-
   # GET /grants
   # GET /companies/:company_id/grants
   def index
@@ -19,7 +17,10 @@ class GrantsController < ApplicationController
         Grant.kept.order(name: :asc)
       end
 
-    render json: (params[:page] == 'all' ? @grants : @grants.page(params[:page]).per(params[:per_page])), has_type: false
+    headers["Total"] = @grants.count
+    headers["Per-Page"] = params[:per_page]
+
+    render json: (params[:page] == 'all' ? @grants : paginator(@grants)), has_type: false
   end
 
   # GET /grants/1

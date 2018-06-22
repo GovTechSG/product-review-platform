@@ -31,6 +31,14 @@ class ApplicationController < ActionController::Base
     get_search_attribute if !performed?
   end
 
+  def paginator(object_list)
+    if object_list.respond_to?(:page)
+      object_list.page(params[:page]).per(params[:per_page])
+    else
+      Kaminari.paginate_array(object_list).page(params[:page]).per(params[:per_page])
+    end
+  end
+
   private
 
   def get_search_object
