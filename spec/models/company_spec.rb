@@ -134,6 +134,30 @@ RSpec.describe Company, type: :model do
       review.reviewable.discard
       expect(review.reviewable.company.grants.length).to eq(0)
     end
+
+    it "returns grants sorted by reviews_count when specified" do
+      company = create(:company)
+      product = company.products.create! build(:product).attributes
+      review = product.reviews.create! build(:product_review).attributes
+      review.grant.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.grants(nil, "reviews_count")[0]).not_to eq(product.reviews.first.grant)
+    end
+
+    it "returns grants sorted by reviews_count by desc when specified" do
+      company = create(:company)
+      product = company.products.create! build(:product).attributes
+      review = product.reviews.create! build(:product_review).attributes
+      review.grant.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.grants(nil, "reviews_count", "true")[0]).to eq(product.reviews.first.grant)
+    end
   end
 
   context "clients" do

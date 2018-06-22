@@ -76,7 +76,7 @@ RSpec.describe GrantsController, type: :controller do
         project = company.projects.create! build(:project).attributes
         project.reviews.create! build(:project_review).attributes
 
-        get :index, params: { company_id: company.hashid, filter_by: "Product", sort_by: "created_at", desc: "true" }
+        get :index, params: { company_id: company.hashid, filter_by: "Product", sort_by: "reviews_count", desc: "true" }
         expect(response).to be_success
         expect(parsed_response.length).to eq(1)
       end
