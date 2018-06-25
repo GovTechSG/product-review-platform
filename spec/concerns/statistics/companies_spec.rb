@@ -34,6 +34,7 @@ shared_examples_for 'companies' do
         product.reviews.create! valid_product_review
         product.reviews.create! valid_product_review
         product.discard
+        valid_company.reload
         expect(valid_company.reviews_count).to eq(0)
       end
     end
@@ -147,31 +148,4 @@ shared_examples_for 'companies' do
     end
   end
 
-  describe "add_score" do
-    it "returns the new score" do
-      product = valid_company.products.new(valid_product)
-      review = product.reviews.new(valid_product_review)
-      expect(valid_company.add_score(review.score)).to eq(review.score)
-    end
-  end
-
-  describe "update_score" do
-    it "returns the new score" do
-      product = valid_company.products.create! valid_product
-      review = product.reviews.create! valid_product_review
-      valid_company.aggregate_score = review.score
-      newscore = Float(FFaker.numerify('#'))
-      expect(valid_company.update_score(review.score, newscore)).to eq(newscore)
-    end
-  end
-
-  describe "subtract_score" do
-    it "returns the new score" do
-      product = valid_company.products.create! valid_product
-      review = product.reviews.create! valid_product_review
-      valid_company.reload
-      valid_company.aggregate_score = review.score
-      expect(valid_company.subtract_score(review.score)).to eq(0)
-    end
-  end
 end

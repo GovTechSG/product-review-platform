@@ -11,30 +11,6 @@ module Statistics::Companies
       whole_set.empty? ? [] : serialize(whole_set.uniq.first(6))
     end
 
-    def add_score(score)
-      # Get current total score and add latest score to it
-      # Then divide by total number of reviews + 1 (+1 because latest review not yet
-      # saved to database)
-      if reviews_count > 0
-        ((reviews_count * aggregate_score) + score)/(reviews_count + 1)
-      else
-        score
-      end
-    end
-
-    def update_score(old_score, updated_score)
-      if reviews_count > 0
-        ((reviews_count * aggregate_score) - old_score + updated_score)/reviews_count
-      else
-        updated_score
-      end
-    end
-
-    def subtract_score(score)
-      final_score = ((reviews_count * aggregate_score) - score)/(reviews_count - 1)
-      final_score.nan? || final_score.infinite? ? 0 : final_score
-    end
-
     private
 
     def get_reviews(product_service)

@@ -2,8 +2,8 @@ class CompaniesController < ApplicationController
   include SwaggerDocs::Companies
   before_action :doorkeeper_authorize!
   before_action :set_company, only: [:show, :update, :destroy]
-  before_action :set_company_by_company_id, only: [:clients]
-  before_action :validate_company_presence, only: [:show, :update, :destroy, :clients]
+  before_action :set_company_by_company_id, only: [:clients, :offerings]
+  before_action :validate_company_presence, only: [:show, :update, :destroy, :clients, :offerings]
   before_action :set_industry, only: [:create, :update]
   before_action :validate_industry_presence, only: [:create, :update]
   before_action :validate_search_inputs, only: [:search]
@@ -14,6 +14,18 @@ class CompaniesController < ApplicationController
   def index
     set_sort
     handle_vendor_get
+
+    headers["Total"] = @results_array.length
+    headers["Per-Page"] = params[:per_page]
+
+    render json: @companies, methods: [:aspects], has_type: false if !performed?
+  end
+
+  # GET /companies/:company_id/clients
+  def offerings
+    set_sort
+
+    
 
     headers["Total"] = @results_array.length
     headers["Per-Page"] = params[:per_page]

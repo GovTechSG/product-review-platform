@@ -41,6 +41,10 @@ class Company < Reviewer
     end
   end
 
+  def offerings
+    (products + services + projects)
+  end
+
   def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
@@ -88,6 +92,19 @@ class Company < Reviewer
     else
       0.0
     end
+  end
+
+  def set_reviews_count
+    self.reviews_count = offerings.select { |offering| offering.discarded_at.nil? }.pluck("reviews_count").compact.sum
+    save!
+    reload
+  end
+
+  def set_aggregate_score
+    offering_count = offerings.select { |offering| offering.discarded_at.nil? }.count
+    self.aggregate_score = reviews_count > 0 ? (1.0 * offerings.select { |offering| offering.discarded_at.nil? }.pluck("aggregate_score").compact.sum) / offering_count : 0
+    save!
+    reload
   end
 
   class << self
