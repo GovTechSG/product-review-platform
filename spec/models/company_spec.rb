@@ -357,78 +357,51 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context "review_scores" do
-    let(:company) { create(:company) }
-    it "returns empty array if there are no review_scores" do
-      company = create(:company)
-      expect(company.review_scores).to eq([])
-    end
-
-    it "does not return deleted scores" do
-      product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.first.discard
-      expect(product.company.review_scores.length).to eq(0)
-    end
-
-    it "returns product scores if there are only products" do
-      product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
-      expect(product.company.review_scores.length).to eq(1)
-    end
-
-    it "returns service scores if there are only services" do
-      service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
-      expect(service.company.review_scores.length).to eq(1)
-    end
-  end
-
-  context "ratings" do
+  context "aggregate_score" do
     let(:company) { create(:company) }
     it "returns 0 when there are no review scores" do
       company = create(:company)
-      expect(company.ratings).to eq(0.0)
+      expect(company.aggregate_score).to eq(0.0)
     end
 
-    it "returns ratings" do
+    it "returns aggregate_score" do
       company = create(:company)
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
-      expect(company.ratings).not_to eq(0)
+      expect(company.aggregate_score).not_to eq(0)
     end
   end
 
-  context "best_ratings" do
+  context "aggregate_score" do
     let(:company) { create(:company) }
     it "returns empty when there are no company" do
-      expect(Company.sort('best_ratings')).to eq([])
+      expect(Company.sort('aggregate_score')).to eq([])
     end
 
     it "sorts by best ratings" do
       create_list(:company, 5)
-      expect(Company.sort('best_ratings').count).to eq(5)
+      expect(Company.sort('aggregate_score').count).to eq(5)
 
-      current_value = Company.sort('best_ratings').first.ratings
-      Company.sort('best_ratings').each do |company|
-        expect(company.ratings).to be <= current_value
-        current_value = company.ratings
+      current_value = Company.sort('aggregate_score').first.aggregate_score
+      Company.sort('aggregate_score').each do |company|
+        expect(company.aggregate_score).to be <= current_value
+        current_value = company.aggregate_score
       end
     end
   end
 
-  context "newly_added" do
+  context "created_at" do
     let(:company) { create(:company) }
     it "returns empty when there are no company" do
-      expect(Company.sort('newly_added')).to eq([])
+      expect(Company.sort('created_at')).to eq([])
     end
 
     it "sorts by newly added" do
       create_list(:company, 5)
-      expect(Company.sort('newly_added').count).to eq(5)
+      expect(Company.sort('created_at').count).to eq(5)
 
-      current_date = Company.sort('newly_added').first.created_at
-      Company.sort('newly_added').each do |company|
+      current_date = Company.sort('created_at').first.created_at
+      Company.sort('created_at').each do |company|
         expect(company.created_at).to be <= current_date
         current_date = company.created_at
       end

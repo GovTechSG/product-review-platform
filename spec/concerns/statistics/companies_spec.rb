@@ -147,5 +147,4 @@ shared_examples_for 'companies' do
       end
     end
   end
-
 end

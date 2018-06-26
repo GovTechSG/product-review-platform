@@ -21,11 +21,9 @@ class CompaniesController < ApplicationController
     render json: @companies, methods: [:aspects], has_type: false if !performed?
   end
 
-  # GET /companies/:company_id/clients
+  # GET /companies/:company_id/offerings
   def offerings
     set_sort
-
-    
 
     headers["Total"] = @results_array.length
     headers["Per-Page"] = params[:per_page]
@@ -36,7 +34,7 @@ class CompaniesController < ApplicationController
   # GET /companies/:company_id/clients
   def clients
     @client_list = @company.clients(params[:filter_by], params[:sort_by], params[:desc])
-    @client_list = @client_list.page(params[:page]).per(params[:per_page]) if @client_list.present? && params[:page] != 'all'
+    @client_list = paginator(@client_list) if @client_list.present? && params[:page] != 'all'
     render json: @client_list, has_type: false
   end
 
@@ -116,7 +114,7 @@ class CompaniesController < ApplicationController
       handle_vendor_search if params[:search].present?
       handle_vendor_filter if params[:filter].present?
 
-      @companies = params[:page] == 'all' ? results_array : Kaminari.paginate_array(@results_array).page(params[:page]).per(params[:per_page])
+      @companies = params[:page] == 'all' ? results_array : paginator(@results_array)
     end
 
     def handle_vendor_search
@@ -127,12 +125,7 @@ class CompaniesController < ApplicationController
     end
 
     def handle_vendor_sort
-      case @sort
-      when 'best_ratings'
-        @results_array = @results_array.sort_by(&:ratings).reverse!
-      when 'newly_added'
-        @results_array = @results_array.order(created_at: :desc).to_ary
-      end
+      @results_array = @results_array.order(@sort => :desc)
     end
 
     def handle_vendor_filter
@@ -162,6 +155,7 @@ class CompaniesController < ApplicationController
     end
 
     def filter_vendors
+      @results_array = @results_array.to_ary
       @results_array.delete_if do |company|
         vendor_match_filter company
       end
@@ -230,7 +224,7 @@ class CompaniesController < ApplicationController
     end
 
     def vendor_listing_valid_options
-      ["best_ratings", "newly_added"]
+      ["aggregate_score", "created_at"]
     end
 
     def fuzzy_search_params
