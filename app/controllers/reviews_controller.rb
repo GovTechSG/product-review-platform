@@ -44,9 +44,7 @@ class ReviewsController < ApplicationController
   def create
     convert_hashids
     @review = Review.new(@whitelisted)
-    # Update aggregate score of associated vendor company
-    company = add_company_score(@reviewable.company, @score) if @score
-    if @review.save && (company.nil? || company.save)
+    if @review.save
       render json: @review, status: :created, location: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
@@ -56,14 +54,7 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   def update
     convert_hashids
-    company = nil
-    # Store update_params in a temp variable to avoid
-    # repeatedly calling the method
-    if !@score.nil?
-      # Update aggregate score of associated vendor company
-      company = update_company_score(@review.reviewable.company, @review.score, @score)
-    end
-    if @review.update(@whitelisted) && (company.nil? || company.save)
+    if @review.update(@whitelisted)
       render json: @review, has_type: false
     else
       render json: @review.errors.messages, status: :unprocessable_entity
@@ -72,9 +63,7 @@ class ReviewsController < ApplicationController
 
   # DELETE /reviews/1
   def destroy
-    # Update aggregate score of associated vendor company
-    company = subtract_company_score(@review.reviewable.company, @review.score)
-    @review.discard && company.save
+    @review.discard
   end
 
   private
@@ -237,21 +226,6 @@ class ReviewsController < ApplicationController
         {from_id: :reviewer_id},
         {from_type: :reviewer_type}
       ]
-    end
-
-    def add_company_score(company, score)
-      company.aggregate_score = company.add_score(score)
-      company
-    end
-
-    def update_company_score(company, old_score, updated_score)
-      company.aggregate_score = company.update_score(old_score, updated_score)
-      company
-    end
-
-    def subtract_company_score(company, score)
-      company.aggregate_score = company.subtract_score(score)
-      company
     end
 
     def validate_score_type

@@ -30,7 +30,10 @@ class Review < ApplicationRecord
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 
-  after_save :set_reviews_count, on: [:create, :update]
+  after_save :set_reviewable_reviews_count, on: [:create, :update]
+  after_destroy :set_reviewable_reviews_count
+  after_save :set_reviewable_score, on: [:create, :update]
+  after_destroy :set_reviewable_score
 
   scope :kept, -> { undiscarded.joins(:grant).merge(Grant.kept) }
   scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
@@ -46,26 +49,11 @@ class Review < ApplicationRecord
 
   private
 
-  def set_reviews_count
-    set_reviewable_reviews_count
-    set_company_reviews_count
-  end
-
   def set_reviewable_reviews_count
-    reviewable.reviews_count = reviewable.reviews.kept.count
-    reviewable.save
+    reviewable.set_reviews_count
   end
 
-  def set_company_reviews_count
-    company = reviewable.company
-    company.reviews_count = get_reviews_count(company)
-    company.save
-  end
-
-  def get_reviews_count(company)
-    product_count = company.products.kept.reduce(0) { |accum, product| accum + product.reviews.kept.count }
-    project_count = company.projects.kept.reduce(0) { |accum, project| accum + project.reviews.kept.count }
-    service_count = company.services.kept.reduce(0) { |accum, service| accum + service.reviews.kept.count }
-    product_count + service_count + project_count
+  def set_reviewable_score
+    reviewable.set_aggregate_score
   end
 end

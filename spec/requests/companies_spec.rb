@@ -256,7 +256,7 @@ RSpec.describe "Companies", type: :request do
     it "returns data of the single updated company" do
       patch company_path(company.hashid), params: { company: company_params.as_json.merge(industry_ids: [industry.hashid]) }, headers: header
       company.reload
-      expect(company.attributes.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image', 'discarded_at', 'reviews_count')).to match(company_params.with_indifferent_access.except('id', 'created_at', 'updated_at', 'aggregate_score', 'image'))
+      expect(company.attributes.except('id', 'created_at', 'updated_at', 'image', 'discarded_at')).to match(company_params.with_indifferent_access.except('id', 'created_at', 'updated_at', 'image'))
     end
 
     it "returns Unprocessable Entity if company is not valid" do

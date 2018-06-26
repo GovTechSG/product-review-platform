@@ -32,7 +32,7 @@ module SwaggerDocs::Companies
         parameter do
           key :name, :sort_by
           key :in, :query
-          key :description, 'Sort by (best_ratings/newly_added)'
+          key :description, 'Sort by (aggregate_score/created_at)'
           key :type, :string
         end
         parameter do

@@ -81,21 +81,6 @@ module SwaggerDocs::Company
           key :'$ref', :Industry
         end
       end
-
-      property :positive do
-        key :type, :number
-      end
-
-      property :neutral do
-        key :type, :number
-      end
-
-      property :negative do
-        key :type, :number
-      end
-      property :ratings do
-        key :type, :number
-      end
     end
 
     swagger_schema :VendorListing do
@@ -148,18 +133,6 @@ module SwaggerDocs::Company
           items do
             key :'$ref', :Industry
           end
-        end
-
-        property :positive do
-          key :type, :number
-        end
-
-        property :neutral do
-          key :type, :number
-        end
-
-        property :negative do
-          key :type, :number
         end
       end
       property :count do

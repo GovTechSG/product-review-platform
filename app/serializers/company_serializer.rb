@@ -1,6 +1,6 @@
 class CompanySerializer < ApplicationSerializer
   attribute :type, if: :type?
-  attributes :id, :name, :ratings, :uen, :aggregate_score, :description, :reviews_count, :aspects, :url, :phone_number, :image, :positive, :neutral, :negative
+  attributes :id, :name, :uen, :aggregate_score, :description, :reviews_count, :aspects, :url, :phone_number, :image
   has_many :industries, serializer: IndustrySerializer
   has_many :project_industries, serializer: IndustrySerializer
 
@@ -18,18 +18,6 @@ class CompanySerializer < ApplicationSerializer
 
   def image
     object.image.serializable_hash
-  end
-
-  def positive
-    object.review_scores.select { |score| score > 0 }.count
-  end
-
-  def neutral
-    object.review_scores.select(&:zero?).count
-  end
-
-  def negative
-    object.review_scores.select { |score| score < 0 }.count
   end
 
   def project_industries

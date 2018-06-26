@@ -41,6 +41,10 @@ class Company < Reviewer
     end
   end
 
+  def offerings
+    (products + services + projects)
+  end
+
   def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
@@ -77,27 +81,38 @@ class Company < Reviewer
     end
   end
 
-  def review_scores
-    get_reviews.pluck(:score)
+  def set_reviews_count
+    self.reviews_count = offerings.select { |offering| offering.discarded_at.nil? }.pluck("reviews_count").compact.sum
+    save!
+    reload
   end
 
-  def ratings
-    if review_scores.count > 0
-      positive = review_scores.select { |score| score > 0 }.count.to_f
-      (positive / review_scores.count.to_f) * 100.0
+  def set_aggregate_score
+    self.aggregate_score = reviews_count > 0 ? (1.0 * get_reviews.pluck("score").compact.sum) / reviews_count : 0
+    save!
+    reload
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def get_reviews(filter_by = nil)
+    case filter_by
+    when 'Product'
+      Review.match_reviewable(products.kept.pluck(:id), "Product").kept
+    when 'Service'
+      Review.match_reviewable(services.kept.pluck(:id), "Service").kept
+    when 'Project'
+      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept
     else
-      0.0
+      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept +
+        Review.match_reviewable(services.kept.pluck(:id), "Service").kept +
+        Review.match_reviewable(projects.kept.pluck(:id), "Project").kept)
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   class << self
     def sort(sort_by)
-      case sort_by
-      when 'best_ratings'
-        kept.sort_by(&:ratings).reverse!
-      when 'newly_added'
-        kept.order(created_at: :desc).to_ary
-      end
+      kept.order(sort_by => :desc)
     end
   end
 
@@ -125,21 +140,4 @@ class Company < Reviewer
     valid_sorters = ['reviews_count']
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
-
-  # rubocop:disable Metrics/AbcSize
-  def get_reviews(filter_by = nil)
-    case filter_by
-    when 'Product'
-      Review.match_reviewable(products.kept.pluck(:id), "Product").kept
-    when 'Service'
-      Review.match_reviewable(services.kept.pluck(:id), "Service").kept
-    when 'Project'
-      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept
-    else
-      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept +
-       Review.match_reviewable(services.kept.pluck(:id), "Service").kept +
-       Review.match_reviewable(projects.kept.pluck(:id), "Project").kept)
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
 end
