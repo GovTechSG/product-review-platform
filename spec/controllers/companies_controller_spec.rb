@@ -268,6 +268,64 @@ RSpec.describe CompaniesController, type: :controller do
     end
   end
 
+  describe "GET #offerings", authorized: true do
+    let(:company) { create(:company) }
+    it "returns a success response" do
+      get :offerings, params: { company_id: company.hashid }
+      expect(response).to be_success
+    end
+
+    it "returns not found if company is not found" do
+      get :offerings, params: { company_id: 0 }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns not found if company is deleted" do
+      company.discard
+      get :offerings, params: { company_id: company.id }
+      expect(response.status).to eq(404)
+    end
+
+    it "accepts valid sort by" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+
+      get :offerings, params: { company_id: company.hashid, sort_by: "aggregate_score" }
+      expect(response).to be_success
+      expect(parsed_response.length).to eq(3)
+    end
+
+    it "disregards invalid sort by" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+
+      get :offerings, params: { company_id: company.hashid, sort_by: "aggregdsfate_score" }
+      expect(response).to be_success
+      expect(parsed_response.length).to eq(3)
+    end
+
+    it "respects per_page" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+
+      get :offerings, params: { company_id: company.hashid, sort_by: "aggregdsfate_score", per_page: 2 }
+      expect(response).to be_success
+      expect(parsed_response.length).to eq(2)
+    end
+  end
+
   describe "GET #clients", authorized: false do
     let(:company) { create(:company) }
     it "returns an unauthorized response" do

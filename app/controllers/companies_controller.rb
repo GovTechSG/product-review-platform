@@ -25,10 +25,12 @@ class CompaniesController < ApplicationController
   def offerings
     set_sort
 
-    headers["Total"] = @results_array.length
+    offering_list = @company.offerings(@sort)
+
+    headers["Total"] = offering_list.length
     headers["Per-Page"] = params[:per_page]
 
-    render json: @companies, methods: [:aspects], has_type: false if !performed?
+    render json: paginator(offering_list), each_serializer: OfferingSerializer if !performed?
   end
 
   # GET /companies/:company_id/clients
