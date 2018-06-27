@@ -41,8 +41,10 @@ class Company < Reviewer
     end
   end
 
-  def offerings
-    (products + services + projects)
+  def offerings(sort_by = nil)
+    results = (products.kept + services.kept + projects.kept)
+    results = results.sort_by { |offering| offering.send(sort_by) }.reverse! if sort_by.present?
+    results.empty? ? [] : results
   end
 
   def clients(filter_by = nil, sort_by = nil, desc = nil)
@@ -82,7 +84,7 @@ class Company < Reviewer
   end
 
   def set_reviews_count
-    self.reviews_count = offerings.select { |offering| offering.discarded_at.nil? }.pluck("reviews_count").compact.sum
+    self.reviews_count = !offerings.empty? ? offerings.select { |offering| offering.discarded_at.nil? }.pluck("reviews_count").compact.sum : 0
     save!
     reload
   end

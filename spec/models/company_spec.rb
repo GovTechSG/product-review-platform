@@ -289,6 +289,62 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  context "offerings" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no offerings" do
+      company = create(:company)
+      expect(company.offerings).to eq([])
+    end
+
+    it "returns product offerings if there are only product offerings" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(product.company.offerings.length).to eq(1)
+    end
+
+    it "returns service offerings if there are only service offerings" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(service.company.offerings.length).to eq(1)
+    end
+
+    it "does not return deleted project" do
+      project = company.projects.create! build(:product).attributes
+      project.discard
+      expect(project.company.offerings.length).to eq(0)
+    end
+
+    it "does not return deleted products review" do
+      product = company.products.create! build(:product).attributes
+      product.discard
+      expect(product.company.offerings.length).to eq(0)
+    end
+
+    it "does not return deleted service" do
+      service = company.services.create! build(:service).attributes
+      service.discard
+      expect(service.company.offerings.length).to eq(0)
+    end
+
+    it "returns product and service offerings" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(product.company.offerings.length).to eq(2)
+    end
+
+    it "returns offerings sorted by aggregate_score when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review, score: 0).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review, score: 0).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.offerings("aggregate_score")[0]).to eq(project)
+    end
+  end
+
   context "reviewable_industries" do
     let(:company) { create(:company) }
     it "returns empty array if there are no reviewables" do
