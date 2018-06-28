@@ -44,7 +44,7 @@ module SwaggerDocs::Companies
         parameter do
           key :name, :filter
           key :in, :query
-          key :description, 'Filter by industries or grants. i.e industries:${hashid},grants:${hashid}'
+          key :description, 'Filter by industries or grants. i.e industries:hashid,grants:hashid'
           key :type, :string
         end
         response 200 do

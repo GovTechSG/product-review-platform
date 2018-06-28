@@ -161,6 +161,125 @@ RSpec.describe ReviewsController, type: :controller do
       end
     end
 
+    describe "GET #company_reviews" do
+      let(:company) { create(:company) }
+      it "returns a success response", authorized: true do
+        get :company_reviews, params: { company_id: company.hashid }
+        expect(response).to be_success
+      end
+
+      it "returns not found if company is not found", authorized: true do
+        get :company_reviews, params: { company_id: 0 }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns not found if company is deleted", authorized: true do
+        company.discard
+        get :company_reviews, params: { company_id: company.id }
+        expect(response.status).to eq(404)
+      end
+
+      it "accepts valid sort by", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        latest_review = project.reviews.create! build(:project_review).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, sort_by: "created_at" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+        expect(parsed_response.first["content"]).to eq(latest_review.content)
+      end
+
+      it "disregards invalid sort by", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, sort_by: "aggregdsfate_score" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+      end
+
+      it "respects per_page", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(2)
+      end
+
+      it "filters by positive", authorized: true do
+        product = company.products.create! build(:product).attributes
+        positive_review = product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, filter_by_score: "POSITIVE", sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(1)
+        expect(parsed_response.first["content"]).to eq(positive_review.content)
+      end
+
+      it "filters by neutral", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+        service = company.services.create! build(:service).attributes
+        neutral_review = service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+        project = company.projects.create! build(:project).attributes
+        project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, filter_by_score: "NEUTRAL", sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(1)
+        expect(parsed_response.first["content"]).to eq(neutral_review.content)
+      end
+
+      it "filters by negative", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+        project = company.projects.create! build(:project).attributes
+        negative_review = project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, filter_by_score: "NEGATIVE", sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(1)
+        expect(parsed_response.first["content"]).to eq(negative_review.content)
+      end
+
+      it "returns review counts if specified", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+        service = company.services.create! build(:service).attributes
+        service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+        project = company.projects.create! build(:project).attributes
+        negative_review = project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+
+        get :company_reviews, params: { company_id: company.hashid, count: "true", filter_by_score: "NEGATIVE", sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response[:reviews].first[:content]).to eq(negative_review.content)
+        expect(parsed_response[:reviews].first[:created_at]).not_to eq(nil)
+        expect(parsed_response["positive_count"]).to eq(1)
+        expect(parsed_response["neutral_count"]).to eq(1)
+        expect(parsed_response["negative_count"]).to eq(1)
+        expect(response.headers["Total"]).to eq(3)
+      end
+    end
+
     describe "GET #show" do
       it "returns a success response", authorized: true do
         review = Review.create! valid_product_review

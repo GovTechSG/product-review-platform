@@ -3,6 +3,8 @@ class ReviewsController < ApplicationController
   before_action :doorkeeper_authorize!
 
   before_action only: [:index] { set_reviewable(true) }
+  before_action :set_company_by_company_id, only: [:company_reviews]
+  before_action :validate_company_presence, only: [:company_reviews]
   before_action only: [:destroy, :show] { set_review }
   before_action only: [:create] do
     require_params(true)
@@ -32,6 +34,22 @@ class ReviewsController < ApplicationController
   def index
     @reviews = params[:page] == 'all' ? @reviewable.reviews.kept : @reviewable.reviews.kept.page(params[:page]).per(params[:per_page])
     render json: @reviews, methods: [:company, :likes_count, :comments_count, :aspects], has_type: false
+  end
+
+  # GET /companies/:company_id/reviews
+  def company_reviews
+    review_list = @company.reviews(params[:filter_by_score], params[:sort_by])
+    all_reviews = @company.reviews
+    headers["Total"] = all_reviews.length
+    if !performed?
+      if params[:count] == 'true'
+        reviews = review_list.blank? ? [].to_json : ActiveModel::SerializableResource.new(paginator(review_list), each_serializer: ReviewWithDateSerializer).to_json
+
+        render json: company_reviews_with_count(reviews, all_reviews)
+      else
+        render json: paginator(review_list), methods: [:company, :likes_count, :comments_count, :aspects], has_type: false
+      end
+    end
   end
 
   # GET /reviews/1
@@ -67,6 +85,16 @@ class ReviewsController < ApplicationController
   end
 
   private
+
+    def company_reviews_with_count(reviews, all_reviews)
+      {
+        reviews: JSON.parse(reviews),
+        positive_count: all_reviews.blank? ? 0 : all_reviews.select { |review| review.score == Review::POSITIVE }.count,
+        neutral_count: all_reviews.blank? ? 0 : all_reviews.select { |review| review.score == Review::NEUTRAL }.count,
+        negative_count: all_reviews.blank? ? 0 : all_reviews.select { |review| review.score == Review::NEGATIVE }.count
+      }
+    end
+
     def require_params(required)
       @whitelisted = params.fetch(:review, nil)
       if @whitelisted.blank?
@@ -263,6 +291,14 @@ class ReviewsController < ApplicationController
         aspects = Aspect.find(@whitelisted["aspect_ids"])
         @whitelisted["aspect_ids"] = aspects.map(&:id)
       end
+    end
+
+    def set_company_by_company_id
+      @company = Company.find_by_hashid(params[:company_id])
+    end
+
+    def validate_company_presence
+      render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
     end
 end
 

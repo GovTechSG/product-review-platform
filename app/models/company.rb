@@ -47,6 +47,15 @@ class Company < Reviewer
     results.empty? ? [] : results
   end
 
+  def reviews(filter_by_score = nil, sort_by = nil)
+    accepted_score_type = valid_review_score_filter(filter_by_score)
+    accepted_sorter = valid_review_sorter(sort_by)
+    @results = get_reviews
+    handle_reviews_filter(accepted_score_type) if accepted_score_type.present?
+    @results = @results.sort_by { |review| review.send(sort_by) }.reverse! if accepted_sorter.present?
+    @results.empty? ? [] : @results
+  end
+
   def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
@@ -120,6 +129,13 @@ class Company < Reviewer
 
   private
 
+  # e.g. score:1
+  def handle_reviews_filter(accepted_score_type)
+    @results.delete_if do |review|
+      review.score != Review.const_get(accepted_score_type)
+    end
+  end
+
   def handle_grant_sort(accepted_sorter, desc)
     case accepted_sorter
     when 'reviews_count'
@@ -135,6 +151,16 @@ class Company < Reviewer
 
   def valid_reviewable_sorter(sort_by)
     valid_sorters = ['reviews_count', 'created_at']
+    valid_sorters.include?(sort_by) ? sort_by : nil
+  end
+
+  def valid_review_score_filter(filter_by_score)
+    valid_score_type = ['POSITIVE', 'NEUTRAL', 'NEGATIVE']
+    valid_score_type.include?(filter_by_score) ? filter_by_score : nil
+  end
+
+  def valid_review_sorter(sort_by)
+    valid_sorters = ['created_at']
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
 

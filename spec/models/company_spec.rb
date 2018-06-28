@@ -345,6 +345,113 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  context "reviews" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no reviews" do
+      company = create(:company)
+      expect(company.reviews).to eq([])
+    end
+
+    it "returns product reviews if there are only product reviews" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(product.company.reviews.length).to eq(1)
+    end
+
+    it "returns service reviews if there are only service reviews" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(service.company.reviews.length).to eq(1)
+    end
+
+    it "does not return deleted project" do
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.discard
+      expect(project.company.reviews.length).to eq(0)
+    end
+
+    it "does not return deleted products" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.discard
+      expect(product.company.reviews.length).to eq(0)
+    end
+
+    it "does not return deleted service" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.discard
+      expect(service.company.reviews.length).to eq(0)
+    end
+
+    it "does not return deleted project review" do
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      project.reviews.first.discard
+      expect(project.company.reviews.length).to eq(0)
+    end
+
+    it "does not return deleted products review" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.first.discard
+      expect(product.company.reviews.length).to eq(0)
+    end
+
+    it "does not return deleted service review" do
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      service.reviews.first.discard
+      expect(service.company.reviews.length).to eq(0)
+    end
+
+    it "returns product and service reviews" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review).attributes
+      expect(product.company.reviews.length).to eq(2)
+    end
+
+    it "returns reviews sorted by created_at when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review, score: 0).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review, score: 0).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review).attributes
+      expect(product.company.reviews(nil, "created_at")[0]).to eq(project.reviews.first)
+    end
+    it "returns reviews filtered by positive when specified" do
+      product = company.products.create! build(:product).attributes
+      positive_review = product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+      expect(product.company.reviews("POSITIVE", "created_at")[0]).to eq(positive_review)
+    end
+    it "returns reviews filtered by neutral when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+      service = company.services.create! build(:service).attributes
+      neutral_review = service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+      project = company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+      expect(product.company.reviews("NEUTRAL", "created_at")[0]).to eq(neutral_review)
+    end
+    it "returns reviews filtered by negative when specified" do
+      product = company.products.create! build(:product).attributes
+      product.reviews.create! build(:product_review, score: Review::POSITIVE).attributes
+      service = company.services.create! build(:service).attributes
+      service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
+      project = company.projects.create! build(:project).attributes
+      negative_review = project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
+      expect(product.company.reviews("NEGATIVE", "created_at")[0]).to eq(negative_review)
+    end
+  end
+
   context "reviewable_industries" do
     let(:company) { create(:company) }
     it "returns empty array if there are no reviewables" do
