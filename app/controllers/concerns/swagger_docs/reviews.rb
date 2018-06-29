@@ -271,6 +271,76 @@ module SwaggerDocs::Reviews
       end
     end
 
+    swagger_path '/api/v1/companies/{companies_id}/reviews' do
+      parameter do
+        key :name, :company_id
+        key :in, :path
+        key :description, I18n.t('swagger_ui.path_id_description', model: "Company").to_s
+        key :required, true
+        key :type, :string
+      end
+      operation :get do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('review.key').to_s]
+        key :description, I18n.t('swagger_ui.index_with_FK_description', model: "Review", id: "Company").to_s
+        key :operationId, 'findReviewsByCompany'
+        key :produces, [
+          'application/json'
+        ]
+        parameter do
+          key :name, :page
+          key :in, :query
+          key :description, 'Page Number to display'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items to display per page'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :filter_by_score
+          key :in, :query
+          key :description, 'POSITIVE/NEUTRAL/NEGATIVE'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :sort_by
+          key :in, :query
+          key :description, 'created_at'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :count
+          key :in, :query
+          key :description, 'true'
+          key :type, :integer
+          key :format, :int64
+        end
+        response 200 do
+          key :description, I18n.t('swagger_ui.index_success_description', model: "Review").to_s
+          schema type: :array do
+            items do
+              key :'$ref', :Review_Company
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+      end
+    end
+
     swagger_path '/api/v1/reviews/{id}' do
       parameter do
         key :name, :id

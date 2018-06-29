@@ -214,7 +214,7 @@ Grants = [
 
 lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
 13.times do |i|
-  company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: rand(-1..1) , description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
+  company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: rand(1..3) , description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
   company.image = File.new(company.avatar_path(200))
   company.save
 end
@@ -259,24 +259,24 @@ end
 
 
 Product.all.each do |p|
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
 end
 
 Service.all.each do |s|
-  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
-  s.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
+  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
+  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
+  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
 end
 
 Project.all.each do |p|
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 4)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 5)
-  p.reviews.create!(score: rand(-1..1), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 4)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 5)
+  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
 end
 
 Review.all.each_with_index do |r, i|

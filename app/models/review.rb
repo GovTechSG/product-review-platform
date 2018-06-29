@@ -9,6 +9,10 @@ class Review < ApplicationRecord
   belongs_to :company, -> { where(reviews: { reviewer_type: 'Company' }) },
              inverse_of: :reviews, foreign_key: 'reviewer_id', optional: true
 
+  POSITIVE = 3
+  NEUTRAL = 2
+  NEGATIVE = 1
+
   def company
     return unless reviewable_type == "Company"
     super
