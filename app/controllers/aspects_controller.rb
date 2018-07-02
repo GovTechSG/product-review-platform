@@ -1,6 +1,9 @@
 class AspectsController < ApplicationController
   include SwaggerDocs::Aspects
   before_action :doorkeeper_authorize!
+
+  before_action :set_company_by_company_id, only: [:company_aspects]
+  before_action :validate_company_presence, only: [:company_aspects]
   before_action :set_aspect, only: [:show, :update, :destroy]
   before_action :validate_aspect_presence, only: [:show, :update, :destroy]
 
@@ -11,6 +14,20 @@ class AspectsController < ApplicationController
     @aspects = params[:page] == 'all' ? Aspect.kept : Aspect.kept.page(params[:page]).per(params[:per_page])
 
     render json: @aspects
+  end
+
+  # GET /companies/:company_id/aspects
+  def company_aspects
+    if !performed?
+      aspect_list = @company.aspects(params[:filter_by_score], params[:sort_by], params[:count])
+      headers["Total"] = aspect_list.length
+      if !aspect_list.first.is_a? Aspect
+        aspect_list.each do |aspect|
+          aspect[:aspect] = ActiveModel::SerializableResource.new(aspect[:aspect])
+        end
+      end
+      render json: paginator(aspect_list)
+    end
   end
 
   # GET /aspects/1
@@ -57,5 +74,13 @@ class AspectsController < ApplicationController
   # Only allow a trusted parameter "white list" through.
   def aspect_params
     params.require(:aspect).permit(:name, :description)
+  end
+
+  def set_company_by_company_id
+    @company = Company.find_by_hashid(params[:company_id])
+  end
+
+  def validate_company_presence
+    render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
   end
 end

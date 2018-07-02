@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       get '/companies/:company_id/clients', to: 'companies#clients', as: 'companies_clients'
       get '/companies/:company_id/offerings', to: 'companies#offerings', as: 'company_offerings'
       get '/companies/:company_id/reviews', to: 'reviews#company_reviews', as: 'company_reviews'
+      get '/companies/:company_id/aspects', to: 'aspects#company_aspects', as: 'company_aspects'
       post '/oauth/refresh', to: 'tokens#refresh'
       post '/project/project_name', to: 'projects#search', as: 'search_project'
       post '/service/service_name', to: 'services#search', as: 'search_service'

@@ -35,6 +35,100 @@ RSpec.describe AspectsController, type: :controller do
       end
     end
 
+    describe "GET #company_aspects" do
+      let(:company) { create(:company) }
+      it "returns a success response", authorized: true do
+        get :company_aspects, params: { company_id: company.hashid }
+        expect(response).to be_success
+      end
+
+      it "returns not found if company is not found", authorized: true do
+        get :company_aspects, params: { company_id: 0 }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns not found if company is deleted", authorized: true do
+        company.discard
+        get :company_aspects, params: { company_id: company.id }
+        expect(response.status).to eq(404)
+      end
+
+      it "accepts valid sort by", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product_review = product.reviews.create! build(:product_review).attributes
+        product_review.aspects.create! build(:aspect).attributes
+        service = company.services.create! build(:service).attributes
+        service_review = service.reviews.create! build(:service_review).attributes
+        service_review.aspects.create! build(:aspect).attributes
+        project = company.projects.create! build(:project).attributes
+        project_review = project.reviews.create! build(:project_review).attributes
+        same_aspect = create(:aspect)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+
+        get :company_aspects, params: { company_id: company.hashid, sort_by: "aspects_count" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+        expect(parsed_response.first["name"]).to eq(same_aspect.name)
+      end
+
+      it "disregards invalid sort by", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product_review = product.reviews.create! build(:product_review).attributes
+        product_review.aspects.create! build(:aspect).attributes
+        service = company.services.create! build(:service).attributes
+        service_review = service.reviews.create! build(:service_review).attributes
+        service_review.aspects.create! build(:aspect).attributes
+        project = company.projects.create! build(:project).attributes
+        project_review = project.reviews.create! build(:project_review).attributes
+        same_aspect = create(:aspect)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+
+        get :company_aspects, params: { company_id: company.hashid, sort_by: "aggregdsfate_score" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+      end
+
+      it "respects per_page", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product_review = product.reviews.create! build(:product_review).attributes
+        product_review.aspects.create! build(:aspect).attributes
+        service = company.services.create! build(:service).attributes
+        service_review = service.reviews.create! build(:service_review).attributes
+        service_review.aspects.create! build(:aspect).attributes
+        project = company.projects.create! build(:project).attributes
+        project_review = project.reviews.create! build(:project_review).attributes
+        same_aspect = create(:aspect)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+
+        get :company_aspects, params: { company_id: company.hashid, sort_by: "aggregdsfate_score", per_page: 2 }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(2)
+      end
+
+      it "returns counts if specified", authorized: true do
+        product = company.products.create! build(:product).attributes
+        product_review = product.reviews.create! build(:product_review).attributes
+        product_review.aspects.create! build(:aspect).attributes
+        service = company.services.create! build(:service).attributes
+        service_review = service.reviews.create! build(:service_review).attributes
+        service_review.aspects.create! build(:aspect).attributes
+        project = company.projects.create! build(:project).attributes
+        project_review = project.reviews.create! build(:project_review).attributes
+        same_aspect = create(:aspect)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+        AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+
+        get :company_aspects, params: { company_id: company.hashid, sort_by: "aspects_count", count: "true" }
+        expect(response).to be_success
+        expect(parsed_response.length).to eq(3)
+        expect(parsed_response.first["aspect"]["name"]).to eq(same_aspect.name)
+        expect(parsed_response.first["count"]).to eq(2)
+      end
+    end
+
     describe "GET #show" do
       it "returns a success response", authorized: true do
         aspect = Aspect.create! valid_attributes

@@ -307,22 +307,19 @@ module SwaggerDocs::Reviews
           key :name, :filter_by_score
           key :in, :query
           key :description, 'POSITIVE/NEUTRAL/NEGATIVE'
-          key :type, :integer
-          key :format, :int64
+          key :type, :string
         end
         parameter do
           key :name, :sort_by
           key :in, :query
           key :description, 'created_at'
-          key :type, :integer
-          key :format, :int64
+          key :type, :string
         end
         parameter do
           key :name, :count
           key :in, :query
           key :description, 'true'
-          key :type, :integer
-          key :format, :int64
+          key :type, :string
         end
         response 200 do
           key :description, I18n.t('swagger_ui.index_success_description', model: "Review").to_s

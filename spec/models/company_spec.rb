@@ -452,6 +452,97 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  context "aspects" do
+    let(:company) { create(:company) }
+    it "returns empty array if there are no reviews" do
+      company = create(:company)
+      expect(company.aspects).to eq([])
+    end
+
+    it "returns product aspects if there are only product aspects" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      expect(product.company.aspects.length).to eq(1)
+    end
+
+    it "returns service aspects if there are only service aspects" do
+      service = company.services.create! build(:service).attributes
+      service_review = service.reviews.create! build(:service_review).attributes
+      service_review.aspects.create! build(:aspect).attributes
+      expect(service.company.aspects.length).to eq(1)
+    end
+
+    it "does not return deleted reviewable" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      product.discard
+      expect(product.company.aspects.length).to eq(0)
+    end
+
+    it "does not return deleted reviewable review" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      product.reviews.first.discard
+      expect(product.company.aspects.length).to eq(0)
+    end
+
+    it "does not return deleted reviewable review aspect" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      product.reviews.first.aspects.first.discard
+      expect(product.company.aspects.length).to eq(0)
+    end
+
+    it "returns reviewable aspects" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      service = company.services.create! build(:service).attributes
+      service_review = service.reviews.create! build(:service_review).attributes
+      service_review.aspects.create! build(:aspect).attributes
+      project = company.projects.create! build(:project).attributes
+      project_review = project.reviews.create! build(:project_review).attributes
+      same_aspect = create(:aspect)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+      expect(product.company.aspects.length).to eq(3)
+    end
+
+    it "returns aspects sorted by aspects_count when specified" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      service = company.services.create! build(:service).attributes
+      service_review = service.reviews.create! build(:service_review).attributes
+      service_review.aspects.create! build(:aspect).attributes
+      project = company.projects.create! build(:project).attributes
+      project_review = project.reviews.create! build(:project_review).attributes
+      same_aspect = create(:aspect)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+      expect(product.company.aspects(nil, "aspects_count")[0]).to eq(same_aspect)
+    end
+
+    it "returns aspects sorted by aspects_count with count when specified" do
+      product = company.products.create! build(:product).attributes
+      product_review = product.reviews.create! build(:product_review).attributes
+      product_review.aspects.create! build(:aspect).attributes
+      service = company.services.create! build(:service).attributes
+      service_review = service.reviews.create! build(:service_review).attributes
+      service_review.aspects.create! build(:aspect).attributes
+      project = company.projects.create! build(:project).attributes
+      project_review = project.reviews.create! build(:project_review).attributes
+      same_aspect = create(:aspect)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
+      AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
+      expect(product.company.aspects(nil, "aspects_count", "true")[0][:count]).to eq(2)
+    end
+  end
+
   context "reviewable_industries" do
     let(:company) { create(:company) }
     it "returns empty array if there are no reviewables" do

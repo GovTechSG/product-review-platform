@@ -38,10 +38,10 @@ class ReviewsController < ApplicationController
 
   # GET /companies/:company_id/reviews
   def company_reviews
-    review_list = @company.reviews(params[:filter_by_score], params[:sort_by])
-    all_reviews = @company.reviews
-    headers["Total"] = all_reviews.length
     if !performed?
+      review_list = @company.reviews(params[:filter_by_score], params[:sort_by])
+      all_reviews = @company.reviews
+      headers["Total"] = all_reviews.length
       if params[:count] == 'true'
         reviews = review_list.blank? ? [].to_json : ActiveModel::SerializableResource.new(paginator(review_list), each_serializer: ReviewWithDateSerializer).to_json
 

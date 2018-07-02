@@ -56,6 +56,14 @@ class Company < Reviewer
     @results.empty? ? [] : @results
   end
 
+  def aspects(filter_by_score = nil, sort_by = nil, count = nil)
+    review_list = reviews(filter_by_score)
+    accepted_sorter = valid_aspect_sorter(sort_by)
+    @results = review_list.flat_map(&:aspects).select { |aspect| aspect.discarded_at.nil? }
+    accepted_sorter.present? ? handle_aspects_sort(accepted_sorter, count) : @results = @results.uniq
+    @results.empty? ? [] : @results
+  end
+
   def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
@@ -136,24 +144,6 @@ class Company < Reviewer
     end
   end
 
-  def handle_grant_sort(accepted_sorter, desc)
-    case accepted_sorter
-    when 'reviews_count'
-      @grant_list = @grant_list.group_by { |grant| grant }.map { |k, v| [k, v.length] }.to_h.sort_by { |_k, v| -v }.map(&:first)
-      @grant_list.reverse! if desc != "true"
-    end
-  end
-
-  def valid_reviewable_filter(filter_by)
-    valid_filters = ['Product', 'Service', 'Project']
-    valid_filters.include?(filter_by) ? filter_by : nil
-  end
-
-  def valid_reviewable_sorter(sort_by)
-    valid_sorters = ['reviews_count', 'created_at']
-    valid_sorters.include?(sort_by) ? sort_by : nil
-  end
-
   def valid_review_score_filter(filter_by_score)
     valid_score_type = ['POSITIVE', 'NEUTRAL', 'NEGATIVE']
     valid_score_type.include?(filter_by_score) ? filter_by_score : nil
@@ -164,8 +154,39 @@ class Company < Reviewer
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
 
+  def valid_aspect_sorter(sort_by)
+    valid_sorters = ['aspects_count']
+    valid_sorters.include?(sort_by) ? sort_by : nil
+  end
+
+  def handle_aspects_sort(accepted_sorter, count)
+    case accepted_sorter
+    when 'aspects_count'
+      @results = @results.group_by(&:name).map { |_k, v| { aspect: v.first, count: v.length } }.sort_by { |v| -v[:count] }
+      @results = @results.flat_map { |result| result.first.last } if count != 'true'
+    end
+  end
+
+  def handle_grant_sort(accepted_sorter, desc)
+    case accepted_sorter
+    when 'reviews_count'
+      @grant_list = @grant_list.group_by { |grant| grant }.map { |k, v| [k, v.length] }.to_h.sort_by { |_k, v| -v }.map(&:first)
+      @grant_list.reverse! if desc != "true"
+    end
+  end
+
   def valid_grant_sorter(sort_by)
     valid_sorters = ['reviews_count']
+    valid_sorters.include?(sort_by) ? sort_by : nil
+  end
+
+  def valid_reviewable_filter(filter_by)
+    valid_filters = ['Product', 'Service', 'Project']
+    valid_filters.include?(filter_by) ? filter_by : nil
+  end
+
+  def valid_reviewable_sorter(sort_by)
+    valid_sorters = ['reviews_count', 'created_at']
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
 end
