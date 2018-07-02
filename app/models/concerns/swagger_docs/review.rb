@@ -42,6 +42,63 @@ module SwaggerDocs::Review
       end
     end
 
+    swagger_schema :ReviewWithDate do
+      key :type, :object
+      key :required, [:id, :name, :description]
+
+      property :id do
+        key :type, :string
+        key :example, "AbC123"
+      end
+
+      property :score do
+        key :type, :number
+      end
+
+      property :content do
+        key :type, :string
+        key :example, "Spring frameworks was not developed in spring"
+      end
+
+      property :from do
+        key :'$ref', :CompanyAssociation
+      end
+
+      property :grant do
+        key :'$ref', :ReviewGrant
+      end
+
+      property :aspects do
+        key :type, :array
+        items do
+          key :'$ref', :Aspect
+        end
+      end
+    end
+
+    swagger_schema :Review_Company do
+      key :type, :object
+      key :required, [:id, :score, :content, :company_id, :reviewable_id]
+      property :reviews do
+        key :type, :array
+        items do
+          key :'$ref', :ReviewWithDate
+        end
+      end
+      property :positive_count do
+        key :type, :number
+        key :example, 10
+      end
+      property :neutral_count do
+        key :type, :number
+        key :example, 12
+      end
+      property :negative_count do
+        key :type, :number
+        key :example, 16
+      end
+    end
+
     swagger_schema :Review_Comment do
       key :type, :object
       key :required, [:id, :score, :content, :company_id, :reviewable_id]
