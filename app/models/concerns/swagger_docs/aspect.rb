@@ -28,6 +28,18 @@ module SwaggerDocs::Aspect
       end
     end
 
+    swagger_schema :Aspect_Company do
+      key :type, :object
+      property :aspect do
+        key :type, :object
+        key :'$ref', :Aspect
+      end
+      property :count do
+        key :type, :number
+        key :example, 30
+      end
+    end
+
     swagger_schema :AspectInput do
       allOf do
         schema do
