@@ -34,8 +34,6 @@ class ApplicationController < ActionController::Base
   def paginator(object_list)
     if params[:page] == 'all'
       object_list
-    elsif object_list.respond_to?(:page)
-      object_list.page(params[:page]).per(params[:per_page])
     else
       Kaminari.paginate_array(object_list).page(params[:page]).per(params[:per_page])
     end
