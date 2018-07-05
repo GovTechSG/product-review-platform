@@ -86,7 +86,8 @@ class ProjectsController < ApplicationController
   end
 
   def set_company_by_name
-    @searched_company = Company.kept.find_by(uen: params[:company][:uen])
+    @searched_company = Company.kept.find_by('lower(uen) =?', params[:company][:uen].downcase.gsub(/[[:punct:]]/, ' ').lstrip.strip)
+    @searched_company = Company.kept.find_by('lower(name) =?', params[:company][:name].downcase.gsub(/[[:punct:]]/, ' ').lstrip.strip) if @searched_company.nil?
     @searched_company = create_company if @searched_company.nil?
     if @searched_company.errors.blank?
     else
