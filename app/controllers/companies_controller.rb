@@ -78,8 +78,8 @@ class CompaniesController < ApplicationController
 
   # POST /company/company_uen
   def search
-    # check if company exist by UEN
-    company = Company.kept.find_by(uen: params[:user][:uen])
+    # check if company exist by UEN or Name
+    company = validate_company_uen_name
     if company.nil?
       # create company if not found
       company = create_company
@@ -94,6 +94,11 @@ class CompaniesController < ApplicationController
   end
 
   private
+    def validate_company_uen_name
+      company = Company.kept.find_by('lower(uen) =?', params[:user][:uen].downcase.lstrip.strip)
+      company = Company.kept.find_by('lower(name) =?', params[:user][:name].downcase.lstrip.strip) if company.nil?
+      company
+    end
 
     def create_company
       company = Company.new(name: params[:user][:name], uen: params[:user][:uen], description: params[:user][:description])

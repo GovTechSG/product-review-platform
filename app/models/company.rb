@@ -23,7 +23,7 @@ class Company < Reviewer
   has_many :industries, through: :industry_companies
 
   validates_presence_of :name, :aggregate_score, :description, :reviews_count
-  validates_uniqueness_of :uen, :name
+  validates_uniqueness_of :uen
   validates :url, allow_blank: true, url: true
   validates :image, file_size: { less_than: 1.megabytes }
 

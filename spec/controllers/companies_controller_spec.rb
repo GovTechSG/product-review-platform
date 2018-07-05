@@ -583,5 +583,17 @@ RSpec.describe CompaniesController, type: :controller do
       post :search, params: { user: { uen: 999, name: '', description: '' } }
       expect(response.status).to eq(422)
     end
+
+    it "returns a company when company uen is found" do
+      create(:company, uen: "999")
+      post :search, params: { user: { uen: 99_9, name: '', description: '' } }
+      expect(response).to be_success
+    end
+
+    it "returns a company when company uen is not found but name is found" do
+      create(:company, name: "tEst name", uen: "999")
+      post :search, params: { user: { uen: 888, name: '  TEsT NAME  ', description: '' } }
+      expect(response).to be_success
+    end
   end
 end

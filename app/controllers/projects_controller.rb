@@ -5,7 +5,8 @@ class ProjectsController < ApplicationController
   before_action :validate_project_presence, only: [:show, :update, :destroy]
   before_action :set_company, only: [:index, :create]
   before_action :validate_company_presence, only: [:index, :create]
-  before_action :set_company_by_name, only: [:search]
+  before_action :validate_company_uen_name, only: [:search]
+  before_action :set_searched_company, only: [:search]
   after_action only: [:index] { set_pagination_header(Project.kept.where(company_id: params[:company_id])) }
 
   # GET /companies/:company_id/projects
@@ -85,14 +86,17 @@ class ProjectsController < ApplicationController
     @company = Company.find_by_hashid(params[:company_id])
   end
 
-  def set_company_by_name
-    @searched_company = Company.kept.find_by('lower(uen) =?', params[:company][:uen].downcase.gsub(/[[:punct:]]/, ' ').lstrip.strip)
-    @searched_company = Company.kept.find_by('lower(name) =?', params[:company][:name].downcase.gsub(/[[:punct:]]/, ' ').lstrip.strip) if @searched_company.nil?
+  def set_searched_company
     @searched_company = create_company if @searched_company.nil?
     if @searched_company.errors.blank?
     else
       render json: @searched_company.errors.messages, status: :unprocessable_entity
     end
+  end
+
+  def validate_company_uen_name
+    @searched_company = Company.kept.find_by("lower(uen) =?", params[:company][:uen].downcase.lstrip.strip)
+    @searched_company = Company.kept.find_by('lower(name) =?', params[:company][:name].downcase.lstrip.strip) if @searched_company.nil?
   end
 
   def create_company
