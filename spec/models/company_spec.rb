@@ -33,11 +33,6 @@ RSpec.describe Company, type: :model do
     company.save
     expect(build(:company, uen: company.uen)).not_to be_valid
   end
-  it 'is invalid with a duplicate name' do
-    company = build(:company)
-    company.save
-    expect(build(:company, name: company.name)).not_to be_valid
-  end
   it "is valid without a url" do
     company = build(:company)
     company.url = ''
