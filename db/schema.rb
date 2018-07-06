@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_05_091515) do
+ActiveRecord::Schema.define(version: 2018_07_06_025118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2018_07_05_091515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.decimal "aggregate_score"
+    t.decimal "aggregate_score", default: "0.0"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["discarded_at"], name: "index_products_on_discarded_at"
     t.index ["name"], name: "index_products_on_name", unique: true
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(version: 2018_07_05_091515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.decimal "aggregate_score"
+    t.decimal "aggregate_score", default: "0.0"
     t.index ["company_id"], name: "index_projects_on_company_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["name"], name: "index_projects_on_name", unique: true
@@ -252,7 +252,7 @@ ActiveRecord::Schema.define(version: 2018_07_05_091515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.decimal "aggregate_score"
+    t.decimal "aggregate_score", default: "0.0"
     t.index ["company_id"], name: "index_services_on_company_id"
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
     t.index ["name"], name: "index_services_on_name", unique: true
