@@ -1,6 +1,9 @@
 class CompaniesController < ApplicationController
   include SwaggerDocs::Companies
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show, :offerings, :clients]
+  before_action only: [:create, :update, :destroy, :search] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
   before_action :set_company, only: [:show, :update, :destroy]
   before_action :set_company_by_company_id, only: [:clients, :offerings]
   before_action :validate_company_presence, only: [:show, :update, :destroy, :clients, :offerings]

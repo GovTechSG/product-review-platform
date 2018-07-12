@@ -1,6 +1,9 @@
 class LikesController < ApplicationController
   include SwaggerDocs::Likes
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show]
+  before_action only: [:create, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
 
   before_action :set_likeable, only: [:index, :create]
   before_action :validate_likeable_presence, only: [:index, :create]

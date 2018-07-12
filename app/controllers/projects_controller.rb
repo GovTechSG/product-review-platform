@@ -1,6 +1,9 @@
 class ProjectsController < ApplicationController
   include SwaggerDocs::Projects
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show]
+  before_action only: [:create, :update, :destroy, :search] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
   before_action :set_project, only: [:show, :update, :destroy]
   before_action :validate_project_presence, only: [:show, :update, :destroy]
   before_action :set_company, only: [:index, :create]

@@ -3,7 +3,7 @@ require 'support/api_login_helper'
 
 RSpec.describe TokensController, type: :controller do
   describe "POST #token" do
-    it "returns a success response" do
+    it "creates a read_write app" do
       authorized_app = create(:app)
       app_params = {
         "password": authorized_app.password,
@@ -12,7 +12,32 @@ RSpec.describe TokensController, type: :controller do
       post :create, params: app_params
       expect(response).to be_success
       expect(response.body).to look_like_json
-      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
+      expect(parsed_response["scope"]).to eq('read_write')
+    end
+    it "creates a write_only app" do
+      authorized_app = create(:write_only_app)
+      app_params = {
+        "password": authorized_app.password,
+        "name": authorized_app.name
+      }
+      post :create, params: app_params
+      expect(response).to be_success
+      expect(response.body).to look_like_json
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
+      expect(parsed_response["scope"]).to eq('write_only')
+    end
+    it "creates a read_only app" do
+      authorized_app = create(:read_only_app)
+      app_params = {
+        "password": authorized_app.password,
+        "name": authorized_app.name
+      }
+      post :create, params: app_params
+      expect(response).to be_success
+      expect(response.body).to look_like_json
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
+      expect(parsed_response["scope"]).to eq('read_only')
     end
   end
 

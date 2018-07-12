@@ -1,6 +1,9 @@
 class IndustriesController < ApplicationController
   include SwaggerDocs::Industries
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show]
+  before_action only: [:create, :update, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
   before_action :set_industry, only: [:show, :update, :destroy]
   before_action :validate_industry_presence, only: [:show, :update, :destroy]
 

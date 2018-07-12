@@ -1,6 +1,9 @@
 class AspectsController < ApplicationController
   include SwaggerDocs::Aspects
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show]
+  before_action only: [:create, :update, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
 
   before_action :set_company_by_company_id, only: [:company_aspects]
   before_action :validate_company_presence, only: [:company_aspects]

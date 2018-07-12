@@ -57,8 +57,8 @@ Doorkeeper.configure do
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  # default_scopes  :public
-  # optional_scopes :write, :update
+  default_scopes  :read_only
+  optional_scopes :write_only, :read_write
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
@@ -120,6 +120,7 @@ Doorkeeper::JWT.configure do
       iss: Rails.application.class.parent.to_s.underscore,
       iat: Time.now.utc.to_i,
       jti: SecureRandom.uuid,
+      scopes: app.scopes.to_s,
       app: {
         id: app.id,
         name: app.name
