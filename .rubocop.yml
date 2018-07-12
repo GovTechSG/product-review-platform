@@ -28,6 +28,7 @@ AllCops:
     - '**/Vagabondfile'
   Exclude:
     - 'Gemfile'
+    - 'app/admin/*'
     - 'vendor/**/*'
     - 'node_modules/**/*'
     - 'bin/**/*'

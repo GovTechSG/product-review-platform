@@ -1,5 +1,5 @@
 ActiveAdmin.register App do
-  permit_params :name, :password, :password_confirmation, :description
+  permit_params :name, :password, :password_confirmation, :description, :scopes, scopes: []
 
   index do
     selectable_column
@@ -26,11 +26,19 @@ ActiveAdmin.register App do
       f.input :description
       f.input :password
       f.input :password_confirmation
+      f.input :scopes,
+              as: :select,
+              collection: ['read_only', 'write_only', 'read_write']
     end
     f.actions
   end
 
   controller do
+    def create
+      params[:app][:scopes] = [params[:app][:scopes]]
+      super
+    end
+
     def update
       if params[:app][:password].blank?
         params[:app].delete("password")
@@ -40,6 +48,7 @@ ActiveAdmin.register App do
         params[:app].delete("email")
         params[:app].delete("email_confirmation")
       end
+      params[:app][:scopes] = [params[:app][:scopes]]
       super
     end
 
