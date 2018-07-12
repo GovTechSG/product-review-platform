@@ -12,7 +12,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_sign_in_path, params: app_params
       expect(response).to have_http_status(200)
       expect(response.body).to look_like_json
-      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
     end
   end
 
@@ -66,7 +66,7 @@ RSpec.describe "Tokens", type: :request do
       post oauth_refresh_path, params: app_params
       expect(response).to have_http_status(200)
       expect(response.body).to look_like_json
-      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
     end
   end
 

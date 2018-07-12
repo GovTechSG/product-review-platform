@@ -118,7 +118,7 @@ RSpec.describe TokensController, type: :controller do
       post :refresh, params: app_params
       expect(response).to be_success
       expect(response.body).to look_like_json
-      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at')
+      expect(parsed_response.keys).to contain_exactly('access_token', 'token_type', 'created_at', 'scope')
     end
   end
 

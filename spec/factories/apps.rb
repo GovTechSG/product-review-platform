@@ -4,12 +4,12 @@ FactoryBot.define do
     password { FFaker::Internet.password }
     scopes ["read_write"]
   end
-  factory :read_only_app do
+  factory :read_only_app, class: App do
     name { FFaker::Name.name }
     password { FFaker::Internet.password }
     scopes ["read_only"]
   end
-  factory :write_only_app do
+  factory :write_only_app, class: App do
     name { FFaker::Name.name }
     password { FFaker::Internet.password }
     scopes ["write_only"]
