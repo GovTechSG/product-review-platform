@@ -6,6 +6,8 @@ class TokensController < Doorkeeper::TokensController
 
   def create
     params[:grant_type] = "password"
+    app = App.find_for_authentication(name: params[:name])
+    params[:scope] = app.scopes.first if app && app.presence?
     response = authorize_response
     headers.merge! response.headers
     self.response_body = response.body.to_json

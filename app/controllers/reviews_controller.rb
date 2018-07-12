@@ -1,6 +1,9 @@
 class ReviewsController < ApplicationController
   include SwaggerDocs::Reviews
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show, :company_reviews]
+  before_action only: [:create, :update, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
 
   before_action only: [:index] { set_reviewable(true) }
   before_action :set_company_by_company_id, only: [:company_reviews]

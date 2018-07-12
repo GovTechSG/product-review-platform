@@ -1,6 +1,9 @@
 class GrantsController < ApplicationController
   include SwaggerDocs::Grants
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show, :search]
+  before_action only: [:create, :update, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
   before_action :set_grant, only: [:show, :update, :destroy]
   before_action :validate_grant_presence, only: [:show, :update, :destroy]
   before_action :set_company_if_present, only: [:index]
@@ -55,6 +58,7 @@ class GrantsController < ApplicationController
     @grant.discard
   end
 
+  # GET
   def search
     grant = Grant.kept.find_by(name: params[:grant_name])
     render json: { grant_id: grant.hashid }

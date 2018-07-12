@@ -1,6 +1,9 @@
 class CommentsController < ApplicationController
   include SwaggerDocs::Comments
-  before_action :doorkeeper_authorize!
+  before_action -> { doorkeeper_authorize! :read_only, :read_write }, only: [:index, :show]
+  before_action only: [:create, :update, :destroy] do
+    doorkeeper_authorize! :read_write, :write_only
+  end
 
   before_action :set_commentable, only: [:index, :create]
 
