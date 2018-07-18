@@ -32,12 +32,13 @@
 en:
   view:
     header:
-      title: "Company Review Platform"
+      title: "GovReview"
       sign_up: "Sign Up"
       api: "API"
       contact_us: "Contact Us"
+      demo: "Demo"
     index:
-      title: "Company Review Platform - Start Reviewing"
+      title: "GovReview - Start Reviewing"
       heading: "Find the Best Business"
       sub_heading: "Partners and Vendors"
       learn_more: "Learn More"
