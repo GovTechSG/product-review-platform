@@ -1,10 +1,12 @@
 require 'rails_helper'
 require 'concerns/statistics/companies_spec.rb'
 require 'concerns/imageable_spec.rb'
+require 'concerns/statistics/score_aggregator_spec.rb'
 
 RSpec.describe Company, type: :model do
   it_behaves_like "companies"
   it_behaves_like "imageable"
+  it_behaves_like "score_aggregator"
   it "is valid with valid attributes" do
     expect(build(:company)).to be_valid
   end
@@ -617,7 +619,13 @@ RSpec.describe Company, type: :model do
       company = create(:company)
       product = company.products.create! build(:product).attributes
       product.reviews.create! build(:product_review).attributes
-      expect(company.aggregate_score).not_to eq(0)
+      expect(company.aggregate_score).to eq(0.0)
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review).attributes
+      expect(company.aggregate_score).to_not eq(0.0)
     end
   end
 
