@@ -20,7 +20,6 @@ shared_examples_for 'score_aggregator' do
       company.products.first.reviews.create!(build(:product_review).attributes)
       review = company.products.first.reviews.create!(build(:product_review).attributes)
 
-
       expect(review.reviewable.company.aggregate_score).to_not eq(0.0)
       expect(review.reviewable.company.products.first.aggregate_score).to_not eq(0.0)
     end
