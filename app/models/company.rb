@@ -4,6 +4,7 @@ class Company < Reviewer
   include SwaggerDocs::Company
   include LetterAvatar::HasAvatar
   include Statistics::Companies
+  include Statistics::ScoreAggregator
   include Imageable
   mount_uploader :image, ImageUploader
 
@@ -107,7 +108,7 @@ class Company < Reviewer
   end
 
   def set_aggregate_score
-    self.aggregate_score = reviews_count > 0 ? (1.0 * get_reviews.pluck("score").compact.sum) / reviews_count : 0
+    self.aggregate_score = reviews_count > 0 ? calculate_aggregate_score(get_reviews) : 0.0
     save!
     reload
   end

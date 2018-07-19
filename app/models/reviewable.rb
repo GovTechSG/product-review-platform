@@ -1,4 +1,5 @@
 class Reviewable < ApplicationRecord
+  include Statistics::ScoreAggregator
   belongs_to :company
   has_many :reviews, as: :reviewable, dependent: :destroy
   self.abstract_class = true
@@ -17,7 +18,7 @@ class Reviewable < ApplicationRecord
   end
 
   def set_aggregate_score
-    self.aggregate_score = reviews.kept.count > 0 ? (1.0 * reviews.kept.pluck("score").compact.sum) / reviews.kept.count : 0
+    self.aggregate_score = reviews.kept.count > 0 ? calculate_aggregate_score(reviews.kept) : 0
     save!
     reload
   end

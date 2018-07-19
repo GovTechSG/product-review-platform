@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'concerns/statistics/products_and_services_spec.rb'
+require 'concerns/statistics/score_aggregator_spec.rb'
 
 RSpec.describe Product, type: :model do
   it_behaves_like "products_and_services"
@@ -36,13 +37,6 @@ RSpec.describe Product, type: :model do
       end.to change { product.company.reviews_count }.by(1)
     end
 
-    it 'updates score of the product on create' do
-      product = create(:product)
-      review_one = product.reviews.create!(build(:product_review).attributes)
-      review_two = product.reviews.create!(build(:product_review).attributes)
-      expect(product.company.aggregate_score).to eq((1.0 * review_one.score + review_two.score) / 2.0)
-    end
-
     it 'updates review count of the product on review discard' do
       product = create(:product)
       product.reviews.create!(build(:product_review).attributes)
@@ -70,10 +64,14 @@ RSpec.describe Product, type: :model do
     it 'updates score on review discard' do
       product = create(:product)
       product.reviews.create!(build(:product_review).attributes)
-      undiscarded_review = product.reviews.create!(build(:product_review).attributes)
+      product.reviews.create!(build(:product_review).attributes)
+      product.reviews.create!(build(:product_review).attributes)
+      product.reviews.create!(build(:product_review).attributes)
+      product.reviews.create!(build(:product_review).attributes)
+      product.reviews.create!(build(:product_review).attributes)
       product.reviews.first.discard
 
-      expect(product.company.aggregate_score).to eq(undiscarded_review.score)
+      expect(product.company.aggregate_score).to eq(0)
     end
     it 'returns 0 when there are no score' do
       product = create(:product)
