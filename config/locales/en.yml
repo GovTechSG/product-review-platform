@@ -167,8 +167,8 @@ en:
   swagger_ui:
     swagger_version: "2.0"
     endpoint_version: "1.0.0"
-    title: "Company Review Platform"
-    description: "API for GDS Company Review Platform"
+    title: "GovReview"
+    description: "API for GovReview"
     contact_name: "Government Digital Services"
     license_name: "MIT"
     authorization_description: "Enter 'Bearer ' before ur access key"
