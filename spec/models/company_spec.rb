@@ -625,6 +625,7 @@ RSpec.describe Company, type: :model do
       product.reviews.create! build(:product_review).attributes
       product.reviews.create! build(:product_review).attributes
       product.reviews.create! build(:product_review).attributes
+      company.reload
       expect(company.aggregate_score).to_not eq(0.0)
     end
   end
