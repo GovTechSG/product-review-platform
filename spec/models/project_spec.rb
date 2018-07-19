@@ -3,7 +3,6 @@ require 'concerns/statistics/products_and_services_spec.rb'
 
 RSpec.describe Project, type: :model do
   it_behaves_like "products_and_services"
-  it_behaves_like "score_aggregator"
 
   describe 'validations' do
     it 'has a valid Factory' do

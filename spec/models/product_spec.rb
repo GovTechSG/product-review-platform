@@ -4,7 +4,6 @@ require 'concerns/statistics/score_aggregator_spec.rb'
 
 RSpec.describe Product, type: :model do
   it_behaves_like "products_and_services"
-  it_behaves_like "score_aggregator"
 
   describe 'validations' do
     it 'has a valid Factory' do
