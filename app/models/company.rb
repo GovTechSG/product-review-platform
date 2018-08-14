@@ -136,6 +136,14 @@ class Company < Reviewer
     end
   end
 
+  def self.uen_query_sanitizer(uen)
+    find_by(sanitize_sql(['lower(uen) =?', uen]))
+  end
+
+  def self.name_query_sanitizer(name)
+    find_by(sanitize_sql(['lower(name) =?', name]))
+  end
+
   private
 
   # e.g. score:1
