@@ -44,6 +44,7 @@ module ProductReviewPlatform
 
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash
+    config.session_store :cookie_store, key: "_GOVREVIEW_session_#{Rails.env}"
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
   end

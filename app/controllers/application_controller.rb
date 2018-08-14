@@ -1,6 +1,11 @@
 # Front facing routes inherit this
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
   include RenderErrors
+
+  rescue_from ActionController::InvalidAuthenticityToken do
+    render_error(403, "CSRF Token": "Failed to authenticate")
+  end
 
   rescue_from ActiveRecord::RecordNotFound do |error|
     render_error(404, "Record not found": [error.message])
