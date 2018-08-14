@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_11_024047) do
+ActiveRecord::Schema.define(version: 2018_08_14_060559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 2018_07_11_024047) do
     t.text "description"
     t.datetime "discarded_at"
     t.string "scopes", default: ["read_only"], null: false, array: true
+    t.boolean "confidential", default: true, null: false
     t.index ["discarded_at"], name: "index_apps_on_discarded_at"
     t.index ["name"], name: "index_apps_on_name", unique: true
     t.index ["reset_password_token"], name: "index_apps_on_reset_password_token", unique: true
