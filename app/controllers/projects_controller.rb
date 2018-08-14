@@ -98,8 +98,8 @@ class ProjectsController < ApplicationController
   end
 
   def validate_company_uen_name
-    @searched_company = Company.kept.find_by("lower(uen) =?", params[:company][:uen].downcase.lstrip.strip)
-    @searched_company = Company.kept.find_by('lower(name) =?', params[:company][:name].downcase.lstrip.strip) if @searched_company.nil?
+    @searched_company = Company.kept.uen_query_sanitizer(params[:company][:uen].downcase.lstrip.strip)
+    @searched_company = Company.kept.name_query_sanitizer(params[:company][:name].downcase.lstrip.strip) if @searched_company.nil?
   end
 
   def create_company
