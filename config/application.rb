@@ -21,7 +21,15 @@ module ProductReviewPlatform
   class Application < Rails::Application
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
+        allowed_origins =
+          if ENV['allowed_origins'].present?
+            ENV['allowed_origins'].split(',')
+          elsif Rails.application.secrets.allowed_origins.present?
+            allowed_origins
+          else
+            ['*']
+          end
+        origins allowed_origins
         resource '*', :headers => :any,
                       :methods => [:get, :post, :options],
                       :expose => ['Total', 'Per-Page']
@@ -44,7 +52,6 @@ module ProductReviewPlatform
 
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash
-    config.session_store :cookie_store, key: "_GOVREVIEW_session_#{Rails.env}"
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
   end

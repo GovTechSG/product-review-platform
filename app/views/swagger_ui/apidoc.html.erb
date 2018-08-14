@@ -7,14 +7,9 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
   <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
-
-    <!-- Bootstrap core JavaScript -->
-    <%= javascript_include_tag "jquery.min" %>
-    <%= javascript_include_tag "bootstrap.bundle.min" %>
-
+  
   <!-- Custom styles for swagger UI -->
   <%= stylesheet_link_tag    "swagger-ui", :media => "all" %>
-  <%= csrf_meta_tags %>
 
   <style>
     html
@@ -99,13 +94,6 @@ window.onload = function() {
       SwaggerUIBundle.presets.apis,
       SwaggerUIStandalonePreset
     ],
-    requestInterceptor: (req) => {
-      if (! req.loadSpec) {
-          // Add the header to "try it out" calls but not spec fetches
-          req.headers.X_CSRF_Token = $('meta[name="csrf-token"]').attr('content')
-      }
-      return req;
-    },
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
