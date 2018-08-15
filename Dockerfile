@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   clamdscan
 
 RUN apt-get update && apt-get -y install --only-upgrade \
-    openssl \
+    openssl 
 
 RUN apt-get clean
 
