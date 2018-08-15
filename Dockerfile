@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   postgresql-client \
   clamdscan
 
+RUN apt-get update && apt-get -y install --only-upgrade \
+    openssl \
+
 RUN apt-get clean
 
 # Set an environment variable to store where the app is installed to inside
