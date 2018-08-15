@@ -55,7 +55,7 @@ Welcome! This document details the setting up of a development environment. The 
 		brew install ruby-build
 		rbenv init
 		rbenv install -l
-		rbenv install 2.3.5
+		rbenv install 2.3.7
 
 	if rbenv fails you may need to run the following command first before rbenv install: 
 		xcode-select --install # possibly need xcode first as well
@@ -115,6 +115,6 @@ Welcome! This document details the setting up of a development environment. The 
 
     these should not give any errors (warnings are fine).
 # Stack
-	Ruby: 2.3.5
-	Rails: 5.1.4
+	Ruby: 2.3.7
+	Rails: 5.2.0
 	Database: Postgresql 10

@@ -1,4 +1,4 @@
-FROM ruby:2.3.5
+FROM ruby:2.3.7-slim-jessie
 
 LABEL maintainer="wynn"
 
@@ -6,6 +6,7 @@ LABEL maintainer="wynn"
 
 # Install some required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  git \
   build-essential \
   nodejs \
   libpq-dev \
