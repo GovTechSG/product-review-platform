@@ -7,6 +7,7 @@ LABEL maintainer="wynn"
 # Install some required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
+  imagemagick \
   build-essential \
   nodejs \
   libpq-dev \
