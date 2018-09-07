@@ -56,6 +56,8 @@ class ProjectsController < ApplicationController
 
   # POST /project/project_name
   def search
+    validate_search_params
+    return if performed?
     if Project.kept.find_by(name: params[:project_name]).nil?
       create_project
     else
@@ -71,7 +73,9 @@ class ProjectsController < ApplicationController
   end
 
   def create_project
-    project = Project.create(company_id: @searched_company.id, name: params[:project_name], description: params[:project][:description])
+    validate_vendor_uen_name
+    vendor = create_vendor if @searched_vendor.nil?
+    project = Project.create(company_id: vendor.id, name: params[:project_name], description: params[:project][:description])
     if project.errors.blank?
       render json: { 'project_id': project.hashid }
     else
@@ -109,12 +113,28 @@ class ProjectsController < ApplicationController
     company
   end
 
+  def validate_vendor_uen_name
+    @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase.lstrip.strip)
+    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].to_s.downcase.lstrip.strip) if @searched_vendor.nil?
+  end
+
+  def create_vendor
+    vendor = Company.new(name: params[:vendor_name], uen: params[:vendor_uen], description: "")
+    vendor.set_image!(@image) if params[:vendor_name].present?
+    vendor.errors.blank? && vendor.save
+    vendor
+  end
+
   def validate_company_presence
     render_error(404, "#{I18n.t('company.key_id')}": [I18n.t('general_error.not_found')]) if @company.nil? || !@company.presence?
   end
 
   # Only allow a trusted parameter "white list" through.
   def project_params
-    params.require(:project).permit(:name, :description)
+    params.require(:project).permit(:name, :description, :vendor_uen, :vendor_name)
+  end
+
+  def validate_search_params
+    render_error(404, "Vendor name or company": [I18n.t('general_error.not_found')]) if params[:vendor_name].nil? || params[:vendor_uen].nil?
   end
 end

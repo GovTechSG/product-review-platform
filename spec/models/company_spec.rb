@@ -15,11 +15,6 @@ RSpec.describe Company, type: :model do
     company.name = ''
     expect(company).to_not be_valid
   end
-  it "is not valid without a description" do
-    company = build(:company)
-    company.description = ''
-    expect(company).to_not be_valid
-  end
   it "is not valid without a aggregate_score" do
     company = build(:company)
     company.aggregate_score = ''

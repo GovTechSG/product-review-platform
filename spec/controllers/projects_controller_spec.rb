@@ -261,35 +261,40 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe "POST #search", authorized: true do
       it "returns a success response when project is found" do
-        create(:project, name: "valid project")
-        post :search, params: { project_name: 'valid project', company: { uen: 999, name: 'test', description: 'for test' } }
+        project = Project.create! valid_attributes
+        post :search, params: { project_name: project.name, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: project.company.name, vendor_uen: project.company.uen }
         expect(response).to be_success
       end
 
       it "returns a success response" do
-        post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response).to be_success
       end
 
+      it "requires vendor name and uen" do
+        post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        expect(response.status).to eq(404)
+      end
+
       it "returns a unprocessable_entity response when project creation failed" do
-        post :search, params: { project_name: 'test', project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' } }
+        post :search, params: { project_name: 'test', project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response.status).to eq(422)
       end
 
       it "returns a unprocessable_entity response when company creation failed" do
-        post :search, params: { project_name: 'test', company: { uen: 999, name: '', description: '' } }
+        post :search, params: { project_name: 'test', company: { uen: 999, name: '', description: '' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response.status).to eq(422)
       end
 
       it "returns a company when company uen is found" do
         create(:company, uen: "999")
-        post :search, params: { project_name: 'test', project: { description: 'test' }, company: { uen: 999, name: '', description: '' } }
+        post :search, params: { project_name: 'test', project: { description: 'test' }, company: { uen: 999, name: '', description: '' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response).to be_success
       end
 
       it "returns a company when company uen is not found but name is found" do
         create(:company, name: "tEst name", uen: "999")
-        post :search, params: { project_name: 'test', project: { description: 'test' }, company: { uen: 888, name: '  Test NaMe   ', description: '' } }
+        post :search, params: { project_name: 'test', project: { description: 'test' }, company: { uen: 888, name: '  Test NaMe   ', description: '' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response).to be_success
       end
     end

@@ -23,8 +23,9 @@ class Company < Reviewer
   has_many :industry_companies, dependent: :destroy
   has_many :industries, through: :industry_companies
 
-  validates_presence_of :name, :aggregate_score, :description, :reviews_count
+  validates_presence_of :name, :aggregate_score, :reviews_count
   validates_uniqueness_of :uen
+  validates_presence_of :description, allow_blank: true
   validates :url, allow_blank: true, url: true
   validates :image, file_size: { less_than: 1.megabytes }
 
