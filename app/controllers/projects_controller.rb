@@ -74,7 +74,7 @@ class ProjectsController < ApplicationController
 
   def create_project
     validate_vendor_uen_name
-    vendor = create_vendor if @searched_vendor.nil?
+    vendor = @searched_vendor.nil? ? create_vendor : @searched_vendor
     project = Project.create(company_id: vendor.id, name: params[:project_name], description: params[:project][:description])
     if project.errors.blank?
       render json: { 'project_id': project.hashid }
