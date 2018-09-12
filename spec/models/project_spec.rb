@@ -13,10 +13,6 @@ RSpec.describe Project, type: :model do
       expect(build(:project, name: nil)).not_to be_valid
     end
 
-    it 'is invalid without a description' do
-      expect(build(:project, description: nil)).not_to be_valid
-    end
-
     it "is not valid without a reviews_count" do
       project = build(:company)
       project.reviews_count = nil

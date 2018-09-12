@@ -99,7 +99,7 @@ class CompaniesController < ApplicationController
   private
     def validate_company_uen_name
       company = Company.kept.uen_query_sanitizer(params[:user][:uen].downcase.lstrip.strip)
-      company = Company.kept.name_query_sanitizer(params[:user][:name].downcase.lstrip.strip) if company.nil?
+      company = Company.kept.name_query_sanitizer(params[:user][:name].downcase.lstrip.strip) if company.nil? || company.uen.blank?
       company
     end
 

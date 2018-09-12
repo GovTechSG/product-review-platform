@@ -103,7 +103,7 @@ class ProjectsController < ApplicationController
 
   def validate_company_uen_name
     @searched_company = Company.kept.uen_query_sanitizer(params[:company][:uen].downcase.lstrip.strip)
-    @searched_company = Company.kept.name_query_sanitizer(params[:company][:name].downcase.lstrip.strip) if @searched_company.nil?
+    @searched_company = Company.kept.name_query_sanitizer(params[:company][:name].downcase.lstrip.strip) if @searched_company.nil? || @searched_company.uen.blank?
   end
 
   def create_company
@@ -115,7 +115,7 @@ class ProjectsController < ApplicationController
 
   def validate_vendor_uen_name
     @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase.lstrip.strip)
-    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].to_s.downcase.lstrip.strip) if @searched_vendor.nil?
+    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].downcase.lstrip.strip) if @searched_vendor.nil? || @searched_vendor.uen.blank?
   end
 
   def create_vendor

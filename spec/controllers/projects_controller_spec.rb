@@ -266,6 +266,65 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to be_success
       end
 
+      it "creates project if project is not found" do
+        expect do
+          post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
+        end.to change { Project.count }.by(1)
+      end
+
+      it "does not create project if project is found" do
+        post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
+        expect do
+          post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
+        end.to change { Project.count }.by(0)
+      end
+
+      it "creates vendor if vendor is not found" do
+        company = create(:company)
+        expect do
+          post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: company.uen, name: company.name, description: company.description }, vendor_name: "new vendor", vendor_uen: 123 }
+        end.to change { Company.count }.by(1)
+      end
+
+      it "does not create vendor or reviewer if vendor is found" do
+        company = create(:company)
+        project = create(:project)
+        expect do
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: company.uen, name: company.name, description: company.description }, vendor_name: project.company.name, vendor_uen: project.company.uen }
+        end.to change { Company.count }.by(0)
+      end
+
+      it "creates reviewer if reviewer is not found" do
+        project = create(:project)
+        expect do
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: "aname", description: "adesc" }, vendor_name: project.company.name, vendor_uen: project.company.uen }
+        end.to change { Company.count }.by(1)
+      end
+
+      it "seaches by uen" do
+        project = create(:project)
+        reviewer = create(:company)
+
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: reviewer.uen, name: "aname", description: "adesc" }, vendor_name: "wrong", vendor_uen: project.company.uen }
+        expect(response).to be_success
+      end
+
+      it "searches by name if uen is not found" do
+        project = create(:project)
+        reviewer = create(:company)
+
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: reviewer.name, description: "adesc" }, vendor_name: project.company.name, vendor_uen: 321 }
+        expect(response).to be_success
+      end
+
+      it "searches by name if uen is blank" do
+        project = create(:project)
+        reviewer = create(:company)
+
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: reviewer.name, description: "adesc" }, vendor_name: project.company.name, vendor_uen: "" }
+        expect(response).to be_success
+      end
+
       it "returns a success response" do
         post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response).to be_success
@@ -274,11 +333,6 @@ RSpec.describe ProjectsController, type: :controller do
       it "requires vendor name and uen" do
         post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' } }
         expect(response.status).to eq(404)
-      end
-
-      it "returns a unprocessable_entity response when project creation failed" do
-        post :search, params: { project_name: 'test', project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "abc", vendor_uen: 123 }
-        expect(response.status).to eq(422)
       end
 
       it "returns a unprocessable_entity response when company creation failed" do
