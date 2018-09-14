@@ -40,6 +40,12 @@ RSpec.describe Company, type: :model do
     company.url = 'hey'
     expect(company).to_not be_valid
   end
+  it "skips uniqueness check for blanks" do
+    create(:company, uen: "")
+    company = build(:company)
+    company.uen = ""
+    expect(company).to be_valid
+  end
 
   it "is valid with a valid url" do
     company = build(:company)

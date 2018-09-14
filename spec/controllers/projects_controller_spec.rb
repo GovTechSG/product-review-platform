@@ -325,6 +325,15 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to be_success
       end
 
+      it "can submit multiple blanks" do
+        project = build(:project)
+
+        expect do
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "aname", description: "adesc" }, vendor_name: project.company.name, vendor_uen: "" }
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "abname", description: "adesc" }, vendor_name: "vname", vendor_uen: "" }
+        end.to change { Company.count }.by(2)
+      end
+
       it "returns a success response" do
         post :search, params: { project_name: 'test', project: { description: 'for test' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "abc", vendor_uen: 123 }
         expect(response).to be_success
