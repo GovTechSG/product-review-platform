@@ -2,21 +2,7 @@
 App.create!(name: "BGP", password: "test12", password_confirmation: "test12", scopes: ["read_only"]) if (Rails.env.development?)
 App.create!(name: "BG", password: "test12", password_confirmation: "test12", scopes: ["read_write"]) if (Rails.env.development?)
 App.create!(name: "P", password: "test12", password_confirmation: "test12", scopes: ["write_only"]) if (Rails.env.development?)
-company_names = [
-  "Pivotal Software",
-  "Microsoft",
-  "Oracle",
-  "SAP",
-  "salesforce.com",
-  "ThoughtWorks",
-  "ADP",
-  "Zendesk",
-  "Hubspot",
-  "RingCentral",
-  "Redmart",
-  "ShopBack",
-  "Shopee",
-]
+
 industry_names = [
   "Agriculture",
   "Building & Construction",
@@ -46,21 +32,6 @@ industry_description = [
   "The Services industry involve the provision of services to businesses as well as final consumers. Such services include accounting, tradesmanship (like mechanic or plumber services), computer services, restaurants, tourism, etc.",
   "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment.",
   "Any other industry."
-]
-uens = [
-  "984208875",
-  "984208874",
-  "984208873",
-  "984208872",
-  "584208374",
-  "384208875",
-  "284208874",
-  "484208873",
-  "844208872",
-  "574208374",
-  "632244643",
-  "442244643",
-  "447244643",
 ]
 
 Strengths = [

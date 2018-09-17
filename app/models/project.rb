@@ -1,7 +1,7 @@
 class Project < Reviewable
   include SwaggerDocs::Project
-  include Statistics::ProductsAndServices
+  has_many :companies, through: :company_reviewables
 
-  validates :name, :company, :reviews_count, presence: true
+  validates :name, :reviews_count, presence: true
   validates :description, presence: true, allow_blank: true
 end

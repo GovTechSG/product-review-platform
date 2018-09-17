@@ -17,10 +17,11 @@ class Company < Reviewer
   has_many :likes, dependent: :destroy, as: :liker
   has_many :comments, dependent: :destroy, as: :commenter
 
-  has_many :products, dependent: :destroy
-  has_many :projects, dependent: :destroy
-  has_many :services, dependent: :destroy
+  has_many :company_reviewables, dependent: :destroy
   has_many :industry_companies, dependent: :destroy
+  has_many :projects, through: :company_reviewables, source: :reviewable, source_type: "Project"
+  has_many :products, through: :company_reviewables, source: :reviewable, source_type: "Product"
+  has_many :services, through: :company_reviewables, source: :reviewable, source_type: "Service"
   has_many :industries, through: :industry_companies
 
   validates_presence_of :name, :aggregate_score, :reviews_count

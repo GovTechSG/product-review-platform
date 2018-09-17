@@ -34,10 +34,10 @@ class Review < ApplicationRecord
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 
-  after_save :set_reviewable_reviews_count, on: [:create, :update]
-  after_destroy :set_reviewable_reviews_count
-  after_save :set_reviewable_score, on: [:create, :update]
-  after_destroy :set_reviewable_score
+  # after_save :set_reviewable_reviews_count, on: [:create, :update]
+  # after_destroy :set_reviewable_reviews_count
+  # after_save :set_reviewable_score, on: [:create, :update]
+  # after_destroy :set_reviewable_score
 
   scope :kept, -> { undiscarded.joins(:grant).merge(Grant.kept) }
   scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
@@ -53,11 +53,11 @@ class Review < ApplicationRecord
 
   private
 
-  def set_reviewable_reviews_count
-    reviewable.set_reviews_count
-  end
+#   def set_reviewable_reviews_count
+#     reviewable.set_reviews_count
+#   end
 
-  def set_reviewable_score
-    reviewable.set_aggregate_score
-  end
+#   def set_reviewable_score
+#     reviewable.set_aggregate_score
+#   end
 end
