@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_17_015357) do
+ActiveRecord::Schema.define(version: 2018_09_18_023321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,10 +248,12 @@ ActiveRecord::Schema.define(version: 2018_09_17_015357) do
     t.bigint "grant_id"
     t.string "reviewer_type"
     t.bigint "reviewer_id"
+    t.bigint "vendor_id"
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_id"], name: "index_reviews_on_grant_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["reviewer_type", "reviewer_id"], name: "index_reviews_on_reviewer_type_and_reviewer_id"
+    t.index ["vendor_id"], name: "index_reviews_on_vendor_id"
   end
 
   create_table "services", force: :cascade do |t|
@@ -274,5 +276,6 @@ ActiveRecord::Schema.define(version: 2018_09_17_015357) do
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
+  add_foreign_key "reviews", "companies", column: "vendor_id"
   add_foreign_key "reviews", "grants"
 end
