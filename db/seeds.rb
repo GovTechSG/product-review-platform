@@ -3,35 +3,20 @@ App.create!(name: "BGP", password: "test12", password_confirmation: "test12", sc
 App.create!(name: "BG", password: "test12", password_confirmation: "test12", scopes: ["read_write"]) if (Rails.env.development?)
 App.create!(name: "P", password: "test12", password_confirmation: "test12", scopes: ["write_only"]) if (Rails.env.development?)
 
-industry_names = [
-  "Agriculture",
-  "Building & Construction",
-  "Food & Beverages",
-  "IT",
-  "Landscape",
-  "Logistics",
-  "Manufacturing & Engineering",
-  "Maritime",
-  "Media",
-  "Retail",
-  "Services",
-  "Tourism",
-  "Other"
-]
-industry_description = [
-  "The agricultural industry, which includes enterprises engaged in growing crops, raising fish and animals, and logging wood, encompasses farms, dairies, hatcheries, and ranches.",
-  "The Building & Construtction industry, heavy civil or heavy engineering that includes large public works, dams, bridges, highways, railways, water or wastewater and utility distribution.",
-  "The F&B industry can be broadly defined as the process of preparing, presenting and serving of food and beverages to the customers.",
-  "The IT industry, application of computers to store, retrieve, transmit and manipulate data, or information, often in the context of a business or other enterprise.",
-  "The landscaping industry includes companies that care for and maintain landscapes for residences, and areas around residential complexes and business establishments.",
-  "The logistics industry comprises establishments primarily engaged in transporting and warehousing goods as well as providing logistics services.",
-  "The Manufacturing & Engineering industry include enterprises which handle the process of adding value to raw materials by turning them into products: electrical goods, vehicles, aircraft, food, beverages, medical supplies, pharmaceuticals, and so on.",
-  "The Maritime industry includes all enterprises engaged in the business of designing, constructing, manufacturing, acquiring, operating, supplying, repairing and/or maintaining vessels, or component parts thereof: of managing and/or operating shipping lines, and customs brokerage services, shipyards, dry docks, marine railways, Marine fishing, repair shops, shipping and freight forwarding services and similar enterprises.",
-  "The Media industry consists of film, print, radio, and television. These segments include movies, TV shows, radio shows, news, music, newspapers, magazines, and books.",
-  "The Retail industry involves the process of selling consumer goods or Services to customers through multiple channels of distribution to earn a profit.",
-  "The Services industry involve the provision of services to businesses as well as final consumers. Such services include accounting, tradesmanship (like mechanic or plumber services), computer services, restaurants, tourism, etc.",
-  "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment.",
-  "Any other industry."
+Industries = [
+  { name: "Agriculture", description: "The agricultural industry, which includes enterprises engaged in growing crops, raising fish and animals, and logging wood, encompasses farms, dairies, hatcheries, and ranches." },
+  { name: "Building & Construction", description: "The Building & Construtction industry, heavy civil or heavy engineering that includes large public works, dams, bridges, highways, railways, water or wastewater and utility distribution." },
+  { name: "Food & Beverages", description: "The F&B industry can be broadly defined as the process of preparing, presenting and serving of food and beverages to the customers." },
+  { name: "IT", description: "The IT industry, application of computers to store, retrieve, transmit and manipulate data, or information, often in the context of a business or other enterprise." },
+  { name: "Landscape", description: "The landscaping industry includes companies that care for and maintain landscapes for residences, and areas around residential complexes and business establishments." },
+  { name: "Logistics", description: "The logistics industry comprises establishments primarily engaged in transporting and warehousing goods as well as providing logistics services." },
+  { name: "Manufacturing & Engineering", description: "The Manufacturing & Engineering industry include enterprises which handle the process of adding value to raw materials by turning them into products: electrical goods, vehicles, aircraft, food, beverages, medical supplies, pharmaceuticals, and so on." },
+  { name: "Maritime", description: "The Maritime industry includes all enterprises engaged in the business of designing, constructing, manufacturing, acquiring, operating, supplying, repairing and/or maintaining vessels, or component parts thereof: of managing and/or operating shipping lines, and customs brokerage services, shipyards, dry docks, marine railways, Marine fishing, repair shops, shipping and freight forwarding services and similar enterprises." },
+  { name: "Media", description: "The Media industry consists of film, print, radio, and television. These segments include movies, TV shows, radio shows, news, music, newspapers, magazines, and books." },
+  { name: "Retail", description: "The Retail industry involves the process of selling consumer goods or Services to customers through multiple channels of distribution to earn a profit." },
+  { name: "Services", description: "The Services industry involve the provision of services to businesses as well as final consumers. Such services include accounting, tradesmanship (like mechanic or plumber services), computer services, restaurants, tourism, etc." },
+  { name: "Tourism", description: "The Tourism industry is the total of all businesses that directly provide goods or services to facilitate business, pleasure and leisure activities away from the home environment." },
+  { name: "Other", description: "Any other industry." }
 ]
 
 Strengths = [
@@ -185,19 +170,6 @@ Grants = [
   ]}
 ]
 
-lorem_ipsum = "Vestibulum nec turpis vestibulum, feugiat mi at, egestas ex. Proin non enim mollis lacus pulvinar laoreet et quis augue. Nam nec magna at leo ultrices auctor. Ut interdum a neque eget malesuada. Phasellus vel velit pulvinar tellus cursus pharetra vehicula in lectus. Nulla viverra erat sed viverra viverra. Aliquam at condimentum nisl, eget ornare turpis. Nulla sollicitudin efficitur tortor at imperdiet."
-13.times do |i|
-  company = Company.new(name: company_names[i], uen: uens[i], aggregate_score: rand(1..3) , description: lorem_ipsum, url: FFaker::Internet.http_url, phone_number: FFaker::PhoneNumberSG.fixed_line_number )
-  company.image = File.new(company.avatar_path(200))
-  company.save
-end
-# c_1.products.create!(name: "Step2 Children's Chair", description: "A great chair for your child!")
-# c_1.products.create!(name: "Rachio Router", description: "The best router for your money")
-# c_1.products.create!(name: "ChengXinTu Hiking Backpack", description: "Get ready to summit Mount Everest.")
-# c_1.services.create!(name: "Pivotal Car Mechanics", description: "Lowest prices all around")
-# c_1.services.create!(name: "Greenplum Hand Washers", description: "Cleanest hands")
-# c_1.services.create!(name: "Carpenters R'Us", description: "Got a fixer-upper? Look no further!")
-
 Agencies.each do |agency_param|
   agency = Agency.new(agency_param)
   agency.image = File.new(agency.avatar_path(200))
@@ -213,61 +185,81 @@ Agencies.each do |agency_param|
   end
 end
 
-
-(1..13).each do |i|
-  c = Company.find(i)
-  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.products.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.services.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.services.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.projects.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.projects.create!(name: FFaker::Name.name, description: lorem_ipsum)
-  c.industries.create!(name: industry_names[i-1], description: industry_description[i-1])
-end
-
 Strengths.each do |strength|
   Aspect.create!(strength)
 end
 
-
-Product.all.each do |p|
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 2)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 3)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 4)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 5)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
+Industries.each do |industry|
+  Industry.create!(industry)
 end
 
-Service.all.each do |s|
-  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 1, reviewer_type: "Company", grant_id: 1)
-  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 4, reviewer_type: "Company", grant_id: 2)
-  s.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 5, reviewer_type: "Company", grant_id: 3)
+no_of_products = rand(3..8)
+no_of_services = rand(5..8)
+no_of_projects = rand(3..5)
+
+no_of_products.times do
+  product = FactoryBot.build(:product)
+
+  vendor = FactoryBot.create(:company)
+  vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
+  vendor.save!
+  vendor.reload
+
+  product.company_ids += [vendor.id]
+  product.save!
+  product.reload
+
+  no_of_reviews = rand(5..10)
+  no_of_reviews.times do 
+    review = FactoryBot.build(:product_review, vendor_id: vendor.id, reviewable_id: product.id)
+    product.reviews.create!(review.attributes)
+  end
+end
+no_of_services.times do
+  service = FactoryBot.build(:service)
+
+  vendor = FactoryBot.create(:company)
+  vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
+  vendor.save!
+  vendor.reload
+
+  service.company_ids += [vendor.id]
+  service.save!
+  service.reload
+
+  no_of_reviews = rand(5..10)
+  no_of_reviews.times do 
+    review = FactoryBot.build(:service_review, vendor_id: vendor.id, reviewable_id: service.id)
+    service.reviews.create!(review.attributes)
+  end
+end
+no_of_projects.times do
+  project = FactoryBot.build(:project)
+
+  no_of_vendors = rand(1..3)
+
+  no_of_vendors.times do
+    vendor = FactoryBot.create(:company)
+    vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
+    vendor.save!
+    vendor.reload
+
+    project.company_ids += [vendor.id]
+    project.save!
+    project.reload
+
+    no_of_reviews = rand(5..10)
+    no_of_reviews.times do 
+      review = FactoryBot.build(:project_review, vendor_id: vendor.id, reviewable_id: project.id)
+      project.reviews.create!(review.attributes)
+    end
+  end
 end
 
-Project.all.each do |p|
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 2, reviewer_type: "Company", grant_id: 4)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 3, reviewer_type: "Company", grant_id: 5)
-  p.reviews.create!(score: rand(1..3), content: lorem_ipsum, reviewer_id: 6, reviewer_type: "Company", grant_id: 6)
-end
-
-Review.all.each_with_index do |r, i|
-  r.comments.create!(content: lorem_ipsum, commenter_id: 1, commenter_type: "Agency", commentable_id: 1, commentable_type: "Review")
-  r.comments.create!(content: lorem_ipsum, commenter_id: 2, commenter_type: "Agency", commentable_id: 2, commentable_type: "Review")
-  r.comments.create!(content: lorem_ipsum, commenter_id: 3, commenter_type: "Agency", commentable_id: 3, commentable_type: "Review")
-  r.comments.create!(content: lorem_ipsum, commenter_id: 4, commenter_type: "Agency", commentable_id: 4, commentable_type: "Review")
-  r.comments.create!(content: lorem_ipsum, commenter_id: 5, commenter_type: "Agency", commentable_id: 5, commentable_type: "Review")
-  r.comments.create!(content: lorem_ipsum, commenter_id: 6, commenter_type: "Agency", commentable_id: 6, commentable_type: "Review")
-  
-  AspectReview.create!(aspect: Aspect.first, review: r)
-  AspectReview.create!(aspect: Aspect.last, review: r)
-
-  r.likes.create!(liker_id: 1, liker_type: "Agency", likeable_id: 1, likeable_type: "Review")
-  r.likes.create!(liker_id: 2, liker_type: "Agency", likeable_id: 2, likeable_type: "Review")
-  r.likes.create!(liker_id: 3, liker_type: "Agency", likeable_id: 3, likeable_type: "Review")
-  r.likes.create!(liker_id: 4, liker_type: "Agency", likeable_id: 4, likeable_type: "Review")
-  r.likes.create!(liker_id: 5, liker_type: "Agency", likeable_id: 5, likeable_type: "Review")
+Review.all.each do |review|
+  review.aspect_ids += [rand(1..3), rand(4..8)]
+  review.comments.create!(FactoryBot.attributes_for(:comment, commenter_id: rand(1..107), commenter_type: "Agency"))
+  review.likes.create!(FactoryBot.attributes_for(:like, liker_id: rand(1..107), liker_type: "Agency"))
 end
 
 AdminUser.create!(email: 'adminuser@admin.com', password: 'password', password_confirmation: 'password') if (Rails.env.development?)

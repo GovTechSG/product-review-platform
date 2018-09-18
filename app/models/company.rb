@@ -14,6 +14,7 @@ class Company < Reviewer
   # These refer to the reviews written by a claimant company
   # (different from reviews_count, see models/concerns/statistics/companies.rb)
   has_many :reviews, dependent: :destroy, as: :reviewer
+  alias_attribute :reviews_as_reviewer, :reviews
   has_many :likes, dependent: :destroy, as: :liker
   has_many :comments, dependent: :destroy, as: :commenter
 
@@ -33,7 +34,7 @@ class Company < Reviewer
   def grants(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
-    grants = get_reviews(accepted_filter).pluck(:grant_id)
+    grants = get_reviews_as_vendor(accepted_filter).pluck(:grant_id)
     if grants.nil?
       []
     else
@@ -50,17 +51,17 @@ class Company < Reviewer
     results.empty? ? [] : results
   end
 
-  def reviews(filter_by_score = nil, sort_by = nil)
+  def reviews_as_vendor(filter_by_score = nil, sort_by = nil)
     accepted_score_type = valid_review_score_filter(filter_by_score)
     accepted_sorter = valid_review_sorter(sort_by)
-    @results = get_reviews
+    @results = get_reviews_as_vendor
     handle_reviews_filter(accepted_score_type) if accepted_score_type.present?
     @results = @results.sort_by { |review| review.send(sort_by) }.reverse! if accepted_sorter.present?
     @results.empty? ? [] : @results
   end
 
   def aspects(filter_by_score = nil, sort_by = nil, count = nil)
-    review_list = reviews(filter_by_score)
+    review_list = reviews_as_vendor(filter_by_score)
     accepted_sorter = valid_aspect_sorter(sort_by)
     @results = review_list.flat_map(&:aspects).select { |aspect| aspect.discarded_at.nil? }
     accepted_sorter.present? ? handle_aspects_sort(accepted_sorter, count) : @results = @results.uniq
@@ -70,7 +71,7 @@ class Company < Reviewer
   def clients(filter_by = nil, sort_by = nil, desc = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
     accepted_sorter = valid_reviewable_sorter(sort_by)
-    reviewers = get_reviews(accepted_filter).pluck(:reviewer_id)
+    reviewers = get_reviews_as_vendor(accepted_filter).pluck(:reviewer_id)
     if reviewers.nil?
       []
     else
@@ -85,7 +86,7 @@ class Company < Reviewer
 
   def reviewable_industries(filter_by = nil)
     accepted_filter = valid_reviewable_filter(filter_by)
-    reviewers = get_reviews(accepted_filter).pluck(:reviewer_id)
+    reviewers = get_reviews_as_vendor(accepted_filter).pluck(:reviewer_id)
     if reviewers.nil?
       []
     else
@@ -104,30 +105,30 @@ class Company < Reviewer
   end
 
   def set_reviews_count
-    self.reviews_count = !offerings.empty? ? offerings.select { |offering| offering.discarded_at.nil? }.pluck("reviews_count").compact.sum : 0
+    self.reviews_count = Review.kept.where(vendor_id: id).count
     save!
     reload
   end
 
   def set_aggregate_score
-    self.aggregate_score = reviews_count > 0 ? calculate_aggregate_score(get_reviews) : 0.0
+    self.aggregate_score = reviews_count > 0 ? calculate_aggregate_score(get_reviews_as_vendor) : 0.0
     save!
     reload
   end
 
   # rubocop:disable Metrics/AbcSize
-  def get_reviews(filter_by = nil)
+  def get_reviews_as_vendor(filter_by = nil)
     case filter_by
     when 'Product'
-      Review.match_reviewable(products.kept.pluck(:id), "Product").kept
+      Review.match_reviewable(id, products.kept.pluck(:id), "Product").kept
     when 'Service'
-      Review.match_reviewable(services.kept.pluck(:id), "Service").kept
+      Review.match_reviewable(id, services.kept.pluck(:id), "Service").kept
     when 'Project'
-      Review.match_reviewable(projects.kept.pluck(:id), "Project").kept
+      Review.match_reviewable(id, projects.kept.pluck(:id), "Project").kept
     else
-      (Review.match_reviewable(products.kept.pluck(:id), "Product").kept +
-        Review.match_reviewable(services.kept.pluck(:id), "Service").kept +
-        Review.match_reviewable(projects.kept.pluck(:id), "Project").kept)
+      (Review.match_reviewable(id, products.kept.pluck(:id), "Product").kept +
+        Review.match_reviewable(id, services.kept.pluck(:id), "Service").kept +
+        Review.match_reviewable(id, projects.kept.pluck(:id), "Project").kept)
     end
   end
   # rubocop:enable Metrics/AbcSize

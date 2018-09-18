@@ -27,30 +27,33 @@ class Review < ApplicationRecord
 
   validates_presence_of :score, :reviewer, :reviewable, :grant
 
-  # after_save :set_reviewable_reviews_count, on: [:create, :update]
-  # after_destroy :set_reviewable_reviews_count
-  # after_save :set_reviewable_score, on: [:create, :update]
-  # after_destroy :set_reviewable_score
+  after_save :set_reviewable_reviews_count, on: [:create, :update]
+  after_destroy :set_reviewable_reviews_count
+  after_save :set_reviewable_score, on: [:create, :update]
+  after_destroy :set_reviewable_score
 
   scope :kept, -> { undiscarded.joins(:grant).merge(Grant.kept) }
-  scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
-  scope :match_reviewable, lambda { |reviewable_id, reviewable_type|
-    where("(reviewable_type = :reviewable_type AND reviewable_id in (:reviewable_id))",
+  scope :kept, -> { undiscarded.joins(:vendor).merge(Company.kept) }
+  scope :match_reviewable, lambda { |vendor_id, reviewable_id, reviewable_type|
+    where("(reviewable_type = :reviewable_type AND reviewable_id in (:reviewable_id)) AND vendor_id in (:vendor_id)",
           reviewable_id: reviewable_id,
-          reviewable_type: reviewable_type)
+          reviewable_type: reviewable_type,
+          vendor_id: vendor_id)
   }
 
   def presence?
-    !discarded? && reviewable.presence? && grant.presence? && reviewer.presence?
+    !discarded? && reviewable.presence? && grant.presence? && reviewer.presence? && vendor.presence?
   end
 
   private
 
-#   def set_reviewable_reviews_count
-#     reviewable.set_reviews_count
-#   end
+  def set_reviewable_reviews_count
+    reviewable.set_reviews_count
+    vendor.set_reviews_count
+  end
 
-#   def set_reviewable_score
-#     reviewable.set_aggregate_score
-#   end
+  def set_reviewable_score
+    reviewable.set_aggregate_score
+    vendor.set_aggregate_score
+  end
 end

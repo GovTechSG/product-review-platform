@@ -419,7 +419,7 @@ RSpec.describe Company, type: :model do
       service.reviews.create! build(:service_review, score: 0).attributes
       project = company.projects.create! build(:project).attributes
       project.reviews.create! build(:project_review).attributes
-      expect(product.company.reviews(nil, "created_at")[0]).to eq(project.reviews.first)
+      expect(product.company.reviews_as_vendor(nil, "created_at")[0]).to eq(project.reviews.first)
     end
     it "returns reviews filtered by positive when specified" do
       product = company.products.create! build(:product).attributes
@@ -428,7 +428,7 @@ RSpec.describe Company, type: :model do
       service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
       project = company.projects.create! build(:project).attributes
       project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
-      expect(product.company.reviews("POSITIVE", "created_at")[0]).to eq(positive_review)
+      expect(product.company.reviews_as_vendor("POSITIVE", "created_at")[0]).to eq(positive_review)
     end
     it "returns reviews filtered by neutral when specified" do
       product = company.products.create! build(:product).attributes
@@ -437,7 +437,7 @@ RSpec.describe Company, type: :model do
       neutral_review = service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
       project = company.projects.create! build(:project).attributes
       project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
-      expect(product.company.reviews("NEUTRAL", "created_at")[0]).to eq(neutral_review)
+      expect(product.company.reviews_as_vendor("NEUTRAL", "created_at")[0]).to eq(neutral_review)
     end
     it "returns reviews filtered by negative when specified" do
       product = company.products.create! build(:product).attributes
@@ -446,7 +446,7 @@ RSpec.describe Company, type: :model do
       service.reviews.create! build(:service_review, score: Review::NEUTRAL).attributes
       project = company.projects.create! build(:project).attributes
       negative_review = project.reviews.create! build(:project_review, score: Review::NEGATIVE).attributes
-      expect(product.company.reviews("NEGATIVE", "created_at")[0]).to eq(negative_review)
+      expect(product.company.reviews_as_vendor("NEGATIVE", "created_at")[0]).to eq(negative_review)
     end
   end
 
