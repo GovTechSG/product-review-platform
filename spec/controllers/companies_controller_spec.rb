@@ -135,14 +135,14 @@ RSpec.describe CompaniesController, type: :controller do
     context "with industry and grant filter, without search" do
       it "returns a success response" do
         review = create(:product_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
         expect(response).to be_success
       end
 
       it "returns only matching companies" do
         review = create(:product_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
         expect(parsed_response.count).to eq(1)
       end
@@ -150,7 +150,7 @@ RSpec.describe CompaniesController, type: :controller do
       it "filters inclusively" do
         review = create(:product_review)
         another_review = create(:service_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{another_review.grant.hashid}" }
         expect(parsed_response.count).to eq(2)
       end
@@ -166,7 +166,7 @@ RSpec.describe CompaniesController, type: :controller do
       it "returns something if only industry filter has results" do
         review = create(:product_review)
         grant = create(:grant)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(1)
       end
