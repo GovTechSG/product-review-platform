@@ -5,7 +5,7 @@ RSpec.describe CompanySerializer, type: :serializer do
     before(:all) do
       @company = create(:company)
       product = @company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
     end
 

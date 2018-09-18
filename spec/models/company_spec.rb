@@ -136,24 +136,24 @@ RSpec.describe Company, type: :model do
     it "returns grants sorted by reviews_count when specified" do
       company = create(:company)
       product = company.products.create! build(:product).attributes
-      review = product.reviews.create! build(:product_review).attributes
+      review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       review.grant.reviews.create! build(:product_review).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.grants(nil, "reviews_count")[0]).not_to eq(product.reviews.first.grant)
     end
 
     it "returns grants sorted by reviews_count by desc when specified" do
       company = create(:company)
       product = company.products.create! build(:product).attributes
-      review = product.reviews.create! build(:product_review).attributes
+      review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       review.grant.reviews.create! build(:product_review).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.grants(nil, "reviews_count", "true")[0]).to eq(product.reviews.first.grant)
     end
   end
@@ -197,14 +197,14 @@ RSpec.describe Company, type: :model do
 
     it "does not return deleted clients" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.discard
       expect(product.company.clients.length).to eq(0)
     end
 
     it "returns product clients if there are only product clients" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       expect(product.company.clients.length).to eq(1)
     end
 
@@ -226,63 +226,63 @@ RSpec.describe Company, type: :model do
 
     it "returns service clients if there are only service clients" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(service.company.clients.length).to eq(1)
     end
 
     it "does not return deleted products" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.discard
       expect(product.company.clients.length).to eq(0)
     end
 
     it "does not return deleted services" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.discard
       expect(service.company.clients.length).to eq(0)
     end
 
     it "does not return deleted products review" do
       product = company.products.create! build(:product).attributes
-      review = product.reviews.create! build(:product_review).attributes
+      review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       review.discard
       expect(product.company.clients.length).to eq(0)
     end
 
     it "does not return deleted services review" do
       service = company.services.create! build(:service).attributes
-      review = service.reviews.create! build(:service_review).attributes
+      review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       review.discard
       expect(service.company.clients.length).to eq(0)
     end
 
     it "returns product and service clients" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(product.company.clients.length).to eq(2)
     end
 
     it "returns clients sorted by created_at when specified" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.clients(nil, "created_at")[0]).to eq(product.reviews.first.reviewer)
     end
 
     it "returns clients sorted by created_at by desc when specified" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.clients(nil, "created_at", "true")[0]).to eq(project.reviews.first.reviewer)
     end
   end
@@ -296,13 +296,13 @@ RSpec.describe Company, type: :model do
 
     it "returns product offerings if there are only product offerings" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       expect(product.company.offerings.length).to eq(1)
     end
 
     it "returns service offerings if there are only service offerings" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(service.company.offerings.length).to eq(1)
     end
 
@@ -326,9 +326,9 @@ RSpec.describe Company, type: :model do
 
     it "returns product and service offerings" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(product.company.offerings.length).to eq(2)
     end
 
@@ -338,7 +338,7 @@ RSpec.describe Company, type: :model do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review, score: 0).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.offerings("aggregate_score")[0]).to eq(project)
     end
   end
@@ -352,63 +352,63 @@ RSpec.describe Company, type: :model do
 
     it "returns product reviews if there are only product reviews" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       expect(product.company.reviews.length).to eq(1)
     end
 
     it "returns service reviews if there are only service reviews" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(service.company.reviews.length).to eq(1)
     end
 
     it "does not return deleted project" do
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.discard
       expect(project.company.reviews.length).to eq(0)
     end
 
     it "does not return deleted products" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.discard
       expect(product.company.reviews.length).to eq(0)
     end
 
     it "does not return deleted service" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.discard
       expect(service.company.reviews.length).to eq(0)
     end
 
     it "does not return deleted project review" do
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.reviews.first.discard
       expect(project.company.reviews.length).to eq(0)
     end
 
     it "does not return deleted products review" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.discard
       expect(product.company.reviews.length).to eq(0)
     end
 
     it "does not return deleted service review" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.reviews.first.discard
       expect(service.company.reviews.length).to eq(0)
     end
 
     it "returns product and service reviews" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       expect(product.company.reviews.length).to eq(2)
     end
 
@@ -418,7 +418,7 @@ RSpec.describe Company, type: :model do
       service = company.services.create! build(:service).attributes
       service.reviews.create! build(:service_review, score: 0).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       expect(product.company.reviews_as_vendor(nil, "created_at")[0]).to eq(project.reviews.first)
     end
     it "returns reviews filtered by positive when specified" do
@@ -459,21 +459,21 @@ RSpec.describe Company, type: :model do
 
     it "returns product aspects if there are only product aspects" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       expect(product.company.aspects.length).to eq(1)
     end
 
     it "returns service aspects if there are only service aspects" do
       service = company.services.create! build(:service).attributes
-      service_review = service.reviews.create! build(:service_review).attributes
+      service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service_review.aspects.create! build(:aspect).attributes
       expect(service.company.aspects.length).to eq(1)
     end
 
     it "does not return deleted reviewable" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       product.discard
       expect(product.company.aspects.length).to eq(0)
@@ -481,7 +481,7 @@ RSpec.describe Company, type: :model do
 
     it "does not return deleted reviewable review" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       product.reviews.first.discard
       expect(product.company.aspects.length).to eq(0)
@@ -489,7 +489,7 @@ RSpec.describe Company, type: :model do
 
     it "does not return deleted reviewable review aspect" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       product.reviews.first.aspects.first.discard
       expect(product.company.aspects.length).to eq(0)
@@ -497,13 +497,13 @@ RSpec.describe Company, type: :model do
 
     it "returns reviewable aspects" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       service = company.services.create! build(:service).attributes
-      service_review = service.reviews.create! build(:service_review).attributes
+      service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service_review.aspects.create! build(:aspect).attributes
       project = company.projects.create! build(:project).attributes
-      project_review = project.reviews.create! build(:project_review).attributes
+      project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       same_aspect = create(:aspect)
       AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
       AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -512,13 +512,13 @@ RSpec.describe Company, type: :model do
 
     it "returns aspects sorted by aspects_count when specified" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       service = company.services.create! build(:service).attributes
-      service_review = service.reviews.create! build(:service_review).attributes
+      service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service_review.aspects.create! build(:aspect).attributes
       project = company.projects.create! build(:project).attributes
-      project_review = project.reviews.create! build(:project_review).attributes
+      project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       same_aspect = create(:aspect)
       AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
       AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -527,13 +527,13 @@ RSpec.describe Company, type: :model do
 
     it "returns aspects sorted by aspects_count with count when specified" do
       product = company.products.create! build(:product).attributes
-      product_review = product.reviews.create! build(:product_review).attributes
+      product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product_review.aspects.create! build(:aspect).attributes
       service = company.services.create! build(:service).attributes
-      service_review = service.reviews.create! build(:service_review).attributes
+      service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service_review.aspects.create! build(:aspect).attributes
       project = company.projects.create! build(:project).attributes
-      project_review = project.reviews.create! build(:project_review).attributes
+      project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       same_aspect = create(:aspect)
       AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
       AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -550,7 +550,7 @@ RSpec.describe Company, type: :model do
 
     it "does not return deleted reviewables" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       product.reviews.first.reviewer.industries.first.discard
       expect(product.company.reviewable_industries.length).to eq(0)
@@ -558,52 +558,52 @@ RSpec.describe Company, type: :model do
 
     it "returns all reviewables by default" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.reviews.first.reviewer.industries.create! build(:industry).attributes
       expect(company.reviewable_industries.length).to eq(3)
     end
 
     it "returns product when specified" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.reviews.first.reviewer.industries.create! build(:industry).attributes
       expect(company.reviewable_industries("Product").length).to eq(1)
     end
 
     it "returns service when specified" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.reviews.first.reviewer.industries.create! build(:industry).attributes
       expect(company.reviewable_industries("Service").length).to eq(1)
     end
 
     it "returns project when specified" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.reviews.first.reviewer.industries.create! build(:industry).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.reviews.first.reviewer.industries.create! build(:industry).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
       project.reviews.first.reviewer.industries.create! build(:industry).attributes
       expect(company.reviewable_industries("Project").length).to eq(1)
     end
@@ -619,13 +619,13 @@ RSpec.describe Company, type: :model do
     it "returns aggregate_score" do
       company = create(:company)
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       expect(company.aggregate_score).to eq(0.0)
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       company.reload
       expect(company.aggregate_score).to_not eq(0.0)
     end

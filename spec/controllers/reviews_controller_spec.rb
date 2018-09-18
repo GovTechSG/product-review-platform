@@ -181,11 +181,11 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "accepts valid sort by", authorized: true do
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        latest_review = project.reviews.create! build(:project_review).attributes
+        latest_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :company_reviews, params: { company_id: company.hashid, sort_by: "created_at" }
         expect(response).to be_success
@@ -195,11 +195,11 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "disregards invalid sort by", authorized: true do
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        project.reviews.create! build(:project_review).attributes
+        project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :company_reviews, params: { company_id: company.hashid, sort_by: "aggregdsfate_score" }
         expect(response).to be_success
@@ -208,11 +208,11 @@ RSpec.describe ReviewsController, type: :controller do
 
       it "respects per_page", authorized: true do
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        project.reviews.create! build(:project_review).attributes
+        project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :company_reviews, params: { company_id: company.hashid, sort_by: "aggregdsfate_score", per_page: 2 }
         expect(response).to be_success
