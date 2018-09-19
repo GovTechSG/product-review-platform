@@ -98,6 +98,7 @@ RSpec.describe CommentsController, type: :controller do
         default_result_per_page = 25
         num_of_object_to_create = 30
         review = Review.create! build(:service_review).attributes
+        review.reviewable.companies.create!(build(:company_as_params))
 
         while num_of_object_to_create > 0
           Comment.create! build(:service_review_comment, commentable: review).attributes
