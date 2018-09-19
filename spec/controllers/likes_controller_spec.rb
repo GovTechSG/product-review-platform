@@ -45,6 +45,7 @@ RSpec.describe LikesController, type: :controller do
         default_result_per_page = 25
         num_of_object_to_create = 30
         review = Review.create! build(:service_review).attributes
+        review.reviewable.companies.create! build(:company_as_params)
 
         while num_of_object_to_create > 0
           Like.create! build(:product_review_like, likeable: review).attributes

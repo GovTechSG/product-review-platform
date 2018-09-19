@@ -38,7 +38,6 @@ class ProjectsController < ApplicationController
     else
       render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end
-
   end
 
   # PATCH/PUT /projects/1

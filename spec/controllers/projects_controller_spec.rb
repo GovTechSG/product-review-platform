@@ -327,7 +327,7 @@ RSpec.describe ProjectsController, type: :controller do
             post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "aname", description: "adesc" }, vendor_name: "bname", vendor_uen: "" }
             post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "abname", description: "adesc" }, vendor_name: "vname", vendor_uen: "" }
           end.to change { Company.count }.by(4)
-        end.to change {Project.count}.by(1)
+        end.to change { Project.count }.by(1)
       end
 
       it "returns a success response" do
