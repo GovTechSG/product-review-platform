@@ -201,4 +201,13 @@ class Company < Reviewer
     valid_sorters = ['reviews_count', 'created_at']
     valid_sorters.include?(sort_by) ? sort_by : nil
   end
+
+  def set_discard
+    if discarded?
+      CompanyReviewable.where(company_id: id).find_each do |company_reviewable|
+        company_reviewable.discard
+        company_reviewable.save!
+      end
+    end
+  end
 end

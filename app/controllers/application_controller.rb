@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
   def set_pagination_header(data)
     headers["Total"] = data.nil? ? 0 : data.count
-    headers["Per-Page"] = data.nil? ? 0 : data.page.limit_value
+    headers["Per-Page"] = data.nil? ? 0 : Kaminari.paginate_array(data).page.limit_value
   end
 
   protected

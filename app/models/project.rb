@@ -3,6 +3,6 @@ class Project < Reviewable
   has_many :company_reviewable, as: :reviewable, dependent: :destroy
   has_many :companies, through: :company_reviewable, as: :reviewable
 
-  validates_presence_of :name, :description, :reviews_count
+  validates :name, :reviews_count, presence: true
   validates :description, presence: true, allow_blank: true
 end
