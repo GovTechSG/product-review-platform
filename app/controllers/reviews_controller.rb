@@ -14,6 +14,7 @@ class ReviewsController < ApplicationController
     set_reviewable(true) unless performed?
     transform_params unless performed?
     set_reviewer(true) unless performed?
+    set_vendor(true) unless performed?
     set_grant(true) unless performed?
     set_aspect(false) unless performed?
   end
@@ -22,6 +23,7 @@ class ReviewsController < ApplicationController
     transform_params unless performed?
     set_review unless performed?
     set_reviewer(false) unless performed?
+    set_vendor(false) unless performed?
     set_grant(false) unless performed?
     set_aspect(false) unless performed?
   end
@@ -104,7 +106,7 @@ class ReviewsController < ApplicationController
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
         return
       else
-        @whitelisted = @whitelisted.permit(:score, :content, :from_id,
+        @whitelisted = @whitelisted.permit(:score, :content, :from_id, :vendor_id,
                                            :from_type, :grant_id, :aspect_ids => [])
       end
       if required
@@ -154,6 +156,11 @@ class ReviewsController < ApplicationController
       reviewer_class = find_class_in_hash(@whitelisted, "Reviewer", true)
       get_reviewer(reviewer_class) if !reviewer_class.nil?
       check_from_params(required, reviewer_class)
+    end
+
+    def set_vendor(required)
+      @vendor = find_record(Company, @whitelisted[:vendor_id])
+      render_error(404, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.not_found', model: "vendor_id")]) if required && (@vendor.nil? || !@vendor.presence?)
     end
 
     def check_from_params(required, check_class)
@@ -293,6 +300,11 @@ class ReviewsController < ApplicationController
       if @whitelisted["aspect_ids"]
         aspects = Aspect.find(@whitelisted["aspect_ids"])
         @whitelisted["aspect_ids"] = aspects.map(&:id)
+      end
+
+      if @whitelisted["vendor_id"]
+        company = Company.find(@whitelisted["vendor_id"])
+        @whitelisted["vendor_id"] = company.id
       end
     end
 

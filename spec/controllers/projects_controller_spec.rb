@@ -56,7 +56,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       it "returns not found when the project's company is deleted", authorized: true do
         @project.companies.first.discard
-        get :index, params: { company_id: @project.companies.first.id }
+        get :index, params: { company_id: @project.companies.first.hashid }
 
         expect(response).to be_not_found
       end
@@ -247,7 +247,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       it "returns a not found response when project not found", authorized: true do
         delete :destroy, params: { id: 0 }
-        expect(response).to be_not_found
+      expect(response).to be_not_found
       end
     end
 
@@ -362,7 +362,7 @@ RSpec.describe ProjectsController, type: :controller do
   describe "Unauthorised user" do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
-        get :index, params: { company_id: @project.companies.first.id }
+        get :index, params: { company_id: @project.companies.first.hashid }
 
         expect_unauthorized
       end

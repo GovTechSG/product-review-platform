@@ -56,7 +56,7 @@ RSpec.describe ProductsController, type: :controller do
 
       it "returns not found when the product's company is deleted", authorized: true do
         @product.companies.first.discard
-        get :index, params: { company_id: @product.companies.first.id }
+        get :index, params: { company_id: @product.companies.first.hashid }
 
         expect(response).to be_not_found
       end
@@ -362,7 +362,7 @@ RSpec.describe ProductsController, type: :controller do
   describe "Unauthorised user" do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
-        get :index, params: { company_id: @product.companies.first.id }
+        get :index, params: { company_id: @product.companies.first.hashid }
 
         expect_unauthorized
       end
