@@ -4,16 +4,17 @@ RSpec.describe ProjectSerializer, type: :serializer do
   context 'Individual Resource Representation' do
     before(:all) do
       @project = create(:project)
+      @project.companies.create!(build(:company_as_params))
     end
 
-    subject { ProjectSerializer.new(@project, root: false).as_json["object"].merge("company" => @project.company) }
+    subject { ProjectSerializer.new(@project, root: false).as_json["object"].merge("companies" => @project.companies) }
 
     it 'has a name' do
       expect(subject['name']).to eql(@project.name)
     end
 
-    it 'has a company' do
-      expect(subject['company']).to eql(@project.company)
+    it 'has companies' do
+      expect(subject['companies']).to eql(@project.companies)
     end
 
     it 'has a reviews_count' do
