@@ -138,91 +138,93 @@ Grants = [
   ]}
 ]
 
-Agencies.each do |agency_param|
-  agency = Agency.new(agency_param)
-  agency.image = File.new(agency.avatar_path(200))
-  agency.save
-  Grants.each do |grant_hash|
-    grants = grant_hash.with_indifferent_access
-    if grants.key?(agency[:name])
-      grantsList = grants[agency[:name]]
-      grantsList.each do |grant|
-        agency.grants.create!(grant)
+def seed
+  Agencies.each do |agency_param|
+    agency = Agency.new(agency_param)
+    agency.image = File.new(agency.avatar_path(200))
+    agency.save
+    Grants.each do |grant_hash|
+      grants = grant_hash.with_indifferent_access
+      if grants.key?(agency[:name])
+        grantsList = grants[agency[:name]]
+        grantsList.each do |grant|
+          agency.grants.create!(grant)
+        end
       end
     end
   end
-end
+  no_of_products = rand(3..8)
+  no_of_services = rand(5..8)
+  no_of_projects = rand(3..5)
 
-no_of_products = rand(3..8)
-no_of_services = rand(5..8)
-no_of_projects = rand(3..5)
+  no_of_products.times do
+    product = FactoryBot.build(:product)
 
-no_of_products.times do
-  product = FactoryBot.build(:product)
-
-  vendor = FactoryBot.create(:company)
-  vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
-  vendor.save!
-  vendor.reload
-
-  product.company_ids += [vendor.id]
-  product.save!
-  product.reload
-
-  no_of_reviews = rand(5..10)
-  no_of_reviews.times do 
-    review = FactoryBot.build(:product_review, vendor_id: vendor.id, reviewable_id: product.id)
-    product.reviews.create!(review.attributes)
-  end
-end
-no_of_services.times do
-  service = FactoryBot.build(:service)
-
-  vendor = FactoryBot.create(:company)
-  vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
-  vendor.save!
-  vendor.reload
-
-  service.company_ids += [vendor.id]
-  service.save!
-  service.reload
-
-  no_of_reviews = rand(5..10)
-  no_of_reviews.times do 
-    review = FactoryBot.build(:service_review, vendor_id: vendor.id, reviewable_id: service.id)
-    service.reviews.create!(review.attributes)
-  end
-end
-no_of_projects.times do
-  project = FactoryBot.build(:project)
-
-  no_of_vendors = rand(1..3)
-
-  no_of_vendors.times do
     vendor = FactoryBot.create(:company)
     vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
     vendor.save!
     vendor.reload
 
-    project.company_ids += [vendor.id]
-    project.save!
-    project.reload
+    product.company_ids += [vendor.id]
+    product.save!
+    product.reload
 
     no_of_reviews = rand(5..10)
     no_of_reviews.times do 
-      review = FactoryBot.build(:project_review, vendor_id: vendor.id, reviewable_id: project.id)
-      project.reviews.create!(review.attributes)
+      review = FactoryBot.build(:product_review, vendor_id: vendor.id, reviewable_id: product.id)
+      product.reviews.create!(review.attributes)
     end
   end
-end
+  no_of_services.times do
+    service = FactoryBot.build(:service)
 
-Company.all.each do |company|
-  company.set_image!(nil)
-end
+    vendor = FactoryBot.create(:company)
+    vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
+    vendor.save!
+    vendor.reload
 
-Review.all.each do |review|
-  review.aspect_ids += [rand(1..3), rand(4..8)]
-  review.grant_id = rand(1..30)
-  review.comments.create!(FactoryBot.attributes_for(:comment, commenter_id: rand(1..81), commenter_type: "Agency"))
-  review.likes.create!(FactoryBot.attributes_for(:like, liker_id: rand(1..81), liker_type: "Agency"))
+    service.company_ids += [vendor.id]
+    service.save!
+    service.reload
+
+    no_of_reviews = rand(5..10)
+    no_of_reviews.times do 
+      review = FactoryBot.build(:service_review, vendor_id: vendor.id, reviewable_id: service.id)
+      service.reviews.create!(review.attributes)
+    end
+  end
+  no_of_projects.times do
+    project = FactoryBot.build(:project)
+
+    no_of_vendors = rand(1..3)
+
+    no_of_vendors.times do
+      vendor = FactoryBot.create(:company)
+      vendor.industry_ids += [rand(1..4), rand(5..9), rand(10..13)]
+      vendor.save!
+      vendor.reload
+
+      project.company_ids += [vendor.id]
+      project.save!
+      project.reload
+
+      no_of_reviews = rand(5..10)
+      no_of_reviews.times do 
+        review = FactoryBot.build(:project_review, vendor_id: vendor.id, reviewable_id: project.id)
+        project.reviews.create!(review.attributes)
+      end
+    end
+  end
+
+  Company.all.each do |company|
+    company.set_image!(nil)
+  end
+
+  Review.all.each do |review|
+    review.aspect_ids += [rand(1..3), rand(4..8)]
+    review.grant_id = rand(1..30)
+    review.comments.create!(FactoryBot.attributes_for(:comment, commenter_id: rand(1..81), commenter_type: "Agency"))
+    review.likes.create!(FactoryBot.attributes_for(:like, liker_id: rand(1..81), liker_type: "Agency"))
+  end
 end
+seed
