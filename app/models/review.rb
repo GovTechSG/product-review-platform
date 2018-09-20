@@ -48,12 +48,12 @@ class Review < ApplicationRecord
   private
 
   def set_reviewable_reviews_count
-    reviewable.set_reviews_count
-    vendor.set_reviews_count
+    reviewable.set_reviews_count unless reviewable.nil?
+    vendor.set_reviews_count unless vendor.nil?
   end
 
   def set_reviewable_score
-    reviewable.set_aggregate_score
-    vendor.set_aggregate_score
+    reviewable.set_aggregate_score unless reviewable.nil?
+    vendor.set_aggregate_score unless vendor.nil?
   end
 end
