@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1
   def show
-    render json: @project, methods: [:reviews_count, :aggregate_score, :company_name], has_type: false
+    render json: @project, methods: [:reviews_count, :aggregate_score], has_type: false
   end
 
   # POST /companies/:company_id/projects
