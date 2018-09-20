@@ -1,7 +1,6 @@
 class ProductSerializer < ApplicationSerializer
   attribute :type, if: :type?
-  attributes :id, :name, :description, :reviews_count
-  belongs_to :company, serializer: AssociateCompanySerializer
+  attributes :id, :name, :description, :reviews_count, :companies
 
   def type
     "Product"

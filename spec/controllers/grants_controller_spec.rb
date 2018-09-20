@@ -50,15 +50,15 @@ RSpec.describe GrantsController, type: :controller do
     describe "GET #index company" do
       it "returns a success response", authorized: true do
         review = create(:product_review)
-        get :index, params: { company_id: review.reviewable.company.hashid }
+        get :index, params: { company_id: review.reviewable.companies.first.hashid }
 
         expect(response).to be_success
       end
 
       it "does not return grants from deleted company", authorized: true do
         review = create(:product_review)
-        review.reviewable.company.discard
-        get :index, params: { company_id: review.reviewable.company.hashid }
+        review.reviewable.companies.first.discard
+        get :index, params: { company_id: review.reviewable.companies.first.hashid }
         expect(response.status).to eq(404)
       end
 
@@ -70,11 +70,11 @@ RSpec.describe GrantsController, type: :controller do
       it "accepts valid filter by, sort by and desc", authorized: true do
         company = create(:company)
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        project.reviews.create! build(:project_review).attributes
+        project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :index, params: { company_id: company.hashid, filter_by: "Product", sort_by: "reviews_count", desc: "true" }
         expect(response).to be_success
@@ -84,11 +84,11 @@ RSpec.describe GrantsController, type: :controller do
       it "disregards invalid filter by, sort by and desc", authorized: true do
         company = create(:company)
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        project.reviews.create! build(:project_review).attributes
+        project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :index, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue" }
         expect(response).to be_success
@@ -98,11 +98,11 @@ RSpec.describe GrantsController, type: :controller do
       it "respects per_page", authorized: true do
         company = create(:company)
         product = company.products.create! build(:product).attributes
-        product.reviews.create! build(:product_review).attributes
+        product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         service = company.services.create! build(:service).attributes
-        service.reviews.create! build(:service_review).attributes
+        service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         project = company.projects.create! build(:project).attributes
-        project.reviews.create! build(:project_review).attributes
+        project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
         get :index, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue", per_page: 2 }
         expect(response).to be_success
@@ -361,7 +361,7 @@ RSpec.describe GrantsController, type: :controller do
     describe "GET #index company" do
       it "returns a nunauthorized response", authorized: false do
         review = create(:product_review)
-        get :index, params: { company_id: review.reviewable.company_id }
+        get :index, params: { company_id: review.vendor_id }
 
         expect_unauthorized
       end

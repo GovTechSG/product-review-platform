@@ -135,14 +135,14 @@ RSpec.describe CompaniesController, type: :controller do
     context "with industry and grant filter, without search" do
       it "returns a success response" do
         review = create(:product_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
         expect(response).to be_success
       end
 
       it "returns only matching companies" do
         review = create(:product_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{review.grant.hashid}" }
         expect(parsed_response.count).to eq(1)
       end
@@ -150,7 +150,7 @@ RSpec.describe CompaniesController, type: :controller do
       it "filters inclusively" do
         review = create(:product_review)
         another_review = create(:service_review)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{another_review.grant.hashid}" }
         expect(parsed_response.count).to eq(2)
       end
@@ -166,7 +166,7 @@ RSpec.describe CompaniesController, type: :controller do
       it "returns something if only industry filter has results" do
         review = create(:product_review)
         grant = create(:grant)
-        industry = review.reviewable.company.industries.create!(build(:industry).attributes)
+        industry = review.reviewable.companies.first.industries.create!(build(:industry).attributes)
         get :index, params: { search: '', filter: "industries:#{industry.hashid},grants:#{grant.hashid}" }
         expect(parsed_response.count).to eq(1)
       end
@@ -230,11 +230,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "accepts valid filter by, sort by and desc" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :clients, params: { company_id: company.hashid, filter_by: "Product", sort_by: "created_at", desc: "true" }
       expect(response).to be_success
@@ -243,11 +243,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "disregards invalid filter by, sort by and desc" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :clients, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue" }
       expect(response).to be_success
@@ -256,11 +256,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "respects per_page" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :clients, params: { company_id: company.hashid, filter_by: "Prsdfoduct", sort_by: "cresdfated_at", desc: "trsdfue", per_page: 2 }
       expect(response).to be_success
@@ -288,11 +288,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "accepts valid sort by" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :offerings, params: { company_id: company.hashid, sort_by: "aggregate_score" }
       expect(response).to be_success
@@ -301,11 +301,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "disregards invalid sort by" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :offerings, params: { company_id: company.hashid, sort_by: "aggregdsfate_score" }
       expect(response).to be_success
@@ -314,11 +314,11 @@ RSpec.describe CompaniesController, type: :controller do
 
     it "respects per_page" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       project = company.projects.create! build(:project).attributes
-      project.reviews.create! build(:project_review).attributes
+      project.reviews.create! build(:project_review, vendor_id: company.id).attributes
 
       get :offerings, params: { company_id: company.hashid, sort_by: "aggregdsfate_score", per_page: 2 }
       expect(response).to be_success

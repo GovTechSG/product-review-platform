@@ -4,6 +4,5 @@ FactoryBot.define do
     description { FFaker::Lorem.sentence }
     reviews_count 0
     aggregate_score 0
-    company
   end
 end

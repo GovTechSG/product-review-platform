@@ -82,22 +82,4 @@ shared_examples_for 'products_and_services' do
       end
     end
   end
-
-  describe "companies_name" do
-    context "products" do
-      it "returns company name" do
-        valid_company.products.create! valid_product
-        product = valid_company.products.first
-        expect(product.company_name).to eq(valid_company.name)
-      end
-    end
-
-    context "services" do
-      it "returns company name" do
-        valid_company.services.create! valid_service
-        service = valid_company.services.first
-        expect(service.company_name).to eq(valid_company.name)
-      end
-    end
-  end
 end

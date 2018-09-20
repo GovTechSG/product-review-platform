@@ -13,7 +13,7 @@ module Statistics::Companies
 
     private
 
-    def get_reviews(product_service)
+    def get_reviews_as_vendor(product_service)
       aspects_set = Set.new
       product_service.first(3).each do |reviewable|
         reviewable.reviews.kept.first(3).each do |review|

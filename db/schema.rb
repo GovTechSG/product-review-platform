@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_14_032802) do
+ActiveRecord::Schema.define(version: 2018_09_18_023321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,18 @@ ActiveRecord::Schema.define(version: 2018_09_14_032802) do
     t.index ["uen"], name: "index_companies_on_uen"
   end
 
+  create_table "company_reviewables", force: :cascade do |t|
+    t.bigint "company_id"
+    t.string "reviewable_type"
+    t.bigint "reviewable_id"
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_company_reviewables_on_company_id"
+    t.index ["discarded_at"], name: "index_company_reviewables_on_discarded_at"
+    t.index ["reviewable_type", "reviewable_id"], name: "index_company_reviewables_on_reviewable_type_and_reviewable_id"
+  end
+
   create_table "grants", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.datetime "discarded_at"
@@ -202,13 +214,11 @@ ActiveRecord::Schema.define(version: 2018_09_14_032802) do
   create_table "products", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.bigint "company_id"
     t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.decimal "aggregate_score", default: "0.0"
-    t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["discarded_at"], name: "index_products_on_discarded_at"
     t.index ["name"], name: "index_products_on_name", unique: true
     t.index ["reviews_count"], name: "index_products_on_reviews_count"
@@ -217,13 +227,11 @@ ActiveRecord::Schema.define(version: 2018_09_14_032802) do
   create_table "projects", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.bigint "company_id"
     t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.decimal "aggregate_score", default: "0.0"
-    t.index ["company_id"], name: "index_projects_on_company_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["name"], name: "index_projects_on_name", unique: true
     t.index ["reviews_count"], name: "index_projects_on_reviews_count"
@@ -240,22 +248,22 @@ ActiveRecord::Schema.define(version: 2018_09_14_032802) do
     t.bigint "grant_id"
     t.string "reviewer_type"
     t.bigint "reviewer_id"
+    t.bigint "vendor_id"
     t.index ["discarded_at"], name: "index_reviews_on_discarded_at"
     t.index ["grant_id"], name: "index_reviews_on_grant_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["reviewer_type", "reviewer_id"], name: "index_reviews_on_reviewer_type_and_reviewer_id"
+    t.index ["vendor_id"], name: "index_reviews_on_vendor_id"
   end
 
   create_table "services", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.bigint "company_id"
     t.integer "reviews_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.decimal "aggregate_score", default: "0.0"
-    t.index ["company_id"], name: "index_services_on_company_id"
     t.index ["discarded_at"], name: "index_services_on_discarded_at"
     t.index ["name"], name: "index_services_on_name", unique: true
     t.index ["reviews_count"], name: "index_services_on_reviews_count"
@@ -263,12 +271,11 @@ ActiveRecord::Schema.define(version: 2018_09_14_032802) do
 
   add_foreign_key "aspect_reviews", "aspects"
   add_foreign_key "aspect_reviews", "reviews"
+  add_foreign_key "company_reviewables", "companies"
   add_foreign_key "grants", "agencies"
   add_foreign_key "industry_companies", "companies"
   add_foreign_key "industry_companies", "industries"
   add_foreign_key "oauth_access_tokens", "apps", column: "resource_owner_id"
-  add_foreign_key "products", "companies"
-  add_foreign_key "projects", "companies"
+  add_foreign_key "reviews", "companies", column: "vendor_id"
   add_foreign_key "reviews", "grants"
-  add_foreign_key "services", "companies"
 end

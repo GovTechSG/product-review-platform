@@ -1,15 +1,10 @@
 class Reviewable < ApplicationRecord
   include Statistics::ScoreAggregator
-  belongs_to :company
+
   has_many :reviews, as: :reviewable, dependent: :destroy
+
+  after_save :set_discard, on: [:update]
   self.abstract_class = true
-
-  after_save :set_company_reviews_count, on: [:create, :update]
-  after_destroy :set_company_reviews_count
-  after_save :set_company_score, on: [:create, :update]
-  after_destroy :set_company_score
-
-  scope :kept, -> { undiscarded.joins(:company).merge(Company.kept) }
 
   def set_reviews_count
     self.reviews_count = reviews.kept.count
@@ -24,14 +19,18 @@ class Reviewable < ApplicationRecord
   end
 
   def presence?
-    !discarded? && company.presence?
+    return false if discarded?
+    CompanyReviewable.where(reviewable_type: self.class.name, reviewable_id: id).find_each do |company_reviewable|
+      return true if !company_reviewable.company.discarded?
+    end
   end
 
-  def set_company_reviews_count
-    company.set_reviews_count
-  end
-
-  def set_company_score
-    company.set_aggregate_score
+  def set_discard
+    if discarded?
+      CompanyReviewable.where(reviewable_type: self.class.name, reviewable_id: id).find_each do |company_reviewable|
+        company_reviewable.discard
+        company_reviewable.save!
+      end
+    end
   end
 end

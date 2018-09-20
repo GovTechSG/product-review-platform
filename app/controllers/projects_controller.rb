@@ -10,33 +10,33 @@ class ProjectsController < ApplicationController
   before_action :validate_company_presence, only: [:index, :create]
   before_action :validate_company_uen_name, only: [:search]
   before_action :set_searched_company, only: [:search]
-  after_action only: [:index] { set_pagination_header(Project.kept.where(company_id: params[:company_id])) }
+  after_action only: [:index] { set_pagination_header(CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Project").map(&:company)) }
 
   # GET /companies/:company_id/projects
   def index
-    @projects =
-      if params[:page] == 'all'
-        Project.kept.where(company_id: @company.id)
-      else
-        Project.kept.where(company_id: @company.id).page(params[:page]).per(params[:per_page])
-      end
+    @projects = CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Project").map(&:company)
 
-    render json: @projects, methods: [:reviews_count, :aggregate_score], has_type: false
+    render json: paginator(@projects), methods: [:reviews_count, :aggregate_score], has_type: false
   end
 
   # GET /projects/1
   def show
-    render json: @project, methods: [:reviews_count, :aggregate_score, :company_name], has_type: false
+    render json: @project, methods: [:reviews_count, :aggregate_score], has_type: false
   end
 
   # POST /companies/:company_id/projects
   def create
-    @project = Project.new(project_params.merge(company_id: @company.id))
-
-    if @project.save
+    @project = Project.new(project_params)
+    if !@project.save
+      render json: @project.errors.messages, status: :unprocessable_entity
+      return
+    end
+    @project.reload
+    company_reviewable = CompanyReviewable.new(reviewable: @project, company: @company)
+    if company_reviewable.save
       render json: @project, status: :created, location: @project, has_type: false
     else
-      render json: @project.errors.messages, status: :unprocessable_entity
+      render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end
   end
 
@@ -58,6 +58,8 @@ class ProjectsController < ApplicationController
   def search
     validate_search_params
     return if performed?
+    validate_vendor_uen_name
+    @searched_vendor = @searched_vendor.nil? ? create_vendor : @searched_vendor
     if Project.kept.find_by(name: params[:project_name]).nil?
       create_project
     else
@@ -73,13 +75,18 @@ class ProjectsController < ApplicationController
   end
 
   def create_project
-    validate_vendor_uen_name
-    vendor = @searched_vendor.nil? ? create_vendor : @searched_vendor
-    project = Project.create(company_id: vendor.id, name: params[:project_name], description: params[:project][:description])
-    if project.errors.blank?
-      render json: { 'project_id': project.hashid }
-    else
+    project = Project.new(name: params[:project_name], description: params[:project][:description])
+    if !project.save
       render json: project.errors.messages, status: :unprocessable_entity
+      return
+    end
+
+    project.reload
+    company_reviewable = CompanyReviewable.new(reviewable: project, company: @searched_vendor)
+    if company_reviewable.save
+      render json: { 'project_id': project.id }
+    else
+      render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotUnique
     search

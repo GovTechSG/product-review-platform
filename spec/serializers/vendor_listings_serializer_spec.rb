@@ -4,9 +4,9 @@ RSpec.describe CompanySerializer, type: :serializer do
   context 'Individual Resource Representation' do
     before(:all) do
       @company = create(:company)
-      product = @company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
-      product.reviews.first.reviewer.industries.create! build(:industry).attributes
+      project = @company.projects.create! build(:project).attributes
+      project.reviews.create! build(:project_review, vendor_id: @company.id).attributes
+      project.reviews.first.reviewer.industries.create! build(:industry).attributes
     end
 
     subject do

@@ -1,6 +1,8 @@
 class Service < Reviewable
   include SwaggerDocs::Service
-  include Statistics::ProductsAndServices
+  has_many :company_reviewable, as: :reviewable, dependent: :destroy
+  has_many :companies, through: :company_reviewable, as: :reviewable
 
-  validates_presence_of :name, :description, :company, :reviews_count
+  validates_presence_of :name, :reviews_count
+  validates :description, presence: true, allow_blank: true
 end

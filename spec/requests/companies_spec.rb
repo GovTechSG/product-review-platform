@@ -46,7 +46,7 @@ RSpec.describe "Companies", type: :request do
 
     it "returns product clients if there are only product clients" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       get companies_clients_path(company.id), headers: header
       expect(parsed_response.length).to eq(1)
     end
@@ -71,14 +71,14 @@ RSpec.describe "Companies", type: :request do
 
     it "returns service clients if there are only service clients" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       get companies_clients_path(company.id), headers: header
       expect(parsed_response.length).to eq(1)
     end
 
     it "does not return deleted products" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       product.discard
       get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
@@ -86,7 +86,7 @@ RSpec.describe "Companies", type: :request do
 
     it "does not return deleted services" do
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       service.discard
       get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
@@ -94,7 +94,7 @@ RSpec.describe "Companies", type: :request do
 
     it "does not return deleted products review" do
       product = company.products.create! build(:product).attributes
-      review = product.reviews.create! build(:product_review).attributes
+      review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       review.discard
       get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
@@ -102,7 +102,7 @@ RSpec.describe "Companies", type: :request do
 
     it "does not return deleted services review" do
       service = company.services.create! build(:service).attributes
-      review = service.reviews.create! build(:service_review).attributes
+      review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       review.discard
       get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(0)
@@ -110,9 +110,9 @@ RSpec.describe "Companies", type: :request do
 
     it "returns product and service clients" do
       product = company.products.create! build(:product).attributes
-      product.reviews.create! build(:product_review).attributes
+      product.reviews.create! build(:product_review, vendor_id: company.id).attributes
       service = company.services.create! build(:service).attributes
-      service.reviews.create! build(:service_review).attributes
+      service.reviews.create! build(:service_review, vendor_id: company.id).attributes
       get companies_clients_path(company.hashid), headers: header
       expect(parsed_response.length).to eq(2)
     end

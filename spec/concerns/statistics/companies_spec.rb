@@ -17,6 +17,16 @@ shared_examples_for 'companies' do
     create(:company, aggregate_score: 0)
   end
 
+  before(:each) do
+    @service = create(:service)
+    @company = @service.companies.create!(build(:company_as_params))
+    @product = @company.products.create(build(:product).attributes)
+    @service_review1 = @service.reviews.create!(build(:service_review, vendor_id: @company.id).attributes)
+    @service_review2 = @service.reviews.create!(build(:service_review, vendor_id: @company.id).attributes)
+    @product_review1 = @product.reviews.create!(build(:product_review, vendor_id: @company.id).attributes)
+    @product_review2 = @product.reviews.create!(build(:product_review, vendor_id: @company.id).attributes)
+  end
+
   describe "reviews_count" do
     context "no product and service" do
       it "returns 0" do
@@ -24,66 +34,21 @@ shared_examples_for 'companies' do
       end
     end
 
-    context "does not count discarded products and services" do
+    context "counts seperately from reviewables" do
       it "returns 0" do
-        service = valid_company.services.create! valid_service
-        service.reviews.create! valid_service_review
-        service.reviews.create! valid_service_review
-        service.discard
-        product = valid_company.products.create! valid_product
-        product.reviews.create! valid_product_review
-        product.reviews.create! valid_product_review
-        product.discard
-        valid_company.reload
-        expect(valid_company.reviews_count).to eq(0)
+        @service.discard
+        @product.discard
+        @company.reload
+        expect(@company.reviews_count).to eq(4)
       end
     end
 
     context "does not count discarded reviews" do
       it "returns 0" do
-        service = valid_company.services.create! valid_service
-        service.reviews.create! valid_service_review
-        service.reviews.create! valid_service_review
-        service.reviews.first.discard
-        product = valid_company.products.create! valid_product
-        product.reviews.create! valid_product_review
-        product.reviews.create! valid_product_review
-        product.reviews.first.discard
-        valid_company.reload
-        expect(valid_company.reviews_count).to eq(2)
-      end
-    end
-
-    context "no product" do
-      it "returns service count" do
-        service = valid_company.services.create! valid_service
-        service.reviews.create! valid_service_review
-        service.reviews.create! valid_service_review
-        valid_company.reload
-        expect(valid_company.reviews_count).to eq(2)
-      end
-    end
-
-    context "no service" do
-      it "returns product count" do
-        product = valid_company.products.create! valid_product
-        product.reviews.create! valid_product_review
-        product.reviews.create! valid_product_review
-        valid_company.reload
-        expect(valid_company.reviews_count).to eq(2)
-      end
-    end
-
-    context "product and service" do
-      it "returns review count" do
-        service = valid_company.services.create! valid_service
-        service.reviews.create! valid_service_review
-        service.reviews.create! valid_service_review
-        product = valid_company.products.create! valid_product
-        product.reviews.create! valid_product_review
-        product.reviews.create! valid_product_review
-        valid_company.reload
-        expect(valid_company.reviews_count).to eq(4)
+        @service_review1.discard
+        @product_review1.discard
+        @company.reload
+        expect(@company.reviews_count).to eq(2)
       end
     end
   end

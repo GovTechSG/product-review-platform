@@ -45,6 +45,7 @@ RSpec.describe LikesController, type: :controller do
         default_result_per_page = 25
         num_of_object_to_create = 30
         review = Review.create! build(:service_review).attributes
+        review.reviewable.companies.create! build(:company_as_params)
 
         while num_of_object_to_create > 0
           Like.create! build(:product_review_like, likeable: review).attributes
@@ -73,7 +74,7 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns not found if company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.likeable.reviewable.company.discard
+        like.likeable.reviewable.companies.first.discard
         get :index, params: { review_id: like.likeable.id }
 
         expect(response).to be_not_found
@@ -124,7 +125,7 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns not found when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.likeable.reviewable.company.discard
+        like.likeable.reviewable.companies.first.discard
         get :show, params: { id: like.to_param }
         expect(response).to be_not_found
       end
@@ -193,7 +194,7 @@ RSpec.describe LikesController, type: :controller do
       context "with deleted company" do
         it "does not create Like", authorized: true do
           review = create(:product_review)
-          review.reviewable.company.discard
+          review.reviewable.companies.first.discard
 
           expect do
             post :create, params: { like: valid_attributes, review_id: review.id }
@@ -202,7 +203,7 @@ RSpec.describe LikesController, type: :controller do
 
         it "renders not found response", authorized: true do
           review = create(:product_review)
-          review.reviewable.company.discard
+          review.reviewable.companies.first.discard
 
           post :create, params: { like: valid_attributes, review_id: review.id }
           expect(response).to have_http_status(404)
@@ -301,7 +302,7 @@ RSpec.describe LikesController, type: :controller do
 
       it "returns a not found response when company is deleted", authorized: true do
         like = Like.create! valid_attributes
-        like.likeable.reviewable.company.discard
+        like.likeable.reviewable.companies.first.discard
         delete :destroy, params: { id: like.to_param }
         expect(response).to have_http_status(404)
       end

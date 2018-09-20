@@ -18,11 +18,15 @@ RSpec.describe ProjectsController, type: :controller do
     allow(controller).to receive(:doorkeeper_token) { token }
   end
 
+  before(:each) do
+    @project = create(:project)
+    @project.companies.create!(build(:company_as_params))
+  end
+
   describe "Authorised user" do
     describe "GET #index" do
       it "returns a success response", authorized: true do
-        project = Project.create! valid_attributes
-        get :index, params: { company_id: project.company.hashid }
+        get :index, params: { company_id: @project.companies.first.hashid }
 
         expect(response).to be_success
       end
@@ -33,7 +37,9 @@ RSpec.describe ProjectsController, type: :controller do
         company = Company.create! build(:company).attributes
 
         while num_of_object_to_create > 0
-          Project.create! build(:project, company: company).attributes
+          project = create(:project)
+          CompanyReviewable.create!(company: company, reviewable: project)
+
           num_of_object_to_create -= 1
         end
 
@@ -42,17 +48,15 @@ RSpec.describe ProjectsController, type: :controller do
       end
 
       it "does not return deleted projects", authorized: true do
-        project = Project.create! valid_attributes
-        project.discard
-        get :index, params: { company_id: project.company.hashid }
+        @project.discard
+        get :index, params: { company_id: @project.companies.first.hashid }
         expect(parsed_response).to match([])
         expect(response).to be_success
       end
 
       it "returns not found when the project's company is deleted", authorized: true do
-        project = Project.create! valid_attributes
-        project.company.discard
-        get :index, params: { company_id: project.company.id }
+        @project.companies.first.discard
+        get :index, params: { company_id: @project.companies.first.hashid }
 
         expect(response).to be_not_found
       end
@@ -65,23 +69,27 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe "GET #show" do
       it "returns a success response", authorized: true do
-        project = Project.create! valid_attributes
-        get :show, params: { id: project.to_param }
+        get :show, params: { id: @project.to_param }
         expect(response).to be_success
       end
 
       it "returns a not found when the project is deleted", authorized: true do
-        project = Project.create! valid_attributes
-        project.discard
-        get :show, params: { id: project.to_param }
+        @project.discard
+        get :show, params: { id: @project.to_param }
         expect(response).to be_not_found
       end
 
-      it "returns a not found when the company is deleted", authorized: true do
-        project = Project.create! valid_attributes
-        project.company.discard
-        get :show, params: { id: project.to_param }
+      it "returns a not found when all company is discarded", authorized: true do
+        @project.companies.first.discard
+        get :show, params: { id: @project.to_param }
         expect(response).to be_not_found
+      end
+
+      it "returns success when at least one company is not discarded", authorized: true do
+        @project.companies.create!(build(:company_as_params))
+        @project.companies.first.discard
+        get :show, params: { id: @project.to_param }
+        expect(response).to be_success
       end
 
       it "returns not found when project not found", authorized: true do
@@ -148,18 +156,14 @@ RSpec.describe ProjectsController, type: :controller do
         end
 
         it "updates the requested project", authorized: true do
-          project = Project.create! valid_attributes
-
-          put :update, params: { id: project.to_param, project: new_attributes }, session: valid_session
-          project.reload
-          expect(project.name).to eq(new_attributes[:name])
-          expect(project.description).to eq(new_attributes[:description])
+          put :update, params: { id: @project.to_param, project: new_attributes }, session: valid_session
+          @project.reload
+          expect(@project.name).to eq(new_attributes[:name])
+          expect(@project.description).to eq(new_attributes[:description])
         end
 
         it "renders a JSON response with the project", authorized: true do
-          project = Project.create! valid_attributes
-
-          put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
+          put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -170,47 +174,41 @@ RSpec.describe ProjectsController, type: :controller do
         end
 
         it "renders not found when project is deleted", authorized: true do
-          project = Project.create! valid_attributes
-          project.discard
-          put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
+          @project.discard
+          put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
 
         it "does not update when project is deleted", authorized: true do
-          project = Project.create! valid_attributes
-          original_attributes = project
-          project.discard
-          put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
-          project.reload
-          expect(project.name).to eq(original_attributes[:name])
-          expect(project.description).to eq(original_attributes[:description])
+          original_attributes = @project
+          @project.discard
+          put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
+          @project.reload
+          expect(@project.name).to eq(original_attributes[:name])
+          expect(@project.description).to eq(original_attributes[:description])
         end
 
         it "renders not found when company is deleted", authorized: true do
-          project = Project.create! valid_attributes
-          project.company.discard
-          put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
+          @project.companies.first.discard
+          put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
 
         it "does not update when company is deleted", authorized: true do
-          project = Project.create! valid_attributes
-          original_attributes = project
-          project.company.discard
-          put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
-          project.reload
-          expect(project.name).to eq(original_attributes[:name])
-          expect(project.description).to eq(original_attributes[:description])
+          original_attributes = @project
+          @project.companies.first.discard
+          put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
+          @project.reload
+          expect(@project.name).to eq(original_attributes[:name])
+          expect(@project.description).to eq(original_attributes[:description])
         end
       end
 
       context "with invalid params" do
         it "renders a JSON response with errors for the project", authorized: true do
-          project = Project.create! valid_attributes
-
-          put :update, params: { id: project.to_param, project: invalid_attributes }, session: valid_session
+          put :update, params: { id: @project.to_param, project: invalid_attributes }, session: valid_session
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -219,50 +217,43 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe "DELETE #destroy" do
       it "soft deletes", authorized: true do
-        project = Project.create! valid_attributes
         expect do
-          delete :destroy, params: { id: project.to_param }, session: valid_session
+          delete :destroy, params: { id: @project.to_param }, session: valid_session
         end.to change(Project, :count).by(0)
       end
 
       it "sets discarded_at datetime", authorized: true do
-        project = Project.create! valid_attributes
-        delete :destroy, params: { id: project.to_param }
-        project.reload
-        expect(project.discarded?).to be true
+        delete :destroy, params: { id: @project.to_param }
+        @project.reload
+        expect(@project.discarded?).to be true
       end
 
       it "renders a JSON response with the project", authorized: true do
-        project = Project.create! valid_attributes
-
-        delete :destroy, params: { id: project.to_param }
+        delete :destroy, params: { id: @project.to_param }
         expect(response).to have_http_status(204)
       end
 
       it "renders a not found if the project is deleted", authorized: true do
-        project = Project.create! valid_attributes
-        project.discard
-        delete :destroy, params: { id: project.to_param }
+        @project.discard
+        delete :destroy, params: { id: @project.to_param }
         expect(response).to have_http_status(404)
       end
 
       it "renders a not found if the company is deleted", authorized: true do
-        project = Project.create! valid_attributes
-        project.company.discard
-        delete :destroy, params: { id: project.to_param }
+        @project.companies.first.discard
+        delete :destroy, params: { id: @project.to_param }
         expect(response).to have_http_status(404)
       end
 
       it "returns a not found response when project not found", authorized: true do
         delete :destroy, params: { id: 0 }
-        expect(response).to be_not_found
+      expect(response).to be_not_found
       end
     end
 
     describe "POST #search", authorized: true do
       it "returns a success response when project is found" do
-        project = Project.create! valid_attributes
-        post :search, params: { project_name: project.name, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: project.company.name, vendor_uen: project.company.uen }
+        post :search, params: { project_name: @project.name, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: @project.companies.first.name, vendor_uen: @project.companies.first.uen }
         expect(response).to be_success
       end
 
@@ -289,39 +280,42 @@ RSpec.describe ProjectsController, type: :controller do
       it "does not create vendor or reviewer if vendor is found" do
         company = create(:company)
         project = create(:project)
+        CompanyReviewable.create(company: company, reviewable: project)
         expect do
-          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: company.uen, name: company.name, description: company.description }, vendor_name: project.company.name, vendor_uen: project.company.uen }
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: company.uen, name: company.name, description: company.description }, vendor_name: project.companies.first.name, vendor_uen: project.companies.first.uen }
         end.to change { Company.count }.by(0)
       end
 
       it "creates reviewer if reviewer is not found" do
+        company = create(:company)
         project = create(:project)
+        CompanyReviewable.create(company: company, reviewable: project)
         expect do
-          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: "aname", description: "adesc" }, vendor_name: project.company.name, vendor_uen: project.company.uen }
+          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: "aname", description: "adesc" }, vendor_name: project.companies.first.name, vendor_uen: project.companies.first.uen }
         end.to change { Company.count }.by(1)
       end
 
       it "seaches by uen" do
         project = create(:project)
         reviewer = create(:company)
-
-        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: reviewer.uen, name: "aname", description: "adesc" }, vendor_name: "wrong", vendor_uen: project.company.uen }
+        CompanyReviewable.create(company: reviewer, reviewable: project)
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: reviewer.uen, name: "aname", description: "adesc" }, vendor_name: "wrong", vendor_uen: project.companies.first.uen }
         expect(response).to be_success
       end
 
       it "searches by name if uen is not found" do
         project = create(:project)
         reviewer = create(:company)
-
-        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: reviewer.name, description: "adesc" }, vendor_name: project.company.name, vendor_uen: 321 }
+        CompanyReviewable.create(company: reviewer, reviewable: project)
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: 123, name: reviewer.name, description: "adesc" }, vendor_name: project.companies.first.name, vendor_uen: 321 }
         expect(response).to be_success
       end
 
       it "searches by name if uen is blank" do
         project = create(:project)
         reviewer = create(:company)
-
-        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: reviewer.name, description: "adesc" }, vendor_name: project.company.name, vendor_uen: "" }
+        CompanyReviewable.create(company: reviewer, reviewable: project)
+        post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: reviewer.name, description: "adesc" }, vendor_name: project.companies.first.name, vendor_uen: "" }
         expect(response).to be_success
       end
 
@@ -329,9 +323,11 @@ RSpec.describe ProjectsController, type: :controller do
         project = build(:project)
 
         expect do
-          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "aname", description: "adesc" }, vendor_name: project.company.name, vendor_uen: "" }
-          post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "abname", description: "adesc" }, vendor_name: "vname", vendor_uen: "" }
-        end.to change { Company.count }.by(2)
+          expect do
+            post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "aname", description: "adesc" }, vendor_name: "bname", vendor_uen: "" }
+            post :search, params: { project_name: project.name, project: { description: project.description }, company: { uen: "", name: "abname", description: "adesc" }, vendor_name: "vname", vendor_uen: "" }
+          end.to change { Company.count }.by(4)
+        end.to change { Project.count }.by(1)
       end
 
       it "returns a success response" do
@@ -366,8 +362,7 @@ RSpec.describe ProjectsController, type: :controller do
   describe "Unauthorised user" do
     describe "GET #index" do
       it "returns an unauthorized response", authorized: false do
-        project = Project.create! valid_attributes
-        get :index, params: { company_id: project.company.id }
+        get :index, params: { company_id: @project.companies.first.hashid }
 
         expect_unauthorized
       end
@@ -375,8 +370,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe "GET #show" do
       it "returns an unauthorized response", authorized: false do
-        project = Project.create! valid_attributes
-        get :show, params: { id: project.to_param }
+        get :show, params: { id: @project.to_param }
 
         expect_unauthorized
       end
@@ -405,40 +399,34 @@ RSpec.describe ProjectsController, type: :controller do
       end
 
       it "does not update the requested project", authorized: false do
-        project = Project.create! valid_attributes
-        current_attributes = project.attributes
+        current_attributes = @project.attributes
 
-        put :update, params: { id: project.to_param, project: new_attributes }, session: valid_session
-        project.reload
-        expect(project.name).to eq(current_attributes["name"])
-        expect(project.description).to eq(current_attributes["description"])
+        put :update, params: { id: @project.to_param, project: new_attributes }, session: valid_session
+        @project.reload
+        expect(@project.name).to eq(current_attributes["name"])
+        expect(@project.description).to eq(current_attributes["description"])
       end
 
       it "returns an unauthorized response", authorized: false do
-        project = Project.create! valid_attributes
-
-        put :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
+        put :update, params: { id: @project.to_param, project: valid_attributes }, session: valid_session
         expect_unauthorized
       end
     end
 
     describe "DELETE #destroy" do
       it "does not destroy the requested project", authorized: false do
-        project = Project.create! valid_attributes
         expect do
-          delete :destroy, params: { id: project.to_param }, session: valid_session
+          delete :destroy, params: { id: @project.to_param }, session: valid_session
         end.to change(Project, :count).by(0)
       end
 
       it "does not set discarded_at datetime", authorized: false do
-        project = Project.create! valid_attributes
-        delete :destroy, params: { id: project.to_param }
-        project.reload
-        expect(project.discarded?).to be false
+        delete :destroy, params: { id: @project.to_param }
+        @project.reload
+        expect(@project.discarded?).to be false
       end
       it "returns an unauthorized response", authorized: false do
-        project = Project.create! valid_attributes
-        delete :destroy, params: { id: project.to_param }, session: valid_session
+        delete :destroy, params: { id: @project.to_param }, session: valid_session
         expect_unauthorized
       end
     end

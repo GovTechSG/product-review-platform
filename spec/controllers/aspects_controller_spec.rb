@@ -55,13 +55,13 @@ RSpec.describe AspectsController, type: :controller do
 
       it "accepts valid sort by", authorized: true do
         product = company.products.create! build(:product).attributes
-        product_review = product.reviews.create! build(:product_review).attributes
+        product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         product_review.aspects.create! build(:aspect).attributes
         service = company.services.create! build(:service).attributes
-        service_review = service.reviews.create! build(:service_review).attributes
+        service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         service_review.aspects.create! build(:aspect).attributes
         project = company.projects.create! build(:project).attributes
-        project_review = project.reviews.create! build(:project_review).attributes
+        project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
         same_aspect = create(:aspect)
         AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
         AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -74,13 +74,13 @@ RSpec.describe AspectsController, type: :controller do
 
       it "disregards invalid sort by", authorized: true do
         product = company.products.create! build(:product).attributes
-        product_review = product.reviews.create! build(:product_review).attributes
+        product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         product_review.aspects.create! build(:aspect).attributes
         service = company.services.create! build(:service).attributes
-        service_review = service.reviews.create! build(:service_review).attributes
+        service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         service_review.aspects.create! build(:aspect).attributes
         project = company.projects.create! build(:project).attributes
-        project_review = project.reviews.create! build(:project_review).attributes
+        project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
         same_aspect = create(:aspect)
         AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
         AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -92,13 +92,13 @@ RSpec.describe AspectsController, type: :controller do
 
       it "respects per_page", authorized: true do
         product = company.products.create! build(:product).attributes
-        product_review = product.reviews.create! build(:product_review).attributes
+        product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         product_review.aspects.create! build(:aspect).attributes
         service = company.services.create! build(:service).attributes
-        service_review = service.reviews.create! build(:service_review).attributes
+        service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         service_review.aspects.create! build(:aspect).attributes
         project = company.projects.create! build(:project).attributes
-        project_review = project.reviews.create! build(:project_review).attributes
+        project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
         same_aspect = create(:aspect)
         AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
         AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)
@@ -110,13 +110,13 @@ RSpec.describe AspectsController, type: :controller do
 
       it "returns counts if specified", authorized: true do
         product = company.products.create! build(:product).attributes
-        product_review = product.reviews.create! build(:product_review).attributes
+        product_review = product.reviews.create! build(:product_review, vendor_id: company.id).attributes
         product_review.aspects.create! build(:aspect).attributes
         service = company.services.create! build(:service).attributes
-        service_review = service.reviews.create! build(:service_review).attributes
+        service_review = service.reviews.create! build(:service_review, vendor_id: company.id).attributes
         service_review.aspects.create! build(:aspect).attributes
         project = company.projects.create! build(:project).attributes
-        project_review = project.reviews.create! build(:project_review).attributes
+        project_review = project.reviews.create! build(:project_review, vendor_id: company.id).attributes
         same_aspect = create(:aspect)
         AspectReview.create(aspect_id: same_aspect.id, review_id: project_review.id)
         AspectReview.create(aspect_id: same_aspect.id, review_id: product_review.id)

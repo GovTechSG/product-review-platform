@@ -11,17 +11,17 @@ shared_examples_for 'score_aggregator' do
       company = Company.first
       expect(company.aggregate_score).to eq(0.0)
       product = company.products.create!(build(:product).attributes)
-      expect(product.company.aggregate_score).to eq(0.0)
-      expect(product.company.products.first.aggregate_score).to eq(0.0)
-      company.products.first.reviews.create!(build(:product_review).attributes)
-      company.products.first.reviews.create!(build(:product_review).attributes)
-      company.products.first.reviews.create!(build(:product_review).attributes)
-      company.products.first.reviews.create!(build(:product_review).attributes)
-      company.products.first.reviews.create!(build(:product_review).attributes)
-      review = company.products.first.reviews.create!(build(:product_review).attributes)
+      expect(product.companies.first.aggregate_score).to eq(0.0)
+      expect(product.companies.first.products.first.aggregate_score).to eq(0.0)
+      company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
+      company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
+      company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
+      company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
+      company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
+      review = company.products.first.reviews.create!(build(:product_review, vendor_id: company.id).attributes)
 
-      expect(review.reviewable.company.aggregate_score).to_not eq(0.0)
-      expect(review.reviewable.company.products.first.aggregate_score).to_not eq(0.0)
+      expect(review.reviewable.companies.first.aggregate_score).to_not eq(0.0)
+      expect(review.reviewable.companies.first.products.first.aggregate_score).to_not eq(0.0)
     end
   end
 end
