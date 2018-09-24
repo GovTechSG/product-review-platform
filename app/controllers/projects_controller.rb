@@ -121,8 +121,8 @@ class ProjectsController < ApplicationController
   end
 
   def validate_vendor_uen_name
-    @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase.lstrip.strip)
-    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].downcase.lstrip.strip) if @searched_vendor.nil? || @searched_vendor.uen.blank?
+    @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase)
+    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].downcase) if @searched_vendor.nil? || @searched_vendor.uen.blank?
   end
 
   def create_vendor
