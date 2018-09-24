@@ -106,8 +106,9 @@ class ReviewsController < ApplicationController
         render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
         return
       else
-        @whitelisted = @whitelisted.permit(:score, :content, :from_id, :vendor_id,
+        @whitelisted = @whitelisted.permit(:score, :content, :from_id, :vendor_name, :vendor_uen,
                                            :from_type, :grant_id, :aspect_ids => [])
+        @whitelisted[:aspect_ids].delete_if(&:blank?)
       end
       if required
         param_required_foreign_keys.each do |foreign_key|
@@ -159,8 +160,9 @@ class ReviewsController < ApplicationController
     end
 
     def set_vendor(required)
-      @vendor = find_record(Company, @whitelisted[:vendor_id])
-      render_error(404, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.not_found', model: "vendor_id")]) if required && (@vendor.nil? || !@vendor.presence?)
+      @vendor = Company.kept.uen_query_sanitizer(@whitelisted[:vendor_uen].to_s.downcase)
+      @vendor = Company.kept.name_query_sanitizer(@whitelisted[:vendor_name].to_s.downcase) if @vendor.nil? || @vendor.uen.blank?
+      render_error(404, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "vendor")]) if required && (@vendor.nil? || !@vendor.presence?)
     end
 
     def check_from_params(required, check_class)
@@ -302,9 +304,10 @@ class ReviewsController < ApplicationController
         @whitelisted["aspect_ids"] = aspects.map(&:id)
       end
 
-      if @whitelisted["vendor_id"]
-        company = Company.find(@whitelisted["vendor_id"])
-        @whitelisted["vendor_id"] = company.id
+      if @vendor
+        @whitelisted["vendor_id"] = @vendor.id
+        @whitelisted.delete("vendor_uen") if @whitelisted["vendor_uen"]
+        @whitelisted.delete("vendor_name") if @whitelisted["vendor_name"]
       end
     end
 
