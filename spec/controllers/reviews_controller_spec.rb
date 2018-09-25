@@ -13,6 +13,8 @@ RSpec.describe ReviewsController, type: :controller do
     value.delete("reviewer_id")
     value.delete("reviewer_type")
     value["vendor_id"] = Company.find(value["vendor_id"]).hashid
+    value["vendor_uen"] = Company.find(value["vendor_id"]).uen
+    value["vendor_name"] = Company.find(value["vendor_id"]).name
 
     reviewable = Product.find(value["reviewable_id"])
     value["reviewable_id"] = reviewable.hashid
@@ -35,6 +37,8 @@ RSpec.describe ReviewsController, type: :controller do
     value["from_id"] = Company.find(value["reviewer_id"]).hashid
     value["from_type"] = value["reviewer_type"]
     value["vendor_id"] = Company.find(value["vendor_id"]).hashid
+    value["vendor_uen"] = Company.find(value["vendor_id"]).uen
+    value["vendor_name"] = Company.find(value["vendor_id"]).name
     value.delete("reviewer_id")
     value.delete("reviewer_type")
 

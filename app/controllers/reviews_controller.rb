@@ -108,7 +108,7 @@ class ReviewsController < ApplicationController
       else
         @whitelisted = @whitelisted.permit(:score, :content, :from_id, :vendor_name, :vendor_uen,
                                            :from_type, :grant_id, :aspect_ids => [])
-        @whitelisted[:aspect_ids].delete_if(&:blank?)
+        @whitelisted[:aspect_ids].delete_if(&:blank?) if @whitelisted[:aspect_ids].present?
       end
       if required
         param_required_foreign_keys.each do |foreign_key|
