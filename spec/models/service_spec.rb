@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'concerns/statistics/score_aggregator_spec.rb'
 
 RSpec.describe Service, type: :model do
-
   describe 'validations' do
     it 'has a valid Factory' do
       expect(build(:service)).to be_valid

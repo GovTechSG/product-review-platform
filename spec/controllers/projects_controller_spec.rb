@@ -247,7 +247,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       it "returns a not found response when project not found", authorized: true do
         delete :destroy, params: { id: 0 }
-      expect(response).to be_not_found
+        expect(response).to be_not_found
       end
     end
 

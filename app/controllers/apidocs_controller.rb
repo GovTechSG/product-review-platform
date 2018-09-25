@@ -34,6 +34,7 @@ class ApidocsController < ApplicationController
     Company,
     AgenciesController,
     Agency,
+    Reviewable,
     ProductsController,
     Product,
     ServicesController,

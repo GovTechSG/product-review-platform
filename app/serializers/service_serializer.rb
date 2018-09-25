@@ -1,6 +1,7 @@
 class ServiceSerializer < ApplicationSerializer
   attribute :type, if: :type?
-  attributes :id, :name, :description, :reviews_count, :companies
+  attributes :id, :name, :description, :reviews_count
+  has_many :companies, serializer: AssociateCompanySerializer
 
   def type
     "Service"

@@ -479,8 +479,6 @@ RSpec.describe ReviewsController, type: :controller do
           end
 
           it "renders a JSON response with the new review", authorized: true do
-            service = create(:service)
-
             post :create, params: { review: create_update_service_review, service_id: @service.hashid }
             expect(response).to have_http_status(:created)
             expect(response.content_type).to eq('application/json')
@@ -806,14 +804,12 @@ RSpec.describe ReviewsController, type: :controller do
 
     describe "POST #create" do
       it "does not create a new Review", authorized: false do
-
         expect do
           post :create, params: { review: valid_product_review, product_id: @product.hashid }
         end.to change(Review, :count).by(0)
       end
 
       it "returns an unauthorized response", authorized: false do
-
         post :create, params: { review: valid_product_review, product_id: @product.hashid }
         expect_unauthorized
       end

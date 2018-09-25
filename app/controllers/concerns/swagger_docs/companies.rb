@@ -248,7 +248,56 @@ module SwaggerDocs::Companies
           key :description, I18n.t('swagger_ui.index_success_description', model: 'offerings').to_s
           schema type: :array do
             items do
-              key :'$ref', :Company
+              key :'$ref', :Reviewable
+            end
+          end
+        end
+        response 401 do
+          key :'$ref', :UnauthorisedError
+        end
+        response 404 do
+          key :'$ref', :NotFoundError
+        end
+      end
+    end
+
+    swagger_path '/api/v1/companies/{company_id}/aspects' do
+      parameter do
+        key :name, :company_id
+        key :in, :path
+        key :description, I18n.t('swagger_ui.path_id_description', model: 'Company').to_s
+        key :required, true
+        key :type, :string
+      end
+      operation :get do
+        security do
+          key :Authorization, []
+        end
+        key :tags, [I18n.t('company.key').to_s]
+        key :description, I18n.t('swagger_ui.index_description', model: 'offerings').to_s
+        key :operationId, 'findCompaniesofferings'
+        key :produces, [
+          'application/json'
+        ]
+        parameter do
+          key :name, :page
+          key :in, :query
+          key :description, 'Page Number to display'
+          key :type, :integer
+          key :format, :int64
+        end
+        parameter do
+          key :name, :per_page
+          key :in, :query
+          key :description, 'Number of items to display per page'
+          key :type, :integer
+          key :format, :int64
+        end
+        response 200 do
+          key :description, I18n.t('swagger_ui.index_success_description', model: 'offerings').to_s
+          schema type: :array do
+            items do
+              key :'$ref', :Aspect
             end
           end
         end

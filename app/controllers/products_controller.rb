@@ -10,11 +10,11 @@ class ProductsController < ApplicationController
   before_action :validate_company_presence, only: [:index, :create]
   before_action :validate_company_uen_name, only: [:search]
   before_action :set_searched_company, only: [:search]
-  after_action only: [:index] { set_pagination_header(CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Product").map(&:company)) }
+  after_action only: [:index] { set_pagination_header(CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Product").map(&:reviewable)) }
 
   # GET /companies/:company_id/products
   def index
-    @products = CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Product").map(&:company)
+    @products = CompanyReviewable.kept.where(company_id: @company.id, reviewable_type: "Product").map(&:reviewable)
 
     render json: paginator(@products), methods: [:reviews_count, :aggregate_score], has_type: false
   end
@@ -84,7 +84,7 @@ class ProductsController < ApplicationController
     product.reload
     company_reviewable = CompanyReviewable.new(reviewable: product, company: @searched_vendor)
     if company_reviewable.save
-      render json: { 'product_id': product.id }
+      render json: { 'product_id': product.hashid }
     else
       render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end

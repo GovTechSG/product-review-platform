@@ -36,7 +36,7 @@ module SwaggerDocs::Projects
           key :type, :integer
           key :format, :int64
         end
-        response 200 do
+        response 201 do
           key :description, I18n.t('swagger_ui.index_success_description', model: "Projects").to_s
           schema type: :array do
             items do

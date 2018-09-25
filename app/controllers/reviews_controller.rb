@@ -162,7 +162,9 @@ class ReviewsController < ApplicationController
     def set_vendor(required)
       @vendor = Company.kept.uen_query_sanitizer(@whitelisted[:vendor_uen].to_s.downcase)
       @vendor = Company.kept.name_query_sanitizer(@whitelisted[:vendor_name].to_s.downcase) if @vendor.nil? || @vendor.uen.blank?
-      render_error(404, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "vendor")]) if required && (@vendor.nil? || !@vendor.presence?)
+      if required && (@vendor.nil? || !@vendor.presence?)
+        render_error(404, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "vendor")])
+      end
     end
 
     def check_from_params(required, check_class)
@@ -283,6 +285,10 @@ class ReviewsController < ApplicationController
       render_error(422, "#{I18n.t('score.key')}": [I18n.t('score.invalid')])
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/PerceivedComplexity
     def convert_hashids
       if @whitelisted["grant_id"]
         grant = Grant.find(@whitelisted["grant_id"])
@@ -311,6 +317,10 @@ class ReviewsController < ApplicationController
       end
     end
 
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/PerceivedComplexity
     def set_company_by_company_id
       @company = Company.find_by_hashid(params[:company_id])
     end

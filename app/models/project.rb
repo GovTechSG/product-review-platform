@@ -1,5 +1,6 @@
 class Project < Reviewable
   include SwaggerDocs::Project
+  include SwaggerDocs::Reviewable
   has_many :company_reviewable, as: :reviewable, dependent: :destroy
   has_many :companies, through: :company_reviewable, as: :reviewable
 

@@ -98,13 +98,13 @@ class CompaniesController < ApplicationController
 
   private
     def validate_company_uen_name
-      company = Company.kept.uen_query_sanitizer(params[:user][:uen].downcase.lstrip.strip)
-      company = Company.kept.name_query_sanitizer(params[:user][:name].downcase.lstrip.strip) if company.nil? || company.uen.blank?
+      company = Company.kept.uen_query_sanitizer(@whitelisted[:uen].downcase.lstrip)
+      company = Company.kept.name_query_sanitizer(@whitelisted[:name].downcase.lstrip) if company.nil? || company.uen.blank?
       company
     end
 
     def create_company
-      company = Company.new(name: params[:user][:name], uen: params[:user][:uen], description: params[:user][:description])
+      company = Company.new(@whitelisted)
       company.set_image!(@image) if params[:user][:name].present?
       company.errors.blank? && company.save
       company
@@ -188,8 +188,12 @@ class CompaniesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def validate_search_inputs
-      if !params[:user].nil? && (params[:user][:uen].nil? || params[:user][:name].nil? || params[:user][:description].nil?)
-        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "user")])
+      @whitelisted = params.fetch(:user, nil)
+      if @whitelisted.blank?
+        render_error(400, "#{I18n.t('general_error.params_missing_key')}": [I18n.t('general_error.params_missing_value', model: "review")])
+        return
+      else
+        @whitelisted = @whitelisted.permit(:name, :uen, :description)
       end
     end
 

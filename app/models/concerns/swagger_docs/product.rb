@@ -23,8 +23,11 @@ module SwaggerDocs::Product
         key :example, "A postman API"
       end
 
-      property :company do
-        key :'$ref', :CompanyAssociation
+      property :companies do
+        key :type, :array
+        items do
+          key :'$ref', :CompanyAssociation
+        end
       end
 
       property :reviews_count do

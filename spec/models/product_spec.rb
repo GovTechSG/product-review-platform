@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'concerns/statistics/score_aggregator_spec.rb'
 
 RSpec.describe Product, type: :model do
-
   describe 'validations' do
     it 'has a valid Factory' do
       expect(build(:product)).to be_valid

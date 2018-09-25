@@ -27,8 +27,11 @@ module SwaggerDocs::Service
         key :type, :number
       end
 
-      property :company do
-        key :'$ref', :CompanyAssociation
+      property :companies do
+        key :type, :array
+        items do
+          key :'$ref', :CompanyAssociation
+        end
       end
     end
 
