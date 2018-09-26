@@ -256,6 +256,7 @@ RSpec.describe ProductsController, type: :controller do
         expect do
           post :search, params: { product_name: "new product", product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
           post :search, params: { product_name: "new product", product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor2", vendor_uen: 1234 }
+          post :search, params: { product_name: "new product", product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor2", vendor_uen: 1234 }
         end.to change { CompanyReviewable.count }.by(2)
       end
       it "returns a success response when product is found" do
