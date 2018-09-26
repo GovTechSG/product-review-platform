@@ -252,6 +252,12 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     describe "POST #search", authorized: true do
+      it "allows multiple companies to be part of the product", authorized: true do
+        expect do
+          post :search, params: { product_name: "new product", product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
+          post :search, params: { product_name: "new product", product: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor2", vendor_uen: 1234 }
+        end.to change { CompanyReviewable.count }.by(2)
+      end
       it "returns a success response when product is found" do
         post :search, params: { product_name: @product.name, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: @product.companies.first.name, vendor_uen: @product.companies.first.uen }
         expect(response).to be_success

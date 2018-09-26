@@ -252,6 +252,12 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe "POST #search", authorized: true do
+      it "allows multiple companies to be part of the project", authorized: true do
+        expect do
+          post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor", vendor_uen: 123 }
+          post :search, params: { project_name: "new project", project: { description: '' }, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: "new vendor2", vendor_uen: 1234 }
+        end.to change { CompanyReviewable.count }.by(2)
+      end
       it "returns a success response when project is found" do
         post :search, params: { project_name: @project.name, company: { uen: 999, name: 'test', description: 'for test' }, vendor_name: @project.companies.first.name, vendor_uen: @project.companies.first.uen }
         expect(response).to be_success

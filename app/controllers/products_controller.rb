@@ -60,14 +60,21 @@ class ProductsController < ApplicationController
     return if performed?
     validate_vendor_uen_name
     @searched_vendor = @searched_vendor.nil? ? create_vendor : @searched_vendor
-    if Product.kept.find_by(name: params[:product_name]).nil?
-      create_product
-    else
-      render json: { 'product_id': Product.kept.find_by(name: params[:product_name]).hashid }
-    end
+    @product = Product.kept.find_by(name: params[:product_name])
+
+    create_product if @product.nil?
+    create_company_reviewable_if_not_exists
+    render json: { 'product_id': @product.hashid } if !performed?
   end
 
   private
+
+  def create_company_reviewable_if_not_exists
+    if CompanyReviewable.find_by(reviewable: @product, company: @searched_vendor).blank?
+      company_reviewable = CompanyReviewable.new(reviewable: @product, company: @searched_vendor)
+      render json: company_reviewable.errors.messages, status: :unprocessable_entity if !company_reviewable.save
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_product
@@ -75,18 +82,10 @@ class ProductsController < ApplicationController
   end
 
   def create_product
-    product = Product.new(name: params[:product_name], description: params[:product][:description])
-    if !product.save
-      render json: product.errors.messages, status: :unprocessable_entity
+    @product = Product.new(name: params[:product_name], description: params[:product][:description])
+    if !@product.save!
+      render json: @product.errors.messages, status: :unprocessable_entity
       return
-    end
-
-    product.reload
-    company_reviewable = CompanyReviewable.new(reviewable: product, company: @searched_vendor)
-    if company_reviewable.save
-      render json: { 'product_id': product.hashid }
-    else
-      render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotUnique
     search
@@ -121,8 +120,8 @@ class ProductsController < ApplicationController
   end
 
   def validate_vendor_uen_name
-    @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase.lstrip.strip)
-    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].downcase.lstrip.strip) if @searched_vendor.nil? || @searched_vendor.uen.blank?
+    @searched_vendor = Company.kept.uen_query_sanitizer(params[:vendor_uen].to_s.downcase)
+    @searched_vendor = Company.kept.name_query_sanitizer(params[:vendor_name].downcase) if @searched_vendor.nil? || @searched_vendor.uen.blank?
   end
 
   def create_vendor

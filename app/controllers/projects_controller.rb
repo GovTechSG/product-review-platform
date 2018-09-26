@@ -60,14 +60,21 @@ class ProjectsController < ApplicationController
     return if performed?
     validate_vendor_uen_name
     @searched_vendor = @searched_vendor.nil? ? create_vendor : @searched_vendor
-    if Project.kept.find_by(name: params[:project_name]).nil?
-      create_project
-    else
-      render json: { 'project_id': Project.kept.find_by(name: params[:project_name]).hashid }
-    end
+    @project = Project.kept.find_by(name: params[:project_name])
+
+    create_project if @project.nil?
+    create_company_reviewable_if_not_exists
+    render json: { 'project_id': @project.hashid } if !performed?
   end
 
   private
+
+  def create_company_reviewable_if_not_exists
+    if CompanyReviewable.find_by(reviewable: @project, company: @searched_vendor).blank?
+      company_reviewable = CompanyReviewable.new(reviewable: @project, company: @searched_vendor)
+      render json: company_reviewable.errors.messages, status: :unprocessable_entity if !company_reviewable.save
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
@@ -75,18 +82,10 @@ class ProjectsController < ApplicationController
   end
 
   def create_project
-    project = Project.new(name: params[:project_name], description: params[:project][:description])
-    if !project.save
-      render json: project.errors.messages, status: :unprocessable_entity
+    @project = Project.new(name: params[:project_name], description: params[:project][:description])
+    if !@project.save!
+      render json: @project.errors.messages, status: :unprocessable_entity
       return
-    end
-
-    project.reload
-    company_reviewable = CompanyReviewable.new(reviewable: project, company: @searched_vendor)
-    if company_reviewable.save
-      render json: { 'project_id': project.hashid }
-    else
-      render json: company_reviewable.errors.messages, status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotUnique
     search
