@@ -10,19 +10,24 @@ RSpec.describe "Projects", type: :request do
     build(:project, name: nil).attributes
   end
 
+  before(:each) do
+    @company_reviewable = create(:company_project)
+    @project = @company_reviewable.reviewable
+    @company = @company_reviewable.company
+    @review = @project.reviews.create!(build(:project_review, vendor_id: @company.id).attributes)
+  end
+
   describe "Authorised user" do
     describe "GET /api/v1/companies/:company_id/projects" do
       it "returns a success response" do
-        project = Project.create! valid_attributes
-        get company_projects_path(project.company.hashid), headers: request_login
+        get company_projects_path(@company.hashid), headers: request_login
 
         expect(response).to be_success
       end
 
       it "returns not found if the company is deleted" do
-        project = Project.create! valid_attributes
-        project.company.discard
-        get company_projects_path(project.company.id), headers: request_login
+        @company.discard
+        get company_projects_path(@company.hashid), headers: request_login
 
         expect(response).to be_not_found
       end
@@ -34,9 +39,8 @@ RSpec.describe "Projects", type: :request do
       end
 
       it "does not return deleted projects" do
-        project = Project.create! valid_attributes
-        project.discard
-        get company_projects_path(project.company.hashid), headers: request_login
+        @project.discard
+        get company_projects_path(@company.hashid), headers: request_login
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -45,22 +49,19 @@ RSpec.describe "Projects", type: :request do
 
     describe "GET /projects/:id" do
       it "returns a success response" do
-        project = Project.create! valid_attributes
-        get project_path(project.hashid), headers: request_login
+        get project_path(@project.hashid), headers: request_login
         expect(response).to be_success
       end
 
       it "returns not found when the project is deleted" do
-        project = Project.create! valid_attributes
-        project.discard
-        get project_path(project.id), headers: request_login
+        @project.discard
+        get project_path(@project.hashid), headers: request_login
         expect(response).to be_not_found
       end
 
       it "returns not found when the company is deleted" do
-        project = Project.create! valid_attributes
-        project.company.discard
-        get project_path(project.id), headers: request_login
+        @company.discard
+        get project_path(@project.hashid), headers: request_login
         expect(response).to be_not_found
       end
 
@@ -73,17 +74,13 @@ RSpec.describe "Projects", type: :request do
     describe "POST /api/v1/companies/:company_id/projects" do
       context "with valid params" do
         it "creates a new Project" do
-          company = create(:company)
-
           expect do
-            post company_projects_path(company.hashid), params: { project: valid_attributes }, headers: request_login
+            post company_projects_path(@company.hashid), params: { project: valid_attributes }, headers: request_login
           end.to change(Project, :count).by(1)
         end
 
         it "renders a JSON response with the new project" do
-          company = create(:company)
-
-          post company_projects_path(company.hashid), params: { project: valid_attributes }, headers: request_login
+          post company_projects_path(@company.hashid), params: { project: valid_attributes }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(project_url(Project.last))
@@ -96,10 +93,9 @@ RSpec.describe "Projects", type: :request do
         end
 
         it "renders not found if the company is deleted" do
-          company = create(:company)
-          company.discard
+          @company.discard
 
-          post company_projects_path(company.id), params: { project: valid_attributes }, headers: request_login
+          post company_projects_path(@company.hashid), params: { project: valid_attributes }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -107,9 +103,7 @@ RSpec.describe "Projects", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the new project" do
-          company = create(:company)
-
-          post company_projects_path(company.hashid), params: { project: invalid_attributes }, headers: request_login
+          post company_projects_path(@company.hashid), params: { project: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -123,40 +117,34 @@ RSpec.describe "Projects", type: :request do
         end
 
         it "updates the requested project" do
-          project = Project.create! valid_attributes
-
-          put project_path(project), params: { project: new_attributes }, headers: request_login
-          project.reload
-          expect(project.name).to eq(new_attributes[:name])
-          expect(project.description).to eq(new_attributes[:description])
+          put project_path(@project), params: { project: new_attributes }, headers: request_login
+          @project.reload
+          expect(@project.name).to eq(new_attributes[:name])
+          expect(@project.description).to eq(new_attributes[:description])
         end
 
         it "renders a JSON response with the project" do
-          project = Project.create! valid_attributes
-
-          put project_path(project), params: { project: new_attributes }, headers: request_login
+          put project_path(@project), params: { project: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
 
         it "does not update the requested project when the company is deleted" do
-          project = Project.create! valid_attributes
-          original_project = project
-          project.company.discard
-          put project_path(project), params: { project: new_attributes }, headers: request_login
-          project.reload
-          expect(project.name).to eq(original_project[:name])
-          expect(project.description).to eq(original_project[:description])
+          original_project = @project
+          @company.discard
+          put project_path(@project), params: { project: new_attributes }, headers: request_login
+          @project.reload
+          expect(@project.name).to eq(original_project[:name])
+          expect(@project.description).to eq(original_project[:description])
         end
 
         it "does not update the requested project when the project is deleted" do
-          project = Project.create! valid_attributes
-          original_project = project
-          project.discard
-          put project_path(project), params: { project: new_attributes }, headers: request_login
-          project.reload
-          expect(project.name).to eq(original_project[:name])
-          expect(project.description).to eq(original_project[:description])
+          original_project = @project
+          @project.discard
+          put project_path(@project), params: { project: new_attributes }, headers: request_login
+          @project.reload
+          expect(@project.name).to eq(original_project[:name])
+          expect(@project.description).to eq(original_project[:description])
         end
 
         it "renders not found when the project is not found" do
@@ -166,9 +154,7 @@ RSpec.describe "Projects", type: :request do
         end
 
         it "renders a JSON response with the project" do
-          project = Project.create! valid_attributes
-
-          put project_path(project), params: { project: new_attributes }, headers: request_login
+          put project_path(@project), params: { project: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -176,9 +162,7 @@ RSpec.describe "Projects", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the project" do
-          project = Project.create! valid_attributes
-
-          put project_path(project), params: { project: invalid_attributes }, headers: request_login
+          put project_path(@project), params: { project: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -187,37 +171,31 @@ RSpec.describe "Projects", type: :request do
 
     describe "DELETE /api/v1/projects/:id" do
       it "soft deletes" do
-        project = Project.create! valid_attributes
         expect do
-          delete project_path(project.id), params: {}, headers: request_login
+          delete project_path(@project.hashid), params: {}, headers: request_login
         end.to change(Project, :count).by(0)
       end
 
       it "sets discarded_at datetime" do
-        project = Project.create! valid_attributes
-        delete project_path(project.hashid), params: {}, headers: request_login
-        project.reload
-        expect(project.discarded?).to be true
+        delete project_path(@project.hashid), params: {}, headers: request_login
+        @project.reload
+        expect(@project.discarded?).to be true
       end
 
       it "renders a JSON response with the project" do
-        project = Project.create! valid_attributes
-
-        delete project_path(project.hashid), params: {}, headers: request_login
+        delete project_path(@project.hashid), params: {}, headers: request_login
         expect(response).to have_http_status(204)
       end
 
       it "render not found when the project is deleted" do
-        project = Project.create! valid_attributes
-        project.discard
-        delete project_path(project.id), params: {}, headers: request_login
-        expect(response).to have_http_status(404)
+        @project.discard
+        delete project_path(@project.hashid), params: {}, headers: request_login
+        expect(@response).to have_http_status(404)
       end
 
       it "render not found when the company is deleted" do
-        project = Project.create! valid_attributes
-        project.company.discard
-        delete project_path(project.id), params: {}, headers: request_login
+        @company.discard
+        delete project_path(@project.hashid), params: {}, headers: request_login
         expect(response).to have_http_status(404)
       end
 
@@ -231,8 +209,7 @@ RSpec.describe "Projects", type: :request do
   describe "Unauthorised user" do
     describe "GET /api/v1/companies/:company_id/projects" do
       it "returns an unauthorized response" do
-        project = Project.create! valid_attributes
-        get company_projects_path(project.company.id), headers: nil
+        get company_projects_path(@company.hashid), headers: nil
 
         expect_unauthorized
       end
@@ -240,8 +217,7 @@ RSpec.describe "Projects", type: :request do
 
     describe "GET /projects/:id" do
       it "returns an unauthorized response" do
-        project = Project.create! valid_attributes
-        get project_path(project.id), headers: nil
+        get project_path(@project.hashid), headers: nil
 
         expect_unauthorized
       end
@@ -249,17 +225,13 @@ RSpec.describe "Projects", type: :request do
 
     describe "POST /api/v1/companies/:company_id/projects" do
       it "does not create a new Project" do
-        company = create(:company)
-
         expect do
-          post company_projects_path(company.id), params: { project: valid_attributes }, headers: nil
+          post company_projects_path(@company.hashid), params: { project: valid_attributes }, headers: nil
         end.to change(Project, :count).by(0)
       end
 
       it "returns an unauthorized response" do
-        company = create(:company)
-
-        post company_projects_path(company.id), params: { project: valid_attributes }, headers: nil
+        post company_projects_path(@company.hashid), params: { project: valid_attributes }, headers: nil
         expect_unauthorized
       end
     end
@@ -270,42 +242,35 @@ RSpec.describe "Projects", type: :request do
       end
 
       it "does not update the requested project" do
-        project = Project.create! valid_attributes
-        current_attributes = project.attributes
+        current_attributes = @project.attributes
 
-        put project_path(project), params: { project: new_attributes }, headers: nil
-        project.reload
-        expect(project.name).to eq(current_attributes["name"])
-        expect(project.description).to eq(current_attributes["description"])
+        put project_path(@project), params: { project: new_attributes }, headers: nil
+        @project.reload
+        expect(@project.name).to eq(current_attributes["name"])
+        expect(@project.description).to eq(current_attributes["description"])
       end
 
       it "returns an unauthorized response" do
-        project = Project.create! valid_attributes
-
-        put project_path(project), params: { project: new_attributes }, headers: nil
+        put project_path(@project), params: { project: new_attributes }, headers: nil
         expect_unauthorized
       end
     end
 
     describe "DELETE /api/v1/projects/:id" do
       it "does not destroy the requested project" do
-        project = Project.create! valid_attributes
         expect do
-          delete project_path(project.id), params: {}, headers: nil
+          delete project_path(@project.hashid), params: {}, headers: nil
         end.to change(Project, :count).by(0)
       end
 
       it "does not set discarded_at datetime" do
-        project = Project.create! valid_attributes
-        delete project_path(project.id), params: {}, headers: nil
-        project.reload
-        expect(project.discarded?).to be false
+        delete project_path(@project.hashid), params: {}, headers: nil
+        @project.reload
+        expect(@project.discarded?).to be false
       end
 
       it "returns an unauthorized response" do
-        project = Project.create! valid_attributes
-
-        delete project_path(project.id), params: {}, headers: nil
+        delete project_path(@project.hashid), params: {}, headers: nil
         expect_unauthorized
       end
     end
