@@ -10,19 +10,24 @@ RSpec.describe "Services", type: :request do
     build(:service, name: nil).attributes
   end
 
+  before(:each) do
+    @company_reviewable = create(:company_service)
+    @service = @company_reviewable.reviewable
+    @company = @company_reviewable.company
+    @review = @service.reviews.create!(build(:service_review, vendor_id: @company.id).attributes)
+  end
+
   describe "Authorised user" do
     describe "GET /api/v1/companies/:company_id/services" do
       it "returns a success response" do
-        service = Service.create! valid_attributes
-        get company_services_path(service.company.hashid), headers: request_login
+        get company_services_path(@company.hashid), headers: request_login
 
         expect(response).to be_success
       end
 
       it "returns not found if the company is deleted" do
-        service = Service.create! valid_attributes
-        service.company.discard
-        get company_services_path(service.company.id), headers: request_login
+        @company.discard
+        get company_services_path(@company.hashid), headers: request_login
 
         expect(response).to be_not_found
       end
@@ -34,9 +39,8 @@ RSpec.describe "Services", type: :request do
       end
 
       it "does not return deleted services" do
-        service = Service.create! valid_attributes
-        service.discard
-        get company_services_path(service.company.hashid), headers: request_login
+        @service.discard
+        get company_services_path(@company.hashid), headers: request_login
 
         expect(response).to be_success
         expect(parsed_response).to match([])
@@ -45,22 +49,19 @@ RSpec.describe "Services", type: :request do
 
     describe "GET /services/:id" do
       it "returns a success response" do
-        service = Service.create! valid_attributes
-        get service_path(service.hashid), headers: request_login
+        get service_path(@service.hashid), headers: request_login
         expect(response).to be_success
       end
 
       it "returns not found when the service is deleted" do
-        service = Service.create! valid_attributes
-        service.discard
-        get service_path(service.id), headers: request_login
+        @service.discard
+        get service_path(@service.hashid), headers: request_login
         expect(response).to be_not_found
       end
 
       it "returns not found when the company is deleted" do
-        service = Service.create! valid_attributes
-        service.company.discard
-        get service_path(service.id), headers: request_login
+        @company.discard
+        get service_path(@service.hashid), headers: request_login
         expect(response).to be_not_found
       end
 
@@ -73,17 +74,13 @@ RSpec.describe "Services", type: :request do
     describe "POST /api/v1/companies/:company_id/services" do
       context "with valid params" do
         it "creates a new Service" do
-          company = create(:company)
-
           expect do
-            post company_services_path(company.hashid), params: { service: valid_attributes }, headers: request_login
+            post company_services_path(@company.hashid), params: { service: valid_attributes }, headers: request_login
           end.to change(Service, :count).by(1)
         end
 
         it "renders a JSON response with the new service" do
-          company = create(:company)
-
-          post company_services_path(company.hashid), params: { service: valid_attributes }, headers: request_login
+          post company_services_path(@company.hashid), params: { service: valid_attributes }, headers: request_login
           expect(response).to have_http_status(:created)
           expect(response.content_type).to eq('application/json')
           expect(response.location).to eq(service_url(Service.last))
@@ -96,10 +93,9 @@ RSpec.describe "Services", type: :request do
         end
 
         it "renders not found if the company is deleted" do
-          company = create(:company)
-          company.discard
+          @company.discard
 
-          post company_services_path(company.id), params: { service: valid_attributes }, headers: request_login
+          post company_services_path(@company.hashid), params: { service: valid_attributes }, headers: request_login
           expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json')
         end
@@ -107,9 +103,7 @@ RSpec.describe "Services", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the new service" do
-          company = create(:company)
-
-          post company_services_path(company.hashid), params: { service: invalid_attributes }, headers: request_login
+          post company_services_path(@company.hashid), params: { service: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -123,40 +117,34 @@ RSpec.describe "Services", type: :request do
         end
 
         it "updates the requested service" do
-          service = Service.create! valid_attributes
-
-          put service_path(service), params: { service: new_attributes }, headers: request_login
-          service.reload
-          expect(service.name).to eq(new_attributes[:name])
-          expect(service.description).to eq(new_attributes[:description])
+          put service_path(@service), params: { service: new_attributes }, headers: request_login
+          @service.reload
+          expect(@service.name).to eq(new_attributes[:name])
+          expect(@service.description).to eq(new_attributes[:description])
         end
 
         it "renders a JSON response with the service" do
-          service = Service.create! valid_attributes
-
-          put service_path(service), params: { service: new_attributes }, headers: request_login
+          put service_path(@service), params: { service: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
 
         it "does not update the requested service when the company is deleted" do
-          service = Service.create! valid_attributes
-          original_service = service
-          service.company.discard
-          put service_path(service), params: { service: new_attributes }, headers: request_login
-          service.reload
-          expect(service.name).to eq(original_service[:name])
-          expect(service.description).to eq(original_service[:description])
+          original_service = @service
+          @company.discard
+          put service_path(@service), params: { service: new_attributes }, headers: request_login
+          @service.reload
+          expect(@service.name).to eq(original_service[:name])
+          expect(@service.description).to eq(original_service[:description])
         end
 
         it "does not update the requested service when the service is deleted" do
-          service = Service.create! valid_attributes
-          original_service = service
-          service.discard
-          put service_path(service), params: { service: new_attributes }, headers: request_login
-          service.reload
-          expect(service.name).to eq(original_service[:name])
-          expect(service.description).to eq(original_service[:description])
+          original_service = @service
+          @service.discard
+          put service_path(@service), params: { service: new_attributes }, headers: request_login
+          @service.reload
+          expect(@service.name).to eq(original_service[:name])
+          expect(@service.description).to eq(original_service[:description])
         end
 
         it "renders not found when the service is not found" do
@@ -166,9 +154,7 @@ RSpec.describe "Services", type: :request do
         end
 
         it "renders a JSON response with the service" do
-          service = Service.create! valid_attributes
-
-          put service_path(service), params: { service: new_attributes }, headers: request_login
+          put service_path(@service), params: { service: new_attributes }, headers: request_login
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to eq('application/json')
         end
@@ -176,9 +162,7 @@ RSpec.describe "Services", type: :request do
 
       context "with invalid params" do
         it "renders a JSON response with errors for the service" do
-          service = Service.create! valid_attributes
-
-          put service_path(service), params: { service: invalid_attributes }, headers: request_login
+          put service_path(@service), params: { service: invalid_attributes }, headers: request_login
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.content_type).to eq('application/json')
         end
@@ -187,37 +171,31 @@ RSpec.describe "Services", type: :request do
 
     describe "DELETE /api/v1/services/:id" do
       it "soft deletes" do
-        service = Service.create! valid_attributes
         expect do
-          delete service_path(service.id), params: {}, headers: request_login
+          delete service_path(@service.hashid), params: {}, headers: request_login
         end.to change(Service, :count).by(0)
       end
 
       it "sets discarded_at datetime" do
-        service = Service.create! valid_attributes
-        delete service_path(service.hashid), params: {}, headers: request_login
-        service.reload
-        expect(service.discarded?).to be true
+        delete service_path(@service.hashid), params: {}, headers: request_login
+        @service.reload
+        expect(@service.discarded?).to be true
       end
 
       it "renders a JSON response with the service" do
-        service = Service.create! valid_attributes
-
-        delete service_path(service.hashid), params: {}, headers: request_login
+        delete service_path(@service.hashid), params: {}, headers: request_login
         expect(response).to have_http_status(204)
       end
 
       it "render not found when the service is deleted" do
-        service = Service.create! valid_attributes
-        service.discard
-        delete service_path(service.id), params: {}, headers: request_login
-        expect(response).to have_http_status(404)
+        @service.discard
+        delete service_path(@service.hashid), params: {}, headers: request_login
+        expect(@response).to have_http_status(404)
       end
 
       it "render not found when the company is deleted" do
-        service = Service.create! valid_attributes
-        service.company.discard
-        delete service_path(service.id), params: {}, headers: request_login
+        @company.discard
+        delete service_path(@service.hashid), params: {}, headers: request_login
         expect(response).to have_http_status(404)
       end
 
@@ -231,8 +209,7 @@ RSpec.describe "Services", type: :request do
   describe "Unauthorised user" do
     describe "GET /api/v1/companies/:company_id/services" do
       it "returns an unauthorized response" do
-        service = Service.create! valid_attributes
-        get company_services_path(service.company.id), headers: nil
+        get company_services_path(@company.hashid), headers: nil
 
         expect_unauthorized
       end
@@ -240,8 +217,7 @@ RSpec.describe "Services", type: :request do
 
     describe "GET /services/:id" do
       it "returns an unauthorized response" do
-        service = Service.create! valid_attributes
-        get service_path(service.id), headers: nil
+        get service_path(@service.hashid), headers: nil
 
         expect_unauthorized
       end
@@ -249,17 +225,13 @@ RSpec.describe "Services", type: :request do
 
     describe "POST /api/v1/companies/:company_id/services" do
       it "does not create a new Service" do
-        company = create(:company)
-
         expect do
-          post company_services_path(company.id), params: { service: valid_attributes }, headers: nil
+          post company_services_path(@company.hashid), params: { service: valid_attributes }, headers: nil
         end.to change(Service, :count).by(0)
       end
 
       it "returns an unauthorized response" do
-        company = create(:company)
-
-        post company_services_path(company.id), params: { service: valid_attributes }, headers: nil
+        post company_services_path(@company.hashid), params: { service: valid_attributes }, headers: nil
         expect_unauthorized
       end
     end
@@ -270,42 +242,35 @@ RSpec.describe "Services", type: :request do
       end
 
       it "does not update the requested service" do
-        service = Service.create! valid_attributes
-        current_attributes = service.attributes
+        current_attributes = @service.attributes
 
-        put service_path(service), params: { service: new_attributes }, headers: nil
-        service.reload
-        expect(service.name).to eq(current_attributes["name"])
-        expect(service.description).to eq(current_attributes["description"])
+        put service_path(@service), params: { service: new_attributes }, headers: nil
+        @service.reload
+        expect(@service.name).to eq(current_attributes["name"])
+        expect(@service.description).to eq(current_attributes["description"])
       end
 
       it "returns an unauthorized response" do
-        service = Service.create! valid_attributes
-
-        put service_path(service), params: { service: new_attributes }, headers: nil
+        put service_path(@service), params: { service: new_attributes }, headers: nil
         expect_unauthorized
       end
     end
 
     describe "DELETE /api/v1/services/:id" do
       it "does not destroy the requested service" do
-        service = Service.create! valid_attributes
         expect do
-          delete service_path(service.id), params: {}, headers: nil
+          delete service_path(@service.hashid), params: {}, headers: nil
         end.to change(Service, :count).by(0)
       end
 
       it "does not set discarded_at datetime" do
-        service = Service.create! valid_attributes
-        delete service_path(service.id), params: {}, headers: nil
-        service.reload
-        expect(service.discarded?).to be false
+        delete service_path(@service.hashid), params: {}, headers: nil
+        @service.reload
+        expect(@service.discarded?).to be false
       end
 
       it "returns an unauthorized response" do
-        service = Service.create! valid_attributes
-
-        delete service_path(service.id), params: {}, headers: nil
+        delete service_path(@service.hashid), params: {}, headers: nil
         expect_unauthorized
       end
     end

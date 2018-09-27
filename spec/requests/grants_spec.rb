@@ -22,6 +22,13 @@ RSpec.describe "Grants", type: :request do
     value
   end
 
+  before(:each) do
+    @company_reviewable = create(:company_product)
+    @product = @company_reviewable.reviewable
+    @company = @company_reviewable.company
+    @review = @product.reviews.create!(build(:product_review, vendor_id: @company.id).attributes)
+  end
+
   describe "Authorised user" do
     describe "GET /api/v1/grants" do
       it "returns a success response" do
@@ -34,16 +41,14 @@ RSpec.describe "Grants", type: :request do
 
     describe "GET /api/v1/companies/:company_id/grants" do
       it "returns a success response" do
-        review = create(:product_review)
-        get company_grants_path(review.reviewable.company.hashid), headers: request_login
+        get company_grants_path(@company.hashid), headers: request_login
 
         expect(response).to be_success
       end
 
       it "does not return grants from deleted company" do
-        review = create(:product_review)
-        review.reviewable.company.discard
-        get company_grants_path(review.reviewable.company.hashid), headers: request_login
+        @company.discard
+        get company_grants_path(@company.hashid), headers: request_login
         expect(response.status).to eq(404)
       end
 
@@ -303,8 +308,7 @@ RSpec.describe "Grants", type: :request do
 
     describe "GET /api/v1/companies/:company_id/grants" do
       it "returns an unauthorized response" do
-        review = create(:product_review)
-        get company_grants_path(review.reviewable.company_id)
+        get company_grants_path(@company.hashid)
 
         expect_unauthorized
       end
