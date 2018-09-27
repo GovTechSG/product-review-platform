@@ -257,7 +257,6 @@ RSpec.describe "Likes", type: :request do
 
     describe "GET api/v1/likes/:id" do
       it "returns an unauthorized response" do
-        like = Like.create! valid_attributes
         get like_path(@like.hashid), headers: nil
 
         expect_unauthorized
