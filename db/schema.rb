@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_18_023321) do
+ActiveRecord::Schema.define(version: 2019_08_26_090813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,12 +30,12 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "admin_users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
+    t.string "email", default: ""
+    t.string "encrypted_password", default: ""
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
+    t.integer "sign_in_count", default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
@@ -49,26 +49,26 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "agencies", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "kind", default: "", null: false
-    t.string "acronym", default: "", null: false
-    t.string "description", default: "", null: false
+    t.string "name", default: ""
+    t.string "kind", default: ""
+    t.string "acronym", default: ""
+    t.string "description", default: ""
     t.string "email"
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.string "image", default: "", null: false
+    t.string "image", default: ""
     t.index ["discarded_at"], name: "index_agencies_on_discarded_at"
     t.index ["name"], name: "index_agencies_on_name", unique: true
   end
 
   create_table "apps", force: :cascade do |t|
-    t.string "encrypted_password", default: "", null: false
+    t.string "encrypted_password", default: ""
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
+    t.integer "sign_in_count", default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
     t.string "name"
     t.text "description"
     t.datetime "discarded_at"
-    t.string "scopes", default: ["read_only"], null: false, array: true
-    t.boolean "confidential", default: true, null: false
+    t.string "scopes", default: ["read_only"], array: true
+    t.boolean "confidential", default: true
     t.index ["discarded_at"], name: "index_apps_on_discarded_at"
     t.index ["name"], name: "index_apps_on_name", unique: true
     t.index ["reset_password_token"], name: "index_apps_on_reset_password_token", unique: true
@@ -97,8 +97,8 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "aspects", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
+    t.string "name", default: ""
+    t.string "description", default: ""
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.text "content", default: "", null: false
+    t.text "content", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
@@ -121,17 +121,17 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "companies", force: :cascade do |t|
-    t.string "name", default: "", null: false
+    t.string "name", default: ""
     t.string "uen", default: ""
     t.string "phone_number"
     t.string "url"
-    t.decimal "aggregate_score", default: "0.0", null: false
-    t.integer "reviews_count", default: 0, null: false
+    t.decimal "aggregate_score", default: "0.0"
+    t.integer "reviews_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description", default: "", null: false
+    t.string "description", default: ""
     t.datetime "discarded_at"
-    t.string "image", default: "", null: false
+    t.string "image", default: ""
     t.index ["discarded_at"], name: "index_companies_on_discarded_at"
     t.index ["name"], name: "index_companies_on_name"
     t.index ["reviews_count"], name: "index_companies_on_reviews_count"
@@ -151,12 +151,12 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "grants", force: :cascade do |t|
-    t.string "name", default: "", null: false
+    t.string "name", default: ""
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "acronym", default: "", null: false
-    t.string "description", default: "", null: false
+    t.string "acronym", default: ""
+    t.string "description", default: ""
     t.bigint "agency_id"
     t.index ["agency_id"], name: "index_grants_on_agency_id"
     t.index ["discarded_at"], name: "index_grants_on_discarded_at"
@@ -164,11 +164,11 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "industries", force: :cascade do |t|
-    t.string "name", default: "", null: false
+    t.string "name", default: ""
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description", default: "", null: false
+    t.string "description", default: ""
     t.index ["discarded_at"], name: "index_industries_on_discarded_at"
     t.index ["name"], name: "index_industries_on_name", unique: true
   end
@@ -212,9 +212,9 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.integer "reviews_count", default: 0, null: false
+    t.string "name", default: ""
+    t.string "description", default: ""
+    t.integer "reviews_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
@@ -225,9 +225,9 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "projects", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.integer "reviews_count", default: 0, null: false
+    t.string "name", default: ""
+    t.string "description", default: ""
+    t.integer "reviews_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
@@ -257,9 +257,9 @@ ActiveRecord::Schema.define(version: 2018_09_18_023321) do
   end
 
   create_table "services", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.integer "reviews_count", default: 0, null: false
+    t.string "name", default: ""
+    t.string "description", default: ""
+    t.integer "reviews_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
