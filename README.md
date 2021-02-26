@@ -6,6 +6,8 @@
 
 <img src="public/favicon.png" width="96" />
 
+**This project has been ported over to another repository for maintenance. As a result, this repo will be archived and made read-only.**
+
 # GRP-RoR
 
 Welcome! This document details the setting up of a development environment. The project uses the following frameworks:
