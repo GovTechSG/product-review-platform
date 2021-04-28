@@ -326,7 +326,8 @@ GEM
     public_suffix (3.0.2)
     puma (3.11.2)
     rack (2.0.5)
-    rack-cors (1.0.2)
+    rack-cors (1.0.5)
+      rack (>= 1.6.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.0)
@@ -472,7 +473,7 @@ DEPENDENCIES
   mini_magick
   pg (~> 0.18)
   puma (~> 3.7)
-  rack-cors
+  rack-cors (= 1.0.5)
   rails (~> 5.2.0)
   ransack
   rspec-rails
@@ -488,4 +489,4 @@ DEPENDENCIES
   valid_url
 
 BUNDLED WITH
-   1.16.2
+   1.17.3
