@@ -25,7 +25,7 @@ gem 'rubocop', '0.52.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 3.12', '>= 3.12.2'
 # Use Figaro to store secrets and env variables
 gem 'figaro'
 gem 'valid_url'
