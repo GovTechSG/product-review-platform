@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'activeadmin'
-gem 'active_model_serializers'
+gem 'active_model_serializers', '0.10.0.rc4'
 gem 'carrierwave'
 gem 'clamby'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -56,16 +56,16 @@ group :development, :test do
   # Gems for ruby debugging
   gem 'database_cleaner'
   gem 'debase', '0.2.2.beta10'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '4.8.2'
   gem 'ffaker'
   gem 'ruby-debug-ide', '0.6.0'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '3.7.2'
   gem 'rspec-teamcity', '~> 0.0.1', require: false
   gem 'rubocop-teamcity-formatter', git: 'https://github.com/govtechsg/rubocop-teamcity-formatter.git', require: false
 end
 
 group :qa do
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '4.8.2'
   gem 'ffaker'
 end
 
